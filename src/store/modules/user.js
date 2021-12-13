@@ -52,7 +52,7 @@ const actions = {
     d.setTime(d.getTime() + -1 * 24 * 60 * 60 * 1000)
     var expires = 'expires=' + d.toUTCString()
     document.cookie = 'loginSysCookie' + '=' + 0 + ';' + expires + ';path=/;domain=' + window.cookiedomain
-    location.href = '/#/login/login?clientUrl=' + location.href // 跳转到外部登陆页面////1
+    location.href = '/#/login/login?clientUrl=' + location.href // 跳转到外部登陆页面
   }
 }
 
