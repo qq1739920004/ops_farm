@@ -327,7 +327,7 @@
               <el-col :span="12" :offset="4">
                 <el-form-item label="工作模式">
                   <el-select v-model="workPattern.type">
-                    <el-option label="内置电台" :value="0" />
+                    <el-option v-if='markerData.terminalType == "AG302"' label="内置电台" :value="0" />
                     <el-option label="内置网络" :value="1" />
                     <el-option label="罗网" :value="3" disabled />
                     <!-- <el-option label="外置网络" :value="2"></el-option> -->

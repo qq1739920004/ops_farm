@@ -788,7 +788,7 @@ export default {
         date: this.registDate,
       }).then((res) => {
         try {
-          if (res.data) {
+          if (res.data || res.data == 0) {
             if (res.data === 1) {
               this.$message.success("注册成功");
             } else {
