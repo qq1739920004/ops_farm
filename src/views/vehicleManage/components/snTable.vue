@@ -128,7 +128,7 @@
         <template slot-scope="scope">
           <el-switch
             class="switch"
-            v-model="scope.row.isTranfer"
+            v-model="scope.row.isTransfer"
             :width="50"
             :active-value="true"
             :inactive-value="false"
@@ -702,7 +702,7 @@ export default {
         sn: row.sn,
       };
 
-      if (row.isTranfer) {
+      if (row.isTransfer) {
         // 开
         logOpen_path(params).then((res) => {
           if (res.data.code == 200) {
