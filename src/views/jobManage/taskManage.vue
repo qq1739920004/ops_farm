@@ -80,10 +80,10 @@
               <template slot="title">
                 <el-row style="width: 100%; padding-right: 8px">
                   <el-col :span="12" class="car_title car_name">{{
-                    item.carName || '/'
+                    item.carName || "/"
                   }}</el-col>
                   <el-col :span="10" class="car_title">{{
-                    item.sn || '/'
+                    item.sn || "/"
                   }}</el-col>
                   <el-col :span="2">({{ item.paddyWorks.length }})</el-col>
                 </el-row>
@@ -98,9 +98,9 @@
                     <el-checkbox v-model="subItem.checked">{{
                       subItem.name
                     }}</el-checkbox>
-                    <span
-                      class="worked_area"
-                    >{{ subItem.workedarea.toFixed(3) }} 亩</span>
+                    <span class="worked_area"
+                      >{{ subItem.workedarea.toFixed(3) }} 亩</span
+                    >
                     <span
                       v-if="!subItem.borderpoints"
                       class="pick_area"
@@ -132,7 +132,7 @@
                   </div>
                   <div class="item_line item_line_2">
                     <span>作业类型: </span>
-                    <span>{{ workTypeReflect[subItem.worktype] || '/' }}</span>
+                    <span>{{ workTypeReflect[subItem.worktype] || "/" }}</span>
                   </div>
                   <div class="item_line item_line_3">
                     <span>作业农具: </span>
@@ -149,32 +149,32 @@
                         <el-col :span="14">农具左右偏移:</el-col>
                         <el-col :span="10">{{
                           subItem.toolParam
-                            ? JSON.parse(subItem.toolParam.paramJson)['Tool1'] +
-                              ' cm'
-                            : '暂无参数'
+                            ? JSON.parse(subItem.toolParam.paramJson)["Tool1"] +
+                              " cm"
+                            : "暂无参数"
                         }}</el-col>
                       </el-row>
                       <el-row style="padding: 2px">
                         <el-col :span="14">农具到后轴距离：</el-col>
                         <el-col :span="10">{{
                           subItem.toolParam
-                            ? JSON.parse(subItem.toolParam.paramJson)['Tool2'] +
-                              ' cm'
-                            : '暂无参数'
+                            ? JSON.parse(subItem.toolParam.paramJson)["Tool2"] +
+                              " cm"
+                            : "暂无参数"
                         }}</el-col>
                       </el-row>
                       <el-row style="padding: 2px">
                         <el-col :span="14">农具宽度：</el-col>
                         <el-col :span="10">{{
                           subItem.toolParam
-                            ? JSON.parse(subItem.toolParam.paramJson)['Tool3'] +
-                              ' m'
-                            : '暂无参数'
+                            ? JSON.parse(subItem.toolParam.paramJson)["Tool3"] +
+                              " m"
+                            : "暂无参数"
                         }}</el-col>
                       </el-row>
                       <!-- <span slot="reference" :class="{'tool_param': subItem.toolParam}">{{subItem.toolParam ? subItem.toolParam.name || '/' : '/'}}</span> -->
                       <span slot="reference" :class="{ tool_param: false }">{{
-                        subItem.toolname ? subItem.toolname || '/' : '/'
+                        subItem.toolname ? subItem.toolname || "/" : "/"
                       }}</span>
                     </el-popover>
                   </div>
@@ -208,9 +208,10 @@
               padding-top: 10px;
               display: block;
               color: #888888;
-              text-align:center;
+              text-align: center;
             "
-          >没有更多了</span>
+            >没有更多了</span
+          >
         </div>
       </div>
     </div>
@@ -224,11 +225,11 @@ import {
   historyList_path,
   provinceList_path,
   paddyWorkUpdate_path,
-} from '@/api/jobManage'
-import gcoord from 'gcoord'
-import pointInChina from '@/utils/pointInChina'
-let a = require('@/assets/jobManage/a.png')
-let b = require('@/assets/jobManage/b.png')
+} from "@/api/jobManage";
+import gcoord from "gcoord";
+import pointInChina from "@/utils/pointInChina";
+let a = require("@/assets/jobManage/a.png");
+let b = require("@/assets/jobManage/b.png");
 
 export default {
   data() {
@@ -239,23 +240,23 @@ export default {
       maxZoom: 18,
       minZoom: 1,
       mapId: 0,
-      province: { 65: '新疆维吾尔自治区' },
-      defaultProvince: '65',
-      input: '',
+      province: { 65: "新疆维吾尔自治区" },
+      defaultProvince: "65",
+      input: "",
       groupData: [],
-      activeNames: '',
+      activeNames: "",
       checked: true,
       currentPage: 1,
       rollLoading: true,
       loading: false,
-      currentWorkId: '',
+      currentWorkId: "",
       mapOptions: [
         {
-          mapName: '卫星地图',
+          mapName: "卫星地图",
           mapId: 0,
         },
         {
-          mapName: '高德地图',
+          mapName: "高德地图",
           mapId: 1,
         },
         // {
@@ -273,193 +274,195 @@ export default {
         },
       },
       workTypeReflect: {
-        1: '播种',
-        2: '翻地',
-        3: '起陇',
-        4: '收割',
-        5: '喷药',
-        6: '其他',
+        1: "播种",
+        2: "翻地",
+        3: "起陇",
+        4: "收割",
+        5: "喷药",
+        6: "其他",
       },
       temPolygonObject: null,
       tileUrl: L.TileLayer.ChinaProvider.providers,
       tileLayer: [],
-    }
+    };
   },
   methods: {
     //地图相关方法
     initMap(id = 0) {
-      this.map = L.map('child6_map', {
+      this.map = L.map("child6_map", {
         fullscreenControl: false,
         zoomControl: false,
-      }).setView(this.originPoint, this.originZoom)
+      }).setView(this.originPoint, this.originZoom);
 
       // L.control.scale({maxWidth: 150,metric: true,imperial: false,position: 'bottomleft'}).addTo(this.map);
-      this.handleMapChange(this.mapId)
-      this.initGeoman()
+      this.handleMapChange(this.mapId);
+      this.initGeoman();
     },
 
     handleMapChange(mapId) {
       switch (mapId) {
         case 0:
-          this.changeTileLayer('Google', 'Satellite')
-          break
+          this.changeTileLayer("Google", "Satellite");
+          break;
         case 1:
-          this.changeTileLayer('GaoDe', 'Normal')
-          break
+          this.changeTileLayer("GaoDe", "Normal");
+          break;
         case 2:
-          this.changeTileLayer('Google', 'Normal')
-          break
+          this.changeTileLayer("Google", "Normal");
+          break;
         case 3:
-          this.changeTileLayer('TianDiTu', 'Normal')
-          break
+          this.changeTileLayer("TianDiTu", "Normal");
+          break;
       }
     },
 
-    changeTileLayer(mapName = 'Google', mapType = 'Satellite') {
+    changeTileLayer(mapName = "Google", mapType = "Satellite") {
       try {
         if (!this.map) {
-          console.warn('未初始化底图实例')
-          return
+          console.warn("未初始化底图实例");
+          return;
         }
         if (this.tileLayer.length) {
-          this.tileLayer.forEach((layer) => layer.remove())
-          this.tileLayer = []
+          this.tileLayer.forEach((layer) => layer.remove());
+          this.tileLayer = [];
         }
-        let mapUrl = this.tileUrl[mapName][mapType]
-        let options = {}
-        options.subdomains = this.tileUrl[mapName]['Subdomains']
-        if ('tms' in this.tileUrl[mapName]) {
-          options.tms = this.tileUrl[mapName]['tms']
+        let mapUrl = this.tileUrl[mapName][mapType];
+        let options = {};
+        options.subdomains = this.tileUrl[mapName]["Subdomains"];
+        if ("tms" in this.tileUrl[mapName]) {
+          options.tms = this.tileUrl[mapName]["tms"];
         }
-        if ('key' in this.tileUrl[mapName]) {
-          options.key = this.tileUrl[mapName]['key']
+        if ("key" in this.tileUrl[mapName]) {
+          options.key = this.tileUrl[mapName]["key"];
         }
         for (let key in mapUrl) {
-          let layer = L.tileLayer(mapUrl[key], options).addTo(this.map)
-          this.tileLayer.push(layer)
+          let layer = L.tileLayer(mapUrl[key], options).addTo(this.map);
+          this.tileLayer.push(layer);
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
 
     initGeoman() {
-      let that = this
-      this.map.pm.setLang('zh')
+      let that = this;
+      this.map.pm.setLang("zh");
       this.map.pm.setGlobalOptions({
         pinning: true,
         limitMarkersToCount: 15,
         limitMarkersCountGlobally: true,
-      })
-      this.map.on('pm:create', (e) => {
-        this.temPolygonObject = e
+      });
+      this.map.on("pm:create", (e) => {
+        this.temPolygonObject = e;
         try {
-          let borderpoints = e.layer._latlngs[0].map((j) => [j.lat, j.lng])
-          that.updateBoundary(that.currentWorkId, borderpoints)
+          let borderpoints = e.layer._latlngs[0].map((j) => [j.lat, j.lng]);
+          that.updateBoundary(that.currentWorkId, borderpoints);
         } catch (err) {
-          console.log(err)
+          console.log(err);
         }
-      })
+      });
     },
 
     hangleSelectChange(mapId) {
-      this.handleMapChange(mapId)
+      this.handleMapChange(mapId);
     },
 
     handleProvinceChange(provinceId) {
-      this.clearAllMarkers()
-      this.groupData = null
-      this.markerCollect = null
-      this.markerCollect = {}
-      this.groupData = []
-      this.currentPage = 1
-      this.rollLoading = true
-      this.loadPaddyData(this.currentPage, provinceId)
+      this.clearAllMarkers();
+      this.groupData = null;
+      this.markerCollect = null;
+      this.markerCollect = {};
+      this.groupData = [];
+      this.currentPage = 1;
+      this.rollLoading = true;
+      this.loadPaddyData(this.currentPage, provinceId);
     },
 
     // 数据相关方法
-    loadPaddyData(currentPage = 1, addrcode = 65, name = '') {
-      this.loading = true
+    loadPaddyData(currentPage = 1, addrcode = 65, name = "") {
+      this.loading = true;
       groupList_path({
         currentPage: currentPage,
         pageSize: 10,
         addrcode: addrcode,
         name: name.trim(),
       }).then((res) => {
-        this.loading = false
+        this.loading = false;
         try {
           if (!res.data.data.length) {
-            this.rollLoading = false
-            return
+            this.rollLoading = false;
+            return;
           }
-          let tem = res.data.data
+          let tem = res.data.data;
+          console.log(tem, "--396");
           tem.forEach((element) => {
-            this.markerCollect[element.id] = {}
+            this.markerCollect[element.id] = {};
             if (element.paddyWorks.length) {
               element.paddyWorks.forEach((item) => {
-                item.checked = false // 增加一个勾选状态字段
+                item.checked = false; // 增加一个勾选状态字段
                 if (item.id === this.currentWorkId) {
-                  item.checked = true
+                  item.checked = true;
                 }
                 this.markerCollect[element.id][item.id] = {
                   marker: [],
-                }
-              })
+                };
+              });
             }
-          })
+          });
           if (this.groupData.length) {
-            this.groupData.push.apply(this.groupData, tem)
+            this.groupData.push.apply(this.groupData, tem);
           } else {
-            this.groupData = tem
+            this.groupData = tem;
           }
+          console.log(this.groupData, "---416");
         } catch (err) {
-          console.log(err)
+          console.log(err);
         }
-      })
+      });
     },
 
     loadMorePaddyData() {
       if (!this.rollLoading) {
-        return
+        return;
       } //没有更多数据了
-      this.currentPage++
-      this.loadPaddyData(this.currentPage, this.defaultProvince, this.input)
+      this.currentPage++;
+      this.loadPaddyData(this.currentPage, this.defaultProvince, this.input);
     },
 
     searchDataByWorkId() {
       if (!this.input) {
-        return
+        return;
       }
-      this.clearAllMarkers()
-      this.currentPage = 1
-      this.groupData = null
-      this.groupData = []
-      this.markerCollect = null
-      this.markerCollect = {}
-      this.rollLoading = true
-      this.loadPaddyData(this.currentPage, this.defaultProvince, this.input)
+      this.clearAllMarkers();
+      this.currentPage = 1;
+      this.groupData = null;
+      this.groupData = [];
+      this.markerCollect = null;
+      this.markerCollect = {};
+      this.rollLoading = true;
+      this.loadPaddyData(this.currentPage, this.defaultProvince, this.input);
     },
 
     clearSearchedData() {
-      this.clearAllMarkers()
-      this.currentPage = 1
-      this.groupData = null
-      this.groupData = []
-      this.markerCollect = null
-      this.markerCollect = {}
-      this.rollLoading = true
-      this.loadPaddyData(this.currentPage, this.defaultProvince)
+      this.clearAllMarkers();
+      this.currentPage = 1;
+      this.groupData = null;
+      this.groupData = [];
+      this.markerCollect = null;
+      this.markerCollect = {};
+      this.rollLoading = true;
+      this.loadPaddyData(this.currentPage, this.defaultProvince);
     },
 
     handleWorkDataChange() {
-      this.clearAllMarkers()
-      this.currentPage = 1
-      this.groupData = null
-      this.groupData = []
-      this.markerCollect = null
-      this.markerCollect = {}
-      this.rollLoading = true
-      this.loadPaddyData(this.currentPage, this.defaultProvince)
+      this.clearAllMarkers();
+      this.currentPage = 1;
+      this.groupData = null;
+      this.groupData = [];
+      this.markerCollect = null;
+      this.markerCollect = {};
+      this.rollLoading = true;
+      this.loadPaddyData(this.currentPage, this.defaultProvince);
     },
 
     loadWorkData(groupId, workId) {
@@ -467,39 +470,41 @@ export default {
         ids: JSON.stringify([workId]),
       }).then((res) => {
         try {
-          let key = Object.keys(res.data.data)
+          let key = Object.keys(res.data.data);
           if (
             !key.length ||
             res.data.data[key[0]] === null ||
             !res.data.data[key[0]].length
           ) {
             this.saveMarker(groupId, workId, [
-              { markerObj: null, name: 'lines' },
-            ])
-            this.$message.warning('暂无作业数据')
-            return
+              { markerObj: null, name: "lines" },
+            ]);
+            this.$message.warning("暂无作业数据");
+            return;
           }
           let PointListTransed = res.data.data[key[0]].map((item) => {
-            return this.coorTransform([item.pos_x, item.pos_y], this.mapId) // 转换坐标
-          })
-          let line = L.polyline(PointListTransed, { color: '#00ff00' })
+            return this.coorTransform([item.pos_x, item.pos_y], this.mapId); // 转换坐标
+          });
+          let line = L.polyline(PointListTransed, { color: "#00ff00" })
             .addTo(this.map)
             .bindPopup(`作业名称：${key[0]}`)
-            .openPopup()
-          this.map.fitBounds(PointListTransed)
-          this.saveMarker(groupId, workId, [{ markerObj: line, name: 'lines' }])
+            .openPopup();
+          this.map.fitBounds(PointListTransed);
+          this.saveMarker(groupId, workId, [
+            { markerObj: line, name: "lines" },
+          ]);
         } catch (err) {
-          console.log(err)
+          console.log(err);
         }
-      })
+      });
     },
 
     loadProvinceData() {
       provinceList_path().then((res) => {
         if (res.data.data) {
-          this.province = { ...this.province, ...res.data.data }
+          this.province = { ...this.province, ...res.data.data };
         }
-      })
+      });
     },
 
     updateBoundary(workId, pointsArray) {
@@ -509,143 +514,155 @@ export default {
       }).then((res) => {
         try {
           if (res.data.data === 1) {
-            this.$message.success(`更新边界成功, 当前田块id：${workId}`)
-            this.map.removeLayer(this.temPolygonObject.layer)
-            this.handleWorkDataChange()
+            this.$message.success(`更新边界成功, 当前田块id：${workId}`);
+            this.map.removeLayer(this.temPolygonObject.layer);
+            this.handleWorkDataChange();
           } else {
-            this.$message.error('更新失败，请稍后再试')
+            this.$message.error("更新失败，请稍后再试");
           }
         } catch (err) {
-          console.log(err)
+          console.log(err);
         }
-      })
+      });
     },
 
     //地图绘制相关方法
     addPathAB(item) {
       try {
-        let pointA = this.coorTransform(
-          [item.lineptax, item.lineptay],
-          this.mapId
-        )
-        let pointB = this.coorTransform(
-          [item.lineptbx, item.lineptby],
-          this.mapId
-        )
-        let l1 = L.latLng(item.lineptax, item.lineptay)
-        let l2 = L.latLng(item.lineptbx, item.lineptby)
-        let distance = l1.distanceTo(l2).toFixed(0)
+        let ax;
+        let ay;
+        let bx;
+        let by;
+
+        if (item.terminalType == "AG360" || item.terminalType == "AG360Pro") {
+          ax = item.ptalat;
+          ay = item.ptalng;
+          bx = item.ptblat;
+          by = item.ptblng;
+        } else {
+          ax = item.lineptax;
+          ay = item.lineptay;
+          bx = item.lineptbx;
+          by = item.lineptby;
+        }
+        let pointA = this.coorTransform([ax, ay], this.mapId);
+        let pointB = this.coorTransform([bx, by], this.mapId);
+        let l1 = L.latLng(ax, ay);
+        let l2 = L.latLng(bx, by);
+        let distance = l1.distanceTo(l2).toFixed(0);
         let iconA = L.icon({
           iconUrl: a,
           iconAnchor: [12, 30],
           popupAnchor: [0, -30],
-        })
+        });
         let iconB = L.icon({
           iconUrl: b,
           iconAnchor: [12, 30],
           popupAnchor: [0, -30],
-        })
-        let markerA = L.marker(pointA, { icon: iconA }).addTo(this.map)
-        let markerB = L.marker(pointB, { icon: iconB }).addTo(this.map)
+        });
+        let markerA = L.marker(pointA, { icon: iconA }).addTo(this.map);
+        let markerB = L.marker(pointB, { icon: iconB }).addTo(this.map);
         let line = L.polyline([pointA, pointB], {
-          color: 'red',
+          color: "red",
           dashArray: [9, 9],
         })
           .bindTooltip(`AB点距离 ${distance} 米`, { permanent: true })
-          .addTo(this.map)
-        this.map.fitBounds([pointA, pointB])
+          .addTo(this.map);
+        this.map.fitBounds([pointA, pointB]);
         let temMarkers = [
           {
             markerObj: markerA,
-            name: 'markerA',
+            name: "markerA",
           },
           {
             markerObj: markerB,
-            name: 'markerB',
+            name: "markerB",
           },
           {
             markerObj: line,
-            name: 'lineAB',
+            name: "lineAB",
           },
-        ]
-        this.saveMarker(item.carid, item.id, temMarkers)
+        ];
+        this.saveMarker(item.carid, item.id, temMarkers);
         //绘制田块边界(全部上传GCJ02坐标，对应全部GCJ02地图，无需相互转换！！！)
         if (item.borderpoints) {
-          let latlngs = JSON.parse(item.borderpoints)
-          let polygon = L.polygon(latlngs, { color: '#388BFE' }).addTo(this.map)
+          let latlngs = JSON.parse(item.borderpoints);
+          let polygon = L.polygon(latlngs, { color: "#388BFE" }).addTo(
+            this.map
+          );
           let tem = {
-            name: 'border',
+            name: "border",
             markerObj: polygon,
-          }
-          this.saveMarker(item.carid, item.id, [tem])
+          };
+          this.saveMarker(item.carid, item.id, [tem]);
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     },
 
     hasMarker(groupId, workId) {
-      return this.markerCollect[groupId][workId]['marker'].length > 0
+      return this.markerCollect[groupId][workId]["marker"].length > 0;
     },
 
     hasMarkerField(groupId, workId, field) {
-      let a = this.markerCollect[groupId][workId]['marker'].find(
+      let a = this.markerCollect[groupId][workId]["marker"].find(
         (element) => element.name === field
-      )
+      );
       if (a && a[field] !== null) {
-        return true
+        return true;
       } else {
-        return false
+        return false;
       }
     },
 
     countMarkerLength(groupId, workId) {
-      return this.markerCollect[groupId][workId]['marker'].length
+      return this.markerCollect[groupId][workId]["marker"].length;
     },
 
     saveMarker(groupId, workId, markerObj) {
       try {
-        let a = this.markerCollect[groupId][workId]['marker']
-        Array.prototype.push.apply(a, markerObj)
+        let a = this.markerCollect[groupId][workId]["marker"];
+        Array.prototype.push.apply(a, markerObj);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     },
 
     removeMarker(groupId, workId) {
       try {
-        if (this.markerCollect[groupId][workId]['marker'].length) {
-          let a = this.markerCollect[groupId][workId]['marker']
+        if (this.markerCollect[groupId][workId]["marker"].length) {
+          let a = this.markerCollect[groupId][workId]["marker"];
           a.forEach((item) => {
             if (item.markerObj) {
-              this.map.removeLayer(item.markerObj)
+              this.map.removeLayer(item.markerObj);
             }
-          })
-          this.markerCollect[groupId][workId]['marker'] = []
+          });
+          this.markerCollect[groupId][workId]["marker"] = [];
         } else {
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     },
 
     removeMarkerByName(groupId, workId, name) {
       try {
-        if (this.markerCollect[groupId][workId]['marker'].length) {
-          let a = this.markerCollect[groupId][workId]['marker']
+        if (this.markerCollect[groupId][workId]["marker"].length) {
+          let a = this.markerCollect[groupId][workId]["marker"];
           a.forEach((item) => {
-            if (item.name === 'border' && item.markerObj) {
-              this.map.removeLayer(item.markerObj)
+            if (item.name === "border" && item.markerObj) {
+              this.map.removeLayer(item.markerObj);
             }
-          })
-          let borderIndex = a.findIndex((item) => item.name === 'border')
+          });
+          let borderIndex = a.findIndex((item) => item.name === "border");
           if (borderIndex !== -1) {
-            a.splice(borderIndex, 1)
+            a.splice(borderIndex, 1);
           }
         } else {
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     },
 
@@ -654,40 +671,40 @@ export default {
         for (let key in this.markerCollect) {
           if (Object.keys(this.markerCollect[key]).length) {
             for (let subKey in this.markerCollect[key]) {
-              if (this.markerCollect[key][subKey]['marker'].length) {
-                this.markerCollect[key][subKey]['marker'].forEach((item) => {
+              if (this.markerCollect[key][subKey]["marker"].length) {
+                this.markerCollect[key][subKey]["marker"].forEach((item) => {
                   if (item && item.markerObj) {
-                    this.map.removeLayer(item.markerObj)
+                    this.map.removeLayer(item.markerObj);
                   }
-                })
+                });
               }
             }
           }
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     },
 
     drawBoundary(workId) {
-      this.currentWorkId = workId //保存当前田块
-      this.$confirm('单击地图开始绘制，点击开始点闭合田块', '提示', {
-        confirmButtonText: '继续',
-        cancelButtonText: '取消',
-        type: 'warning',
+      this.currentWorkId = workId; //保存当前田块
+      this.$confirm("单击地图开始绘制，点击开始点闭合田块", "提示", {
+        confirmButtonText: "继续",
+        cancelButtonText: "取消",
+        type: "warning",
       }).then(() => {
-        this.map.pm.enableDraw('Polygon', {
+        this.map.pm.enableDraw("Polygon", {
           snappable: true,
           snapDistance: 20,
-        })
-      })
+        });
+      });
     },
     clearBoundary(item) {
-      this.currentWorkId = item.id //保存当前田块
-      this.$confirm('是否删除当前田块边界', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
+      this.currentWorkId = item.id; //保存当前田块
+      this.$confirm("是否删除当前田块边界", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       }).then(() => {
         paddyWorkUpdate_path({ id: item.id, borderpoints: null }).then(
           (res) => {
@@ -695,48 +712,48 @@ export default {
               if (res.data.data === 1) {
                 this.$message.success(
                   `删除边界成功, 当前田块作业id：${item.id}`
-                )
-                this.removeMarkerByName(item.carid, item.id, 'border')
-                this.handleWorkDataChange()
+                );
+                this.removeMarkerByName(item.carid, item.id, "border");
+                this.handleWorkDataChange();
               } else {
-                this.$message.error('删除失败，请稍后再试')
+                this.$message.error("删除失败，请稍后再试");
               }
             } catch (err) {
-              console.log(err)
+              console.log(err);
             }
           }
-        )
-      })
+        );
+      });
     },
 
     //坐标转换
     coorTransform(point = [], mapType = 1) {
       //经纬度顺序 gcoor 需要 [116.403988, 39.914266] 经度在前
       if (!pointInChina(point)) {
-        return point
+        return point;
       }
-      let p = [point[1], point[0]]
+      let p = [point[1], point[0]];
       switch (mapType) {
         case 0:
-          let [a, b] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-          return [b, a]
+          let [a, b] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+          return [b, a];
         case 1:
-          let [c, d] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-          return [d, c]
+          let [c, d] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+          return [d, c];
         case 2:
-          let [e, f] = gcoord.transform(p, gcoord.WGS84, gcoord.BD09)
-          return [f, e]
+          let [e, f] = gcoord.transform(p, gcoord.WGS84, gcoord.BD09);
+          return [f, e];
         case 3:
-          let [g, h] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-          return [h, g]
+          let [g, h] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+          return [h, g];
         default:
-          let [i, j] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-          return [j, i]
+          let [i, j] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+          return [j, i];
       }
     },
 
     getToolParam(param) {
-      console.log(param)
+      console.log(param);
     },
   },
 
@@ -747,21 +764,22 @@ export default {
           if (newData.length) {
             newData.forEach((item) => {
               item.paddyWorks.forEach((subItem) => {
+                subItem.terminalType = item.terminalType;
                 if (subItem.checked) {
                   if (!this.hasMarker(item.id, subItem.id)) {
-                    this.addPathAB(subItem)
+                    this.addPathAB(subItem);
                   }
-                  if (!this.hasMarkerField(item.id, subItem.id, 'lines')) {
-                    this.loadWorkData(item.id, subItem.id)
+                  if (!this.hasMarkerField(item.id, subItem.id, "lines")) {
+                    this.loadWorkData(item.id, subItem.id);
                   }
                 } else {
-                  this.removeMarker(item.id, subItem.id)
+                  this.removeMarker(item.id, subItem.id);
                 }
-              })
-            })
+              });
+            });
           }
         } catch (err) {
-          console.log(err)
+          console.log(err);
         }
       },
       deep: true,
@@ -769,11 +787,11 @@ export default {
   },
 
   mounted() {
-    this.initMap()
-    this.loadPaddyData(this.currentPage, this.defaultProvince)
-    this.loadProvinceData()
+    this.initMap();
+    this.loadPaddyData(this.currentPage, this.defaultProvince);
+    this.loadProvinceData();
   },
-}
+};
 </script>
 <style scoped lang='scss'>
 .page7_child6_container {
@@ -806,7 +824,7 @@ export default {
       background-color: #4cb04f;
       color: #ffffff;
       border-top-left-radius: 5px;
-      text-align:center;
+      text-align: center;
       border-top-right-radius: 5px;
       > span {
         font-size: 14px;
@@ -869,7 +887,7 @@ export default {
         position: relative;
       }
       .car_name:before {
-        content: '';
+        content: "";
         display: inline-block;
         width: 6px;
         height: 20px;
