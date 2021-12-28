@@ -11,7 +11,7 @@
       <!-- </el-tooltip> -->
     </div>
     <div class="banner_container">
-      <div class="banner_title">司南农业态势感知平台</div>
+      <div class="banner_title">司南耕耘态势感知平台</div>
       <div class="banner_time">
         {{ currentTime }}
       </div>

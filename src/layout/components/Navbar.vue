@@ -7,7 +7,7 @@
     />
     <breadcrumb class="breadcrumb-container" />
 
-    <p v-if="isTargetComponent" class="bang_title">司南农业态势监控</p>
+    <p v-if="isTargetComponent" class="bang_title">司南耕耘态势监控</p>
     <div class="right-menu">
       <el-dropdown trigger="hover" class="lang_select">
         <span class="el-dropdown-link">

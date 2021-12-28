@@ -1,5 +1,5 @@
 module.exports = {
-  title: '司南农业',
+  title: '司南耕耘',
 
   /**
    * @type {boolean} true | false

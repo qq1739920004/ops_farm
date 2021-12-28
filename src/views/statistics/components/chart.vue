@@ -188,6 +188,10 @@ export default {
             {
               name: '注册',
               icon: 'roundRect'
+            },
+              {
+              name: '小程序',
+              icon: 'roundRect'
             }
           ]
         },
@@ -268,6 +272,15 @@ export default {
             name: '注册',
             itemStyle: {
               color: '#00E581'
+            }
+          },
+           {
+            data: [],
+            smooth: false,
+            type: 'line',
+            name: '小程序',
+            itemStyle: {
+              color: 'orange'
             }
           }
         ]
@@ -580,7 +593,6 @@ export default {
         st: st,
         et: et
       }).then(res => {
-        console.log(res, '-----------------579')
         try {
           this.optionsFun.xAxis.data = res.data.chart.date
           this.optionsFun.series[0].data = res.data.chart.data
@@ -605,10 +617,12 @@ export default {
         et: et
       }).then(res => {
         try {
+          console.log(res,'---620')
           this.optionsOps.xAxis.data = res.data.chart.date
           this.optionsOps.series[0].data = res.data.chart.data.map(i => i[0])
           this.optionsOps.series[1].data = res.data.chart.data.map(i => i[1])
           this.optionsOps.series[2].data = res.data.chart.data.map(i => i[2])
+          //小程序接口获取统计数据
           this.chartOps.setOption(this.optionsOps)
           this.chartOps.hideLoading()
         } catch (error) {
