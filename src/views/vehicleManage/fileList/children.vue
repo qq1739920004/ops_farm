@@ -42,7 +42,7 @@ import {
                 total: 0,
                 current: 1,
                 pagesize: 10,
-                baseUrl: process.env.VUE_APP_BASE_API,
+                baseUrl: 'http://140.143.154.216:9000',
                 loading:false
             }
         },
