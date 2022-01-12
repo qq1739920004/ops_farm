@@ -622,6 +622,7 @@ export default {
           this.optionsOps.series[0].data = res.data.chart.data.map(i => i[0])
           this.optionsOps.series[1].data = res.data.chart.data.map(i => i[1])
           this.optionsOps.series[2].data = res.data.chart.data.map(i => i[2])
+          this.optionsOps.series[3].data = res.data.chart.data.map(i => i[3])
           //小程序接口获取统计数据
           this.chartOps.setOption(this.optionsOps)
           this.chartOps.hideLoading()

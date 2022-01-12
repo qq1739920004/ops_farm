@@ -1805,7 +1805,7 @@ export default {
     // AG360升级接口
 
     // 获取神牛模块版本
-    getAG360softVersion(model = "10") {
+    getAG360softVersion(model = "11") {
       modelVersion_path({
         updateModel: model,
       }).then((res) => {
