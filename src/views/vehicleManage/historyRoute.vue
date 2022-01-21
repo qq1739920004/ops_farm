@@ -9,7 +9,8 @@
           icon="el-icon-back"
           size="small"
           @click="goBack"
-        >返回</el-button>
+          >返回</el-button
+        >
       </div>
       <div class="menu_content">
         <div class="menu_content_title">
@@ -89,19 +90,19 @@
                   {{ item.companyName }}
                 </div>
               </template>
-              <div class="menu_content_car_list">
+              <div class="menu_content_car_list" style='padding:0 10px;'>
                 <el-row
                   v-for="(subItem, subIndex) in item.carList"
                   :key="subIndex"
                   class="car_list_row"
                 >
-                  <el-col class="car_name" :span="8" :offset="2">{{
-                    subItem.car.name || '/'
+                  <el-col class="car_name" :span="8" :offset="0">{{
+                    subItem.car.name || "/"
                   }}</el-col>
-                  <el-col :span="10" :offset="1">{{
-                    subItem.deviceSn || '/'
+                  <el-col :span="10" :offset="0">{{
+                    subItem.deviceSn || "/"
                   }}</el-col>
-                  <el-col :span="3">
+                  <el-col :span="6">
                     <el-radio
                       v-model="deviceId"
                       :label="subItem.car.deviceId"
@@ -122,202 +123,231 @@
             :icon="loading ? 'el-icon-loading' : 'el-icon-search'"
             :disabled="loading"
             @click="getHistoryRoute"
-          >查询</el-button>
+            >查询</el-button
+          >
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-const L = window.L
-import mapMixin from '@/utils/mapMix'
-import gcoord from 'gcoord'
-const statrIcon = require('@/assets/locationManage/start.png')
-const endIcon = require('@/assets/locationManage/end.png')
-import { provinceList_path, filterCar_path, singleCarTrack_path } from '@/api/vehicleManage'
+const L = window.L;
+import mapMixin from "@/utils/mapMix";
+import gcoord from "gcoord";
+const statrIcon = require("@/assets/locationManage/start.png");
+const endIcon = require("@/assets/locationManage/end.png");
+import {
+  provinceList_path,
+  filterCar_path,
+  singleCarTrack_path,
+} from "@/api/vehicleManage";
 export default {
   mixins: [mapMixin],
   data() {
     return {
-      provinceId: '65',
+      provinceId: "65",
       provinceOptions: [],
-      searchValue: '',
-      startDate: '',
-      endDate: '',
+      searchValue: "",
+      startDate: "",
+      endDate: "",
       activeNames: [1],
       listData: [],
-      deviceId: '',
+      deviceId: "",
       loading: false,
       polyline: [],
       startMarker: [],
       endMarker: [],
-      color: ['#1abc9c', '#2ecc71', '#3498db', '#9b59b6', '#f1c40f', '#d35400']
-    }
+      color: ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#f1c40f", "#d35400"],
+      xyArr:[]
+    };
   },
 
   methods: {
     setMapId() {
-      this.domID = 'new_history_map' // 地图id
+      this.domID = "new_history_map"; // 地图id
     },
 
     setDefaultDate() {
-      const end = new Date()
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
       this.startDate =
-        start.toLocaleDateString().split('/').join('-') +
-        ' ' +
-        start.toTimeString().slice(0, 8)
+        start.toLocaleDateString().split("/").join("-") +
+        " " +
+        start.toTimeString().slice(0, 8);
       this.endDate =
-        end.toLocaleDateString().split('/').join('-') +
-        ' ' +
-        end.toTimeString().slice(0, 8)
+        end.toLocaleDateString().split("/").join("-") +
+        " " +
+        end.toTimeString().slice(0, 8);
     },
 
     handleProvinceChange() {
-      this.getCarList()
+      this.getCarList();
     },
 
     handleDateChange() {
-      this.getCarList()
+      this.getCarList();
     },
 
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
 
     // 获取省份列表
     getProvinceList() {
-        provinceList_path().then((res) => {
+      provinceList_path().then((res) => {
         try {
           if (res.data.data) {
-            this.provinceOptions = res.data.data
+            this.provinceOptions = res.data.data;
           }
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
-      })
+      });
     },
 
     // 检查时间跨度
     checkDate(startDate, endDate) {
       try {
         if (!this.startDate) {
-          this.$message.warning('请选择开始时间')
-          return false
+          this.$message.warning("请选择开始时间");
+          return false;
         }
         if (!this.endDate) {
-          this.$message.warning('请选择结束时间')
-          return false
+          this.$message.warning("请选择结束时间");
+          return false;
         }
 
-        let startStamp = new Date(this.startDate).getTime()
-        let endStamp = new Date(this.endDate).getTime()
+        let startStamp = new Date(this.startDate).getTime();
+        let endStamp = new Date(this.endDate).getTime();
         if (startStamp > endStamp) {
-          this.$message.warning('开始时间须小于结束时间')
-          return false
+          this.$message.warning("开始时间须小于结束时间");
+          return false;
         }
         if (endStamp - startStamp > 3600 * 24 * 60 * 1000) {
-          this.$message.warning('时间范围过长,超过两个月')
-          return false
+          this.$message.warning("时间范围过长,超过两个月");
+          return false;
         }
 
-        return true
+        return true;
       } catch (error) {
-        console.log(error)
-        return false
+        console.log(error);
+        return false;
       }
     },
 
     // 获取车辆列表数据
     getCarList() {
-      if (!this.checkDate()) return
+      if (!this.checkDate()) return;
       filterCar_path({
-          code: this.provinceId,
-          st: this.startDate,
-          et: this.endDate
-        }).then((res) => {
-          try {
-            this.listData = []
-            this.deviceId = ''
-            // if(res.data.code === 101) {
-            //     this.$message.warning('时间范围过长,超过两个月');
-            //     return;
-            // }
-            if (res.data.data.length === 0) {
-              this.$message.warning(
-                '没有符合筛选条件的车辆，请检查时间跨度和省份选择'
-              )
-            }
-            if (res.data.data && res.data.data.length) {
-              this.listData = res.data.data
-              this.$message.success('已根据筛选条件自动过滤不符合条件车辆')
-            }
-          } catch (error) {
-            console.log(error)
+        code: this.provinceId,
+        st: this.startDate,
+        et: this.endDate,
+      }).then((res) => {
+        try {
+          this.listData = [];
+          this.deviceId = "";
+          // if(res.data.code === 101) {
+          //     this.$message.warning('时间范围过长,超过两个月');
+          //     return;
+          // }
+          if (res.data.data.length === 0) {
+            this.$message.warning(
+              "没有符合筛选条件的车辆，请检查时间跨度和省份选择"
+            );
           }
-        })
+          if (res.data.data && res.data.data.length) {
+            this.listData = res.data.data;
+            this.$message.success("已根据筛选条件自动过滤不符合条件车辆");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      });
     },
 
     getHistoryRoute() {
       if (!this.deviceId) {
-        this.$message.warning('请选择车辆')
-        return
+        this.$message.warning("请选择车辆");
+        return;
       }
-      this.loading = true
+      this.loading = true;
       singleCarTrack_path({
-          deviceId: this.deviceId,
-          st: this.startDate,
-          et: this.endDate
-        }).then((res) => {
+        deviceId: this.deviceId,
+        st: this.startDate,
+        et: this.endDate,
+      })
+        .then((res) => {
           try {
+            // if (res.data.code === 100) {
+            //   if (res.data.data.length && res.data.data[0]['list'].length) {
+            //     this.removeOverlay()
+            //     res.data.data.forEach((item, index) => {
+            //       this.drawPath(item.list, item, this.color[index % 5])
+            //     })
+            //   } else {
+            //     this.$message.warning('暂无数据,请重新筛选时间')
+            //   }
+            // }
             if (res.data.code === 100) {
-              if (res.data.data.length && res.data.data[0]['list'].length) {
-                this.removeOverlay()
-                res.data.data.forEach((item, index) => {
-                  this.drawPath(item.list, item, this.color[index % 5])
-                })
+              if (res.data.data.length) {
+                this.xyArr.length = 0;
+                res.data.data.forEach((item) => {
+                      let point =  this.coorTransform([item.pos_x, item.pos_y])
+                this.xyArr.push(point);
+                });
+                let latlngs = this.xyArr;
+
+                let polyline = L.polyline(latlngs, { color: "#75FB4C" }).addTo(
+                  this.map
+                );
+                this.map.fitBounds(this.xyArr);
+                //上一版本代码---
+                // this.removeOverlay();
+                // res.data.data.forEach((item, index) => {
+                // this.drawPath(item.list, item, this.color[index % 5])
+                // });
               } else {
-                this.$message.warning('暂无数据,请重新筛选时间')
+                this.$message.warning("暂无数据,请重新筛选时间");
               }
             }
             if (res.data.code === 101) {
-              this.$message.warning('时间范围过长，超过两个月')
+              this.$message.warning("时间范围过长，超过两个月");
             }
-            this.loading = false
+            this.loading = false;
           } catch (error) {
-            console.log(error)
-            this.loading = false
+            console.log(error);
+            this.loading = false;
           }
         })
         .catch((err) => {
-          console.log(err)
-          this.loading = false
-        })
+          console.log(err);
+          this.loading = false;
+        });
     },
 
-    drawPath(pathArray = [], popup = {}, color = 'green') {
+    drawPath(pathArray = [], popup = {}, color = "green") {
       if (!pathArray.length) {
-        console.warn('空的集合')
-        return
+        console.warn("空的集合");
+        return;
       }
 
-      let temArray = []
+      let temArray = [];
       pathArray.forEach((item) => {
-        let point = this.coorTransform([item.pos_x, item.pos_y])
-        temArray.push(point)
-      })
+        let point = this.coorTransform([item.pos_x, item.pos_y]);
+        temArray.push(point);
+      });
 
       let iconStart = L.icon({
         iconUrl: statrIcon,
         iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
-      })
+        popupAnchor: [0, -32],
+      });
       let iconEnd = L.icon({
         iconUrl: endIcon,
         iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
-      })
+        popupAnchor: [0, -32],
+      });
 
       let text = `
                 <div class="litte_popup_warpper">
@@ -344,39 +374,39 @@ export default {
                         )}</div>
                     </div>
                 </div>
-            `
-      let polyline = L.polyline(temArray, { color: color }).addTo(this.map)
-      this.polyline.push(polyline)
+            `;
+      let polyline = L.polyline(temArray, { color: color }).addTo(this.map);
+      this.polyline.push(polyline);
 
       let startMarker = L.marker(temArray[0], { icon: iconStart }).addTo(
         this.map
-      )
-      this.startMarker.push(startMarker)
+      );
+      this.startMarker.push(startMarker);
 
       let endMarker = L.marker(temArray[temArray.length - 1], {
-        icon: iconEnd
-      }).addTo(this.map)
-      this.endMarker.push(endMarker)
+        icon: iconEnd,
+      }).addTo(this.map);
+      this.endMarker.push(endMarker);
 
       L.featureGroup([polyline, startMarker, endMarker])
         .bindPopup(text)
-        .addTo(this.map)
+        .addTo(this.map);
 
-      this.map.fitBounds(temArray)
+      this.map.fitBounds(temArray);
     },
 
     removeOverlay() {
       if (this.polyline.length) {
-        this.polyline.forEach((item) => item.remove())
-        this.polyline = []
+        this.polyline.forEach((item) => item.remove());
+        this.polyline = [];
       }
       if (this.startMarker.length) {
-        this.startMarker.forEach((item) => item.remove())
-        this.startMarker = []
+        this.startMarker.forEach((item) => item.remove());
+        this.startMarker = [];
       }
       if (this.endMarker.length) {
-        this.endMarker.forEach((item) => item.remove())
-        this.endMarker = []
+        this.endMarker.forEach((item) => item.remove());
+        this.endMarker = [];
       }
     },
 
@@ -386,30 +416,30 @@ export default {
       //     return point;
       // }
       /*eslint-disable */
-      let p = [point[1], point[0]]
+      let p = [point[1], point[0]];
       switch (mapType) {
         case 0:
-          let [a, b] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-          return [b, a]
+          let [a, b] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+          return [b, a];
         case 1:
-          let [c, d] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-          return [d, c]
+          let [c, d] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+          return [d, c];
         case 2:
-          let [e, f] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-          return [f, e]
+          let [e, f] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+          return [f, e];
         default:
-          let [g, h] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-          return [h, g]
+          let [g, h] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+          return [h, g];
       }
     },
   },
 
   mounted() {
-    this.setDefaultDate()
-    this.getProvinceList()
-    this.getCarList()
+    this.setDefaultDate();
+    this.getProvinceList();
+    this.getCarList();
   },
-}
+};
 </script>
 <style scoped lang='scss'>
 .history_map_container {

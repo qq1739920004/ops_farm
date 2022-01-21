@@ -258,10 +258,10 @@ export default {
               console.log(res.data.data,'---258')
               this.xyArr.length = 0
               res.data.data.forEach((item) => {
-                this.xyArr.push([item.pos_x, item.pos_y]);
+                let point =  this.coorTransform([item.pos_x, item.pos_y])
+                this.xyArr.push(point);
               });
               let latlngs = this.xyArr;
-
               let polyline = L.polyline(latlngs, { color: "#75FB4C" }).addTo(
                 this.map
               );
