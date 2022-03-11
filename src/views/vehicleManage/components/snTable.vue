@@ -665,6 +665,9 @@ export default {
   data() {
     return {
       isRegister: true,
+      registerArr1:[
+          { name: "3个月", value: 90 },
+      ],
       registerArr: [
         { name: "3天", value: 3 },
         { name: "7天", value: 7 },
@@ -724,7 +727,13 @@ export default {
           let data = res.data.data;
           if (data.indexOf(77) > -1) {
           } else if (data.indexOf(83) > -1) {
+            //只允许查看3天的注册时长
             this.registerArr.length = 1;
+          } else if (data.indexOf(108) > -1) {
+            //只允许查看3个月的注册时长
+            this.registerArr = this.registerArr1
+            this.registDate = 90
+            this.selectDateChange(90)
           } else {
             this.isRegister = false;
           }
