@@ -11,6 +11,8 @@ import filters from '@/filter/index'
 import '@/utils/directive'
 import '@/icons' // icon
 import '@/utils/socket/socket'
+import state from '@/store'
+import { permissionList_path } from '@/api'
 // import '@/permission' // permission control
 
 for (let filter in filters) {
@@ -62,3 +64,9 @@ if (document.cookie) {
     console.log(err)
   }
 }
+
+permissionList_path().then(res => {
+  if(res.status == 200) {
+    store.dispatch('index/setPermission',res.data.data)
+  }
+})

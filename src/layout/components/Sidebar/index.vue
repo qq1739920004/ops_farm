@@ -2,7 +2,7 @@
   <div :class="{ 'has-logo': isCollapse }">
     <div :class="{ logo_area: true, logo_area_active: !sidebar.opened }">
       <a href="/">
-        <img src="@/assets/common/logo2.png" alt="" />
+        <img  src="@/assets/common/logo2.png" alt="" />
       </a>
     </div>
     <el-scrollbar wrap-class="scrollbar-wrapper">
@@ -61,8 +61,20 @@ export default {
 </script>
 <style scoped lang="scss">
 .logo_area {
-  padding: 10px 20px 30px 20px;
+  padding: 10px 20px 20px 5px;
   transition: all 0.3s;
+
+}
+.logo_area a {
+  width:180px !important;
+  display: block;
+  // display: inline-block;
+  // width:180px !important;
+  // justify-content: center;
+
+}
+.logo_area a img {
+
 }
 .logo_area_active {
   padding: 10px 0px 30px 0px;

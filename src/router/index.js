@@ -44,7 +44,7 @@ export const constantRoutes = [
         name: 'vehicleManage_device',
         hidden: true,
         component: () => import('@/views/vehicleManage/fileList'),
-        meta: { title: '设备SN', replaceTitlePid: true, icon: 'el-icon-download',activeMenu: '/vehicleManage/carList', keepAlive: true, breadcrumb: ['农机列表'] }
+        meta: { title: '设备SN', replaceTitlePid: true, icon: 'el-icon-download', activeMenu: '/vehicleManage/carList', keepAlive: true, breadcrumb: ['农机列表'] }
       },
 
       {
@@ -52,14 +52,14 @@ export const constantRoutes = [
         name: 'vehicleManage_file',
         hidden: true,
         component: () => import('@/views/vehicleManage/fileList/children'),
-        meta: { title: '子文件', replaceTitleSn: true, icon: 'el-icon-aim',activeMenu: '/vehicleManage/carList', breadcrumb: ['农机列表'] }
+        meta: { title: '子文件', replaceTitleSn: true, icon: 'el-icon-aim', activeMenu: '/vehicleManage/carList', breadcrumb: ['农机列表'] }
       },
       {
         path: 'backFile/:sn',
         name: 'vehicleManage_backFile',
         hidden: true,
         component: () => import('@/views/vehicleManage/fileList/backFile'),
-        meta: { title: '回传', replaceBack: true, icon: 'el-icon-aim', activeMenu: '/vehicleManage/carList',breadcrumb: ['农机列表'] }
+        meta: { title: '回传', replaceBack: true, icon: 'el-icon-aim', activeMenu: '/vehicleManage/carList', breadcrumb: ['农机列表'] }
       },
 
       {
@@ -191,50 +191,37 @@ export function resetRouter() {
 
 router.beforeEach((to, from, next) => {
   try {
-      if (to.matched.some(record => record.meta.permissionId)) {
-        if (state.state.index.permission.length) {
-              if (!state.state.index.permission.includes(to.meta.permissionId)) {
-                  next({
-                      path: '/jurisdiction/noPermission'
-                  })
-              } else {
-                  next()
-              }
-          } else {
-            permissionList_path().then(res => {
-              if (res) {
-                  try {
-                      state.permission = res.data.data;
-                      if (!state.permission.includes(to.meta.permissionId)) {
-                          next({
-                              path: '/jurisdiction/noPermission'
-                          })
-                      } else {
-                          next()
-                      }
-                  } catch (err) {
-                      console.log(err);
-                  }
-              }
+    if (to.matched.some(record => record.meta.permissionId)) {
+      if (state.state.index.permission.length) {
+        if (!state.state.index.permission.includes(to.meta.permissionId)) {
+          next({
+            path: '/jurisdiction/noPermission'
           })
-          }
-      } else if (to.matched.some(record => record.meta.requireAdmin)) {
-          // let admin = store.state.farmSuperAdministrator;
-          let adminString = localStorage.getItem('farmSuperAdministrator');
-          let admin = adminString === 'true';
-          if (admin) {
-              next();
-          } else {
-              next({
-                  path: '/jurisdiction/noPermission'
-              });
-          }
-      } else {
+        } else {
           next()
+        }
+      } else {
+        next({
+          path: '/jurisdiction/noPermission'
+        })
       }
+    } else if (to.matched.some(record => record.meta.requireAdmin)) {
+      // let admin = store.state.farmSuperAdministrator;
+      let adminString = localStorage.getItem('farmSuperAdministrator');
+      let admin = adminString === 'true';
+      if (admin) {
+        next();
+      } else {
+        next({
+          path: '/jurisdiction/noPermission'
+        });
+      }
+    } else {
+      next()
+    }
   } catch (err) {
-      console.log(err);
-      next();
+    console.log(err);
+    next();
   }
 })
 

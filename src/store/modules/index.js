@@ -36,6 +36,9 @@ const mutations = {
         }
         localStorage.setItem('fileBreadcrumb', JSON.stringify(state.fileBreadcrumb))
 
+    },
+    SET_PERMISSION(state, permission) {
+        state.permission = permission
     }
 }
 
@@ -67,6 +70,9 @@ const actions = {
     setfileBreadcrumb({ commit }, fileBreadcrumb) {
         commit('SET_FILEBREADCRUMB', fileBreadcrumb)
 
+    },
+    setPermission({ commit }, permission) {
+        commit('SET_PERMISSION',permission)
     }
 }
 
