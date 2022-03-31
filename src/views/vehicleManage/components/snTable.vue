@@ -114,6 +114,7 @@
       </el-table-column>
 
       <el-table-column
+        sortable
         prop="lastOnlineTime"
         label="最近上线时间"
         width=""
