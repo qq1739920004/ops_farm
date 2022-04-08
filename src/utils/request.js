@@ -1,7 +1,8 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import { Message ,Loading} from 'element-ui'
 import qs from 'qs'
 // import store from '@/store'
+let loadingInstance;
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -14,6 +15,14 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     config.withCredentials = true
+
+    loadingInstance =  Loading.service({
+      lock: true,
+      text: 'Loading',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.1)'
+    });
+
     if (config.headers['Content-Type'] == 'application/json;charset=UTF-8') { //
     } 
     else { //请求头不为application/json的时候进行qs.stringify
@@ -34,10 +43,12 @@ service.interceptors.response.use(
     // if (response.headers.redirect) {
     //   location.href = response.headers.redirect
     // }
+    loadingInstance.close()
     return response
   },
   error => {
     console.log('err' + error)
+    loadingInstance.close()
     Message({
       message: '请求错误，请稍后重试',
       type: 'error',

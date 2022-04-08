@@ -1,6 +1,10 @@
 <template>
   <div>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table
+      :data="tableData"
+      style="width: 100%"
+      @sort-change="handleSortChange"
+    >
       <el-table-column type="index" width="50" label="序号" align="center" />
 
       <el-table-column
@@ -114,7 +118,7 @@
       </el-table-column>
 
       <el-table-column
-        sortable
+        sortable="custom"
         prop="lastOnlineTime"
         label="最近上线时间"
         width=""
@@ -236,300 +240,312 @@
       width="680px"
       class="detailDialog"
     >
-      <el-row>
-        <el-col :span="4"><div class="grid-content detailL">SN：</div></el-col>
-        <el-col :span="8"
-          ><div class="grid-content">{{ detailData.deviceSn }}</div></el-col
-        >
-        <el-col :span="4"
-          ><div class="grid-content detailL">在线状态：</div></el-col
-        >
-        <el-col :span="8">
-          <div class="grid-content">
-            <img
-              style="position: relative; bottom: 1px; right: 0px"
-              :src="
-                detailData.onlineTcp === 0 ? './img/o2.png' : './img/o3.png'
-              "
-            />
-            {{ detailData.onlineTcp === 0 ? "离线" : "在线" }}
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4"
-          ><div class="grid-content detailL">驾驶状态：</div></el-col
-        >
-        <el-col v-if="detailData.onlineTcp === 0" :span="8">
-          <div class="grid-content">/</div>
-        </el-col>
-        <el-col v-else :span="8">
-          <div v-if="detailData.driveState == 0" class="grid-content">
-            未开始
-          </div>
-          <div v-if="detailData.driveState == 1" class="grid-content">入线</div>
-          <div v-if="detailData.driveState == 2" class="grid-content">在线</div>
-        </el-col>
-        <el-col :span="4"
-          ><div class="grid-content detailL">公司名称：</div></el-col
-        >
-        <el-col :span="8">
-          <div class="grid-content" :title="detailData.companyName">
-            {{ detailData.companyName }}
-          </div>
-        </el-col>
-      </el-row>
-      <el-row class="margin48">
-        <el-col :span="4"
-          ><div class="grid-content detailL">车主姓名：</div></el-col
-        >
-        <el-col :span="8">
-          <div class="grid-content">{{ detailData.userName }}</div>
-        </el-col>
-        <el-col :span="4"
-          ><div class="grid-content detailL">车主电话：</div></el-col
-        >
-        <el-col :span="8">
-          <div class="grid-content">{{ detailData.tel || "/" }}</div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4"
-          ><div class="grid-content detailL">车辆名称：</div></el-col
-        >
-        <el-col :span="8"
-          ><div class="grid-content">{{ detailData.name }}</div></el-col
-        >
-        <el-col :span="4"
-          ><div class="grid-content detailL">车辆厂家：</div></el-col
-        >
-        <el-col :span="8"
-          ><div class="grid-content">{{ detailData.factory }}</div></el-col
-        >
-      </el-row>
-      <el-row>
-        <el-col :span="4"
-          ><div class="grid-content detailL">车辆型号：</div></el-col
-        >
-        <el-col :span="8"
-          ><div class="grid-content">{{ detailData.model }}</div></el-col
-        >
-        <el-col :span="4"
-          ><div class="grid-content detailL">车龄：</div></el-col
-        >
-        <el-col :span="8"
-          ><div class="grid-content">{{ detailData.age }}</div></el-col
-        >
-      </el-row>
-      <el-row class="">
-        <el-col :span="4"
-          ><div class="grid-content detailL">创建人：</div></el-col
-        >
-        <el-col :span="8"
-          ><div class="grid-content">{{ detailData.creatorName }}</div></el-col
-        >
-        <el-col :span="4"
-          ><div class="grid-content detailL">创建人电话：</div></el-col
-        >
-        <el-col :span="8"
-          ><div class="grid-content">{{ detailData.creatorTel }}</div></el-col
-        >
-      </el-row>
-      <!-- 神牛固件信息 -->
-      <div
-        v-if="
-          detailData.terminalType === 'AG360Pro' ||
-          detailData.terminalType === 'AG360'
-        "
-      >
+      <div v-loading="dialogVisibleDetailLoading">
+        <el-row>
+          <el-col :span="4"
+            ><div class="grid-content detailL">SN：</div></el-col
+          >
+          <el-col :span="8"
+            ><div class="grid-content">{{ detailData.deviceSn }}</div></el-col
+          >
+          <el-col :span="4"
+            ><div class="grid-content detailL">在线状态：</div></el-col
+          >
+          <el-col :span="8">
+            <div class="grid-content">
+              <img
+                style="position: relative; bottom: 1px; right: 0px"
+                :src="
+                  detailData.onlineTcp === 0 ? './img/o2.png' : './img/o3.png'
+                "
+              />
+              {{ detailData.onlineTcp === 0 ? "离线" : "在线" }}
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4"
+            ><div class="grid-content detailL">驾驶状态：</div></el-col
+          >
+          <el-col v-if="detailData.onlineTcp === 0" :span="8">
+            <div class="grid-content">/</div>
+          </el-col>
+          <el-col v-else :span="8">
+            <div v-if="detailData.driveState == 0" class="grid-content">
+              未开始
+            </div>
+            <div v-if="detailData.driveState == 1" class="grid-content">
+              入线
+            </div>
+            <div v-if="detailData.driveState == 2" class="grid-content">
+              在线
+            </div>
+          </el-col>
+          <el-col :span="4"
+            ><div class="grid-content detailL">公司名称：</div></el-col
+          >
+          <el-col :span="8">
+            <div class="grid-content" :title="detailData.companyName">
+              {{ detailData.companyName }}
+            </div>
+          </el-col>
+        </el-row>
         <el-row class="margin48">
-          <el-col :span="6"
-            ><div class="grid-content detailL">板卡固件号：</div></el-col
+          <el-col :span="4"
+            ><div class="grid-content detailL">车主姓名：</div></el-col
           >
-          <el-col :span="6"
-            ><div class="grid-content" :title="detailData.board">
-              {{ detailData.board || "/" }}
+          <el-col :span="8">
+            <div class="grid-content">{{ detailData.userName }}</div>
+          </el-col>
+          <el-col :span="4"
+            ><div class="grid-content detailL">车主电话：</div></el-col
+          >
+          <el-col :span="8">
+            <div class="grid-content">{{ detailData.tel || "/" }}</div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4"
+            ><div class="grid-content detailL">车辆名称：</div></el-col
+          >
+          <el-col :span="8"
+            ><div class="grid-content">{{ detailData.name }}</div></el-col
+          >
+          <el-col :span="4"
+            ><div class="grid-content detailL">车辆厂家：</div></el-col
+          >
+          <el-col :span="8"
+            ><div class="grid-content">{{ detailData.factory }}</div></el-col
+          >
+        </el-row>
+        <el-row>
+          <el-col :span="4"
+            ><div class="grid-content detailL">车辆型号：</div></el-col
+          >
+          <el-col :span="8"
+            ><div class="grid-content">{{ detailData.model }}</div></el-col
+          >
+          <el-col :span="4"
+            ><div class="grid-content detailL">车龄：</div></el-col
+          >
+          <el-col :span="8"
+            ><div class="grid-content">{{ detailData.age }}</div></el-col
+          >
+        </el-row>
+        <el-row class="">
+          <el-col :span="4"
+            ><div class="grid-content detailL">创建人：</div></el-col
+          >
+          <el-col :span="8"
+            ><div class="grid-content">
+              {{ detailData.creatorName }}
             </div></el-col
           >
-          <el-col :span="6"
-            ><div class="grid-content detailL">EC20固件号：</div></el-col
+          <el-col :span="4"
+            ><div class="grid-content detailL">创建人电话：</div></el-col
           >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.ec20 || "/" }}
+          <el-col :span="8"
+            ><div class="grid-content">{{ detailData.creatorTel }}</div></el-col
+          >
+        </el-row>
+        <!-- 神牛固件信息 -->
+        <div
+          v-if="
+            detailData.terminalType === 'AG360Pro' ||
+            detailData.terminalType === 'AG360'
+          "
+        >
+          <el-row class="margin48">
+            <el-col :span="6"
+              ><div class="grid-content detailL">板卡固件号：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content" :title="detailData.board">
+                {{ detailData.board || "/" }}
+              </div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content detailL">EC20固件号：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.ec20 || "/" }}
+              </div></el-col
+            >
+          </el-row>
+          <el-row>
+            <el-col :span="6"
+              ><div class="grid-content detailL">电台固件号：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.radioStation || "/" }}
+              </div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content detailL">车身IMU固件号：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.carImu || "/" }}
+              </div></el-col
+            >
+          </el-row>
+          <el-row class="">
+            <el-col :span="6"
+              ><div class="grid-content detailL">车身IMU_SN：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.carImuSn || "/" }}
+              </div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content detailL">前轮IMU固件号：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.wheelImu || "/" }}
+              </div></el-col
+            >
+          </el-row>
+          <el-row>
+            <el-col :span="6"
+              ><div class="grid-content detailL">前轮IMU_SN：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.wheelImuSn || "/" }}
+              </div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content detailL">电机固件号：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.motor || "/" }}
+              </div></el-col
+            >
+          </el-row>
+          <el-row>
+            <el-col :span="6"
+              ><div class="grid-content detailL">电机SN：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.motorSn || "/" }}
+              </div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content detailL">
+                多功能方向盘固件号：
+              </div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.steeringWheel || "/" }}
+              </div></el-col
+            >
+          </el-row>
+          <el-row class="">
+            <el-col :span="6"
+              ><div class="grid-content detailL" style="white-space: nowrap">
+                多功能方向盘SN：
+              </div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.steeringWheelSn || "/" }}
+              </div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content detailL">Hub蓝牙固件号：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.hubBluetooth || "/" }}
+              </div></el-col
+            >
+          </el-row>
+          <el-row class="">
+            <el-col :span="6"
+              ><div class="grid-content detailL">Hub固件号：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.hub || "/" }}
+              </div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content detailL">Hub_SN：</div></el-col
+            >
+            <el-col :span="6"
+              ><div class="grid-content">
+                {{ detailData.hubSn || "/" }}
+              </div></el-col
+            >
+          </el-row>
+        </div>
+        <el-row class="margin48">
+          <el-col :span="4"
+            ><div class="grid-content detailL">创建时间：</div></el-col
+          >
+          <el-col :span="8">
+            <div class="grid-content">
+              {{ detailData.createTime | dateTimeTrans }}
+            </div>
+          </el-col>
+          <el-col :span="4"
+            ><div class="grid-content detailL">更新时间：</div></el-col
+          >
+          <el-col :span="8">
+            <div class="grid-content">
+              {{ detailData.updateTime | dateTimeTrans }}
+            </div>
+          </el-col>
+        </el-row>
+        <!-- 最后时间+总时长 -->
+        <el-row class="">
+          <el-col :span="8"
+            ><div class="grid-content detailL">最近上线时间：</div></el-col
+          >
+          <el-col :span="8">
+            <div class="grid-content">
+              {{ detailData.lastOnlineTime | dateTimeTrans }}
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <div class="grid-content detailL">在线时间总时长：</div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content">
+              {{ millisecondFormat(detailData.onlineTimeCount) || "/" }}
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <div class="grid-content detailL">最近自动驾驶时间：</div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content">
+              {{ detailData.lastAutoDriveTime | dateTimeTrans }}
             </div></el-col
           >
         </el-row>
         <el-row>
-          <el-col :span="6"
-            ><div class="grid-content detailL">电台固件号：</div></el-col
-          >
-          <el-col :span="6"
+          <el-col :span="8">
+            <div class="grid-content detailL">自动驾驶时间总时长：</div>
+          </el-col>
+          <el-col :span="8"
             ><div class="grid-content">
-              {{ detailData.radioStation || "/" }}
-            </div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content detailL">车身IMU固件号：</div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.carImu || "/" }}
-            </div></el-col
-          >
-        </el-row>
-        <el-row class="">
-          <el-col :span="6"
-            ><div class="grid-content detailL">车身IMU_SN：</div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.carImuSn || "/" }}
-            </div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content detailL">前轮IMU固件号：</div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.wheelImu || "/" }}
-            </div></el-col
-          >
-        </el-row>
-        <el-row>
-          <el-col :span="6"
-            ><div class="grid-content detailL">前轮IMU_SN：</div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.wheelImuSn || "/" }}
-            </div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content detailL">电机固件号：</div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.motor || "/" }}
-            </div></el-col
-          >
-        </el-row>
-        <el-row>
-          <el-col :span="6"
-            ><div class="grid-content detailL">电机SN：</div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.motorSn || "/" }}
-            </div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content detailL">
-              多功能方向盘固件号：
-            </div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.steeringWheel || "/" }}
-            </div></el-col
-          >
-        </el-row>
-        <el-row class="">
-          <el-col :span="6"
-            ><div class="grid-content detailL" style="white-space: nowrap">
-              多功能方向盘SN：
-            </div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.steeringWheelSn || "/" }}
-            </div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content detailL">Hub蓝牙固件号：</div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.hubBluetooth || "/" }}
-            </div></el-col
-          >
-        </el-row>
-        <el-row class="">
-          <el-col :span="6"
-            ><div class="grid-content detailL">Hub固件号：</div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">{{ detailData.hub || "/" }}</div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content detailL">Hub_SN：</div></el-col
-          >
-          <el-col :span="6"
-            ><div class="grid-content">
-              {{ detailData.hubSn || "/" }}
+              {{ millisecondFormat(detailData.autoDriveTimeCount) || "/" }}
             </div></el-col
           >
         </el-row>
       </div>
-      <el-row class="margin48">
-        <el-col :span="4"
-          ><div class="grid-content detailL">创建时间：</div></el-col
-        >
-        <el-col :span="8">
-          <div class="grid-content">
-            {{ detailData.createTime | dateTimeTrans }}
-          </div>
-        </el-col>
-        <el-col :span="4"
-          ><div class="grid-content detailL">更新时间：</div></el-col
-        >
-        <el-col :span="8">
-          <div class="grid-content">
-            {{ detailData.updateTime | dateTimeTrans }}
-          </div>
-        </el-col>
-      </el-row>
-      <!-- 最后时间+总时长 -->
-      <el-row class="">
-        <el-col :span="8"
-          ><div class="grid-content detailL">最近上线时间：</div></el-col
-        >
-        <el-col :span="8">
-          <div class="grid-content">
-            {{ detailData.lastOnlineTime | dateTimeTrans }}
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <div class="grid-content detailL">在线时间总时长：</div>
-        </el-col>
-        <el-col :span="8">
-          <div class="grid-content">
-            {{ millisecondFormat(detailData.onlineTimeCount) || "/" }}
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <div class="grid-content detailL">最近自动驾驶时间：</div>
-        </el-col>
-        <el-col :span="8">
-          <div class="grid-content">
-            {{ detailData.lastAutoDriveTime | dateTimeTrans }}
-          </div></el-col
-        >
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <div class="grid-content detailL">自动驾驶时间总时长：</div>
-        </el-col>
-        <el-col :span="8"
-          ><div class="grid-content">
-            {{ millisecondFormat(detailData.autoDriveTimeCount) || "/" }}
-          </div></el-col
-        >
-      </el-row>
     </el-dialog>
 
     <!-- 远程控制 -->
@@ -642,7 +658,12 @@
 </template>
 <script>
 import remote from "@/views/locationManage/components/remote";
-import { logOpen_path, logClose_path } from "@/api/vehicleManage";
+import {
+  logOpen_path,
+  logClose_path,
+  carDetail_path,
+} from "@/api/vehicleManage";
+
 import {
   activationCodeAdd_path,
   searchNearABPt_path,
@@ -666,9 +687,8 @@ export default {
   data() {
     return {
       isRegister: true,
-      registerArr1:[
-          { name: "3个月", value: 90 },
-      ],
+      dialogVisibleDetailLoading: true,
+      registerArr1: [{ name: "3个月", value: 90 }],
       registerArr: [
         { name: "3天", value: 3 },
         { name: "7天", value: 7 },
@@ -701,6 +721,9 @@ export default {
     this.getUserRole();
   },
   methods: {
+    handleSortChange(data) {
+      this.$emit("sortChange", data);
+    },
     changeIsTranfer(row) {
       let params = {
         sn: row.sn,
@@ -732,9 +755,9 @@ export default {
             this.registerArr.length = 1;
           } else if (data.indexOf(108) > -1) {
             //只允许查看3个月的注册时长
-            this.registerArr = this.registerArr1
-            this.registDate = 90
-            this.selectDateChange(90)
+            this.registerArr = this.registerArr1;
+            this.registDate = 90;
+            this.selectDateChange(90);
           } else {
             this.isRegister = false;
           }
@@ -858,7 +881,16 @@ export default {
     // 详情
     getParamDetail(item) {
       this.dialogVisibleDetail = true;
-      this.detailData = item;
+      this.dialogVisibleDetailLoading = true;
+      let params = {
+        carId: item.id,
+      };
+      carDetail_path(params).then((res) => {
+        if (res.status == 200) {
+          this.detailData = { ...item, ...res.data.carCustom };
+          this.dialogVisibleDetailLoading = false;
+        }
+      });
     },
 
     // 远程管理

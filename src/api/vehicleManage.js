@@ -149,3 +149,10 @@ export function provinceDataList_path(params) {
       params
     })
   }
+  export function carDetail_path(params) {
+    return request({
+      url: '/farm/car/detail',
+      method: 'post',
+      params
+    })
+  }
