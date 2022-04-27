@@ -170,3 +170,10 @@ export function modelVersion_path(params) {
     params
   })
 }
+export function setFileUpload(params) {
+  return request({
+    url: '/lu/ftp/upload',
+    method: 'post',
+    data: params
+  })
+}

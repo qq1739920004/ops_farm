@@ -97,6 +97,15 @@
         >
           在线升级
         </div>
+        <div
+          class="param_title_item"
+          :class="{
+            param_title_item_active: currentCarouselName === 'logParam',
+          }"
+          @click="setCurrentIndex('logParam')"
+        >
+          日志回传
+        </div>
       </div>
       <el-carousel
         ref="swipper"
@@ -108,7 +117,6 @@
       >
         <!-- 车辆参数 -->
         <el-carousel-item name="carParam">
-
           <el-form
             ref="carParam"
             :model="carParamModel"
@@ -327,7 +335,11 @@
               <el-col :span="12" :offset="4">
                 <el-form-item label="工作模式">
                   <el-select v-model="workPattern.type">
-                    <el-option v-if='markerData.terminalType == "AG302"' label="内置电台" :value="0" />
+                    <el-option
+                      v-if="markerData.terminalType == 'AG302'"
+                      label="内置电台"
+                      :value="0"
+                    />
                     <el-option label="内置网络" :value="1" />
                     <el-option label="罗网" :value="3" disabled />
                     <!-- <el-option label="外置网络" :value="2"></el-option> -->
@@ -773,8 +785,7 @@
               >
               <el-col :span="8">
                 <el-select
-                class='el-select'
-            
+                  class="el-select"
                   v-model="AG360UpdateVersion"
                   placeholder="请选择"
                   size="small"
@@ -813,6 +824,34 @@
               <!-- <el-button type="primary" @click="handleUpdate">升级</el-button> -->
             </el-col>
           </el-row>
+          <el-row> </el-row>
+        </el-carousel-item>
+        <el-carousel-item name="logParam">
+          <el-form
+            :model="fileForm"
+            ref="fileForm"
+            label-width="100px"
+            class="fileForm"
+            :rules="fileRules"
+          >
+            <el-form-item label="时间范围：" prop="functionDate">
+              <el-date-picker
+                type="daterange"
+                v-model="fileForm.functionDate"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                popper-class="datePopper filePopper"
+                :picker-options="pickerOptions"
+                :clearable="false"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" size="small" @click="fileTransfer"
+                >回传</el-button
+              >
+            </el-form-item>
+          </el-form>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -838,6 +877,7 @@ import {
   updateCar_path,
   onlineUpgrade_path,
   modelVersion_path,
+  setFileUpload,
 } from "@/api/locationManage";
 export default {
   props: {
@@ -847,7 +887,30 @@ export default {
     },
   },
   data() {
+    let functionDateValidDate = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请选择日期时间"));
+      } else if (!value[0] || !value[1]) {
+        callback(new Error("请选择日期时间"));
+      } else {
+        callback();
+      }
+    };
     return {
+      fileRules: {
+        functionDate: [
+          {
+            type: "array",
+            validator: functionDateValidDate,
+            trigger: "change",
+          },
+        ],
+      },
+      pickerOptions: {
+        disabledDate: (time) => {
+          return time.getTime() > Date.now();
+        },
+      },
       buttonDis: true,
       version: "",
       options: [],
@@ -965,6 +1028,9 @@ export default {
       AG360UpdateModule: "11",
       AG360UpdateVersion: "",
       AG360versionOptions: {},
+      fileForm: {
+         functionDate: [new Date(), new Date()]
+      },
     };
   },
   computed: {
@@ -1111,6 +1177,34 @@ export default {
     this.getAG360softVersion();
   },
   methods: {
+    // 日志回传
+    fileTransfer() {
+      this.$refs.fileForm.validate((valid) => {
+        if (valid) {
+          let params = {
+            start: this.getDatePost(this.fileForm.functionDate[0]),
+            end: this.getDatePost(this.fileForm.functionDate[1]),
+            sn: this.markerData.sn,
+          };
+          console.log(params);
+          setFileUpload(params).then((res) => {
+            console.log(res, "---1191");
+            if (res.data.code == 200) {
+              this.$message({ message: res.data.message, type: "success" });
+            } else {
+              this.$message({ message: res.data.message, type: "error" });
+            }
+          });
+        }
+      });
+    },
+    getDatePost(date) {
+      return (
+        date.getFullYear() +
+        (date.getMonth() + 1).toString().padStart(2, "0") +
+        date.getDate().toString().padStart(2, "0")
+      );
+    },
     // 参数描述获取
     async getParamDes(version = 0, type = 0, paramType) {
       // let contrast = {
@@ -2108,7 +2202,14 @@ export default {
     width: 150px;
   }
 }
-.el-select  ::v-deep .el-select-dropdown {
-  position:absolute !important;
+.el-select ::v-deep .el-select-dropdown {
+  position: absolute !important;
+}
+.fileForm {
+  width:100%;
+  display:flex;
+  // justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
