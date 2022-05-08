@@ -1,14 +1,14 @@
 <template>
     <div>
      
-        <el-table :data="fileListData" style="width:100%" v-loading="loading">
+        <el-table :data="backFileListData" style="width:100%" v-loading="loading">
             <el-table-column type="index" :label="$t('message.serialNumber')" :width="isMobile?40:50">
             </el-table-column>
             <el-table-column :label="$t('deviceManage.fileName')">
                 <template slot-scope="scope"> 
                     <div class="fileName">
                         
-                        <a :href="baseUrl+'/log_download/'+parentSn+'/'+scope.row">{{scope.row}}</a>
+                        <a :href="baseUrl+'/ftp_file_download/'+parentPid+'/'+parentSn+'/'+scope.row">{{scope.row}}</a>
                         
                     </div> 
                   
@@ -20,7 +20,7 @@
                 <template slot-scope="scope">
                  
                     <el-button type="text" v-if="!scope.row.isBack">
-                        <a :href="baseUrl+'/log_download/'+parentSn+'/'+scope.row" >{{$t('message.download')}}</a>
+                        <a :href="baseUrl+'/ftp_file_download/'+parentPid+'/'+parentSn+'/'+scope.row" >{{$t('message.download')}}</a>
                     </el-button>    
                 </template>
             </el-table-column>
@@ -32,13 +32,13 @@
 <script>
 //   import {childrenFileList} from './testData'
 import {
-    getChildrenFileList     
+    getBackFileSnList     
     } from "@/api/file";
     export default {
        
         data() {
             return {
-                fileListData:['回传文件1','回传文件2','回传文件3'],
+                backFileListData:[],
                 total: 0,
                 current: 1,
                 pagesize: 10,
@@ -56,12 +56,15 @@ import {
             parentSn(){
                 return this.$route.params.sn
             },
+            parentPid(){
+                return this.$route.params.pid
+            },
             layout() {
                 return this.isMobile ? 'total,prev, pager, next' : 'total,prev, pager, next,jumper'
             }
         },
         mounted() {
-            //this.getBackFileList();
+            this.getBackFileList();
         },
       
         methods: {
@@ -74,17 +77,17 @@ import {
                 let postData={
                     current:this.current,
                     size:this.pagesize,
-                    sn:this.parentSn
+                    sn:this.parentSn,
+                    pid:this.parentPid
                 }
-                getChildrenFileList(postData).then(res=>{
-                    res = res.data
+                getBackFileSnList(postData).then(res=>{
                      this.loading=false;
                     if(res.code==200){
-                        this.fileListData=[];
+                        this.backFileListData=[];
                         res.data.records.forEach(item=>{
-                            this.fileListData.push({isBack:false,name:item})
+                            this.backFileListData.push(item)
                         })
-                        this.fileListData.push({isBack:true,name:'回传文件'})
+                       
                         this.total=res.data.total;
                     }
                 }).catch(function (error) { console.log(error); });

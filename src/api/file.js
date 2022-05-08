@@ -27,3 +27,12 @@ export function getFileProductList(params) {
       data: params
     })
   }
+
+
+export function getBackFileSnList(params) {
+  return request({
+    url: '/lu/log/ftpDirListFiles',
+    method: 'post',
+    data:params
+  })
+}
