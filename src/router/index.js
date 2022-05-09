@@ -55,7 +55,7 @@ export const constantRoutes = [
         meta: { title: '子文件', replaceTitleSn: true, icon: 'el-icon-aim', activeMenu: '/vehicleManage/carList', breadcrumb: ['农机列表'] }
       },
       {
-        path: 'backFile/:sn',
+        path: 'backFile/:pid/:sn',
         name: 'vehicleManage_backFile',
         hidden: true,
         component: () => import('@/views/vehicleManage/fileList/backFile'),

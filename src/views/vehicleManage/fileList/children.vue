@@ -90,14 +90,14 @@ import {
                         res.data.records.forEach(item=>{
                             this.fileListData.push({isBack:false,name:item})
                         })
-                        // this.fileListData.push({isBack:true,name:'回传文件'})
+                        this.fileListData.push({isBack:true,name:'回传文件'})
                         this.total=res.data.total;
                     }
                 }).catch(function (error) { console.log(error); });
             },      
            
             toBackFile(){
-                this.$router.push(`/vehicleManage/backFile/${this.parentSn}`)
+                this.$router.push(`/vehicleManage/backFile/${this.parentPid}/${this.parentSn}`)
                 
             },
             

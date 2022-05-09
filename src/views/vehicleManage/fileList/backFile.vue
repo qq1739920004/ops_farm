@@ -81,6 +81,7 @@ import {
                     pid:this.parentPid
                 }
                 getBackFileSnList(postData).then(res=>{
+                    res = res.data
                      this.loading=false;
                     if(res.code==200){
                         this.backFileListData=[];
