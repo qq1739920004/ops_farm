@@ -19,6 +19,8 @@ const mutations = {
   },
   SET_USERID: (state, userId) => {
     state.userId = userId
+    window.userId_w = userId
+    console.log(window.userId_w,'---23')
   },
   SET_COMPANYID: (state, companyId) => {
     state.companyId = companyId

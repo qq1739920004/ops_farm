@@ -11,7 +11,7 @@
       <!-- </el-tooltip> -->
     </div>
     <div class="banner_container">
-      <div class="banner_title">司南耕耘态势感知平台</div>
+      <div class="banner_title">{{userId == 11 ? '北方雷科态势感知平台' : '司南耕耘态势感知平台'}}</div>
       <div class="banner_time">
         {{ currentTime }}
       </div>
@@ -82,7 +82,7 @@
             style="cursor: pointer"
             @click="backToProvince"
           ></i>
-          {{ provinceCountShow ? '省份统计' : '地级市统计' }}
+          {{ provinceCountShow ? "省份统计" : "地级市统计" }}
         </div>
         <div class="count_table_container">
           <el-row class="row_title">
@@ -104,23 +104,28 @@
                 :span="4"
                 style="color: #9ccc9f; height: 32px; line-height: 32px"
                 class="row_title_province"
-              ><span class="province_name">{{ item.name }}</span></el-col>
+                ><span class="province_name">{{ item.name }}</span></el-col
+              >
               <el-col
                 :span="4"
                 style="color: #6be90b; height: 32px; line-height: 32px"
-              >{{ item.onlineCar || 0 }}</el-col>
+                >{{ item.onlineCar || 0 }}</el-col
+              >
               <el-col
                 :span="4"
                 style="color: #00eaff; height: 32px; line-height: 32px"
-              >{{ item.totalCar || 0 }}</el-col>
+                >{{ item.totalCar || 0 }}</el-col
+              >
               <el-col
                 :span="6"
                 style="color: #eca91c; height: 32px; line-height: 32px"
-              >{{ item.todayArea || 0 }}</el-col>
+                >{{ item.todayArea || 0 }}</el-col
+              >
               <el-col
                 :span="6"
                 style="color: #448aff; height: 32px; line-height: 32px"
-              >{{ item.totalArea || 0 }}</el-col>
+                >{{ item.totalArea || 0 }}</el-col
+              >
               <i class="el-icon-arrow-right"></i>
             </el-row>
           </div>
@@ -137,23 +142,28 @@
                 style="color: #9ccc9f; height: 32px; line-height: 32px"
                 class="row_title_province"
                 :title="item.name"
-              >{{ item.name }}</el-col>
+                >{{ item.name }}</el-col
+              >
               <el-col
                 :span="4"
                 style="color: #6be90b; height: 32px; line-height: 32px"
-              >{{ item.onlineCar || 0 }}</el-col>
+                >{{ item.onlineCar || 0 }}</el-col
+              >
               <el-col
                 :span="4"
                 style="color: #00eaff; height: 32px; line-height: 32px"
-              >{{ item.totalCar || 0 }}</el-col>
+                >{{ item.totalCar || 0 }}</el-col
+              >
               <el-col
                 :span="6"
                 style="color: #eca91c; height: 32px; line-height: 32px"
-              >{{ item.todayArea || 0 }}</el-col>
+                >{{ item.todayArea || 0 }}</el-col
+              >
               <el-col
                 :span="6"
                 style="color: #448aff; height: 32px; line-height: 32px"
-              >{{ item.totalArea || 0 }}</el-col>
+                >{{ item.totalArea || 0 }}</el-col
+              >
             </el-row>
           </div>
         </div>
@@ -216,23 +226,21 @@
           <div class="abnormal">异常车辆</div>
         </div>
         <div class="awareness_map_control">
-          <el-checkbox
-            v-model="roadNet"
-            @change="handleRoadnetChange"
-          >路网</el-checkbox>
-          <el-checkbox
-            v-model="heatMap"
-            @change="handleHeatMapChange"
-          >热力图</el-checkbox>
+          <el-checkbox v-model="roadNet" @change="handleRoadnetChange"
+            >路网</el-checkbox
+          >
+          <el-checkbox v-model="heatMap" @change="handleHeatMapChange"
+            >热力图</el-checkbox
+          >
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import echarts from 'echarts'
-import gcoord from 'gcoord'
-import bus from '@/utils/socket/bus'
+import echarts from "echarts";
+import gcoord from "gcoord";
+import bus from "@/utils/socket/bus";
 import {
   farmMachineDataStatistics_path,
   carDataCount_path,
@@ -241,14 +249,15 @@ import {
   onlineFarmMachinePosition_path,
   district_path,
   statCar_path,
-  paddyWorkStat_path
-} from '@/api/situation'
-let working = require('@/assets/situation/working.png')
-let notworking = require('@/assets/situation/notworking.png')
-const L = window.L
+  paddyWorkStat_path,
+} from "@/api/situation";
+let working = require("@/assets/situation/working.png");
+let notworking = require("@/assets/situation/notworking.png");
+const L = window.L;
 export default {
   data() {
     return {
+      userId: this.$store.state.user.userId,
       provinceCountData: [],
       cityCountData: [],
       provinceCountShow: true,
@@ -277,7 +286,7 @@ export default {
 
       carIndex: 0,
       areaIndex: 0,
-      currentTime: '',
+      currentTime: "",
       timerId: null,
       isFullScreen: false,
       valve: null, // 统计节流
@@ -288,63 +297,63 @@ export default {
         grid: {
           right: 30,
           bottom: 30,
-          top: 10
+          top: 10,
         },
         tooltip: {
           show: true,
-          trigger: 'axis'
+          trigger: "axis",
         },
         xAxis: {
-          type: 'category',
+          type: "category",
           data: [],
           axisLine: {
             lineStyle: {
-              color: '#B9C8DB'
-            }
+              color: "#B9C8DB",
+            },
           },
           axisTick: {
-            show: false
+            show: false,
           },
           axisLabel: {
-            color: '#0490AB'
-          }
+            color: "#0490AB",
+          },
         },
         yAxis: {
-          type: 'value',
-          name: '车辆数',
+          type: "value",
+          name: "车辆数",
           axisLine: {
             lineStyle: {
-              color: '#B9C8DB'
-            }
+              color: "#B9C8DB",
+            },
           },
           splitNumber: 3,
           minInterval: 1,
           axisTick: {
-            show: false
+            show: false,
           },
           splitLine: {
             lineStyle: {
-              color: '#384155'
-            }
+              color: "#384155",
+            },
           },
           axisLabel: {
-            color: '#0490AB'
+            color: "#0490AB",
           },
           nameTextStyle: {
-            color: '#0490AB'
-          }
+            color: "#0490AB",
+          },
         },
         series: [
           {
             data: [],
             smooth: true,
-            type: 'line',
+            type: "line",
             itemStyle: {
-              color: '#20FF8A'
+              color: "#20FF8A",
             },
             areaStyle: {
               color: {
-                type: 'linear',
+                type: "linear",
                 x: 0,
                 y: 0,
                 x2: 0,
@@ -352,86 +361,86 @@ export default {
                 colorStops: [
                   {
                     offset: 0,
-                    color: '#20FF8A' // 0% 处的颜色
+                    color: "#20FF8A", // 0% 处的颜色
                   },
                   {
                     offset: 1,
-                    color: 'rgba(32, 255, 138, 0.1)' // 100% 处的颜色
-                  }
-                ]
-              }
-            }
-          }
-        ]
+                    color: "rgba(32, 255, 138, 0.1)", // 100% 处的颜色
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       areaOptions: {
         grid: {
           right: 30,
           bottom: 30,
-          top: 10
+          top: 10,
         },
         tooltip: {
           show: true,
-          trigger: 'axis'
+          trigger: "axis",
         },
         xAxis: {
-          type: 'category',
+          type: "category",
           data: [
-            '2020-03-01',
-            '2020-03-01',
-            '2020-03-01',
-            '2020-03-01',
-            '2020-03-01',
-            '2020-03-01',
-            '2020-03-01'
+            "2020-03-01",
+            "2020-03-01",
+            "2020-03-01",
+            "2020-03-01",
+            "2020-03-01",
+            "2020-03-01",
+            "2020-03-01",
           ],
           axisLine: {
             lineStyle: {
-              color: '#B9C8DB'
-            }
+              color: "#B9C8DB",
+            },
           },
           axisTick: {
-            show: false
+            show: false,
           },
           axisLabel: {
-            color: '#0490AB'
-          }
+            color: "#0490AB",
+          },
         },
         yAxis: {
-          type: 'value',
-          name: '作业面积(亩)',
+          type: "value",
+          name: "作业面积(亩)",
           axisLine: {
             lineStyle: {
-              color: '#B9C8DB'
-            }
+              color: "#B9C8DB",
+            },
           },
           splitNumber: 3,
           axisTick: {
-            show: false
+            show: false,
           },
           splitLine: {
             lineStyle: {
-              color: '#384155'
-            }
+              color: "#384155",
+            },
           },
           axisLabel: {
-            color: '#0490AB'
+            color: "#0490AB",
           },
           nameTextStyle: {
-            color: '#0490AB'
-          }
+            color: "#0490AB",
+          },
         },
         series: [
           {
             data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: 'line',
+            type: "line",
             smooth: true,
             itemStyle: {
-              color: '#20FF8A'
+              color: "#20FF8A",
             },
             areaStyle: {
               color: {
-                type: 'linear',
+                type: "linear",
                 x: 0,
                 y: 0,
                 x2: 0,
@@ -439,46 +448,46 @@ export default {
                 colorStops: [
                   {
                     offset: 0,
-                    color: '#20FF8A'
+                    color: "#20FF8A",
                   },
                   {
                     offset: 1,
-                    color: 'rgba(32, 255, 138, 0.1)'
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      }
-    }
+                    color: "rgba(32, 255, 138, 0.1)",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
   },
   mounted() {
-    this.initChart()
-    this.initMap()
-    this.getProvinceCount()
-    this.loadIndiData()
-    this.loadOnlineFarmData()
-    this.getActiveCar()
-    this.getWorkArea()
+    this.initChart();
+    this.initMap();
+    this.getProvinceCount();
+    this.loadIndiData();
+    this.loadOnlineFarmData();
+    this.getActiveCar();
+    this.getWorkArea();
     // this.listenMessage();
     this.timerId = setInterval(() => {
-      this.getCurrntTime()
-    }, 1000)
+      this.getCurrntTime();
+    }, 1000);
   },
 
   beforeDestroy() {
-    let that = this
-    bus.$off('message')
-    this.timerId ? clearInterval(this.timerId) : ''
-    this.vehicleChart ? this.vehicleChart.dispose() : ''
-    this.areaChart ? this.areaChart.dispose() : ''
-    window.removeEventListener('resize', that.reloadChart)
+    let that = this;
+    bus.$off("message");
+    this.timerId ? clearInterval(this.timerId) : "";
+    this.vehicleChart ? this.vehicleChart.dispose() : "";
+    this.areaChart ? this.areaChart.dispose() : "";
+    window.removeEventListener("resize", that.reloadChart);
   },
 
   created() {
-    let that = this
-    window.addEventListener('resize', that.reloadChart)
+    let that = this;
+    window.addEventListener("resize", that.reloadChart);
   },
   methods: {
     handleClick() {
@@ -486,247 +495,247 @@ export default {
         document.fullscreenEnabled ||
         document.mozFullScreenEnabled ||
         document.webkitFullscreenEnabled ||
-        document.msFullscreenEnabled
+        document.msFullscreenEnabled;
       var fullscreenElement =
         document.fullscreenElement ||
         document.mozFullScreenElement ||
-        document.webkitFullscreenElement
+        document.webkitFullscreenElement;
       if (!fullscreenEnabled) {
-        console.log('浏览器当前不能全屏')
-        return
+        console.log("浏览器当前不能全屏");
+        return;
       }
       if (fullscreenElement) {
         document.exitFullscreen().then((res) => {
-          this.reloadChart()
-          this.isFullScreen = false
-        })
+          this.reloadChart();
+          this.isFullScreen = false;
+        });
       } else {
         document
-          .getElementById('awareness')
+          .getElementById("awareness")
           .requestFullscreen()
           .then((res) => {
-            this.reloadChart()
-            this.isFullScreen = true
-          })
+            this.reloadChart();
+            this.isFullScreen = true;
+          });
       }
     },
 
     initChart() {
-      this.vehicleChart = echarts.init(document.getElementById('vehicleChart'))
-      this.areaChart = echarts.init(document.getElementById('areaChart'))
+      this.vehicleChart = echarts.init(document.getElementById("vehicleChart"));
+      this.areaChart = echarts.init(document.getElementById("areaChart"));
     },
 
     reloadChart() {
-      this.vehicleChart.dispose()
-      this.vehicleChart = null
-      this.vehicleChart = echarts.init(document.getElementById('vehicleChart'))
-      this.vehicleChart.setOption(this.vehicleOptions)
-      this.areaChart.dispose()
-      this.areaChart = null
-      this.areaChart = echarts.init(document.getElementById('areaChart'))
-      this.areaChart.setOption(this.areaOptions)
+      this.vehicleChart.dispose();
+      this.vehicleChart = null;
+      this.vehicleChart = echarts.init(document.getElementById("vehicleChart"));
+      this.vehicleChart.setOption(this.vehicleOptions);
+      this.areaChart.dispose();
+      this.areaChart = null;
+      this.areaChart = echarts.init(document.getElementById("areaChart"));
+      this.areaChart.setOption(this.areaOptions);
     },
 
     initMap() {
-      this.map = L.map('awareness_map', { zoomControl: false }).setView(
+      this.map = L.map("awareness_map", { zoomControl: false }).setView(
         this.originPoint,
         this.originZoom
-      )
-      this.handleMapChange(this.mapName)
+      );
+      this.handleMapChange(this.mapName);
     },
 
     handleMapChange(mapId) {
       switch (mapId) {
         case 0:
-          this.changeTileLayer('Google', 'Satellite')
-          break
+          this.changeTileLayer("Google", "Satellite");
+          break;
         case 1:
-          this.changeTileLayer('GaoDe', 'Normal')
-          break
+          this.changeTileLayer("GaoDe", "Normal");
+          break;
         case 2:
-          this.changeTileLayer('Google', 'Normal')
-          break
+          this.changeTileLayer("Google", "Normal");
+          break;
         case 3:
-          this.changeTileLayer('TianDiTu', 'Normal')
-          break
+          this.changeTileLayer("TianDiTu", "Normal");
+          break;
       }
     },
-    changeTileLayer(mapName = 'Google', mapType = 'Satellite') {
+    changeTileLayer(mapName = "Google", mapType = "Satellite") {
       try {
         if (!this.map) {
-          console.warn('未初始化底图实例')
-          return
+          console.warn("未初始化底图实例");
+          return;
         }
         if (this.tileLayer.length) {
-          this.tileLayer.forEach((layer) => layer.remove())
-          this.tileLayer = []
+          this.tileLayer.forEach((layer) => layer.remove());
+          this.tileLayer = [];
         }
-        let mapUrl = this.tileUrl[mapName][mapType]
-        let options = {}
-        options.subdomains = this.tileUrl[mapName]['Subdomains']
-        if ('tms' in this.tileUrl[mapName]) {
-          options.tms = this.tileUrl[mapName]['tms']
+        let mapUrl = this.tileUrl[mapName][mapType];
+        let options = {};
+        options.subdomains = this.tileUrl[mapName]["Subdomains"];
+        if ("tms" in this.tileUrl[mapName]) {
+          options.tms = this.tileUrl[mapName]["tms"];
         }
-        if ('key' in this.tileUrl[mapName]) {
-          options.key = this.tileUrl[mapName]['key']
+        if ("key" in this.tileUrl[mapName]) {
+          options.key = this.tileUrl[mapName]["key"];
         }
         for (let key in mapUrl) {
-          let layer = L.tileLayer(mapUrl[key], options).addTo(this.map)
-          this.tileLayer.push(layer)
+          let layer = L.tileLayer(mapUrl[key], options).addTo(this.map);
+          this.tileLayer.push(layer);
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
 
     changeActive(index) {
-      if (index === this.carIndex) return
-      this.carIndex = index
-      this.getActiveCar(index)
+      if (index === this.carIndex) return;
+      this.carIndex = index;
+      this.getActiveCar(index);
     },
 
     changeArea(index) {
-      if (index === this.areaIndex) return
-      this.areaIndex = index
-      this.getWorkArea(index)
+      if (index === this.areaIndex) return;
+      this.areaIndex = index;
+      this.getWorkArea(index);
     },
 
     // 获取统计数据
     loadIndiData() {
       farmMachineDataStatistics_path().then((res) => {
         try {
-          this.todayArea = res.data.workArea.todayArea
-          this.totalArea = res.data.workArea.totalArea
+          this.todayArea = res.data.workArea.todayArea;
+          this.totalArea = res.data.workArea.totalArea;
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
-      })
+      });
       carDataCount_path().then((res) => {
         try {
           if (res.data.data) {
-            this.working302 = res.data.data.workAG302
-            this.standby302 = res.data.data.noWorkAG302
-            this.working360 = res.data.data.workAG360
-            this.standby360 = res.data.data.noWorkAG360
-            this.total302 = res.data.data.AG302
-            this.total360 = res.data.data.AG360
+            this.working302 = res.data.data.workAG302;
+            this.standby302 = res.data.data.noWorkAG302;
+            this.working360 = res.data.data.workAG360;
+            this.standby360 = res.data.data.noWorkAG360;
+            this.total302 = res.data.data.AG302;
+            this.total360 = res.data.data.AG360;
           }
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
-      })
+      });
     },
 
     // 获取省份统计数据
     getProvinceCount() {
-        provinceDataList_path().then((res) => {
+      provinceDataList_path().then((res) => {
         try {
           if (res.data.data) {
-            this.provinceCountData = res.data.data
+            this.provinceCountData = res.data.data;
           }
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
-      })
+      });
     },
 
     // 获取地级市省份数据
     getCityCount(provinceCode) {
-      if (!provinceCode) return
-      this.cityCountData = []
+      if (!provinceCode) return;
+      this.cityCountData = [];
       cityDataList_path({ provinceCode: provinceCode }).then((res) => {
-          try {
-            if (res.data.data) {
-              this.cityCountData = res.data.data
-            }
-          } catch (error) {
-            console.log(error)
+        try {
+          if (res.data.data) {
+            this.cityCountData = res.data.data;
           }
-        })
+        } catch (error) {
+          console.log(error);
+        }
+      });
     },
 
     handleProvinceClick(item) {
-      this.provinceCountShow = false
-      this.getCityCount(item.code)
-      this.getBoundary(item.name)
+      this.provinceCountShow = false;
+      this.getCityCount(item.code);
+      this.getBoundary(item.name);
     },
 
     handleCityClick(item) {
-      this.getBoundary(item.name)
+      this.getBoundary(item.name);
     },
 
     // 获取省份行政区域边界
     getBoundary(name) {
-      if (name === '未知省份') {
-        name = '中国'
+      if (name === "未知省份") {
+        name = "中国";
       }
       let params = {
         keywords: name,
         subdistrict: 0,
-        extensions: 'all',
-        key: '066eeeeb08237a3bf45006dff87bed26'
-      }
+        extensions: "all",
+        key: "066eeeeb08237a3bf45006dff87bed26",
+      };
       district_path(params).then((res) => {
-          try {
-            let data = res.data.districts[0].polyline
-            if (!data) return
+        try {
+          let data = res.data.districts[0].polyline;
+          if (!data) return;
 
-            let dataArea = data.split('|') // 不同区域
-            let area = dataArea.map((item) =>
-              item.split(';').map((i) =>
-                i
-                  .split(',')
-                  .reverse()
-                  .map((j) => parseFloat(j))
-              )
+          let dataArea = data.split("|"); // 不同区域
+          let area = dataArea.map((item) =>
+            item.split(";").map((i) =>
+              i
+                .split(",")
+                .reverse()
+                .map((j) => parseFloat(j))
             )
-            this.clearBoundary()
-            this.drawBoundary(area)
-          } catch (error) {
-            console.log(error)
-          }
-        })
+          );
+          this.clearBoundary();
+          this.drawBoundary(area);
+        } catch (error) {
+          console.log(error);
+        }
+      });
     },
 
     drawBoundary(area = []) {
-      let allPoints = []
+      let allPoints = [];
       area.forEach((item) => {
-        let polygon = L.polygon(item, { color: '#409EFF' }).addTo(this.map)
-        allPoints = allPoints.concat(item)
-        this.boundary.push(polygon)
-      })
-      this.map.fitBounds(allPoints)
+        let polygon = L.polygon(item, { color: "#409EFF" }).addTo(this.map);
+        allPoints = allPoints.concat(item);
+        this.boundary.push(polygon);
+      });
+      this.map.fitBounds(allPoints);
     },
 
     clearBoundary() {
-      this.boundary.forEach((item) => item.remove())
-      this.boundary = []
+      this.boundary.forEach((item) => item.remove());
+      this.boundary = [];
     },
 
     backToProvince() {
-      this.provinceCountShow = true
-      this.clearBoundary()
-      this.map.setView(this.originPoint, this.originZoom)
+      this.provinceCountShow = true;
+      this.clearBoundary();
+      this.map.setView(this.originPoint, this.originZoom);
     },
 
     getCurrntTime() {
       let tem = {
-        0: '日',
-        1: '一',
-        2: '二',
-        3: '三',
-        4: '四',
-        5: '五',
-        6: '六'
-      }
-      let current = new Date()
-      let year = current.getFullYear()
-      let month = current.getMonth() + 1
-      let day = current.getDate()
-      let weekday = current.getDay()
-      let time = current.toTimeString().slice(0, 8)
+        0: "日",
+        1: "一",
+        2: "二",
+        3: "三",
+        4: "四",
+        5: "五",
+        6: "六",
+      };
+      let current = new Date();
+      let year = current.getFullYear();
+      let month = current.getMonth() + 1;
+      let day = current.getDate();
+      let weekday = current.getDay();
+      let time = current.toTimeString().slice(0, 8);
       // let content = `${time} ${year}-${month}-${day}`;
-      this.currentTime = `${time} ${year}年${month}月${day}日 星期${tem[weekday]}`
+      this.currentTime = `${time} ${year}年${month}月${day}日 星期${tem[weekday]}`;
     },
 
     // 获取车辆活跃度
@@ -734,95 +743,95 @@ export default {
      * @params 0:当日 1：当月 2 当年
      */
     getActiveCar(indi = 0) {
-      let st, et
-      let date = new Date()
-      let day = date.getDate() // 今天
-      let month = date.getMonth() + 1 // 当月
-      let year = date.getFullYear() // 年份
+      let st, et;
+      let date = new Date();
+      let day = date.getDate(); // 今天
+      let month = date.getMonth() + 1; // 当月
+      let year = date.getFullYear(); // 年份
       switch (indi) {
         case 0:
-          st = `${year}-${month}-${day} 00:00:00`
-          et = `${year}-${month}-${day} 23:59:59`
-          break
+          st = `${year}-${month}-${day} 00:00:00`;
+          et = `${year}-${month}-${day} 23:59:59`;
+          break;
         case 1:
-          st = `${year}-${month}-01 00:00:00`
-          et = `${year}-${month}-${day} 23:59:59`
-          break
+          st = `${year}-${month}-01 00:00:00`;
+          et = `${year}-${month}-${day} 23:59:59`;
+          break;
         case 2:
-          st = `${year}-01-01 00:00:00`
-          et = `${year}-${month}-${day} 23:59:59`
-          break
+          st = `${year}-01-01 00:00:00`;
+          et = `${year}-${month}-${day} 23:59:59`;
+          break;
       }
       this.vehicleChart.showLoading({
-        type: 'default',
-        text: 'loading',
-        color: '#ffffff',
-        textColor: '#ffffff',
-        maskColor: 'rgba(255, 255, 255, 0.1)'
-      })
+        type: "default",
+        text: "loading",
+        color: "#ffffff",
+        textColor: "#ffffff",
+        maskColor: "rgba(255, 255, 255, 0.1)",
+      });
       statCar_path({
-          st: st,
-          et: et
-        }).then((res) => {
-          try {
-            this.vehicleOptions.xAxis.data = res.data.chart.date
-            this.vehicleOptions.series[0].data = res.data.chart.data.map(
-              (item) => item[0]
-            )
-            this.vehicleChart.setOption(this.vehicleOptions)
-            this.vehicleChart.hideLoading()
-          } catch (error) {
-            console.log(error)
-          }
-        })
+        st: st,
+        et: et,
+      }).then((res) => {
+        try {
+          this.vehicleOptions.xAxis.data = res.data.chart.date;
+          this.vehicleOptions.series[0].data = res.data.chart.data.map(
+            (item) => item[0]
+          );
+          this.vehicleChart.setOption(this.vehicleOptions);
+          this.vehicleChart.hideLoading();
+        } catch (error) {
+          console.log(error);
+        }
+      });
     },
 
     // 获取作业面积
     getWorkArea(indi = 0) {
-      let st, et
-      let date = new Date()
-      let day = date.getDate() // 今天
-      let month = date.getMonth() + 1 // 当月
-      let year = date.getFullYear() // 年份
+      let st, et;
+      let date = new Date();
+      let day = date.getDate(); // 今天
+      let month = date.getMonth() + 1; // 当月
+      let year = date.getFullYear(); // 年份
       switch (indi) {
         case 0:
-          st = `${year}-${month}-${day} 00:00:00`
-          et = `${year}-${month}-${day} 23:59:59`
-          break
+          st = `${year}-${month}-${day} 00:00:00`;
+          et = `${year}-${month}-${day} 23:59:59`;
+          break;
         case 1:
-          st = `${year}-${month}-01 00:00:00`
-          et = `${year}-${month}-${day} 23:59:59`
-          break
+          st = `${year}-${month}-01 00:00:00`;
+          et = `${year}-${month}-${day} 23:59:59`;
+          break;
         case 2:
-          st = `${year}-01-01 00:00:00`
-          et = `${year}-${month}-${day} 23:59:59`
-          break
+          st = `${year}-01-01 00:00:00`;
+          et = `${year}-${month}-${day} 23:59:59`;
+          break;
       }
       this.areaChart.showLoading({
-        type: 'default',
-        text: 'loading',
-        color: '#ffffff',
-        textColor: '#ffffff',
-        maskColor: 'rgba(255, 255, 255, 0.1)'
-      })
+        type: "default",
+        text: "loading",
+        color: "#ffffff",
+        textColor: "#ffffff",
+        maskColor: "rgba(255, 255, 255, 0.1)",
+      });
       paddyWorkStat_path({
-          // /farm/stat/paddyWork
-          st: st,
-          et: et
-        }).then((res) => {
-          try {
-            this.areaOptions.xAxis.data = res.data.chart.map(
-              (item) => item.formatDate
-            )
-            this.areaOptions.series[0].data = res.data.chart.map(
-              (item) => item.workedArea
-            )
-            this.areaChart.setOption(this.areaOptions)
-            this.areaChart.hideLoading()
-          } catch (error) {
-            console.log(error)
-          }
-        })
+        // /farm/stat/paddyWork
+        st: st,
+        et: et,
+      }).then((res) => {
+        try {
+          this.areaOptions.xAxis.data = res.data.chart.map(
+            (item) => item.formatDate
+          );
+          this.areaOptions.series[0].data = res.data.chart.map(
+            (item) => item.workedArea
+          );
+          this.areaChart.setOption(this.areaOptions);
+          this.areaChart.hideLoading();
+        } catch (error) {
+          console.log(error);
+        }
+      });
     },
 
     /**
@@ -830,37 +839,37 @@ export default {
      */
 
     loadOnlineFarmData() {
-        onlineFarmMachinePosition_path().then((res) => {
+      onlineFarmMachinePosition_path().then((res) => {
         try {
-          let data = res.data.onlineFarmMachines
+          let data = res.data.onlineFarmMachines;
           if (data.length) {
-            this.appendMarkers(data)
-            this.countDeviceDynamic()
-            this.initHeatMap()
+            this.appendMarkers(data);
+            this.countDeviceDynamic();
+            this.initHeatMap();
           }
-          this.listenMessage()
+          this.listenMessage();
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
-      })
+      });
     },
 
     appendMarkers(farmDataArray = []) {
       try {
         // let that = this;
         farmDataArray.forEach((item) => {
-          let point = this.createMarkerPoint(item)
+          let point = this.createMarkerPoint(item);
           // let icon = this.createMarkerIcon(item);
           // let marker = L.marker(point, {icon: icon}).addTo(this.map);
-          let popup = this.createPopup(item)
-          let options = this.createCircleMarkerOptions(item)
+          let popup = this.createPopup(item);
+          let options = this.createCircleMarkerOptions(item);
           let marker = L.circleMarker(point, options)
             .bindPopup(popup)
-            .addTo(this.map)
-          this.saveFarmMarker(item.sn, marker, item)
-        })
+            .addTo(this.map);
+          this.saveFarmMarker(item.sn, marker, item);
+        });
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
 
@@ -868,10 +877,10 @@ export default {
       try {
         return gcoord
           .transform([item.posY, item.posX], gcoord.WGS84, gcoord.GCJ02)
-          .reverse()
+          .reverse();
       } catch (error) {
-        console.log(error)
-        return [0, 0]
+        console.log(error);
+        return [0, 0];
       }
     },
 
@@ -879,43 +888,43 @@ export default {
       try {
         let icon = L.icon({
           iconUrl: item.driveState === 0 ? notworking : working,
-          iconAnchor: [4, 8]
-        })
-        return icon
+          iconAnchor: [4, 8],
+        });
+        return icon;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
 
     createCircleMarkerOptions(item) {
       try {
-        let status = {}
-        status.radius = 4
-        status.stroke = false
-        status.fillOpacity = 0.9
+        let status = {};
+        status.radius = 4;
+        status.stroke = false;
+        status.fillOpacity = 0.9;
         status.fillColor =
           item.driveState === 0
-            ? '#FFF000'
+            ? "#FFF000"
             : item.solStat === 4
-            ? '#01EF83'
-            : '#ff0000'
+            ? "#01EF83"
+            : "#ff0000";
         status.fill =
           item.driveState === 0
-            ? '#FFF000'
+            ? "#FFF000"
             : item.solStat === 4
-            ? '#01EF83'
-            : '#ff0000'
+            ? "#01EF83"
+            : "#ff0000";
 
-        return status
+        return status;
       } catch (error) {
-        console.log(error)
+        console.log(error);
         return {
           radius: 4,
           stroke: false,
           fillOpacity: 0.9,
-          fillColor: '#ff0000',
-          fill: 'ff0000'
-        }
+          fillColor: "#ff0000",
+          fill: "ff0000",
+        };
       }
     },
 
@@ -924,36 +933,36 @@ export default {
                 <div>
                     <h5>${item.sn}</h5>
                 </div>
-            `
-      return content
+            `;
+      return content;
     },
 
     saveFarmMarker(sn, marker, markerData) {
       this.farmMarkers.push({
         sn: sn,
         marker: marker,
-        markerData: markerData
-      })
+        markerData: markerData,
+      });
     },
 
     getFarmMarker(sn) {
       try {
-        let markerObj = this.farmMarkers.find((item) => item.sn === sn)
-        return markerObj ? markerObj['marker'] : undefined
+        let markerObj = this.farmMarkers.find((item) => item.sn === sn);
+        return markerObj ? markerObj["marker"] : undefined;
       } catch (error) {
-        console.log(error)
-        return
+        console.log(error);
+        return;
       }
     },
 
     removeFarmMarker(sn) {
-      let index = this.farmMarkers.findIndex((item) => item.sn === sn)
+      let index = this.farmMarkers.findIndex((item) => item.sn === sn);
       if (index >= 0) {
-        let markerObj = this.farmMarkers[index]
-        markerObj ? markerObj['marker'].remove() : ''
-        this.farmMarkers.splice(index, 1)
+        let markerObj = this.farmMarkers[index];
+        markerObj ? markerObj["marker"].remove() : "";
+        this.farmMarkers.splice(index, 1);
       } else {
-        console.log('删除点失败，因为没有找到对应的marker')
+        console.log("删除点失败，因为没有找到对应的marker");
       }
     },
 
@@ -961,33 +970,33 @@ export default {
     countDeviceDynamic() {
       if (!this.valve) {
         this.valve = setTimeout(() => {
-          this.valve = null
-          this.count()
-        }, 2000)
+          this.valve = null;
+          this.count();
+        }, 2000);
       }
     },
 
     count() {
-      let working302 = 0
-      let standby302 = 0
-      let working360 = 0
-      let standby360 = 0
-      let abNormalCar = 0
+      let working302 = 0;
+      let standby302 = 0;
+      let working360 = 0;
+      let standby360 = 0;
+      let abNormalCar = 0;
       this.farmMarkers.forEach((item) => {
         item.markerData.driveState !== 0 && item.markerData.solStat !== 4
           ? abNormalCar++
-          : ''
-        if (item.markerData.terminalType === 'AG302') {
-          item.markerData.driveState === 0 ? ++standby302 : ++working302
+          : "";
+        if (item.markerData.terminalType === "AG302") {
+          item.markerData.driveState === 0 ? ++standby302 : ++working302;
         } else {
-          item.markerData.driveState === 0 ? ++standby360 : ++working360
+          item.markerData.driveState === 0 ? ++standby360 : ++working360;
         }
-      })
-      this.working302 = working302
-      this.standby302 = standby302
-      this.working360 = working360
-      this.standby360 = standby360
-      this.abNormalCar = abNormalCar
+      });
+      this.working302 = working302;
+      this.standby302 = standby302;
+      this.working360 = working360;
+      this.standby360 = standby360;
+      this.abNormalCar = abNormalCar;
     },
 
     /**
@@ -996,81 +1005,81 @@ export default {
 
     // 处理websocket数据
     listenMessage() {
-      bus.$on('message', (data) => {
-        this.handleMessageChange(data)
-      })
+      bus.$on("message", (data) => {
+        this.handleMessageChange(data);
+      });
     },
 
     // 筛选农机消息-派发处理
     handleMessageChange(data) {
-      if (data.module === 'farm' && data.type === 'farmPt') {
-        this.handleFarmMarkerChange(data)
+      if (data.module === "farm" && data.type === "farmPt") {
+        this.handleFarmMarkerChange(data);
       }
-      if (data.module === 'farm' && data.type === 'workAreaCount') {
-        this.totalArea = data.data.workArea.totalArea
-        this.todayArea = data.data.workArea.todayArea
+      if (data.module === "farm" && data.type === "workAreaCount") {
+        this.totalArea = data.data.workArea.totalArea;
+        this.todayArea = data.data.workArea.todayArea;
       }
 
-      this.countDeviceDynamic()
+      this.countDeviceDynamic();
     },
 
     // 区分消息类型
     handleFarmMarkerChange(data) {
-      if (data.action === 'online') {
-        let marker = this.getFarmMarker(data.deviceSn)
+      if (data.action === "online") {
+        let marker = this.getFarmMarker(data.deviceSn);
         if (marker) {
-          this.updateFarmMarker(marker, data.data)
-          this.updateFarmMarkerData(data.deviceSn, data.data)
+          this.updateFarmMarker(marker, data.data);
+          this.updateFarmMarkerData(data.deviceSn, data.data);
         } else {
-          this.appendMarkers([data.data])
+          this.appendMarkers([data.data]);
         }
       }
-      if (data.action === 'offline') {
-        let marker = this.getFarmMarker(data.deviceSn)
+      if (data.action === "offline") {
+        let marker = this.getFarmMarker(data.deviceSn);
         if (marker) {
-          this.removeFarmMarker(data.deviceSn)
+          this.removeFarmMarker(data.deviceSn);
         }
       }
-      if (data.action === 'upline') {
-        let marker = this.getFarmMarker(data.deviceSn)
+      if (data.action === "upline") {
+        let marker = this.getFarmMarker(data.deviceSn);
         if (!marker) {
-          this.appendMarkers([data.data])
+          this.appendMarkers([data.data]);
         }
       }
     },
 
     // 更新农机信息
     updateFarmMarker(marker, data) {
-      this.updateFarmMarkerPosition(marker, data)
-      this.updateFarmMarkerIcon(marker, data)
+      this.updateFarmMarkerPosition(marker, data);
+      this.updateFarmMarkerIcon(marker, data);
     },
 
     // 更新位置信息
     updateFarmMarkerPosition(marker, data) {
-      let point = this.createMarkerPoint(data)
-      marker.setLatLng(point)
+      let point = this.createMarkerPoint(data);
+      marker.setLatLng(point);
     },
 
     // 更新图标状态
     updateFarmMarkerIcon(marker, data) {
       // let icon = this.createMarkerIcon(data);
       // marker.setIcon(icon);
-      let options = this.createCircleMarkerOptions(data)
-      marker.setStyle(options)
+      let options = this.createCircleMarkerOptions(data);
+      marker.setStyle(options);
     },
 
     // 更新marker原始数据-用于筛选
     updateFarmMarkerData(sn, data) {
-      let markerObj = this.farmMarkers.find((item) => item.sn === sn)
-      markerObj ? (markerObj['markerData'] = data) : ''
+      let markerObj = this.farmMarkers.find((item) => item.sn === sn);
+      markerObj ? (markerObj["markerData"] = data) : "";
     },
 
     // 切换显示路网
     handleRoadnetChange(e) {
       if (e) {
-        this.tileLayer[1].addTo(this.map)
+        this.tileLayer[1].addTo(this.map);
       } else {
-        this.tileLayer[1].remove()
+        this.tileLayer[1].remove();
       }
     },
 
@@ -1078,24 +1087,24 @@ export default {
       if (e) {
         let latLngs = this.farmMarkers.map((item) => [
           item.marker._latlng.lat,
-          item.marker._latlng.lng
-        ])
-        this.heatLayer = L.heatLayer(latLngs, { radius: 25 }).addTo(this.map)
+          item.marker._latlng.lng,
+        ]);
+        this.heatLayer = L.heatLayer(latLngs, { radius: 25 }).addTo(this.map);
       } else {
-        this.heatLayer ? this.heatLayer.remove() : ''
-        this.heatLayer = null
+        this.heatLayer ? this.heatLayer.remove() : "";
+        this.heatLayer = null;
       }
     },
 
     initHeatMap() {
       let latLngs = this.farmMarkers.map((item) => [
         item.marker._latlng.lat,
-        item.marker._latlng.lng
-      ])
-      this.heatLayer = L.heatLayer(latLngs, { radius: 25 }).addTo(this.map)
-    }
-  }
-}
+        item.marker._latlng.lng,
+      ]);
+      this.heatLayer = L.heatLayer(latLngs, { radius: 25 }).addTo(this.map);
+    },
+  },
+};
 </script>
 <style scoped lang ='scss'>
 .awareness {
@@ -1114,7 +1123,7 @@ export default {
   }
   .banner_container {
     height: 100px;
-    background: url('~@/assets/common/aware.png');
+    background: url("~@/assets/common/aware.png");
     background-size: 100% 80%;
     background-repeat: no-repeat;
     background-position: 0px 5px;
@@ -1177,7 +1186,7 @@ export default {
       text-overflow: ellipsis;
     }
     .grid_item_title:before {
-      content: ' ';
+      content: " ";
       display: inline-block;
       width: 8px;
       height: 100%;
@@ -1221,7 +1230,7 @@ export default {
         text-overflow: ellipsis;
       }
       .car_type:before {
-        content: ' ';
+        content: " ";
         display: inline-block;
         width: 8px;
         height: 50%;
@@ -1291,7 +1300,7 @@ export default {
               width: 65px;
             }
             .province_name:after {
-              content: '';
+              content: "";
               display: inline-block;
               width: 100%;
             }
@@ -1388,7 +1397,7 @@ export default {
           color: #21ff89;
         }
         > .working:before {
-          content: '';
+          content: "";
           display: inline-block;
           width: 8px;
           height: 8px;
@@ -1401,7 +1410,7 @@ export default {
           color: #fff000;
         }
         > .notworking:before {
-          content: '';
+          content: "";
           display: inline-block;
           width: 8px;
           height: 8px;
@@ -1413,7 +1422,7 @@ export default {
           color: red;
         }
         > .abnormal:before {
-          content: '';
+          content: "";
           display: inline-block;
           width: 8px;
           height: 8px;
@@ -1446,5 +1455,4 @@ export default {
 //         font-size: 24px;
 //     }
 // }
-
 </style>

@@ -291,6 +291,7 @@ export default {
             // }
             if (res.data.code === 100) {
               if (res.data.data.length) {
+               this.map.removeLayer(this.polyline);
                 this.xyArr.length = 0;
                 res.data.data.forEach((item) => {
                       let point =  this.coorTransform([item.pos_x, item.pos_y])
@@ -298,7 +299,7 @@ export default {
                 });
                 let latlngs = this.xyArr;
 
-                let polyline = L.polyline(latlngs, { color: "#75FB4C" }).addTo(
+                this.polyline = L.polyline(latlngs, { color: "#75FB4C" }).addTo(
                   this.map
                 );
                 this.map.fitBounds(this.xyArr);
