@@ -11,7 +11,7 @@
       <!-- </el-tooltip> -->
     </div>
     <div class="banner_container">
-      <div class="banner_title">{{userId == 11 ? '北方雷科态势感知平台' : '司南耕耘态势感知平台'}}</div>
+      <div class="banner_title">{{userId == 11 ? '智慧农机态势感知平台' : '司南耕耘态势感知平台'}}</div>
       <div class="banner_time">
         {{ currentTime }}
       </div>

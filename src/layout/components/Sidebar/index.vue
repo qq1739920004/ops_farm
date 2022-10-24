@@ -4,8 +4,7 @@
       <a href="/">
         <img
           v-if="userId == 11"
-          style="height: 60px"
-          src="@/assets/common/qr_logo.png"
+          src="@/assets/common/liantongLogo.png"
           alt=""
         />
         <img v-else src="@/assets/common/logo2.png" alt="" />
@@ -71,17 +70,20 @@ export default {
 </script>
 <style scoped lang="scss">
 .logo_area {
-  padding: 10px 20px 20px 5px;
+  padding: 10px 20px 20px 20px;
   transition: all 0.3s;
 }
 .logo_area a {
-  width: 180px !important;
+  // width: 180px !important;
   display: block;
+  height: 60px;
+  
   // display: inline-block;
   // width:180px !important;
   // justify-content: center;
   img {
     width: 100%;
+    height: 100%;
   }
 }
 .logo_area a img {

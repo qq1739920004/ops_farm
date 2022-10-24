@@ -7,7 +7,7 @@
     />
     <breadcrumb class="breadcrumb-container" />
 
-    <p v-if="isTargetComponent" class="bang_title">{{userId == 11 ? '北方雷科态势监控' : '司南耕耘态势监控'}}</p>
+    <p v-if="isTargetComponent" class="bang_title">{{userId == 11 ? '智慧农机态势监控' : '司南耕耘态势监控'}}</p>
     <div class="right-menu">
       <el-dropdown trigger="hover" class="lang_select">
         <span class="el-dropdown-link">
