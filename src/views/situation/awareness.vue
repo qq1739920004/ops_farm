@@ -774,9 +774,9 @@ export default {
         et: et,
       }).then((res) => {
         try {
-          this.vehicleOptions.xAxis.data = res.data.chart.date;
-          this.vehicleOptions.series[0].data = res.data.chart.data.map(
-            (item) => item[0]
+          this.vehicleOptions.xAxis.data = res.data.chart.map(item => item.formatDate);
+          this.vehicleOptions.series[0].data = res.data.chart.map(
+            (item) => item.workedArea
           );
           this.vehicleChart.setOption(this.vehicleOptions);
           this.vehicleChart.hideLoading();

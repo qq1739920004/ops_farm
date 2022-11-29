@@ -75,7 +75,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column
+      <!-- <el-table-column
         prop="workArea"
         label="亩数"
         width="100"
@@ -88,7 +88,7 @@
               : scope.row.workArea
           }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column
         prop="expirationTime"
@@ -690,6 +690,7 @@ export default {
       dialogVisibleDetailLoading: true,
       registerArr1: [{ name: "3个月", value: 90 }],
       registerArr: [
+        { name: "立即过期", value: -1 },
         { name: "3天", value: 3 },
         { name: "7天", value: 7 },
         { name: "15天", value: 15 },

@@ -45,7 +45,7 @@ export function carDataCount_path(params) {
   }
   export function statCar_path(params) {
     return request({
-      url: '/farm/stat/car',
+      url: 'farm/stat/onlineCarStat',
       method: 'post',
       params
     })
