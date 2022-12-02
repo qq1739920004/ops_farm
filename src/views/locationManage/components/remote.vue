@@ -32,7 +32,6 @@
     </div>
     <div class="param_container">
       <div class="param_title">
-        <!-- 车辆参数 -->
         <div
           class="param_title_item"
           :class="{
@@ -42,7 +41,6 @@
         >
           车辆参数
         </div>
-        <!-- 校准参数 -->
         <div
           class="param_title_item"
           :class="{
@@ -52,52 +50,7 @@
         >
           校准参数
         </div>
-        <!-- 基本参数 -->
         <div
-          v-if="markerData.terminalType === 'AG302Android'||markerData.terminalType === 'AG502' ||(markerData.terminalType.indexOf('AG360')!=-1 &&markerData.version>=100)"
-          class="param_title_item"
-          :class="{
-            param_title_item_active: currentCarouselName === 'basicParam',
-          }"
-          @click="setCurrentIndex('basicParam')"
-        >
-          基本参数
-        </div>
-        <!-- advanced1参数 -->
-        <div
-          v-if="markerData.terminalType === 'AG302Android'||markerData.terminalType === 'AG502'||(markerData.terminalType.indexOf('AG360')!=-1 &&markerData.version>=100)"
-          class="param_title_item"
-          :class="{
-            param_title_item_active: currentCarouselName === 'advanced1Param',
-          }"
-          @click="setCurrentIndex('advanced1Param')"
-        >
-          高级参数1
-        </div>
-        <!-- advanced2参数 -->
-        <div
-          v-if="markerData.terminalType === 'AG302Android'"
-          class="param_title_item"
-          :class="{
-            param_title_item_active: currentCarouselName === 'advanced2Param',
-          }"
-          @click="setCurrentIndex('advanced2Param')"
-        >
-          高级参数2
-        </div>
-        <!-- <div
-          v-if="markerData.terminalType === 'AG302Android'"
-          class="param_title_item"
-          :class="{
-            param_title_item_active: currentCarouselName === 'toolParam',
-          }"
-          @click="setCurrentIndex('toolParam')"
-        >
-          农具参数
-        </div> -->
-        <!-- pid参数 -->
-        <div
-          v-if="markerData.terminalType === 'AG302'||(markerData.terminalType.indexOf('AG360')!=-1 &&markerData.version<100)"
           class="param_title_item"
           :class="{
             param_title_item_active: currentCarouselName === 'pidParam',
@@ -106,7 +59,6 @@
         >
           PID参数
         </div>
-        <!-- pid曲线参数 -->
         <div
           v-if="markerData.terminalType === 'AG302'"
           class="param_title_item"
@@ -117,7 +69,6 @@
         >
           PID曲线参数
         </div>
-        <!-- pid超低速参数 -->
         <div
           v-if="markerData.terminalType === 'AG302'"
           class="param_title_item"
@@ -266,167 +217,8 @@
             >设置</el-button
           >
         </el-carousel-item>
-        <!-- 基本参数 -->
-        <el-carousel-item 
-          v-if="markerData.terminalType === 'AG302Android'||markerData.terminalType === 'AG502' ||(markerData.terminalType.indexOf('AG360')!=-1 &&markerData.version>=100)"
-          name='basicParam' 
-        >
-          <el-form
-          
-            ref="basicParam"
-            :model="basic.model"
-            label-width="200px"
-            :rules="basicParamRules"
-            :disabled="disableConfig"
-            
-          >
-            <el-row>
-              <el-col
-                v-for="(value, key, index) in basic.model"
-                :key="index"
-                :span="12"
-              >
-                <el-form-item
-                  :label="
-                    basic.des[key]
-                      ? basic.des[key]['name'] + ':'
-                      : '未命名参数:'
-                  "
-                  :prop="key"
-                >
-                  <el-input v-model="basic.model[key]" />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-          <el-button
-            v-show="calibParamUpdateButtonShow"
-            type="primary"
-            :disabled="disableConfig"
-            @click="handleBasicParamUpdate"
-            >设置</el-button
-          >
-        </el-carousel-item>
-        <!-- 高级参数1 -->
-        <el-carousel-item 
-          v-if="markerData.terminalType === 'AG302Android'||markerData.terminalType === 'AG502' ||(markerData.terminalType.indexOf('AG360')!=-1 &&markerData.version>=100)"
-          name='advanced1Param' 
-        >
-          <el-form
-            ref="advanced1Param"
-            :model="advanced1.model"
-            label-width="200px"
-            :rules="advanced1ParamRules"
-            :disabled="disableConfig"
-          >
-            <el-row>
-              <el-col
-                v-for="(value, key, index) in advanced1.model"
-                :key="index"
-                :span="12"
-              >
-                <el-form-item
-                  :label="
-                    advanced1.des[key]
-                      ? advanced1.des[key]['name'] + ':'
-                      : '未命名参数:'
-                  "
-                  :prop="key"
-                >
-                  <el-input v-model="advanced1.model[key]" />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-          <el-button
-            v-show="calibParamUpdateButtonShow"
-            type="primary"
-            :disabled="disableConfig"
-            @click="handleAdvanced1ParamUpdate"
-            >设置</el-button
-          >
-        </el-carousel-item>
-        <!-- 高级参数2 -->
-        <el-carousel-item 
-          v-if="markerData.terminalType === 'AG302Android'"
-          name='advanced2Param' 
-        >
-          <el-form
-            ref="advanced2Param"
-            :model="advanced2.model"
-            label-width="200px"
-            :rules="advanced2ParamRules"
-            :disabled="disableConfig"
-          >
-            <el-row>
-              <el-col
-                v-for="(value, key, index) in advanced2.model"
-                :key="index"
-                :span="12"
-              >
-                <el-form-item
-                  :label="
-                    advanced2.des[key]
-                      ? advanced2.des[key]['name'] + ':'
-                      : '未命名参数:'
-                  "
-                  :prop="key"
-                >
-                  <el-input v-model="advanced2.model[key]" />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-          <el-button
-            v-show="calibParamUpdateButtonShow"
-            type="primary"
-            :disabled="disableConfig"
-            @click="handleAdvanced2ParamUpdate"
-            >设置</el-button
-          >
-        </el-carousel-item>
-        <!-- 农具参数 -->
-        <el-carousel-item name='toolParam' >
-          <el-form
-            ref="toolParam"
-            :model="tool.model"
-            label-width="200px"
-            :rules="toolParamRules"
-            :disabled="disableConfig"
-          >
-            <el-row>
-              <el-col
-                v-for="(value, key, index) in tool.model"
-                :key="index"
-                :span="12"
-              >
-                <el-form-item
-                  :label="
-                    tool.des[key]
-                      ? tool.des[key]['name'] + ':'
-                      : '未命名参数:'
-                  "
-                  :prop="key"
-                >
-                  <el-input v-model="tool.model[key]" />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
-          <el-button
-            v-show="calibParamUpdateButtonShow"
-            type="primary"
-            :disabled="disableConfig"
-            @click="handleCalibParamUpdate"
-            >设置</el-button
-          >
-        </el-carousel-item>
         <!-- PID参数 -->
-        <el-carousel-item 
-          name="pidParam"
-          v-if="markerData.terminalType === 'AG302'||(markerData.terminalType.indexOf('AG360')!=-1 &&markerData.version<100)"
-          
-        >
+        <el-carousel-item name="pidParam">
           <el-form
             ref="pidParam"
             :model="pidParamModel"
@@ -536,7 +328,6 @@
             >设置</el-button
           >
         </el-carousel-item>
-        
         <!-- 内置电台 -->
         <el-carousel-item name="radioParam">
           <el-form :model="workPattern" label-width="100px">
@@ -545,14 +336,13 @@
                 <el-form-item label="工作模式">
                   <el-select v-model="workPattern.type">
                     <el-option
-                      v-if="markerData.terminalType.indexOf('AG302')!=-1"
+                      v-if="markerData.terminalType == 'AG302'"
                       label="内置电台"
                       :value="0"
                     />
                     <el-option label="内置网络" :value="1" />
-                    <!-- <el-option label="外置网络" :value="2"></el-option> -->
                     <el-option label="罗网" :value="3" disabled />
-                    
+                    <!-- <el-option label="外置网络" :value="2"></el-option> -->
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -755,9 +545,8 @@
             @click="handleNetParamUpate"
             >设置</el-button
           >
-          <!-- -------------------------------------------------------------->
           <!-- 外置网络表单 -->
-          <!-- <el-form
+          <el-form
             v-show="workPattern.type === 2"
             ref="outNetParam"
             validate-on-rule-change
@@ -847,8 +636,7 @@
             :disabled="disableConfig"
             @click="handleextendNetParamUpate"
             >设置</el-button
-          > -->
-          <!-- -------------------------------------------------------------->
+          >
           <!-- 罗网 -->
           <el-button
             v-show="workPattern.type === 3"
@@ -861,13 +649,10 @@
         <!-- 在线升级 -->
         <el-carousel-item name="updateParam">
           <!-- 神牛和AG302升级接口不同,这里要做区分 -->
-          <!-- 神牛 -->
           <div
-            
-            v-if="markerData.terminalType.indexOf('AG360') !=-1"
+            v-if="markerData.terminalType !== 'AG302'"
             class="AG360_upgrade_container"
-          > 
-            <el-row><h3 style=" text-align:center;margin:0 10px">双天线一体机</h3></el-row>
+          >
             <el-row>
               <el-col
                 :span="8"
@@ -879,13 +664,7 @@
                 "
                 >模块选择:</el-col
               >
-              <el-col :span="16" style="line-height:32px">
-                <el-radio-group v-model="AG360UpdateModule" >
-                  <el-radio label="11001">EC20</el-radio>
-                  <el-radio label="11002">板卡</el-radio>
-                </el-radio-group>
-              </el-col>
-              <!-- <el-col :span="8">
+              <el-col :span="8">
                 <el-radio
                   v-model="AG360UpdateModule"
                   :label="AG360UpdateModule"
@@ -893,47 +672,28 @@
                   size="small"
                   >双天线一体机</el-radio
                 >
-              </el-col> -->
-              <!-- <el-col
+              </el-col>
+              <el-col
                 :span="8"
                 style="position: absolute; right: 0; z-index: 999"
               >
-                <el-row
-                  v-if="['11000', '11001', '11002'].includes(AG360UpdateModule)"
+                <!-- <el-row
+                  v-if="['10', '11', '12'].includes(AG360UpdateModule)"
                 ><el-radio
                   v-model="AG360UpdateModule"
                   label="10"
                   size="small"
-                >EC20配置文件</el-radio></el-row>
-                <el-row v-if="['11000', '11001', '11002'].includes(AG360UpdateModule)"
-                  ><el-radio v-model="AG360UpdateModule" label="11001" size="small" 
+                >EC20配置文件</el-radio></el-row> -->
+                <el-row v-if="['10', '11', '12'].includes(AG360UpdateModule)"
+                  ><el-radio v-model="AG360UpdateModule" label="11" size="small"
                     >EC20</el-radio
                   ></el-row
                 >
-                <el-row v-if="['11000', '11001', '11002'].includes(AG360UpdateModule)"
-                  ><el-radio v-model="AG360UpdateModule" label="11002" size="small"
+                <el-row v-if="['10', '11', '12'].includes(AG360UpdateModule)"
+                  ><el-radio v-model="AG360UpdateModule" label="12" size="small"
                     >板卡</el-radio
                   ></el-row
                 >
-              </el-col> -->
-            </el-row>
-            <el-row>
-              <el-col 
-                :span="8"
-                style="
-                  text-align: right;
-                  height: 32px;
-                  line-height: 32px;
-                  padding-right: 20px;
-                "
-                >版本类型:</el-col
-              >
-              <el-col :span="16" style="line-height:32px">
-                <el-radio-group v-model="AG360versionType">
-                  <el-radio :label='1'>正式版</el-radio>
-                  <el-radio :label='2'>测试版</el-radio>
-                </el-radio-group>
-                
               </el-col>
             </el-row>
             <!-- <el-row>
@@ -1029,14 +789,13 @@
                   v-model="AG360UpdateVersion"
                   placeholder="请选择"
                   size="small"
-                  @change="printPara"
                 >
                   <el-option
                     style="z-index: 1"
-                    v-for="(item,index) in AG360versionOptions"
+                    v-for="(value, key, index) in AG360versionOptions"
                     :key="index"
-                    :label="item.versionName"
-                    :value="item.id"
+                    :label="value"
+                    :value="key"
                   />
                 </el-select>
               </el-col>
@@ -1047,74 +806,28 @@
               >
             </el-row>
           </div>
-          <!-- 302 -->
-          <el-row 
-            v-else-if="markerData.terminalType ==='AG302'" 
-            class="soft_update_container"
-          >
-            <el-row>
-              <el-col 
-                :span="8"
-                style="
-                  text-align: right;
-                  height: 32px;
-                  line-height: 32px;
-                  padding-right: 20px;
-                "
-                >版本类型:</el-col
-              >
-              <el-col :span="16" style="line-height:32px">
-                <el-radio-group v-model="AG302versionType" >
-                  <el-radio  style="width:120px" :label='1'>正式版</el-radio>
-                  <el-radio style="width:120px" :label='2'>测试版</el-radio>
-                </el-radio-group>
-                
-              </el-col>
-            </el-row>
-            <el-row class="versionSelect">
-              <el-col :span="8" style="
-                  text-align: right;
-                  height: 32px;
-                  line-height: 32px;
-                  padding-right: 20px;
-                ">版本选择:</el-col
-              >
-              <el-col :span="16">
-                <el-select class="versionOptions" v-model="AG302softVersion" placeholder="请选择升级版本" >
-                  <el-option
-                    v-for="(item,index) in AG302softOptions"
-                    :key="index"
-                    :label="item.versionName"
-                    :value="item.id"
-                  />
-                </el-select>
-              </el-col>
-            </el-row >
-            <!-- <span>选择升级版本 </span>
+
+          <el-row v-else class="soft_update_container">
+            <span>选择升级版本 </span>
             <el-select v-model="AG302softVersion" placeholder="请选择升级版本">
               <el-option
-                v-for="(item,index) in AG302softOptions"
-                :key="index"
-                :label="item.versionName"
-                :value="item.id"
+                v-for="item in AG302softOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               />
-            </el-select> -->
-            <el-col :span="24" style="margin-top: 150px;text-align:center">
-              <el-button type="danger"  size="" @click="handleForceUpdate"
+            </el-select>
+            <el-col :span="24" style="margin-top: 150px">
+              <el-button type="danger" size="" @click="handleForceUpdate"
                 >强制升级</el-button
               >
               <!-- <el-button type="primary" @click="handleUpdate">升级</el-button> -->
             </el-col>
           </el-row>
-          <!-- 302Android -->
-          <el-row
-          v-else
-          >AG502和AG302_Android的升级功能暂未开放</el-row>
+          <el-row> </el-row>
         </el-carousel-item>
-        <!-- 日志回传 -->
         <el-carousel-item name="logParam">
           <el-form
-            v-if="markerData.terminalType.indexOf('AG360')!=-1"
             :model="fileForm"
             ref="fileForm"
             label-width="100px"
@@ -1139,7 +852,6 @@
               >
             </el-form-item>
           </el-form>
-          <div v-else>AG302以及AG302_Android的日志回传功能暂未开放</div>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -1157,22 +869,14 @@ import {
   getPidParam_path,
   getPidCurveParam_path,
   getPidSlsParam_path,
-  getBasicParam_path,
-  getAdvanced1Param_path,
-  getAdvanced2Param_path,
-  getTool_path,
   update_carParam_path,
   update_calibParam_path,
   updatePidParam_path,
   updatePidCurveParam_path,
   updatePidSlsParam_path,
-  updateBasicParam_path,
-  updateAdvanced1Param_path,
-  updateAdvanced2Param_path,
   updateCar_path,
-  getVersionPackage_path,
   onlineUpgrade_path,
-  // modelVersion_path,
+  modelVersion_path,
   setFileUpload,
 } from "@/api/locationManage";
 export default {
@@ -1193,7 +897,6 @@ export default {
       }
     };
     return {
-      abc:[7,8,9,4],
       fileRules: {
         functionDate: [
           {
@@ -1226,14 +929,6 @@ export default {
       calibParamDes: {},
       pidParamModel: {},
       pidParamDes: {},
-      basicParamModel:{},
-      basicParamDes:{},
-      advanced1ParamModel:{},
-      advanced1ParamDes:{},
-      advanced2ParamModel:{},
-      advanced2ParamDes:{},
-      toolParamModel:{},
-      toolParamDes:{},   
       radioParamModel: {
         protocol: null,
         radioChannel: null,
@@ -1250,24 +945,6 @@ export default {
         model: {},
         des: {},
       },
-//--------------------------------------------------
-      basic:{
-        model:{},
-        des:{}
-      },
-      advanced1:{
-        model:{},
-        des:{}
-      },
-      advanced2:{
-        model:{},
-        des:{}
-      },
-      tool:{
-        model:{},
-        des:{}
-      },
-//--------------------------------------------------
       radioChannelOptions: {
         1: 4550500,
         2: 4560500,
@@ -1348,11 +1025,9 @@ export default {
       currentCarouselName: "carParam",
       AG302softVersion: "",
       AG302softOptions: [],
-      AG360UpdateModule: "11001",
+      AG360UpdateModule: "11",
       AG360UpdateVersion: "",
-      AG360versionType:1,
-      AG302versionType:1,
-      AG360versionOptions: [],
+      AG360versionOptions: {},
       fileForm: {
          functionDate: [new Date(), new Date()]
       },
@@ -1379,14 +1054,12 @@ export default {
         let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
         temRule.push(rule1);
         let rule2 = this.parseVerification(this.calibParamDes[key]);
-        console.log(rule2)
         temRule.push.apply(temRule, rule2);
         rules[key] = temRule;
       }
-      console.log(rules)
       return rules;
     },
-    
+
     pidParamRules() {
       let rules = {};
       for (let key in this.pidParamDes) {
@@ -1410,7 +1083,6 @@ export default {
         temRule.push.apply(temRule, rule2);
         rules[key] = temRule;
       }
-      
       return rules;
     },
 
@@ -1426,63 +1098,6 @@ export default {
       }
       return rules;
     },
-    // ------------------------------------------------------------------------------
-    basicParamRules(){
-      let rules = {};
-      for(let key in this.basic.des){
-        let temRule = [];
-        let rule1 ={required:true,message:'请输入参数',trigger:'blur'};
-        temRule.push(rule1);
-        let rule2 = this.parseVerification(this.basic.des[key]);
-        temRule.push.apply(temRule,rule2)
-        rules[key]= temRule
-      }
-      console.log(rules)
-      return rules
-      
-    },
-    advanced1ParamRules(){
-      let rules = {};
-      for(let key in this.advanced1.des){
-        let temRule = [];
-        let rule1 ={required:true,message:'请输入参数',trigger:'blur'};
-        temRule.push(rule1);
-        let rule2 = this.parseVerification(this.advanced1.des[key]);
-        temRule.push.apply(temRule,rule2)
-        rules[key]= temRule
-      }
-      return rules
-    },
-    advanced2ParamRules(){
-      let rules = {};
-      for(let key in this.advanced2.des){
-        let temRule = [];
-        let rule1 ={required:true,message:'请输入参数',trigger:'blur'};
-        temRule.push(rule1);
-        let rule2 = this.parseVerification(this.advanced2.des[key]);
-        temRule.push.apply(temRule,rule2)
-        rules[key]= temRule
-      }
-      return rules
-    },
-    toolParamRules(){
-      let rules = {};
-      for(let key in this.tool.des){
-        let temRule = [];
-        let rule1 ={require:true,message:'请输入参数',trigger:'blur'};
-        temRule.push(rule1);
-        let rule2 = this.parseVerification(this.tool.des[key]);
-        temRule.push.apply(temRule,rule2)
-        rules[key]= temRule
-      }
-      return rules
-    },
-
-    // ------------------------------------------------------------------------------
-
-
-
-
 
     carParamUpateButtonShow() {
       return Object.keys(this.carParamModel).length !== 0;
@@ -1546,74 +1161,22 @@ export default {
 
     AG360UpdateModule(newValue, old) {
       this.AG360UpdateVersion = "";
-      // this.getAG360softVersion(newValue);
-      
-      //AG360UpdateModule和AG360versionType结合使用的，这里是为了当AG360versionType == 2时，AG360UpdateModule进行切换的时候只请求一次固件包
-      this.AG360versionType == 1?this.get360VersionPackage({
-        pid:newValue,
-        versionType:this.AG360versionType
-      }):this.AG360versionType = 1 
+      this.getAG360softVersion(newValue);
     },
-    AG360versionType(newValue,old){
-      this.AG360UpdateVersion = ''
-      this.AG360versionOptions = []
-      this.get360VersionPackage({
-        pid:this.AG360UpdateModule,
-        versionType:newValue
-      })
-    },
-    AG302versionType(newValue,old){
-      this.AG302softVersion = ''
-      this.AG302softOptions = []
-      this.get302VersionPackage({
-        pid:9002,
-        versionType:newValue
-      })
-    }
   },
   mounted() {
     let data = this.markerData;
-    console.log(this.markerData)
     this.getAllParams(data);
-    //不论是AG302还是AG302Android还是神牛，都要请求car、calib参数
+
     this.getCarParam();
     this.getCalibParam();
-    //AG302需要请求曲线、超低速参数
+    this.getPidParam();
     this.markerData.terminalType === "AG302" ? this.getPidCurveParam() : "";
     this.markerData.terminalType === "AG302" ? this.getPidLowSpeedParam() : "";
-    //pid参数是AG302以及神牛参数版本100之前的版本需要请求
-    this.markerData.terminalType ==="AG302"||((this.markerData.terminalType.indexOf('AG360') !=-1)&&this.markerData.version<100)?this.getPidParam():''
-    // this.markerData.terminalType ==="AG302Android"?'':this.getPidParam();
-    //basic参数和Advanced1参数是在AG302Android或者神牛的参数版本大于等于100时展示
-    this.markerData.terminalType ==="AG302Android"||this.markerData.terminalType === 'AG502'||((this.markerData.terminalType.indexOf('AG360') !=-1)&&this.markerData.version >=100)?this.getBasicParam():"";
-    this.markerData.terminalType ==="AG302Android"||this.markerData.terminalType === 'AG502'||((this.markerData.terminalType.indexOf('AG360') !=-1)&&this.markerData.version>=100)?this.getAdvanced1Param():"";
-    //仅AG302Android类型设备有advanced2
-    this.markerData.terminalType ==="AG302Android"?this.getAdvanced2Param():"";
-    // this.markerData.terminalType ==="AG302Android"?this.getToolParam():"";
-
-    
-    // this.getAG302softVersion();
-    // this.getAG360softVersion();
-    this.get360VersionPackage({
-      pid:11001,
-      versionType:this.AG360versionType,
-      // deviceId:18695
-    })
-    this.get302VersionPackage({
-      pid:9002,
-      versionType:this.AG302versionType,
-      // deviceId:18695
-    })
-    // getVersionPackage_path({
-    //   pid:9004,
-    //   versionType:1,
-    //   deviceId:18695
-    // })
+    this.getAG302softVersion();
+    this.getAG360softVersion();
   },
   methods: {
-   printPara(p){
-      console.log(p)
-   },
     // 日志回传
     fileTransfer() {
       this.$refs.fileForm.validate((valid) => {
@@ -1677,7 +1240,8 @@ export default {
           this.$message.warning("参数描述为空");
           return Promise.resolve(0);
         }
-      })
+      });
+
       return des;
     },
     // 参数管理
@@ -1721,7 +1285,6 @@ export default {
         this.markerData.type,
         "car"
       );
-      console.log(tem)
       if (!tem) {
         return;
       }
@@ -1897,7 +1460,6 @@ export default {
 
     // 获取pid超低速参数
     async getPidLowSpeedParam() {
-      
       let tem = await this.getParamDes(
         this.markerData.version,
         this.markerData.type,
@@ -1918,104 +1480,7 @@ export default {
         }
       });
     },
-// ---------------------------------------------------------------------------------------
-    async getBasicParam(){
-      let tem = await this.getParamDes(
-        this.markerData.version,
-        this.markerData.type,
-        'basic'
-      );
-  
-      if(!tem)return;
-      this.basic.des = tem
-      getBasicParam_path({
-        carId:this.markerData.carId
-      }).then((res)=>{
-        try{
-          if(!res.data.data){
-            this.$message.warning('基本参数为空')
-            return
-          }
-          let paramJSON = res.data.data.paramJson;
-          let paramData = JSON.parse(paramJSON);
-          this.basic.model = paramData
-        }catch(error){
-          console.log(error)
-        }
-      })
-    },
-    async getAdvanced1Param(){
-      let tem = await this.getParamDes(
-        this.markerData.version,
-        this.markerData.type,
-        'advanced1'
-      );
-      
-      if(!tem)return;
-      this.advanced1.des = tem
-      getAdvanced1Param_path({
-        carId:this.markerData.carId
-      }).then((res)=>{
-        try{
-          if(!res.data.data){
-            this.$message.warning('高级参数1为空')
-            return
-          }
-          let paramJSON = res.data.data.paramJson;
-          let paramData = JSON.parse(paramJSON);
-          this.advanced1.model = paramData
-        }catch(error){
-          console.log(error)
-        }
-      })
-    },
-    async getAdvanced2Param(){
-      let tem = await this.getParamDes(
-        this.markerData.version,
-        this.markerData.type,
-        'advanced2'
-      );
-      if(!tem)return;
-      this.advanced2.des = tem
-      getAdvanced2Param_path({
-        carId:this.markerData.carId
-      }).then((res)=>{
-        try{
-          if(!res.data.data)return
-          let paramJSON = res.data.data.paramJson;
-          let paramData = JSON.parse(paramJSON);
-          this.advanced2.model = paramData
-        }catch(error){
-          console.log(error)
-        }
-      })
-    },
-    async getToolParam(){
-      let tem = await this.getParamDes(
-        this.markerData.version,
-        this.markerData.type,
-        'tool'
-      )
-      if(!tem)return
-      this.tool.des = tem
-      getTool_path({
-        carId:this.markerData.carId
-      }).then((res)=>{
-        try{
-          if(!res.data.data)return
-          let paramJSON = res.data.data.paramJson;
-          let paramData = JSON.parse(paramJSON)
-          this.tool.model = paramData
-        }catch(error){
-          console.log(error)
-        }
 
-
-      })
-    },
-
-
-//----------------------------------------------------------------------------------------
     // 车辆参数更新
     handleCarParamUpdate() {
       this.$refs["carParam"].validate((valid) => {
@@ -2109,7 +1574,6 @@ export default {
         }
       });
     },
-   
     // PID 参数更新
     handlePidParamUpdate() {
       this.$refs["pidParam"].validate((valid) => {
@@ -2174,16 +1638,14 @@ export default {
                 this.$message.error("PID曲线参数更新失败");
               }
             });
-          }).catch(()=>{})
+          });
         }
       });
     },
 
     // pid超低速参数更新
     handlePidLowSpeedParamUpate() {
-      console.log(this.pidLowSpeedParamRules)
       this.$refs["pidLowSpeedParam"].validate((valid) => {
-        console.log(valid)
         if (valid) {
           this.$confirm("此操作将覆盖当前车辆所有参数，是否继续？", "提示", {
             confirmButtonText: "确定",
@@ -2201,89 +1663,11 @@ export default {
                 this.$message.error("PID超低速参数更新失败");
               }
             });
-          }).catch(()=>{})
+          });
         }
       });
     },
-    // ----------------------------------------------
-    //基本参数更新
-    handleBasicParamUpdate(){
-      this.$refs["basicParam"].validate((valid) => {
-        console.log(valid)
-        if (valid) {
-          this.$confirm("此操作将覆盖当前车辆所有参数，是否继续？", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          }).then(() => {
-            updateBasicParam_path({
-              carId: this.markerData.carId,
-              paramJson: JSON.stringify(this.basic.model),
-            }).then((res) => {
-              if (res.data === 1) {
-                this.$message.success("基本参数更新成功");
-                // this.closeMe();
-              } else {
-                this.$message.error("基本参数更新失败");
-              }
-            });
-          }).catch(()=>{})
-        }
-      });
 
-    },
-    //advanced1参数更新
-    handleAdvanced1ParamUpdate(){
-      this.$refs["advanced1Param"].validate((valid) => {
-        if (valid) {
-          this.$confirm("此操作将覆盖当前车辆所有参数，是否继续？", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          }).then(() => {
-            updateAdvanced1Param_path({
-              carId: this.markerData.carId,
-              paramJson: JSON.stringify(this.advanced1.model),
-            }).then((res) => {
-              if (res.data === 1) {
-                this.$message.success("高级参数1更新成功");
-                // this.closeMe();
-              } else {
-                this.$message.error("高级参数1更新失败");
-              }
-            });
-          }).catch(()=>{})
-        }
-      });
-
-    },
-     //advanced2参数更新
-    handleAdvanced2ParamUpdate(){
-      this.$refs["advanced1Param"].validate((valid) => {
-        if (valid) {
-          this.$confirm("此操作将覆盖当前车辆所有参数，是否继续？", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          }).then(() => {
-            updateAdvanced2Param_path({
-              carId: this.markerData.carId,
-              paramJson: JSON.stringify(this.advanced2.model),
-            }).then((res) => {
-              if (res.data === 1) {
-                this.$message.success("高级参数2更新成功");
-                // this.closeMe();
-              } else {
-                this.$message.error("高级参数2更新失败");
-              }
-            });
-          }).catch(()=>{})
-        }
-      });
-
-    },
-    // ----------------------------------------------
-    
     // 电台数据更新
     handleRadioParamUpdate() {
       this.$refs["radioParam"].validate((valid) => {
@@ -2434,42 +1818,27 @@ export default {
       });
     },
 
-    
-
-    // 获取AG302版本选择老方案
-    // getAG302softVersion() {
-    //   modelVersion_path({
-    //     updateModel: "9",
-    //   }).then((res) => {
-    //     try {
-    //       let tem = [];
-    //       if (res.data && res.data.data) {
-    //         for (let i in res.data.data) {
-    //           let item = {
-    //             label: res.data.data[i],
-    //             value: i,
-    //           };
-    //           tem.push(item);
-    //         }
-    //       }
-    //       this.AG302softOptions = tem;
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   });
-    // },
-    //获取AG302版本选择新方案
-    get302VersionPackage(para){
-      getVersionPackage_path(para).then((res)=>{
-          console.log(res.data.data)
-          try{
-            res?this.AG302softOptions = res.data.data.packgeList:''
-            // console.log(this.AG302softOptions)
-          }catch(error){
-            console.log(error)
+    // 获取AG302版本选择
+    getAG302softVersion() {
+      modelVersion_path({
+        updateModel: "9",
+      }).then((res) => {
+        try {
+          let tem = [];
+          if (res.data && res.data.data) {
+            for (let i in res.data.data) {
+              let item = {
+                label: res.data.data[i],
+                value: i,
+              };
+              tem.push(item);
+            }
           }
-      })
-
+          this.AG302softOptions = tem;
+        } catch (error) {
+          console.log(error);
+        }
+      });
     },
 
     // AG302强制远程升级
@@ -2527,34 +1896,21 @@ export default {
       });
     },
 
-    // AG360升级接口：
+    // AG360升级接口
 
-    // 获取神牛模块版本老方案
-    // getAG360softVersion(model = "11") {
-    //   modelVersion_path({
-    //     updateModel: model,
-    //   }).then((res) => {
-    //     try {
-    //       if (res) {
-    //         this.AG360versionOptions = res.data.data;
-    //       }
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   });
-    // },
-    //获取神牛版本新方案
-    get360VersionPackage(para){
-      console.log(para)
-      getVersionPackage_path(para).then((res)=>{
-          try{
-            res?this.AG360versionOptions = res.data.data.packgeList:''
-            // console.log(this.AG360versionOptions)
-          }catch(error){
-            console.log(error)
+    // 获取神牛模块版本
+    getAG360softVersion(model = "11") {
+      modelVersion_path({
+        updateModel: model,
+      }).then((res) => {
+        try {
+          if (res) {
+            this.AG360versionOptions = res.data.data;
           }
-      })
-
+        } catch (error) {
+          console.log(error);
+        }
+      });
     },
 
     // 神牛强制升级
@@ -2583,12 +1939,6 @@ export default {
 
     // 神牛升级
     updateAG360(upgradeWay = 0) {
-      console.log({
-        installPackageId: this.AG360UpdateVersion,
-        sn: this.markerData.sn,
-        updateModel: this.AG360UpdateModule,
-        upgradeWay: upgradeWay,
-      })
       onlineUpgrade_path({
         installPackageId: this.AG360UpdateVersion,
         sn: this.markerData.sn,
@@ -2640,7 +1990,6 @@ export default {
 
     // 动态解析表单效验规则
     parseVerification(objItem) {
-      console.log(objItem)
       try {
         let temRule = [];
         if (objItem.type === "String") {
@@ -2652,7 +2001,7 @@ export default {
           };
           temRule.push(rule1);
         }
-        if (objItem.type === "int"|| objItem.type === "Int") {
+        if (objItem.type === "int") {
           if (typeof objItem.range === "string") {
             let [min, max] = objItem.range.split(",").map((element) => {
               return Number(element);
@@ -2682,7 +2031,7 @@ export default {
             //
           }
         }
-        if (objItem.type === "double" || objItem.type === "Double") {
+        if (objItem.type === "double") {
           if (objItem.range === "") {
             // let rule3 = { min: 1, max: 8, message: '长度在 1 到 8 位', trigger: 'blur' };
             // temRule.push(rule3);
@@ -2728,7 +2077,6 @@ export default {
             temRule.push(rule4);
           }
         }
-        console.log(temRule)
         return temRule;
       } catch (err) {
         console.log(err);
@@ -2737,9 +2085,6 @@ export default {
         );
       }
     },
-    
-
-
   },
 };
 </script>
@@ -2831,32 +2176,9 @@ export default {
     height: auto;
   }
   .soft_update_container {
-    text-align: left;
     margin-top: 20px;
-    .versionSelect{
-      //  color:pink;
-       .el-col{
-          &:nth-child(2){
-            // color:yellow;
-            
-           .el-select {
-              width: unset;
-              & ::v-deep .el-input__inner{
-                height: 32px;
-                line-height: 32px;
-              }
-              & ::v-deep .el-input__suffix{
-                height: 32px;
-                line-height: 32px;
-                .el-input__icon{
-                  line-height: 32px;
-                }
-              }
-              
-            }   
-          }   
-       }
-   
+    .el-select {
+      width: unset;
     }
   }
 }
@@ -2877,7 +2199,7 @@ export default {
     // white-space: nowrap;
   }
   .el-radio {
-    width: 120px;
+    width: 150px;
   }
 }
 .el-select ::v-deep .el-select-dropdown {
