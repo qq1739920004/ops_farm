@@ -4,5 +4,5 @@
 // window.socketAddress = 'ws://116.233.204.150:9039/';  // 测试服外网
 // window.socketAddress = 'wss://cloud.sinognss.com';
 // window.socketAddress = 'ws://140.207.166.210:9034/websocket';
-window.socketAddress = 'wss:cloud.sinognss.com:59508';
+window.socketAddress = 'wss://cloud.sinognss.com';
 window.cookiedomain='.sinognss.com'

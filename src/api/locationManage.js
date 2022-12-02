@@ -112,6 +112,35 @@ export function getPidSlsParam_path(params) {
     params
   })
 }
+export function getBasicParam_path(params){
+  return request({
+    url:'/farm/param/basicParam/get',
+    method:'post',
+    params
+  })
+}
+export function getAdvanced1Param_path(params){
+  return request({
+    url:'/farm/param/advanced1Param/get',
+    method:'post',
+    params
+  })
+}
+export function getAdvanced2Param_path(params){
+  return request({
+    url:'/farm/param/advanced2Param/get',
+    method:'post',
+    params
+  })
+}
+export function getTool_path(params){
+  return request({
+    url:'/farm/param/farmtoolParam/get',
+    method:'post',
+    params
+  })
+}
+
 export function update_carParam_path(params) {
   return request({
     url: '/farm/param/carParam/update',
@@ -148,6 +177,29 @@ export function updatePidSlsParam_path(params) {
     params
   })
 }
+export function updateBasicParam_path(params){
+  return request({
+    url: '/farm/param/basicParam/update',
+    method: 'post',
+    params
+  })
+}
+export function updateAdvanced1Param_path(params){
+  return request({
+    url: '/farm/param/advanced1Param/update',
+    method: 'post',
+    params
+  })
+}
+export function updateAdvanced2Param_path(params){
+  return request({
+    url: '/farm/param/advanced2Param/update',
+    method: 'post',
+    params
+  })
+}
+
+
 export function updateCar_path(params) {
   return request({
     url: '/farm/car/update',
@@ -155,9 +207,17 @@ export function updateCar_path(params) {
     params
   })
 }
+
+export function getVersionPackage_path(params){
+  return request({
+    url:'/farm/car/productPackage',
+    method:'post',
+    data:params
+  })
+}
 export function onlineUpgrade_path(params) {
   return request({
-    url: '/farm/car/onlineUpgrade',
+    url: '/farm/car/PackageUpgrade',
     method: 'post',
     params
   })
