@@ -250,7 +250,7 @@ export default {
       singleCarTrack_path({
         st: this.startDate,
         et: this.endDate,
-        deviceId: this.carObj.deviceId,
+        sn: this.carObj.sn,
       }).then((res) => {
         try {
           if (res.data.code === 100) {

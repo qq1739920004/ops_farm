@@ -104,8 +104,8 @@
                   }}</el-col>
                   <el-col :span="6">
                     <el-radio
-                      v-model="deviceId"
-                      :label="subItem.car.deviceId"
+                      v-model="deviceSn"
+                      :label="subItem.deviceSn"
                     />
                   </el-col>
                 </el-row>
@@ -152,7 +152,7 @@ export default {
       endDate: "",
       activeNames: [1],
       listData: [],
-      deviceId: "",
+      deviceSn: "",
       loading: false,
       polyline: [],
       startMarker: [],
@@ -246,7 +246,7 @@ export default {
       }).then((res) => {
         try {
           this.listData = [];
-          this.deviceId = "";
+          this.deviceSn = "";
           // if(res.data.code === 101) {
           //     this.$message.warning('时间范围过长,超过两个月');
           //     return;
@@ -267,13 +267,13 @@ export default {
     },
 
     getHistoryRoute() {
-      if (!this.deviceId) {
+      if (!this.deviceSn) {
         this.$message.warning("请选择车辆");
         return;
       }
       this.loading = true;
       singleCarTrack_path({
-        deviceId: this.deviceId,
+        sn: this.deviceSn,
         st: this.startDate,
         et: this.endDate,
       })

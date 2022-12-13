@@ -72,11 +72,11 @@ export function provinceDataList_path(params) {
       data
     })
   }
-  export function singleCarTrack_path(data) {
+  export function singleCarTrack_path(params) {
     return request({
-      url: '/farm/point/singleCarTrack',
-      method: 'post',
-      data
+      url: '/farmPoint/point/singleCarTrack',
+      method: 'get',
+      params
     })
   }
   export function activationCodeAdd_path(params) {

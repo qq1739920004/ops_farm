@@ -1,7 +1,7 @@
 'use strict';
 const path = require('path');
-const target = 'http://cloud.sinognss.com/'; // 线上
-// const target = 'http://140.207.166.210:9030'; // 测试服
+// const target = 'http://cloud.sinognss.com/'; // 线上
+const target = 'http://140.207.166.210:9030'; // 测试服
 // const target = 'http://192.168.2.60:8081'; // 测试服
 const webpack = require('webpack');
 
