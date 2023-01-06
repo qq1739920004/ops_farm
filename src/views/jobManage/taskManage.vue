@@ -467,7 +467,7 @@ export default {
 
     loadWorkData(groupId, workId) {
       historyList_path({
-        ids: JSON.stringify([workId]),
+        ids: workId,
       }).then((res) => {
         try {
           let key = Object.keys(res.data.data);
