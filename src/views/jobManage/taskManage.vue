@@ -180,7 +180,7 @@
                   </div>
                   <div class="item_line item_line_4">
                     <i class="el-icon-location-information"></i>
-                    <span>{{ subItem.province }}</span>
+                    <span>{{ subItem.position }}</span>
                   </div>
                   <div class="item_line item_line_5">
                     <i class="el-icon-timer"></i>
