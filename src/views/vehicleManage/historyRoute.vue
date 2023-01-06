@@ -289,12 +289,12 @@ export default {
             //     this.$message.warning('暂无数据,请重新筛选时间')
             //   }
             // }
-            if (res.data.code === 100) {
-              if (res.data.data.length) {
+            // if (res.data.code === 100) {
+              if (res.data.length > 0) {
                this.map.removeLayer(this.polyline);
                 this.xyArr.length = 0;
                 res.data.data.forEach((item) => {
-                      let point =  this.coorTransform([item.pos_x, item.pos_y])
+                      let point =  this.coorTransform([item.posX, item.posY])
                 this.xyArr.push(point);
                 });
                 let latlngs = this.xyArr;
@@ -311,7 +311,7 @@ export default {
               } else {
                 this.$message.warning("暂无数据,请重新筛选时间");
               }
-            }
+            // }
             if (res.data.code === 101) {
               this.$message.warning("时间范围过长，超过两个月");
             }

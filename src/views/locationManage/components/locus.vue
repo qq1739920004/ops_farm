@@ -253,32 +253,33 @@ export default {
         sn: this.carObj.sn,
       }).then((res) => {
         try {
-          if (res.data.code === 100) {
-            if (res.data.data.length) {
-              this.map.removeLayer(this.polyline);
-              this.xyArr.length = 0;
+          // if (res.data.code === 100) {
+          if (res.data.length > 0) {
+            this.map.removeLayer(this.polyline);
+            this.xyArr.length = 0;
 
-              res.data.data.forEach((item) => {
-                let point = this.coorTransform([item.pos_x, item.pos_y]);
-                this.xyArr.push(point);
-              });
+            res.data.forEach((item) => {
+      
+              let point = this.coorTransform([item.posX, item.posY]);
+              this.xyArr.push(point);
+            });
 
-              let latlngs = this.xyArr;
-              this.polyline = L.polyline(latlngs, { color: "#75FB4C" }).addTo(
-                this.map
-              );
+            let latlngs = this.xyArr;
+            this.polyline = L.polyline(latlngs, { color: "#75FB4C" }).addTo(
+              this.map
+            );
 
-              this.map.fitBounds(this.xyArr);
+            this.map.fitBounds(this.xyArr);
 
-              //上一版本代码---
-              // this.removeOverlay();
-              // res.data.data.forEach((item, index) => {
-              // this.drawPath(item.list, item, this.color[index % 5])
-              // });
-            } else {
-              this.$message.warning("暂无数据,请重新筛选时间");
-            }
+            //上一版本代码---
+            // this.removeOverlay();
+            // res.data.data.forEach((item, index) => {
+            // this.drawPath(item.list, item, this.color[index % 5])
+            // });
+          } else {
+            this.$message.warning("暂无数据,请重新筛选时间");
           }
+          // }
           if (res.data.code === 101) {
             this.$message.warning("时间范围过长，超过两个月");
           }
