@@ -483,7 +483,7 @@ export default {
             return;
           }
           let PointListTransed = res.data.data[key[0]].map((item) => {
-            return this.coorTransform([item.pos_x, item.pos_y], this.mapId); // 转换坐标
+            return this.coorTransform([item.posX, item.posY], this.mapId); // 转换坐标
           });
           let line = L.polyline(PointListTransed, { color: "#00ff00" })
             .addTo(this.map)
