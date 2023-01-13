@@ -112,7 +112,8 @@
       </div>
       <div v-show="calculationObj.length > 0">
         <el-button class="el-icon-delete" size="small" @click="clearDistance">
-          清除</el-button>
+          清除</el-button
+        >
       </div>
     </div>
     <remote
@@ -738,11 +739,18 @@ export default {
     appendMarkers(farmDataArray = []) {
       try {
         let that = this;
-        farmDataArray.forEach((item) => {
+
+        let marker;
+        let markers = [];
+        farmDataArray.forEach((item, index) => {
           let point = this.createMarkerPoint(item);
           let icon = this.createMarkerIcon(item);
+
           let popup = this.createMakerPopup(item);
-          let marker;
+
+          // let baseMarker = L.marker(point, { icon: icon }).bindPopup(popup, {
+          //   maxWidth: 500,
+          // });
           if (this.renderEngine === "dom") {
             marker = L.marker(point, {
               icon: icon,
@@ -752,10 +760,26 @@ export default {
               .addTo(this.layerGroup)
               .bindPopup(popup);
           }
+
           if (this.renderEngine === "polymer") {
-            marker = L.marker(point, { icon: icon })
-              .addTo(this.markerClusterGroup)
-              .bindPopup(popup);
+            marker = L.marker(point, { icon: icon });
+            // // console.log(marker,'--766');
+            // markers.push(marker);
+
+            // if (index <= this.domMarkerLimit) {
+            //   marker.addTo(this.markerClusterGroup);
+            // }
+
+            // this.markerClusterGroup.addLayers(
+            //   window.farmMarkers.map((item) => item.marker)
+            // );
+            // if (index <= 1000) {
+            //   marker.addTo(this.markerClusterGroup);
+            // }
+
+            // marker = L.marker(point, { icon: icon })
+            //   .addTo(this.markerClusterGroup)
+            //   .bindPopup(popup);
           }
 
           //此处缺少拦截器，用于拦截新上来的设备，对筛选状态的匹配；动态是否添加到地图;
@@ -776,7 +800,13 @@ export default {
               className: "away_from_base",
             });
           }
+
+          // markers.push({sn:item.sn,marker:marker,item:item })
+
+  
           this.saveFarmMarker(item.sn, marker, item);
+
+   
         });
       } catch (error) {
         console.log(error);
@@ -1216,8 +1246,7 @@ export default {
     // 处理websocket数据
     listenMessage() {
       bus.$on("message", (data) => {
-        console.log(data,'---1219')
-        this.handleMessageChange(data);
+        // this.handleMessageChange(data);
       });
     },
 
@@ -1377,7 +1406,10 @@ export default {
           break;
 
         case "polymer":
+          
           this.layerGroup.clearLayers();
+
+
           this.markerClusterGroup.addLayers(
             window.farmMarkers.map((item) => item.marker)
           );
@@ -2152,7 +2184,7 @@ export default {
       font-weight: bolder;
     }
     .aysoicss {
-      width:270px !important;
+      width: 270px !important;
     }
   }
 

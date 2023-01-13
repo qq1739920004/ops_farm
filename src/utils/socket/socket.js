@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
   baseURL = window.socketAddress;
 }
 if (process.env.NODE_ENV === 'development') {
-  baseURL = `wss://cloud.sinognss.com`;
+  baseURL = `ws://192.168.2.145:9034`;
 }
 
 function decodeToken() {
