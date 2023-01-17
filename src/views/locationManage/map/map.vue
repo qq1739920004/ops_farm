@@ -264,8 +264,6 @@ export default {
       zoom: 1, // 当前地图缩放层级
       criticalZoom: 8, // 地图层级临界值，使用不同的渲染逻辑，高于使用点聚合，低于值使用只更新当前视野值
       valve: null, // 锁,用于统计marker状态的节流逻辑
-      markerClusterGroup: L.markerClusterGroup(),
-      layerGroup: L.layerGroup(),
       currentView: [], // 当前视野坐标数组:左上-右上-右下-左下；
       renderEngine: "dom", // 原生dom渲染， 或者 polymer 聚合引擎；
       domMarkerLimit: 1000, // 使用dom渲染上限
@@ -516,7 +514,7 @@ export default {
           if (test(item.markerData, testArray)) {
             that.map.hasLayer(item.marker)
               ? ""
-              : item.marker.addTo(that.layerGroup);
+              : item.marker.addTo(layerGroup);
           } else {
             that.map.hasLayer(item.marker) ? item.marker.remove() : "";
           }
@@ -525,12 +523,12 @@ export default {
       if (this.renderEngine === "polymer") {
         window.farmMarkers.forEach((item) => {
           if (test(item.markerData, testArray)) {
-            that.markerClusterGroup.hasLayer(item.marker)
+            markerClusterGroup.hasLayer(item.marker)
               ? ""
-              : item.marker.addTo(that.markerClusterGroup);
+              : item.marker.addTo(markerClusterGroup);
           } else {
-            that.markerClusterGroup.hasLayer(item.marker)
-              ? that.markerClusterGroup.removeLayer(item.marker)
+            markerClusterGroup.hasLayer(item.marker)
+              ? markerClusterGroup.removeLayer(item.marker)
               : "";
           }
         });
