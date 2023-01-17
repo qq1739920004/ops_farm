@@ -363,8 +363,27 @@
                         return t.data._leaflet_id === n.data._leaflet_id
                     }), this._latlngMarkers.total--, this._latlngMarkers.dirty++, !0 === a && !0 === n && this._redraw(!0)
                 },
-                onAdd: function(t) {
-                    this._map = t, this._canvas || this._initCanvas(), this.options.pane ? this.getPane().appendChild(this._canvas) : t._panes.overlayPane.appendChild(this._canvas), t.on("moveend", this._reset, this), t.on("resize", this._reset, this), t.on("click", this._executeListeners, this), t.on("mousemove", this._executeListeners, this)
+                // onAdd: function(t) {
+                //     this._map = t, this._canvas || this._initCanvas(), this.options.pane ? this.getPane().appendChild(this._canvas) : t._panes.overlayPane.appendChild(this._canvas), t.on("moveend", this._reset, this), t.on("resize", this._reset, this), t.on("click", this._executeListeners, this), t.on("mousemove", this._executeListeners, this)
+                // },
+                onAdd: function (map) {
+
+                    this._map = map;
+        
+                    if (!this._canvas) this._initCanvas();
+        
+                    if (this.options.pane) this.getPane().appendChild(this._canvas);
+                    else map._panes.overlayPane.appendChild(this._canvas);
+        
+                    map.on('moveend', this._reset, this);
+                    map.on('resize',this._reset,this);
+        
+                    map.on('click', this._executeListeners, this);
+                    map.on('mousemove', this._executeListeners, this);
+                    // map.on('mousemove', ()=>{this._executeListeners();this._animateZoom()}, this);
+                    if (map._zoomAnimated) {
+                        map.on('zoomanim', this._animateZoom, this);
+                    }
                 },
                 onRemove: function(t) {
                     this.options.pane ? this.getPane().removeChild(this._canvas) : t.getPanes().overlayPane.removeChild(this._canvas)
@@ -372,6 +391,15 @@
                     this._map.removeEventListener('moveend');
                     this._map.removeEventListener('click');
                     this._map.removeEventListener('resize');
+                    if (t._zoomAnimated) {
+                        this._map.removeEventListener('zoomanim');
+                    }
+                },
+                _animateZoom: function(event) {
+                    var scale = this._map.getZoomScale(event.zoom);
+                    var offset = this._map._latLngBoundsToNewLayerBounds(this._map.getBounds(), event.zoom, event.center).min;
+        
+                    L.DomUtil.setTransform(this._canvas, offset, scale);
                 },
                 addTo: function(t) {
                     return t.addLayer(this), this
@@ -448,7 +476,7 @@
                 },
                 _redraw: function(t) {
                     var n = this;
-                    if (this._map) {
+                    if (this._map&&this._latlngMarkers) {
                         t && this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
                         var i = [];
                         n._latlngMarkers.dirty / n._latlngMarkers.total >= .1 && (n._latlngMarkers.all().forEach(function(t) {
@@ -479,8 +507,8 @@
                 },
                 _initCanvas: function() {
                     this._canvas = t.DomUtil.create("canvas", "leaflet-canvas-icon-layer leaflet-layer");
-                    var n = t.DomUtil.testProp(["transformOrigin", "WebkitTransformOrigin", "msTransformOrigin"]);
-                    this._canvas.style[n] = "50% 50%";
+                    // var n = t.DomUtil.testProp(["transformOrigin", "WebkitTransformOrigin", "msTransformOrigin"]);
+                    // this._canvas.style[n] = "50% 50%";
                     var i = this._map.getSize();
                     this._canvas.width = i.x, this._canvas.height = i.y, this._context = this._canvas.getContext("2d");
                     var a = this._map.options.zoomAnimation && t.Browser.any3d;

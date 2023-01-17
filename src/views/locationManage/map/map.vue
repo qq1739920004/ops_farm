@@ -187,6 +187,10 @@ const focusAbnormal = require("./img/icon0309/focusAbnormal.png");
 const focusNormal = require("./img/icon0309/focusNormal.png");
 const focusStandby = require("./img/icon0309/Standby.png");
 
+let markerClusterGroup  = L.markerClusterGroup()
+
+let layerGroup = L.layerGroup()
+
 function dmsTrans(decimal) {
   try {
     if (!decimal) {
@@ -286,8 +290,8 @@ export default {
         .addTo(this.map);
       this.handleMapChange(this.mapName);
       // 添加聚合图层
-      this.map.addLayer(this.markerClusterGroup);
-      this.map.addLayer(this.layerGroup);
+      this.map.addLayer(markerClusterGroup);
+      this.map.addLayer(layerGroup);
       let that = this;
       //  拾取地图点坐标
       this.map.on("click", function (event) {
@@ -415,38 +419,38 @@ export default {
           item.marker && item.marker.remove();
           if (e.includes(0)) {
             item.markerData.driveState !== 0 && item.markerData.solStat !== 4
-              ? item.marker.addTo(this.layerGroup)
+              ? item.marker.addTo(layerGroup)
               : "";
           }
           if (e.includes(1)) {
             item.markerData.driveState !== 0 && item.markerData.solStat === 4
-              ? item.marker.addTo(this.layerGroup)
+              ? item.marker.addTo(layerGroup)
               : "";
           }
           if (e.includes(2)) {
             item.markerData.driveState === 0
-              ? item.marker.addTo(this.layerGroup)
+              ? item.marker.addTo(layerGroup)
               : "";
           }
         });
       }
       if (this.renderEngine === "polymer") {
         window.farmMarkers.forEach((item) => {
-          item.marker && this.markerClusterGroup.removeLayer(item.marker);
+          item.marker && markerClusterGroup.removeLayer(item.marker);
           // item.marker && item.marker.remove();
           if (e.includes(0)) {
             item.markerData.driveState !== 0 && item.markerData.solStat !== 4
-              ? item.marker.addTo(this.markerClusterGroup)
+              ? item.marker.addTo(markerClusterGroup)
               : "";
           }
           if (e.includes(1)) {
             item.markerData.driveState !== 0 && item.markerData.solStat === 4
-              ? item.marker.addTo(this.markerClusterGroup)
+              ? item.marker.addTo(markerClusterGroup)
               : "";
           }
           if (e.includes(2)) {
             item.markerData.driveState === 0
-              ? item.marker.addTo(this.markerClusterGroup)
+              ? item.marker.addTo(markerClusterGroup)
               : "";
           }
         });
@@ -612,7 +616,7 @@ export default {
 
     // 点击搜索结果
     handleSelect(item) {
-      item.marker.addTo(this.layerGroup);
+      item.marker.addTo(layerGroup);
       item.marker.openPopup();
       this.map.fitBounds([item.marker._latlng]);
     },
@@ -757,28 +761,33 @@ export default {
               riseOnHover: false,
               draggable: false,
             })
-              .addTo(this.layerGroup)
+              .addTo(layerGroup)
               .bindPopup(popup);
           }
 
           if (this.renderEngine === "polymer") {
             marker = L.marker(point, { icon: icon });
+
+            // console.log(marker,);
+
+
+
             // // console.log(marker,'--766');
             // markers.push(marker);
 
             // if (index <= this.domMarkerLimit) {
-            //   marker.addTo(this.markerClusterGroup);
+            //   marker.addTo(markerClusterGroup);
             // }
 
-            // this.markerClusterGroup.addLayers(
+            // markerClusterGroup.addLayers(
             //   window.farmMarkers.map((item) => item.marker)
             // );
             // if (index <= 1000) {
-            //   marker.addTo(this.markerClusterGroup);
+            //   marker.addTo(markerClusterGroup);
             // }
 
             // marker = L.marker(point, { icon: icon })
-            //   .addTo(this.markerClusterGroup)
+            //   .addTo(markerClusterGroup)
             //   .bindPopup(popup);
           }
 
@@ -1139,7 +1148,7 @@ export default {
         }
         if (this.renderEngine === "polymer") {
           markerObj
-            ? this.markerClusterGroup.removeLayer(markerObj["marker"])
+            ? markerClusterGroup.removeLayer(markerObj["marker"])
             : "";
         }
         window.farmMarkers.splice(index, 1);
@@ -1393,29 +1402,30 @@ export default {
     switchRenderEngine(engine) {
       switch (engine) {
         case "dom":
-          this.markerClusterGroup.removeLayers(
+          markerClusterGroup.removeLayers(
             window.farmMarkers.map((item) => item.marker)
           );
           window.farmMarkers.forEach((item) =>
-            item.marker.addTo(this.layerGroup)
+            item.marker.addTo(layerGroup)
           );
           // window.farmMarkers.forEach(item => {
-          //     this.markerClusterGroup.removeLayer(item.marker);
-          //     item.marker.addTo(this.layerGroup);
+          //     markerClusterGroup.removeLayer(item.marker);
+          //     item.marker.addTo(layerGroup);
           // });
           break;
 
         case "polymer":
           
-          this.layerGroup.clearLayers();
+          layerGroup.clearLayers();
 
-
-          this.markerClusterGroup.addLayers(
-            window.farmMarkers.map((item) => item.marker)
+          markerClusterGroup.addLayers(
+            farmMarkers.map((item) => item.marker)
           );
+
+          return
           // window.farmMarkers.forEach(item => {
           //     item.marker && item.marker.remove();
-          //     item.marker.addTo(this.markerClusterGroup);
+          //     item.marker.addTo(markerClusterGroup);
           // });
           break;
       }

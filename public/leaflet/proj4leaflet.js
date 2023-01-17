@@ -43,7 +43,13 @@
 
 		unproject: function (point, unbounded) {
 			var point2 = this._proj.inverse([point.x, point.y]);
-			return new L.LatLng(point2[1], point2[0], unbounded);
+		
+			if(isNaN(point2[0])||isNaN(point2[1])){
+				return new L.LatLng(39.907478, 116.390814, unbounded);//故宫位置
+			}else{
+				return new L.LatLng(point2[1], point2[0], unbounded);
+			}
+			
 		},
 
 		_projFromCodeDef: function(code, def) {
