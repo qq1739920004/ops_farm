@@ -1,10 +1,10 @@
 'use strict';
 const path = require('path');
-// const target = 'http://cloud.sinognss.com/'; // 线上
+const target = 'https://cloud.sinognss.com'; // 线上
 // const target = 'http://140.207.166.210:9030'; // 测试服
 // const target = 'http://192.168.2.60:8081'; // 测试服
-const target = 'http://192.168.2.145:80'; // 测试服
-const target1 = 'http://192.168.2.145:9900'; // 测试服
+// const target = 'http://192.168.2.145:80'; // 测试服
+// const target1 = 'http://192.168.2.145:9900'; // 测试服
 
 
 
@@ -35,7 +35,7 @@ module.exports = {
     open: false,
     hotOnly: true,
     proxy: {
-      '/api/farm': {
+      '/api': {
         target: target,
         changeOrigin: true,
         ws: false,
@@ -44,15 +44,15 @@ module.exports = {
           '^/api': ''
         }
       },
-      '/api/DiffServer': {
-        target: target1,
-        changeOrigin: true,
-        ws: false,
-        secure: false,
-        pathRewrite: {
-          '^/api': ''
-        }
-      }
+      // '/api/DiffServer': {
+      //   target: target1,
+      //   changeOrigin: true,
+      //   ws: false,
+      //   secure: false,
+      //   pathRewrite: {
+      //     '^/api': ''
+      //   }
+      // }
   }
   },
 
