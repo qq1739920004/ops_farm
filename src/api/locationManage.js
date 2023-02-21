@@ -32,11 +32,11 @@ export function mapStatus_path(params) {
   })
 }
 
-export function tendency_path(data) {
+export function tendency_path(params) {
   return request({
-    url: '/farm/point/tendency',
-    method: 'post',
-    data
+    url: '/farmPoint/point/tendency',
+    method: 'get',
+    params
   })
 }
 
@@ -49,7 +49,7 @@ export function singleCarTrack_path(params) {
 }
 export function driveStatus_path(params) {
   return request({
-    url: '/farm/car/driveStatus',
+    url: '/farmPoint/car/driveStatus',
     method: 'get',
     params
   })

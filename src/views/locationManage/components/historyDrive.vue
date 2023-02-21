@@ -190,9 +190,9 @@ export default {
     },
     refreshData() {
       tendency_path({
-          deviceSn: this.deviceSn,
-          startTime: formatDate(this.startTime),
-          endTime: formatDate(this.endTime)
+          sn: this.deviceSn,
+          st: formatDate(this.startTime),
+          et: formatDate(this.endTime)
         }).then((res) => {
           console.log(res, '-------196')
           if (res.data.code == 'ok') {
