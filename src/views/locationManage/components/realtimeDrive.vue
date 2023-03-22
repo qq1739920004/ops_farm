@@ -406,7 +406,7 @@ export default {
             // data.data.heading = null;
           }
           let time = this.dateTimeTrans(data.data.gnssTime).slice(11)
-          let xoffset = data.data.xoffset
+          let xoffset = data.data.xOffset
           let speed = data.data.speed
           let direction = data.data.heading
           let diffAge = data.data.diffAge
