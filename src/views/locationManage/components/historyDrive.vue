@@ -194,7 +194,6 @@ export default {
           st: formatDate(this.startTime),
           et: formatDate(this.endTime)
         }).then((res) => {
-          console.log(res, '-------196')
           if (res.data.code == 'ok') {
             // this.$message.success('刷新成功');
             if (res.data.page.length == 0) {
@@ -217,12 +216,12 @@ export default {
                   this.formatHour(this.startTime)
                 ) {
                   this.hDiffXLabel.push(this.formatHour(item.gnssTime))
-                  // this.hDiffData.push(item.xOffset);
-                  this.hDiffData.push(item.xOffset * 100)
+                  // this.hDiffData.push(item.xoffset);
+                  this.hDiffData.push(item.xoffset * 100)
                   this.speedData.push(item.speed)
                   this.azimuthData.push(item.heading)
                 } else {
-                  this.hDiffData[index] = item.xOffset * 100
+                  this.hDiffData[index] = item.xoffset * 100
                   this.speedData[index] = item.speed
                   this.azimuthData[index] = item.heading
                 }
@@ -232,12 +231,12 @@ export default {
                   this.formatHour(this.endTime)
                 ) {
                   this.hDiffXLabel.push(this.formatHour(item.gnssTime))
-                  // this.hDiffData.push(item.xOffset);
-                  this.hDiffData.push(item.xOffset * 100)
+                  // this.hDiffData.push(item.xoffset);
+                  this.hDiffData.push(item.xoffset * 100)
                   this.speedData.push(item.speed)
                   this.azimuthData.push(item.heading)
                 } else {
-                  this.hDiffData[index] = item.xOffset * 100
+                  this.hDiffData[index] = item.xoffset * 100
                   this.speedData[index] = item.speed
                   this.azimuthData[index] = item.heading
                 }
@@ -247,8 +246,8 @@ export default {
                 this.azimuthData.push(0)
               } else {
                 this.hDiffXLabel.push(this.formatHour(item.gnssTime))
-                this.hDiffData.push(item.xOffset * 100)
-                // this.hDiffData.push(item.xOffset);
+                this.hDiffData.push(item.xoffset * 100)
+                // this.hDiffData.push(item.xoffset);
                 this.speedData.push(item.speed)
                 this.azimuthData.push(item.heading)
               }
@@ -263,7 +262,6 @@ export default {
       return [date.getHours(), date.getMinutes()].join(':')
     },
     initHDiffChart() {
-      console.log('-----265')
       if (this.history_hDiffChart != null) {
         this.history_hDiffChart.dispose()
       }
@@ -361,6 +359,7 @@ export default {
           }
         ]
       }
+      console.log(this.hDiffData,'---363');
       this.history_hDiffChart.setOption(option)
       this.history_hDiffChart.on('dataZoom', (res) => {
         this.history_speedChart.setOption({
