@@ -340,13 +340,13 @@ export default {
               this.judgeLevel = res.data.data.judgeLevel
               let data = res.data.data.list
               let time = [];
-                let xOffset = [];
+                let xoffset = [];
                 let speed = [];
                 let direction = [];
                 let diffAge = []
               data.forEach(element => {
                 time.push(this.dateTimeTrans(element.gnssTime).slice(11))
-                xOffset.push(element.xOffset)
+                xoffset.push(element.xoffset)
                 speed.push(element.speed)
                 direction.push(element.heading)
                 diffAge.push(element.diffAge)
@@ -357,7 +357,7 @@ export default {
               this.optionDirection.xAxis.data = time.map(i => i)
               this.optionDifference.xAxis.data = time.map(i => i)
 
-              this.optionOffset.series[0].data = xOffset
+              this.optionOffset.series[0].data = xoffset
               this.optionSpeed.series[0].data = speed
               this.optionDirection.series[0].data = direction
               this.optionDifference.series[0].data = diffAge
@@ -401,12 +401,12 @@ export default {
         if (data.deviceSn === this.deviceSn) {
           // 过滤非自动驾驶驾驶状态的值；
           if (data.data.driveState === 0) {
-            data.data.xOffset = null
+            data.data.xoffset = null
             // data.data.speed = null;
             // data.data.heading = null;
           }
           let time = this.dateTimeTrans(data.data.gnssTime).slice(11)
-          let xOffset = data.data.xOffset
+          let xoffset = data.data.xoffset
           let speed = data.data.speed
           let direction = data.data.heading
           let diffAge = data.data.diffAge
@@ -423,7 +423,7 @@ export default {
           // 	this.optionDifference.xAxis.data.shift();
           // }
           // 系列数据
-          this.optionOffset.series[0].data.push(xOffset)
+          this.optionOffset.series[0].data.push(xoffset)
           this.optionSpeed.series[0].data.push(speed)
           this.optionDirection.series[0].data.push(direction)
           this.optionDifference.series[0].data.push(diffAge)
