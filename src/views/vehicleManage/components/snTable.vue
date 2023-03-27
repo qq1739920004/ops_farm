@@ -690,8 +690,8 @@ export default {
       dialogVisibleDetailLoading: true,
       registerArr1: [{ name: "3个月", value: 90 }],
       registerArr: [
-        { name: "立即过期", value: -1 },
         { name: "3天", value: 3 },
+        { name: "立即过期", value: -1 },
         { name: "7天", value: 7 },
         { name: "15天", value: 15 },
         { name: "20天", value: 20 },
@@ -753,7 +753,7 @@ export default {
           if (data.indexOf(77) > -1) {
           } else if (data.indexOf(83) > -1) {
             //只允许查看3天的注册时长
-            this.registerArr.length = 1;
+            this.registerArr.length = 2;
           } else if (data.indexOf(108) > -1) {
             //只允许查看3个月的注册时长
             this.registerArr = this.registerArr1;
