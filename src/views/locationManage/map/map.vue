@@ -714,6 +714,7 @@ export default {
       onlineFarmMachinePosition_path().then((res) => {
         try {
           let data = res.data.onlineFarmMachines;
+
           if (data && data.length) {
             this.renderEngine =
               data.length >= this.domMarkerLimit ? "polymer" : "dom"; // 初始化确定渲染方式
@@ -764,7 +765,7 @@ export default {
           }
 
           if (this.renderEngine === "polymer") {
-            marker = L.marker(point, { icon: icon });
+            // marker = L.marker(point, { icon: icon });
 
             // console.log(marker,);
 
@@ -784,9 +785,9 @@ export default {
             //   marker.addTo(markerClusterGroup);
             // }
 
-            // marker = L.marker(point, { icon: icon })
-            //   .addTo(markerClusterGroup)
-            //   .bindPopup(popup);
+            marker = L.marker(point, { icon: icon })
+              .addTo(markerClusterGroup)
+              .bindPopup(popup);
           }
 
           //此处缺少拦截器，用于拦截新上来的设备，对筛选状态的匹配；动态是否添加到地图;

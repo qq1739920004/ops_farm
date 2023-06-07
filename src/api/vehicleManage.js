@@ -50,11 +50,12 @@ export function provinceDataList_path(params) {
       params
     })
   }
-  export function sacredCowQrExport_path(params) {
+  export function sacredCowQrExport_path(data) {
     return request({
       url: '/farm/sacredCowQr/export',
       method: 'post',
-      params
+      data,
+      responseType: 'blob'
     })
   }
   export function provinceList_path(params) {
