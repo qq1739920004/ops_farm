@@ -121,12 +121,9 @@
         sortable="custom"
         prop="lastOnlineTime"
         label="最近上线时间"
-        width=""
         show-overflow-tooltip
       >
-        <template slot-scope="scope">
-          <span>{{ scope.row.lastOnlineTime | dateTimeTrans }}</span>
-        </template>
+      
       </el-table-column>
 
       <el-table-column prop="a" label="数据存储">
@@ -853,9 +850,10 @@ export default {
     },
 
     // 判断过期时间
-    testExpiration(timeStamp) {
+    testExpiration(arg1) {
       try {
         let now = Date.now();
+        let timeStamp = +new Date(arg1)
         let gap = Number(timeStamp) - now;
         let delta = 3 * 24 * 3600 * 1000;
         if (!timeStamp) return { type: "info", text: "/" };
