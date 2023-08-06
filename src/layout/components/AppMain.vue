@@ -1,49 +1,40 @@
 <template>
-  <section class="app-main">
-     <div style="background-color: #f5f5f5">
-      <!-- <breadcrumb class="breadcrumb-container" /> -->
-    </div>
-    <transition name="fade-transform" mode="out-in">
-      <router-view :key="key" />
-    </transition>
-  </section>
+  <!-- <section class="app-main"> -->
+    <router-view v-slot="{ Component, route }">
+      <transition name="router-fade" mode="out-in">
+        <keep-alive>
+          <component :is="Component" :key="route.fullPath" />
+        </keep-alive>
+      </transition>
+    </router-view>
+  <!-- </section> -->
 </template>
+<script setup lang="ts"></script>
 
-<script>
-import Breadcrumb from "@/components/Breadcrumb";
-export default {
-  name: 'AppMain',
-    components: {
-    Breadcrumb,
-  },
-  computed: {
-    key() {
-      return this.$route.path
-    }
-  }
-}
-</script>
-
-<style scoped>
+<style lang="scss" scoped>
 .app-main {
-  /*50 = navbar  */
-  height:0px;
-  min-height: calc(100vh - 50px);
-  width: 100%;
-  position: relative;
-  overflow: auto;
-}
-.fixed-header+.app-main {
-  padding-top: 50px;
-}
-</style>
+  // position: relative;
+  // width: 100%;
 
-<style scoped lang="scss" >
-// fix css style bug in open el-dialog
-.el-popup-parent--hidden {
-  .fixed-header {
-    padding-right: 15px;
-  }
+  // /* 50= navbar  50  */
+  // min-height: calc(100vh - 50px);
+  // overflow: hidden;
+  // background-color: var(--el-bg-color-page);
 }
 
+// .fixed-header + .app-main {
+//   padding-top: 50px;
+// }
+
+// .hasTagsView {
+//   .app-main {
+//     /* 84 = navbar + tags-view = 50 + 34 */
+//     min-height: calc(100vh - 84px);
+//   }
+
+//   .fixed-header + .app-main {
+//     min-height: 100vh;
+//     padding-top: 84px;
+//   }
+// }
 </style>
