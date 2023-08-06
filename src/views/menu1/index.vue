@@ -3,7 +3,7 @@
     <HelloWorld msg="1234656" />
     <el-button @click="changeLang('zh')">中文</el-button>
     <el-button @click="changeLang('en')">英文</el-button>
-    <el-button>1235352343</el-button>
+    <el-button>12353523453</el-button>
     <p>1231</p>
     <p>{{ userStore.nickName }}</p>
     <p>{{ userStore.ddNickname }}</p>
