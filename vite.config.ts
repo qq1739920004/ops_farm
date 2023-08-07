@@ -23,7 +23,8 @@ export default defineConfig({
       '/dev-api': {
         // target: "http://vapi.youlai.tech", // 线上接口地址
         // target: 'http://localhost:8989',  // 本地接口地址 , 后端工程仓库地址：https://gitee.com/youlaiorg/youlai-boot
-        target:'http://140.207.166.210:9030',
+        // target:'http://140.207.166.210:9030',
+        target:"http://127.0.0.1:4523/m1/2885822-0-default",
         changeOrigin: true,
         rewrite: (path) =>
           path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
