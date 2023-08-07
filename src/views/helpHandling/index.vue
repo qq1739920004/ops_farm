@@ -1,11 +1,7 @@
 <template>
-    <div class='help_container'>
+    <div class='app_container'>
 
-        <el-row class="help_title">
-            <el-col>
-                求助处理
-            </el-col>
-        </el-row>
+
 
         <el-row class="help_search" :gutter="40">
             <el-col :span="4" class="help_search_phone">
@@ -56,16 +52,16 @@
 </template>
 
 <script setup lang='ts'>
+import { ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import Pagination from '@/components/Pagination/index.vue'
+const value = ref()
 
 
 </script>
 
 <style lang="scss" scoped>
-.help_container {
-    width: 100%;
-    height: 100%;
+.app_container {
 
     .help_title {
         height: 40px;

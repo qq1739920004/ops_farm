@@ -7,7 +7,7 @@
 
 <script setup lang='ts'>
 import { } from 'vue'
-import Chart from './chart.vue'
+import Chart from './components/chart.vue'
 
 </script>
 
