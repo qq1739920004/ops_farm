@@ -1,6 +1,6 @@
 <template>
-    <div>
-        menu3-2
+    <div class='app_container'>
+        作业管理
     </div>
 </template>
 

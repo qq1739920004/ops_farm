@@ -84,7 +84,7 @@ function changeCollapse() {
 .app-layout-mobile {
   .el-container {
     .el-header {
-      background-color: #1f222c;
+      background-color: #192035;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -108,7 +108,7 @@ function changeCollapse() {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #1f222c;
+      background-color: #192035;
     }
   }
 }

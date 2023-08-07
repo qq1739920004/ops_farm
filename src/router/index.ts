@@ -4,86 +4,108 @@ import Layout from '@/layout/index.vue';
 export const constantRoutes = [ // 静态路由数据
   {
     path: '/',
-    redirect: '/menu1'
+    redirect: '/monitoring'
   },
   {
-    path: '/menu1',
+    path: '/monitoring',
     component: Layout,
-
     children: [
       {
         path: '',
-        component: () => import("@/views/menu1/index.vue"),
+        component: () => import("@/views/monitoring/index.vue"),
         meta: {
-          title: 'menu1',
-          icon: 'Minus'
+          title: '态势监控',
+          icon: 'Notification'
         },
       }
     ]
   },
   {
-    path: '/menu2',
+    path: '/machineryList',
     component: Layout,
     children: [
       {
         path: '',
-        component: () => import("@/views/menu2/index.vue"),
+        component: () => import("@/views/machineryList/index.vue"),
         meta: {
-          title: 'menu2s1',
-          icon: 'Minus'
+          title: '农机列表',
+          icon: 'List'
         },
       },
     ]
   },
   {
-    path: '/menu3',
+    path: '/jobManagement',
     component: Layout,
-    redirect: '/menu3/menu31',
-    meta: {
-      title: 'me',
-      icon: 'Minus'
-    },
     children: [
       {
-        path: 'menu31',
-        component: () => import("@/views/menu3/menu3-1.vue"),
+        path: '',
+        component: () => import("@/views/jobManagement/index.vue"),
         meta: {
-          title: 'menu3-1',
-          icon: 'Minus'
+          title: '作业管理',
+          icon: 'CreditCard'
         },
-
-      },
-      {
-        path: 'menu32',
-        component: () => import("@/views/menu3/menu3-2.vue"),
-        redirect: '/menu3/menu32/menu311123',
-        meta: {
-          title: 'menu3-2',
-          icon: 'Minus'
-        },
-        children: [
-          {
-            path: 'menu311123',
-            component: () => import("@/views/menu3/menu3-1.vue"),
-            meta: {
-              title: 'menu3-1123',
-              icon: 'Minus'
-            },
-
-          },
-          {
-            path: 'menu3123321',
-            component: () => import("@/views/menu3/menu3-1.vue"),
-            meta: {
-              title: 'menu3-1123',
-              icon: 'Minus'
-            },
-
-          },
-        ]
       },
     ]
   },
+  {
+    path: '/infoManagement',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import("@/views/infoManagement/index.vue"),
+        meta: {
+          title: '信息管理',
+          icon: 'Suitcase'
+        },
+      },
+    ]
+  },
+
+  {
+    path: '/statisticsReport',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import("@/views/statisticsReport/index.vue"),
+        meta: {
+          title: '统计报表',
+          icon: 'Message'
+        },
+      },
+    ]
+  },
+  {
+    path: '/helpHandling',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import("@/views/helpHandling/index.vue"),
+        meta: {
+          title: '求助处理',
+          icon: 'ChatDotSquare'
+        },
+      },
+    ]
+  },
+  {
+    path: '/perception',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import("@/views/perception/index.vue"),
+        meta: {
+          title: '感知平台',
+          icon: 'ChatSquare'
+        },
+      },
+    ]
+  },
+
 
 
 ]

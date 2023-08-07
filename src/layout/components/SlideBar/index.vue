@@ -3,7 +3,7 @@
     :mode="mode"
     :default-active="activeMenu"
     :collapse="collapse"
-    background-color="#1f222c"
+    background-color="#192035"
     text-color="#fff"
     active-text-color="#ffd04b"
     @select="elMenuSelect"

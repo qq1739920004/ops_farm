@@ -1,6 +1,6 @@
 <template>
-    <div>
-        menu2
+    <div class='app_container'>
+        感知平台
     </div>
 </template>
 

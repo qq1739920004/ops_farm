@@ -12,7 +12,7 @@
       :index="resolvePath(onlyOneChild.path)"
     >
       <el-icon>
-        <component is="House"></component>
+        <component :is="onlyOneChild.meta.icon"></component>
       </el-icon>
       <span>
         {{ onlyOneChild.meta.title }}
@@ -23,7 +23,7 @@
   <el-sub-menu v-else :index="resolvePath(item.path)" teleported>
     <template #title>
       <el-icon>
-        <component is="House"></component>
+        <component :is="item.meta.icon"></component>
       </el-icon>
       <span v-if="item.meta && item.meta.title">{{ item.meta.title }}</span>
     </template>
