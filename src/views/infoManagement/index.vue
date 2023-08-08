@@ -1,13 +1,9 @@
 <template>
-    <div>
-        <div class="top-bar">
-            <div class="title">
-                信息管理
-            </div>
-        </div>
+    <div class='app_container'>
         <div class="middle-area">
             <div class="input_area">
-                <el-input placeholder="请输入SN号" v-model="key" class="input-with-select" @keyup.enter.native="search">
+                <el-input placeholder="请输入SN号" v-model="pageInfo.key" class="input-with-select"
+                    @keyup.enter.native="search">
                     <template #append>
                         <el-button :icon="Search" @click="search" />
                     </template>
@@ -15,10 +11,10 @@
                 <div class="kind">
                     设备类型：
                 </div>
-                <el-select v-model="terminalType" class="m-2" placeholder="请选择" @blur="changeBlur">
+                <el-select v-model="pageInfo.terminalType" class="m-2" placeholder="请选择" @blur="changeBlur">
                     <el-option value="G360" label="G360" />
-                    <el-option value="G501" label="G502" />
-                    <el-option value="G502" label="G501" />
+                    <el-option value="G502" label="G502" />
+                    <el-option value="G501" label="G501" />
                 </el-select>
             </div>
             <div class="button_area">
@@ -26,8 +22,10 @@
                 <el-button type="success" class="btn2" :icon="Plus" @click="openDialog">新建</el-button>
             </div>
         </div>
-        <div class='app_container'>
-            <el-table style="width: 100%" stripe :data="records">
+        <div>
+            <el-table @selection-change="handleSelectionChange" style="width: 100%" stripe :data="records"
+                v-show="scence == '1'">
+                <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
                 <el-table-column prop="npn" label="铭牌SN" width="180" show-overflow-tooltip>
                 </el-table-column>
@@ -50,16 +48,93 @@
                 </el-table-column>
                 <el-table-column prop="steeringWheelSn" label="前轮IMU_SN" width="" show-overflow-tooltip>
                 </el-table-column>
-                <el-table-column label="操作" width="300" show-overflow-tooltip>
+                <el-table-column label="操作" show-overflow-tooltip align="center">
                     <template #="{ row, $index }">
                         <div class="edit-btn">
                             <div class="left">
-                                <span class="edit" @click="edit(row)">编辑 </span>
-                                <span class="delete">删除</span>
+                                <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
+                                <el-button class="delete" size="small" text>删除</el-button>
                             </div>
                             <div class="right">
-                                <div>售后</div>
-                                <div>处理</div>
+                                <el-button text size="small" @click="gotoAfterSale(row, $index)"
+                                    class="aftersale">售后</el-button>
+                                <el-button text size="small" class="aftersale">处理</el-button>
+                            </div>
+                        </div>
+                    </template>
+                </el-table-column>
+
+            </el-table>
+            <el-table style="width: 100%" stripe :data="records" v-show="scence == '2'">
+                <el-table-column type="index" width="80" label="序号" align="center" />
+                <el-table-column prop="npn" label="铭牌SN" width="180" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column label="质保日期" width="140" show-overflow-tooltip>
+                    <template #="{ row, $index }">
+                        <div v-if="row.expirationTime">{{ row.expirationTime.split(' ')[0] }}</div>
+                        <div v-else>
+                            <el-tag>123</el-tag>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="sn" label="平板SN" width="" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column prop="motorSn" label="电机SN" width="" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column prop="carImuSn" label="车身SN" width="" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column prop="wheelImuSn" label="天线1_SN" width="" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column prop="wheelImuSn" label="天线2_SN" width="" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column label="操作" show-overflow-tooltip align="center">
+                    <template #="{ row, $index }">
+                        <div class="edit-btn">
+                            <div class="left">
+                                <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
+                                <el-button class="delete" size="small" text>删除</el-button>
+                            </div>
+                            <div class="right">
+                                <el-button text size="small" class="aftersale">售后</el-button>
+                                <el-button text size="small" class="aftersale">处理</el-button>
+                            </div>
+                        </div>
+                    </template>
+                </el-table-column>
+
+            </el-table>
+            <el-table style="width: 100%" stripe :data="records" v-show="scence == '3'">
+                <el-table-column type="index" width="80" label="序号" align="center" />
+                <el-table-column prop="npn" label="铭牌SN" width="180" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column label="维护信息" width="280" show-overflow-tooltip>
+                    <template #="{ row, $index }">
+                        <div v-if="row.expirationTime">{{ row.expirationTime.split(' ')[0] }}</div>
+                        <div v-else>
+                            <el-tag>123</el-tag>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="sn" label="平板SN" width="" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column prop="motorSn" label="电机SN" width="" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column prop="carImuSn" label="车身SN" width="" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column prop="steeringWheelSn" label="前轮SN" width="" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column prop="wheelImuSn" label="天线1_SN" width="" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column label="操作" show-overflow-tooltip align="center">
+                    <template #="{ row, $index }">
+                        <div class="edit-btn">
+                            <div class="left">
+                                <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
+                                <el-button class="delete" size="small" text>删除</el-button>
+                            </div>
+                            <div class="right">
+                                <el-button text size="small" class="aftersale">售后</el-button>
+                                <el-button text size="small" class="aftersale">处理</el-button>
                             </div>
                         </div>
                     </template>
@@ -68,18 +143,19 @@
             </el-table>
         </div>
         <div class="bottom">
-            <Pagination :total="total" :currentPage="currentPage" :pageSize="pageSize" @pageChange="currentChange">
+            <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
+                @pageChange="currentChange">
             </Pagination>
         </div>
         <div class="dialog">
             <el-dialog v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'" width="544px" height="580px">
                 <el-form style="width: 100%" ref="formRef" :model="newRecords" :rules="rules">
                     <el-form-item label="设备类型" label-width="140px" prop="terminalType">
-                        <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" @blur="changeBlur"
-                            width="120px" style="width:100%" prop="terminalType">
+                        <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
+                            style="width:100%" prop="terminalType">
                             <el-option value="G360" label="G360" />
-                            <el-option value="G501" label="G502" />
-                            <el-option value="G502" label="G501" />
+                            <el-option value="G502" label="G502" />
+                            <el-option value="G501" label="G501" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="铭牌SN" label-width="140px" prop="npn">
@@ -121,44 +197,63 @@
                 </template>
             </el-dialog>
         </div>
+        <G502Dia ref="G502D" :newRecords=newRecords></G502Dia>
+        <G501Dia ref="G501D" :newRecords=newRecords></G501Dia>
     </div>
 </template>
 
 <script setup lang='ts'>
+import G502Dia from './components/G502Dia.vue'
+import G501Dia from './components/G501Dia.vue'
 import Pagination from '@/components/Pagination/index.vue'
-import { reactive, ref, nextTick } from 'vue'
+import { reactive, ref, nextTick, watch } from 'vue'
 import { Search, Plus } from '@element-plus/icons-vue'
-import { getInfoMangementInfoAPI, addInfoMangementInfoAPI, editInfoMangementInfoAPI } from '@/api/infoManagement/index'
-
-
-const key = ref<string>('')
-const terminalType = ref<string>('')
-const currentPage = ref<number>(1)
-const pageSize = ref<number>(3)
-const total = ref<number>(10)
-const records = ref([])
-const dialogVisible = ref<boolean>(false)
-const newRecords = reactive<any>({
-    "carImuSn": "",
-    "hubSn": "",
-    "antennaTwo": "",
-    "wheelImuSn": "",
-    "id": "",
-    "superCattleModuleInfo": "",
-    "sn": "",
-    "npn": "",
-    "steeringWheelSn": "",
-    "warrantyDate": "",
-    "antennaOne": "",
-    "type": "",
-    "terminalType": "",
-    "motorSn": ""
+import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API } from '@/api/infoManagement/index'
+import { ElMessage } from 'element-plus'
+import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj, changeResponseData, editResponseData } from "@/api/infoManagement/type"
+import { useRouter } from 'vue-router'
+const pageInfo = reactive<PageObj>({
+    key: '',
+    terminalType: '',
+    currentPage: 1,
+    pageSize: 3
 })
+const $router = useRouter()
+const scence = ref<string>('1')
+const total = ref<number>(10)
+const records = ref<RecordsObj[]>([])
+const dialogVisible = ref<boolean>(false)
+const G502D = ref()
+const G501D = ref()
+const multipleSelection = ref<RecordsObj[]>([])
+const newRecords = reactive<newRecordsObj>({
+    carImuSn: "",
+    hubSn: "",
+    antennaTwo: "",
+    wheelImuSn: "",
+    id: null,
+    superCattleModuleInfo: "",
+    sn: "",
+    npn: "",
+    steeringWheelSn: "",
+    warrantyDate: "",
+    antennaOne: "",
+    type: "",
+    terminalType: "",
+    motorSn: "",
+    expirationTime: "",
+})
+
 let formRef = ref()
 const getInfoMangementInfo = async () => {
-    const res: any = await getInfoMangementInfoAPI({ 'key': key.value, 'terminalType': terminalType.value, 'currentPage': currentPage.value, 'pageSize': pageSize.value })
+    const res: carModuleInfoResponseData = await carModuleInfo_API(pageInfo)
     records.value = res.data.records
     total.value = res.data.total
+}
+const handleSelectionChange = (val: any) => {
+    multipleSelection.value = val
+    console.log(multipleSelection.value);
+
 }
 const rules = {
     terminalType: [{ required: true, message: '请输入活动名称', trigger: 'blur' }, { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }],
@@ -173,40 +268,42 @@ const rules = {
 }
 getInfoMangementInfo()
 const currentChange = (val: any) => {
-    currentPage.value = val.currentPage
-    pageSize.value = val.pageSize
+    pageInfo.currentPage = val.currentPage
+    pageInfo.pageSize = val.pageSize
     getInfoMangementInfo()
 }
 const search = () => {
     getInfoMangementInfo()
 }
 const changeBlur = () => {
+    if (pageInfo.terminalType == 'G360') {
+        scence.value = '1'
+    } if (pageInfo.terminalType == 'G502') {
+        scence.value = '2'
+    } if (pageInfo.terminalType == 'G501') {
+        scence.value = '3'
+    }
     getInfoMangementInfo()
 
 }
 const addInfo = async () => {
-    const res: any = await addInfoMangementInfoAPI(newRecords)
-    console.log(res);
+    const res: changeResponseData = await carModuleInfoSave_API(newRecords)
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '添加成功' })
+    }
+    else {
+        ElMessage({ type: 'error', message: '添加失败' })
+    }
 }
 const editInfo = async () => {
-    const res: any = await editInfoMangementInfoAPI(newRecords)
-    console.log(res);
+    const res: editResponseData = await carModuleInfoUpdate_API(newRecords)
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '编辑成功' })
+    }
+    else {
+        ElMessage({ type: 'error', message: '编辑失败' })
+    }
 }
-// 编辑
-// "carImuSn": "",
-// "hubSn": "",
-//     "antennaTwo": "",
-//     "wheelImuSn": "",
-//     "id": "",
-//     "superCattleModuleInfo": "",
-//     "sn": "",
-//     "npn": "",
-//     "steeringWheelSn": "",
-//     "warrantyDate": "",
-//     "antennaOne": "",
-//     "type": "",
-//     "terminalType": "",
-//     "motorSn": ""
 const edit = (row: any) => {
     dialogVisible.value = true
     newRecords.carImuSn = row.carImuSn
@@ -222,23 +319,45 @@ const edit = (row: any) => {
     newRecords.antennaOne = row.antennaOne
     newRecords.type = row.type
     newRecords.terminalType = row.terminalType
+    newRecords.expirationTime = row.expirationTime
     newRecords.motorSn = row.motorSn
     nextTick(() => {
         formRef.value.clearValidate()
+        G502D.value.formRef.clearValidate()
     })
 }
-const editSubmit = () => {
+watch(
+    () => newRecords.terminalType,
+    () => {
+        if (newRecords.terminalType == 'G502') {
+            dialogVisible.value = false
+            G502D.value.dialogVisible = true
+            G501D.value.dialogVisible = false
+        } if (newRecords.terminalType == 'G360') {
+            dialogVisible.value = true
+            G502D.value.dialogVisible = false
+            G501D.value.dialogVisible = false
+        } if (newRecords.terminalType == 'G501') {
+            dialogVisible.value = false
+            G501D.value.dialogVisible = true
+            G502D.value.dialogVisible = false
+        }
+    })
+const editSubmit = async () => {
+    await formRef.value.validate()
     editInfo()
+    dialogVisible.value = false
 }
 const openDialog = () => {
     dialogVisible.value = true
     nextTick(() => {
         formRef.value.clearValidate()
+        G502D.value.formRef.clearValidate()
         newRecords.carImuSn = ''
         newRecords.hubSn = ''
         newRecords.antennaTwo = ''
         newRecords.wheelImuSn = ''
-        newRecords.id = ''
+        newRecords.id = null
         newRecords.superCattleModuleInfo = ''
         newRecords.sn = ''
         newRecords.npn = ''
@@ -246,9 +365,11 @@ const openDialog = () => {
         newRecords.warrantyDate = ''
         newRecords.antennaOne = ''
         newRecords.type = ''
-        newRecords.terminalType = ''
         newRecords.motorSn = ''
+        newRecords.expirationTime = ''
+        newRecords.terminalType = ''
     })
+
 }
 const submit = async () => {
     await formRef.value.validate()
@@ -258,6 +379,12 @@ const submit = async () => {
 const cancel = () => {
     dialogVisible.value = false
     formRef.value.resetFields()
+}
+const gotoAfterSale = (row: any, $index: number) => {
+    console.log(row);
+    $router.push({
+        path: '/infoManagement/aftersale', query: row
+    })
 }
 </script>
 
@@ -269,25 +396,24 @@ const cancel = () => {
     opacity: 1;
     background: rgba(245, 245, 245, 1);
 
-    .title {
-        padding-top: 7px;
-        margin-left: 40px;
-        width: 72px;
-        height: 27px;
-        opacity: 1;
-        font-size: 18px;
-        font-weight: 400;
-        letter-spacing: 0px;
-        line-height: 26.06px;
-        color: rgba(0, 0, 0, 1);
-    }
+    // .title {
+    //     padding-top: 7px;
+    //     margin-left: 40px;
+    //     width: 72px;
+    //     height: 27px;
+    //     opacity: 1;
+    //     font-size: 18px;
+    //     font-weight: 400;
+    //     letter-spacing: 0px;
+    //     line-height: 26.06px;
+    //     color: rgba(0, 0, 0, 1);
+    // }
 }
 
 .middle-area {
-    height: 50px;
+    height: 86px;
 
     .input_area {
-
         .input-with-select {
             margin-left: 10px;
             position: absolute;
@@ -365,13 +491,9 @@ const cancel = () => {
     align-items: center;
 
     .left {
-        margin-right: 10px;
-
-        div {
-            margin-right: 3px
-        }
-
         .edit {
+            margin-left: 10px;
+            margin-right: -15px;
             font-size: 14px;
             font-weight: 400;
             letter-spacing: 0px;
@@ -382,6 +504,7 @@ const cancel = () => {
         }
 
         .delete {
+            margin-right: -15px;
             font-size: 14px;
             font-weight: 400;
             letter-spacing: 0px;
@@ -393,13 +516,13 @@ const cancel = () => {
     }
 
     .right {
-        font-size: 14px;
-        font-weight: 400;
-        letter-spacing: 0px;
-        line-height: 20.27px;
-        color: rgba(76, 176, 79, 1);
-        text-align: left;
-        vertical-align: top;
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+
+        .aftersale {
+            color: rgba(76, 176, 79, 1);
+        }
     }
 }
 

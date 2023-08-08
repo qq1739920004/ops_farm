@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    :mode="mode"
+    :mode="appStore.themeSettings.layout"
     :default-active="activeMenu"
     :collapse="collapse"
     background-color="#192035"
@@ -32,11 +32,6 @@ defineProps({
     type: Boolean,
     default: false,
   },
-});
-const mode = computed(() => {
-  return appStore.themeSettings.navigation == "left"
-    ? "vertical"
-    : "horizontal";
 });
 
 const activeMenu = computed(() => {
