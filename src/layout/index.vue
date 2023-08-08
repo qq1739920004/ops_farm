@@ -1,7 +1,7 @@
 <template>
   <!-- 宽屏 -->
   <div v-if="appStore.device == 'desktop'" class="app-layout-desktop">
-    <el-container v-if="appStore.themeSettings.navigation == 'left'">
+    <el-container v-if="appStore.themeSettings.layout == 'vertical'">
       <SlideBar :collapse="collapse" />
       <el-container>
         <el-header height="50px">

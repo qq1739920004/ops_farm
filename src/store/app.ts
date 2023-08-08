@@ -4,8 +4,9 @@ const useAppStore = defineStore("app", {
     state: () => (
         {
             device: "desktop",
+            // 主题配置
             themeSettings: {
-                navigation: 'left'
+                layout: 'vertical' // vertical 横屏 // horizontal 竖屏
             } as Record<string, any>
         }
     ),

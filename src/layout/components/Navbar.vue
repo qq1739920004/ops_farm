@@ -35,13 +35,13 @@
 
       <ul class="layout">
         <el-tooltip content="左侧模式" placement="bottom">
-          <li @click="changeNavgation('left')" :class="'layout-item layout-left '">
+          <li @click="changeNavgation('vertical')" :class="'layout-item layout-left '">
             <div />
             <div />
           </li>
         </el-tooltip>
         <el-tooltip content="顶部模式" placement="bottom">
-          <li @click="changeNavgation('top')"  :class="'layout-item layout-top '">
+          <li @click="changeNavgation('horizontal')"  :class="'layout-item layout-top '">
             <div />
             <div />
           </li>
@@ -62,7 +62,7 @@ let drawer = ref(false);
 
 function changeNavgation(arg: string) {
   drawer.value = !drawer.value 
-  appStore.updateThemeSettings('navigation',arg)
+  appStore.updateThemeSettings('layout',arg)
 
 }
 
