@@ -60,9 +60,29 @@ export const constantRoutes = [ // 静态路由数据
           icon: 'Suitcase'
         },
       },
+      {
+        path: 'aftersale',
+        component: () => import("@/views/infoManagement/aftersale/index.vue"),
+        meta: {
+          title: '信息管理',
+          icon: 'Suitcase',
+          activeMenu:'/infoManagement',
+          hidden:true
+        },
+       
+      },
     ]
   },
-
+  // {
+  //   path: '/infoManagement',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: '/infoManagement/aftersale',
+  //       component: () => import("@/views/infoManagement/aftersale/index.vue"),
+  //     },
+  //   ]
+  // },
   {
     path: '/statisticsReport',
     component: Layout,
