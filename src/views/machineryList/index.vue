@@ -1,80 +1,77 @@
 <template>
-    <div class="top-bar">
-        <div class="title">
-            农机列表
+    <div class="app-container">
+        <div class="middle-area">
+            <div class="input_area">
+                <el-input placeholder="请输入SN号" class="input-with-select">
+                    <template #append>
+                        <el-button :icon="Search" @click="search" />
+                    </template>
+                </el-input>
+                <el-select class="m-2" placeholder="请选择" >
+                    <el-option value="G360" label="G360" />
+                    <el-option value="G502" label="G502" />
+                    <el-option value="G501" label="G501" />
+                </el-select>
+            </div>
+            <div class="button_area">
+                <el-button type="success" class="btn1">录入经销商设备</el-button>
+                <el-button type="success" class="btn2">查看车型模版</el-button>
+            </div>
         </div>
-    </div>
-    <div class="middle-area">
-        <div class="input_area">
-            <el-input placeholder="输入机器码" v-model="input" class="input-with-select">
-                <template #append>
-                    <el-button :icon="Search" />
-                </template>
-            </el-input>
-            <el-select v-model="selectValue" class="m-2" placeholder="请选择" size="middle">
-                <el-option value="公司/经销商" />
-                <el-option value="全部" />
-            </el-select>
+        <div class='app_container'>
+            <el-table style="width: 100%">
+                <el-table-column type="index" width="80" label="序号" align="center" />
+
+                <el-table-column label="铭牌SN" width="140" show-overflow-tooltip>
+                </el-table-column>
+
+                <el-table-column label="SN" width="140" show-overflow-tooltip>
+
+                </el-table-column>
+
+                <el-table-column label="车主姓名" width="" show-overflow-tooltip>
+
+                </el-table-column>
+
+                <el-table-column label="车辆型号" width="" show-overflow-tooltip />
+
+                <el-table-column label="设备所在地" width="" show-overflow-tooltip>
+
+                </el-table-column>
+
+                <el-table-column label="类型" width="" show-overflow-tooltip>
+
+                </el-table-column>
+
+                <el-table-column label="过期时间" width="110" show-overflow-tooltip>
+                </el-table-column>
+                <el-table-column label="最近上线时间" width="" show-overflow-tooltip>
+
+                </el-table-column>
+
+                <el-table-column label="公司/经销商" width="110" show-overflow-tooltip>
+                </el-table-column>
+
+                <el-table-column label="星基" width="" show-overflow-tooltip>
+
+                </el-table-column>
+
+
+                <el-table-column label="数据存储">
+                </el-table-column>
+
+                <!-- 说明  离线和自动驾驶状态不可编辑 -->
+                <el-table-column label="操作" width="370">
+                </el-table-column>
+            </el-table>
         </div>
-        <div class="button_area">
-            <el-button type="success" class="btn1">录入经销商设备</el-button>
-            <el-button type="success" class="btn2">查看车型模版</el-button>
-        </div>
-    </div>
-    <div class='app_container'>
-        <el-table style="width: 100%" stripe>
-            <el-table-column type="index" width="80" label="序号" align="center" />
-
-            <el-table-column prop="deviceSn" label="铭牌SN" width="140" show-overflow-tooltip>
-            </el-table-column>
-
-            <el-table-column prop="sunFlowerSn" label="SN" width="140" show-overflow-tooltip>
-
-            </el-table-column>
-
-            <el-table-column prop="userName" label="车主姓名" width="" show-overflow-tooltip>
-
-            </el-table-column>
-
-            <el-table-column prop="model" label="车辆型号" width="" show-overflow-tooltip />
-
-            <el-table-column prop="province" label="设备所在地" width="" show-overflow-tooltip>
-
-            </el-table-column>
-
-            <el-table-column prop="type" label="类型" width="" show-overflow-tooltip>
-
-            </el-table-column>
-
-            <el-table-column prop="workArea" label="过期时间" width="110" show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column prop="lastOnlineTime" label="最近上线时间" width="" show-overflow-tooltip>
-
-            </el-table-column>
-
-            <el-table-column prop="expirationTime" label="公司/经销商" width="110" show-overflow-tooltip>
-            </el-table-column>
-
-            <el-table-column prop="softwareVersion" label="星基" width="" show-overflow-tooltip>
-
-            </el-table-column>
-
-
-            <el-table-column prop="a" label="数据存储">
-            </el-table-column>
-
-            <!-- 说明  离线和自动驾驶状态不可编辑 -->
-            <el-table-column label="操作" width="370">
-            </el-table-column>
-        </el-table>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
-const input = ref<string>('')
-const selectValue = ref<string>('')
+const search = () => {
+}
 </script>
 
 <style lang="scss" scoped>
