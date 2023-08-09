@@ -1,7 +1,7 @@
 <template>
   <!-- 宽屏 -->
   <div v-if="appStore.device == 'desktop'" class="app-layout-desktop">
-    <el-container v-if="appStore.themeSettings.navigation == 'left'">
+    <el-container v-if="appStore.themeSettings.layout == 'vertical'">
       <SlideBar :collapse="collapse" />
       <el-container>
         <el-header height="50px">
@@ -16,6 +16,7 @@
         </el-main>
       </el-container>
     </el-container>
+
     <el-container v-else>
       <el-header height="50px">
         <SlideBar />
@@ -82,7 +83,9 @@ function changeCollapse() {
 
 <style lang="scss" scoped>
 .app-layout-mobile {
+  height: 100%;
   .el-container {
+    height: 100%;
     .el-header {
       background-color: #192035;
       display: flex;
@@ -104,6 +107,7 @@ function changeCollapse() {
   height: 100%;
   .el-container {
     height: 100%;
+    flex:1;
     .el-header {
       display: flex;
       justify-content: space-between;
