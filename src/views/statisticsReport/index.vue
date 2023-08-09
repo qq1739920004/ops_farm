@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="app_container">
         <div class="top">
             <div class="chart1">
                 <div class="chart_title">实时统计</div>
@@ -20,22 +20,22 @@
         </div>
         <div class='center'>
             <div class="chart4">
-                <div class="chart_title">功能统计</div>
+                <!-- <div class="chart_title">功能统计</div> -->
                 <Chartfour></Chartfour>
             </div>
             <div class="chart5">
-                <div class="chart_title">运输统计</div>
+                <!-- <div class="chart_title">运输统计</div> -->
                 <Chartfive></Chartfive>
             </div>
         </div>
 
         <div class="bottom">
             <div class="chart6">
-                <div class="chart_title">访问次数统计</div>
+                <!-- <div class="chart_title">访问次数统计</div> -->
                 <Chartsix></Chartsix>
             </div>
             <div class="chart7">
-                <div class="chart_title">车辆分布与作业信息</div>
+                <!-- <div class="chart_title">车辆分布与作业信息</div> -->
                 <Chartseven></Chartseven>
             </div>
         </div>
@@ -55,12 +55,6 @@ import Chartfive from './components/chartfive.vue'
 import Chartsix from './components/chartsix.vue'
 import Chartseven from './components/chartseven.vue'
 
-
-
-
-
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -76,8 +70,11 @@ import Chartseven from './components/chartseven.vue'
 .chart5,
 .chart6,
 .chart7 {
+
     box-shadow: 2px 2px 20px 2px rgba(0, 0, 0, .25);
     border-radius: 15px;
+    margin-left: 10px;
+
 }
 
 .top {
@@ -88,15 +85,19 @@ import Chartseven from './components/chartseven.vue'
     margin-top: 10px;
 
     .chart1 {
-        width: 615px;
+        width: 36%;
     }
 
     .chart2 {
-        width: 634px;
+        display: flex;
+        flex-direction: column;
+       position: relative;
+       
+        width: 36%;
     }
 
     .chart3 {
-        width: 406px;
+        width: 28%;
     }
 }
 
@@ -107,11 +108,11 @@ import Chartseven from './components/chartseven.vue'
     margin-top: 20px;
 
     .chart4 {
-        width: 837px;
+        width: 50%;
     }
 
     .chart5 {
-        width: 837px;
+        width: 50%;
     }
 
 }
@@ -123,11 +124,11 @@ import Chartseven from './components/chartseven.vue'
     margin-top: 20px;
 
     .chart6 {
-        width: 837px;
+        width: 50%;
     }
 
     .chart7 {
-        width: 837px;
+        width: 50%;
 
     }
 }
