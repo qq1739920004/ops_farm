@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { carModuleInfoResponseData, PageObj, newRecordsObj, editResponseData, changeResponseData, SaleResponseData, carModuleInfoOperationLogResponseData } from './type'
+import { carModuleInfoResponseData, PageObj, newRecordsObj, editResponseData, changeResponseData, SaleResponseData, carModuleInfoOperationLogResponseData, carMoudleInfoDeleteResponseData } from './type'
 export function carModuleInfo_API(params: PageObj) {
   return request<any, carModuleInfoResponseData>({
     url: "/carModuleInfo/page",
@@ -32,5 +32,11 @@ export function carModuleInfoOperationLog_API(id: number) {
   return request<any, carModuleInfoOperationLogResponseData>({
     url: `/carModuleInfo/operationLog/${id}`,
     method: 'get',
+  })
+}
+export function carModuleInfoOperationDelete_API(data: any) {
+  return request<any, carMoudleInfoDeleteResponseData>({
+    url: `/carModuleInfo/delete?id=${data}`,
+    method: 'delete',
   })
 }

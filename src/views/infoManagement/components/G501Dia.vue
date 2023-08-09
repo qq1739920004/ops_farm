@@ -32,10 +32,10 @@
                 <span class="dialog-footer">
                     <el-button type="danger" @click="cancel">取消</el-button>
                     <el-button type="primary" v-if="!newRecords.id" @click="submit">
-                        确定1
+                        确定
                     </el-button>
                     <el-button type="primary" v-else @click="editSubmit">
-                        确定2
+                        确定
                     </el-button>
                 </span>
             </template>
@@ -65,6 +65,7 @@ const props = defineProps({
 const dialogVisible = ref<boolean>(false)
 defineExpose({ //
     dialogVisible,
+    formRef
 });
 const editSubmit = async () => {
     await formRef.value.validate()
@@ -108,4 +109,9 @@ const rules = {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+    .dialog-footer {
+        display: flex;
+        justify-content: space-around;
+    }
+</style>

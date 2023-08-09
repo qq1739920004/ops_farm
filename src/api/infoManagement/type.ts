@@ -81,3 +81,6 @@ export interface LogObj {
 export interface carModuleInfoOperationLogResponseData extends ResponseData {
     data: LogObj[]
 }
+export interface carMoudleInfoDeleteResponseData extends ResponseData {
+    data: string
+}
