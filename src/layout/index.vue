@@ -5,10 +5,14 @@
       <SlideBar :collapse="collapse" />
       <el-container>
         <el-header height="50px">
-          <div>
-            <Hamburger @click="changeCollapse" />
-            <!-- <Breadcrumb /> -->
-          </div>
+          <SvgIcon
+            @click="changeCollapse"
+            cursor="pointer"
+            :icon="collapse ? 'exit-fold' : 'fold'"
+            color="#fff"
+            size="24"
+          />
+          <!-- <Breadcrumb /> -->
           <Navbar />
         </el-header>
         <el-main>
@@ -32,13 +36,18 @@
   <div v-else class="app-layout-mobile">
     <el-container>
       <el-header height="50px">
-        <Hamburger @click="changeMenu" />
+        <SvgIcon
+          @click="changeDrawerVisible"
+          icon="exit-fold"
+          color="#fff"
+          size="24"
+        />
         <Navbar />
       </el-header>
       <el-main> <AppMain /></el-main>
     </el-container>
-    <el-drawer direction="ltr" v-model="drawer" :with-header="false">
-      <SlideBar @handleChange="slideBarHandleChange" />
+    <el-drawer direction="ltr" v-model="drawerVisible" :with-header="false">
+      <SlideBar @handleChange="changeDrawerVisible" />
     </el-drawer>
   </div>
 </template>
@@ -46,8 +55,8 @@
 <script setup lang="ts">
 import { watchEffect, ref } from "vue";
 import SlideBar from "./components/SlideBar/index.vue";
-import Hamburger from "./components/Hamburger/index.vue";
 import Navbar from "./components/Navbar.vue";
+import SvgIcon from "@/components/SvgIcon/index.vue";
 // import Breadcrumb from "./components/Breadcrumb/index.vue";
 import AppMain from "./components/AppMain.vue";
 import { useWindowSize } from "@vueuse/core";
@@ -57,7 +66,7 @@ const appStore = useAppStore();
 const { width } = useWindowSize();
 const WIDTH = 750;
 
-let drawer = ref(false);
+let drawerVisible = ref(false);
 let collapse = ref(false);
 
 watchEffect(() => {
@@ -69,11 +78,8 @@ watchEffect(() => {
   }
 });
 
-function changeMenu() {
-  drawer.value = true;
-}
-function slideBarHandleChange() {
-  drawer.value = !drawer.value;
+function changeDrawerVisible() {
+  drawerVisible.value = !drawerVisible.value;
 }
 
 function changeCollapse() {
@@ -107,7 +113,7 @@ function changeCollapse() {
   height: 100%;
   .el-container {
     height: 100%;
-    flex:1;
+    flex: 1;
     .el-header {
       display: flex;
       justify-content: space-between;

@@ -2,17 +2,41 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from "path-browserify";
 import { fileURLToPath } from 'url'
+import AutoImport from 'unplugin-auto-import/vite'
+// import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+const pathSrc = path.resolve(dirname, "src");
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(),
+  // AutoImport({
+    // Auto import functions from Vue, e.g. ref, reactive, toRef...
+    // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+    // imports: ["vue"],
+
+    // Auto import functions from Element Plus, e.g. ElMessage, ElMessageBox... (with style)
+    // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+    // resolvers: [
+      // ElementPlusResolver()
+    // ],
+
+  // }),
+  createSvgIconsPlugin({
+    // 指定需要缓存的图标文件夹
+    iconDirs: [path.resolve(pathSrc, "assets/icons")],
+    // 指定symbolId格式
+    symbolId: "icon-[dir]-[name]",
+  }),
+
+
+  ],
   resolve: {
     alias: {
-      "@": path.resolve(dirname, 'src')
+      "@": pathSrc
     },
-    // extensions: ['.js', '.ts', '.vue']
   },
   server: {
     host: "127.0.0.1",
@@ -21,14 +45,12 @@ export default defineConfig({
     proxy: {
       // 反向代理解决跨域
       '/dev-api': {
-        // target: "http://vapi.youlai.tech", // 线上接口地址
-        // target: 'http://localhost:8989',  // 本地接口地址 , 后端工程仓库地址：https://gitee.com/youlaiorg/youlai-boot
         // target:'http://140.207.166.210:9030',
-        target:"http://127.0.0.1:4523/m1/2885822-0-default",
+        target: "http://127.0.0.1:4523/m1/2885822-0-default",
         changeOrigin: true,
         rewrite: (path) =>
           path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
-          
+
       },
     },
   },

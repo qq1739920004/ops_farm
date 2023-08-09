@@ -1,5 +1,5 @@
 <template>
-  <!-- <section class="app-main"> -->
+  <section class="app-main">
     <router-view v-slot="{ Component, route }">
       <transition name="router-fade" mode="out-in">
         <keep-alive>
@@ -7,7 +7,7 @@
         </keep-alive>
       </transition>
     </router-view>
-  <!-- </section> -->
+  </section>
 </template>
 <script setup lang="ts"></script>
 

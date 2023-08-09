@@ -1,14 +1,24 @@
 <template>
   <div class="navbar_component">
+    <div class="setting-item" @click="toggle">
+      <SvgIcon
+        color="#fff"
+        :icon="isFullscreen ? 'exit-fullscreen' : 'fullscreen'"
+      />
+    </div>
     <el-dropdown class="lang-dropdown">
-      <div>
-        <span>中文</span>
-        <el-icon><arrow-down /></el-icon>
-      </div>
+      <SvgIcon  icon="language" size="22" />
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="changeLang('zh')">中文</el-dropdown-item>
-          <el-dropdown-item @click="changeLang('en')">English</el-dropdown-item>
+          <el-dropdown-item :disabled="locale == 'zh'" @click="changeLang('zh')"
+            >中文</el-dropdown-item
+          >
+          <el-dropdown-item
+            divided
+            :disabled="locale == 'en'"
+            @click="changeLang('en')"
+            >English</el-dropdown-item
+          >
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -20,8 +30,10 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item>用户中心</el-dropdown-item>
-          <el-dropdown-item @click="drawer = true">主题设置</el-dropdown-item>
-          <el-dropdown-item >退出登陆</el-dropdown-item>
+          <el-dropdown-item divided @click="drawer = true"
+            >主题设置</el-dropdown-item
+          >
+          <el-dropdown-item divided>退出登陆</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -35,13 +47,19 @@
 
       <ul class="layout">
         <el-tooltip content="左侧模式" placement="bottom">
-          <li @click="changeNavgation('vertical')" :class="'layout-item layout-left '">
+          <li
+            @click="changeNavgation('vertical')"
+            :class="'layout-item layout-left '"
+          >
             <div />
             <div />
           </li>
         </el-tooltip>
         <el-tooltip content="顶部模式" placement="bottom">
-          <li @click="changeNavgation('horizontal')"  :class="'layout-item layout-top '">
+          <li
+            @click="changeNavgation('horizontal')"
+            :class="'layout-item layout-top '"
+          >
             <div />
             <div />
           </li>
@@ -54,16 +72,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import useAppstore from '@/store/app'
+import useAppstore from "@/store/app";
+import SvgIcon from "@/components/SvgIcon/index.vue";
+import { useFullscreen } from "@vueuse/core";
 const { locale } = useI18n();
-const appStore = useAppstore()
-
+const appStore = useAppstore();
+const { isFullscreen, toggle } = useFullscreen();
 let drawer = ref(false);
 
 function changeNavgation(arg: string) {
-  drawer.value = !drawer.value 
-  appStore.updateThemeSettings('layout',arg)
-
+  drawer.value = !drawer.value;
+  appStore.updateThemeSettings("layout", arg);
 }
 
 function changeLang(value: string) {
@@ -75,6 +94,10 @@ function changeLang(value: string) {
 .navbar_component {
   display: flex;
   align-items: center;
+  .setting-item {
+    margin-right: 8px;
+    cursor: pointer;
+  }
   .lang-dropdown {
     color: #fff;
     cursor: pointer;

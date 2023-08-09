@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination_component">
+  <div class="Pagination_component">
     <el-pagination
       style="padding-bottom: 20px"
       class="pagination"
