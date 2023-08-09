@@ -83,7 +83,7 @@
 
                         </el-col>
                     </el-row>
-                    <el-row :gutter="16">
+                    <el-row :gutter="16" v-if="scence != '1'">
                         <el-col :span="3" :offset="2">
                             车身SN
                         </el-col>
@@ -97,7 +97,7 @@
 
                         </el-col>
                     </el-row>
-                    <el-row :gutter="16">
+                    <el-row :gutter="16" v-if="scence != '1'">
                         <el-col :span="3" :offset="2">
                             前轮SN
                         </el-col>
@@ -111,7 +111,7 @@
 
                         </el-col>
                     </el-row>
-                    <el-row :gutter="16">
+                    <el-row :gutter="16" v-if="scence != '1'">
                         <el-col :span="3" :offset="2">
                             天线_1SN
                         </el-col>
@@ -125,12 +125,40 @@
 
                         </el-col>
                     </el-row>
-                    <el-row :gutter="16">
+                    <el-row :gutter="16" v-if="scence == '2'">
                         <el-col :span="3" :offset="2">
                             天线_2SN
                         </el-col>
                         <el-col :span='8'>
                             <el-input v-model="saleObj.wheelImuSn" class="input-with-select">
+                                <template #append>
+                                    <el-button @click="changeBtn"
+                                        style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                </template>
+                            </el-input>
+
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="16" v-if="scence == '1'">
+                        <el-col :span="3" :offset="2">
+                            HUB_SN
+                        </el-col>
+                        <el-col :span='8'>
+                            <el-input v-model="saleObj.hubSn" class="input-with-select">
+                                <template #append>
+                                    <el-button @click="changeBtn"
+                                        style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                </template>
+                            </el-input>
+
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="16" v-if="scence == '1'">
+                        <el-col :span="3" :offset="2">
+                            一体机SN
+                        </el-col>
+                        <el-col :span='8'>
+                            <el-input v-model="saleObj.carImuSn" class="input-with-select">
                                 <template #append>
                                     <el-button @click="changeBtn"
                                         style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
@@ -164,11 +192,12 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { RecordsObj, SaleResponseData, carModuleInfoOperationLogResponseData, LogObj } from "@/api/infoManagement/type"
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { carModuleInfoGet_API, carModuleInfoOperationLog_API } from '@/api/infoManagement/index'
 import { ElMessage } from 'element-plus'
+const scence = ref<string>('')
 let $route = useRoute()
-console.log($route.query);
+scence.value = JSON.parse($route.query.scence as string)
 const saleObj = reactive<RecordsObj>({
     carImuSn: '',
     hubSn: '',
@@ -196,12 +225,11 @@ const saleObj = reactive<RecordsObj>({
     sn: '',
     type: ''
 })
-console.log($route.query.carImuSn)
-Object.assign(saleObj, $route.query)
+Object.assign(saleObj, JSON.parse($route.query.row as string))
 const tableData = reactive<LogObj[]>([])
 const getInfo = async () => {
     const res: carModuleInfoOperationLogResponseData = await carModuleInfoOperationLog_API(saleObj.id as number)
-    Object.assign(tableData,res.data)
+    Object.assign(tableData, res.data)
 }
 const changeBtn = async () => {
     const res: SaleResponseData = await carModuleInfoGet_API(saleObj)

@@ -62,6 +62,7 @@ export const constantRoutes = [ // 静态路由数据
       },
       {
         path: 'aftersale',
+        name:'aftersale',
         component: () => import("@/views/infoManagement/aftersale/index.vue"),
         meta: {
           title: '信息管理',
