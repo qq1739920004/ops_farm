@@ -18,7 +18,7 @@
                 </el-select>
             </div>
             <div class="button_area">
-                <el-button type="success" class="btn1" :icon="Search">导出</el-button>
+                <el-button type="success" class="btn1" :icon="Search" @click="openExportDia">导出</el-button>
                 <el-button type="success" class="btn2" :icon="Plus" @click="openDialog">新建</el-button>
             </div>
         </div>
@@ -53,7 +53,12 @@
                         <div class="edit-btn">
                             <div class="left">
                                 <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
-                                <el-button class="delete" size="small" text>删除</el-button>
+                                <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
+                                    @confirm="removeTradeMark(row.id)">
+                                    <template #reference>
+                                        <el-button class="delete" size="small" text>删除</el-button>
+                                    </template>
+                                </el-popconfirm>
                             </div>
                             <div class="right">
                                 <el-button text size="small" @click="gotoAfterSale(row, $index)"
@@ -65,7 +70,9 @@
                 </el-table-column>
 
             </el-table>
-            <el-table style="width: 100%" stripe :data="records" v-show="scence == '2'">
+            <el-table @selection-change="handleSelectionChange" style="width: 100%" stripe :data="records"
+                v-show="scence == '2'">
+                <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
                 <el-table-column prop="npn" label="铭牌SN" width="180" show-overflow-tooltip>
                 </el-table-column>
@@ -92,10 +99,16 @@
                         <div class="edit-btn">
                             <div class="left">
                                 <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
-                                <el-button class="delete" size="small" text>删除</el-button>
+                                <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
+                                    @confirm="removeTradeMark(row.id)">
+                                    <template #reference>
+                                        <el-button class="delete" size="small" text>删除</el-button>
+                                    </template>
+                                </el-popconfirm>
                             </div>
                             <div class="right">
-                                <el-button text size="small" class="aftersale">售后</el-button>
+                                <el-button text size="small" @click="gotoAfterSale(row, $index)"
+                                    class="aftersale">售后</el-button>
                                 <el-button text size="small" class="aftersale">处理</el-button>
                             </div>
                         </div>
@@ -103,17 +116,72 @@
                 </el-table-column>
 
             </el-table>
-            <el-table style="width: 100%" stripe :data="records" v-show="scence == '3'">
+            <el-table @selection-change="handleSelectionChange" style="width: 100%" stripe :data="records"
+                v-show="scence == '3'">
+                <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
-                <el-table-column prop="npn" label="铭牌SN" width="180" show-overflow-tooltip>
+                <el-table-column prop="npn" label="铭牌SN" width="200" show-overflow-tooltip align="center">
                 </el-table-column>
-                <el-table-column label="维护信息" width="280" show-overflow-tooltip>
+                <el-table-column label="维保信息" width="280" show-overflow-tooltip align="center">
                     <template #="{ row, $index }">
+                        <el-popover placement="right" :width="200" trigger="click" style="">
+                            <template #reference>
+                                <el-button
+                                    style="width: 52px;height: 26px;opacity: 1;border:1px rgba(222, 255, 235, 1) 4px;background: rgba(222, 255, 235, 1);font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 20.27px;color: rgba(76, 176, 79, 1);text-align: left;vertical-align: top;">查看</el-button>
+                            </template>
+                            <el-row :gutter="16"
+                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(202, 204, 207, 1);">
+                                <el-col :span="7" :offset="2">
+                                    类型
+                                </el-col>
+                                <el-col :span="15">
+                                    过期时间
+                                </el-col>
+                            </el-row>
+                            <el-row :gutter="16"
+                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                                <el-col :span="7" :offset="2">
+                                    罗网
+                                </el-col>
+                                <el-col :span="15">
+                                    {{ row.netDate.split(' ')[0] }}
+                                </el-col>
+                            </el-row>
+                            <el-row :gutter="16"
+                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                                <el-col :span="7" :offset="2">
+                                    软件
+                                </el-col>
+                                <el-col :span="15">
+                                    {{ row.warrantyDate.split(' ')[0] }}
+                                </el-col>
+                            </el-row>
+                            <el-row :gutter="16"
+                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                                <el-col :span="7" :offset="2">
+                                    星基
+                                </el-col>
+                                <el-col :span="15">
+                                    {{ row.satelliteDate.split(' ')[0] }}
+                                </el-col>
+                            </el-row>
+                            <el-row :gutter="16"
+                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                                <el-col :span="7" :offset="2">
+                                    质保
+                                </el-col>
+                                <el-col :span="15">
+                                    {{ row.expirationTime.split(' ')[0] }}
+                                </el-col>
+                            </el-row>
+                        </el-popover>
+                    </template>
+                    <!-- <template #="{ row, $index }">
                         <div v-if="row.expirationTime">{{ row.expirationTime.split(' ')[0] }}</div>
                         <div v-else>
                             <el-tag>123</el-tag>
                         </div>
-                    </template>
+                    </template> -->
                 </el-table-column>
                 <el-table-column prop="sn" label="平板SN" width="" show-overflow-tooltip>
                 </el-table-column>
@@ -130,10 +198,16 @@
                         <div class="edit-btn">
                             <div class="left">
                                 <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
-                                <el-button class="delete" size="small" text>删除</el-button>
+                                <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
+                                    @confirm="removeTradeMark(row.id)">
+                                    <template #reference>
+                                        <el-button class="delete" size="small" text>删除</el-button>
+                                    </template>
+                                </el-popconfirm>
                             </div>
                             <div class="right">
-                                <el-button text size="small" class="aftersale">售后</el-button>
+                                <el-button text size="small" @click="gotoAfterSale(row, $index)"
+                                    class="aftersale">售后</el-button>
                                 <el-button text size="small" class="aftersale">处理</el-button>
                             </div>
                         </div>
@@ -199,18 +273,20 @@
         </div>
         <G502Dia ref="G502D" :newRecords=newRecords></G502Dia>
         <G501Dia ref="G501D" :newRecords=newRecords></G501Dia>
+        <exporDia ref="exporD"></exporDia>
     </div>
 </template>
 
 <script setup lang='ts'>
 import G502Dia from './components/G502Dia.vue'
 import G501Dia from './components/G501Dia.vue'
+import exporDia from './components/exporDia.vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { reactive, ref, nextTick, watch } from 'vue'
 import { Search, Plus } from '@element-plus/icons-vue'
-import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API } from '@/api/infoManagement/index'
+import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API, carModuleInfoOperationDelete_API } from '@/api/infoManagement/index'
 import { ElMessage } from 'element-plus'
-import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj, changeResponseData, editResponseData } from "@/api/infoManagement/type"
+import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj, changeResponseData, editResponseData, carMoudleInfoDeleteResponseData } from "@/api/infoManagement/type"
 import { useRouter } from 'vue-router'
 const pageInfo = reactive<PageObj>({
     key: '',
@@ -225,6 +301,7 @@ const records = ref<RecordsObj[]>([])
 const dialogVisible = ref<boolean>(false)
 const G502D = ref()
 const G501D = ref()
+const exporD = ref()
 const multipleSelection = ref<RecordsObj[]>([])
 const newRecords = reactive<newRecordsObj>({
     carImuSn: "",
@@ -323,7 +400,8 @@ const edit = (row: any) => {
     newRecords.motorSn = row.motorSn
     nextTick(() => {
         formRef.value.clearValidate()
-        G502D.value.formRef.clearValidate()
+        G501D.value.formRef?.clearValidate()
+        G502D.value.formRef?.clearValidate()
     })
 }
 watch(
@@ -351,8 +429,9 @@ const editSubmit = async () => {
 const openDialog = () => {
     dialogVisible.value = true
     nextTick(() => {
+        G501D.value.formRef?.clearValidate()
         formRef.value.clearValidate()
-        G502D.value.formRef.clearValidate()
+        G502D.value.formRef?.clearValidate()
         newRecords.carImuSn = ''
         newRecords.hubSn = ''
         newRecords.antennaTwo = ''
@@ -371,6 +450,15 @@ const openDialog = () => {
     })
 
 }
+const removeTradeMark = async (id: any) => {
+    const res: carMoudleInfoDeleteResponseData = await carModuleInfoOperationDelete_API(id)
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '删除成功' })
+    }
+    else {
+        ElMessage({ type: 'error', message: '删除失败' })
+    }
+}
 const submit = async () => {
     await formRef.value.validate()
     dialogVisible.value = false
@@ -383,8 +471,11 @@ const cancel = () => {
 const gotoAfterSale = (row: any, $index: number) => {
     console.log(row);
     $router.push({
-        path: '/infoManagement/aftersale', query: row
+        name: 'aftersale', query: { row: JSON.stringify(row), scence: JSON.stringify(scence.value) }
     })
+}
+const openExportDia = () => {
+    exporD.value.dialogVisible = true
 }
 </script>
 
