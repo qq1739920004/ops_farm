@@ -24,7 +24,7 @@
         </div>
         <div>
             <el-table :header-cell-style="{
-                background: 'rgba(247, 247, 247, 1)', height: '40px',color: 'rgba(0, 0, 0, 1)',font:'14px'
+                background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px'
             }" @selection-change="handleSelectionChange" style="width: 100%" :data="records" v-show="scence == '1'">
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
@@ -33,6 +33,7 @@
                 <el-table-column label="质保日期" width="140" show-overflow-tooltip>
                     <template #="{ row }">
                         <div v-if="row.expirationTime">{{ row.expirationTime.split(' ')[0] }}</div>
+                        
                         <div v-else>
                             <el-tag>123</el-tag>
                         </div>
@@ -72,8 +73,7 @@
             </el-table>
             <el-table @selection-change="handleSelectionChange" style="width: 100%" :header-cell-style="{
                 background: 'rgba(247, 247, 247, 1)', height: '40px'
-            }" :data="records"
-                v-show="scence == '2'">
+            }" :data="records" v-show="scence == '2'">
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
                 <el-table-column prop="npn" label="铭牌SN" width="180" show-overflow-tooltip>
@@ -119,18 +119,17 @@
             </el-table>
             <el-table @selection-change="handleSelectionChange" style="width: 100%" :header-cell-style="{
                 background: 'rgba(247, 247, 247, 1)', height: '40px'
-            }" :data="records"
-                v-show="scence == '3'">
+            }" :data="records" v-show="scence == '3'">
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
                 <el-table-column prop="npn" label="铭牌SN" width="200" show-overflow-tooltip align="center">
                 </el-table-column>
                 <el-table-column label="维保信息" width="280" show-overflow-tooltip align="center">
                     <template #="{ row }">
-                        <el-popover placement="right" :width="200" trigger="click" style="">
+                        <el-popover placement="right" :width="200" trigger="hover" style="">
                             <template #reference>
                                 <el-button
-                                    style="width: 52px;height: 26px;opacity: 1;border:1px rgba(222, 255, 235, 1) 4px;background: rgba(222, 255, 235, 1);font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 20.27px;color: rgba(76, 176, 79, 1);text-align: left;vertical-align: top;">查看</el-button>
+                                    style="width: 52px;height: 26px;opacity: 1;border:1px rgba(222, 255, 235, 1) solid;background: rgba(222, 255, 235, 1);font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 20.27px;color: rgba(76, 176, 79, 1);text-align: left;vertical-align: top;">查看</el-button>
                             </template>
                             <el-row :gutter="16"
                                 style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(202, 204, 207, 1);">
@@ -264,10 +263,10 @@
                     <span class="dialog-footer">
                         <el-button type="danger" @click="cancel">取消</el-button>
                         <el-button type="primary" v-if="!newRecords.id" @click="submit">
-                            确定1
+                            确定
                         </el-button>
                         <el-button type="primary" v-else @click="editSubmit">
-                            确定2
+                            确定
                         </el-button>
                     </span>
                 </template>
@@ -642,7 +641,7 @@ const openExportDia = () => {
         opacity: 1;
         border-radius: 2px;
 
-        border:1px solid rgba(220, 223, 230, 1);
+        border: 1px solid rgba(220, 223, 230, 1);
     }
 
 }

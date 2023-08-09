@@ -109,4 +109,9 @@ const rules = {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+    .dialog-footer {
+        display: flex;
+        justify-content: space-around;
+    }
+</style>
