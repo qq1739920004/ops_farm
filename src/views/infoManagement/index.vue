@@ -23,14 +23,15 @@
             </div>
         </div>
         <div>
-            <el-table @selection-change="handleSelectionChange" style="width: 100%" stripe :data="records"
-                v-show="scence == '1'">
+            <el-table :header-cell-style="{
+                background: 'rgba(247, 247, 247, 1)', height: '40px',color: 'rgba(0, 0, 0, 1)',font:'14px'
+            }" @selection-change="handleSelectionChange" style="width: 100%" :data="records" v-show="scence == '1'">
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
                 <el-table-column prop="npn" label="铭牌SN" width="180" show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column label="质保日期" width="140" show-overflow-tooltip>
-                    <template #="{ row, $index }">
+                    <template #="{ row }">
                         <div v-if="row.expirationTime">{{ row.expirationTime.split(' ')[0] }}</div>
                         <div v-else>
                             <el-tag>123</el-tag>
@@ -49,7 +50,7 @@
                 <el-table-column prop="steeringWheelSn" label="前轮IMU_SN" width="" show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column label="操作" show-overflow-tooltip align="center">
-                    <template #="{ row, $index }">
+                    <template #="{ row }">
                         <div class="edit-btn">
                             <div class="left">
                                 <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
@@ -61,8 +62,7 @@
                                 </el-popconfirm>
                             </div>
                             <div class="right">
-                                <el-button text size="small" @click="gotoAfterSale(row, $index)"
-                                    class="aftersale">售后</el-button>
+                                <el-button text size="small" @click="gotoAfterSale(row)" class="aftersale">售后</el-button>
                                 <el-button text size="small" class="aftersale">处理</el-button>
                             </div>
                         </div>
@@ -70,14 +70,16 @@
                 </el-table-column>
 
             </el-table>
-            <el-table @selection-change="handleSelectionChange" style="width: 100%" stripe :data="records"
+            <el-table @selection-change="handleSelectionChange" style="width: 100%" :header-cell-style="{
+                background: 'rgba(247, 247, 247, 1)', height: '40px'
+            }" :data="records"
                 v-show="scence == '2'">
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
                 <el-table-column prop="npn" label="铭牌SN" width="180" show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column label="质保日期" width="140" show-overflow-tooltip>
-                    <template #="{ row, $index }">
+                    <template #="{ row }">
                         <div v-if="row.expirationTime">{{ row.expirationTime.split(' ')[0] }}</div>
                         <div v-else>
                             <el-tag>123</el-tag>
@@ -95,7 +97,7 @@
                 <el-table-column prop="wheelImuSn" label="天线2_SN" width="" show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column label="操作" show-overflow-tooltip align="center">
-                    <template #="{ row, $index }">
+                    <template #="{ row }">
                         <div class="edit-btn">
                             <div class="left">
                                 <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
@@ -107,8 +109,7 @@
                                 </el-popconfirm>
                             </div>
                             <div class="right">
-                                <el-button text size="small" @click="gotoAfterSale(row, $index)"
-                                    class="aftersale">售后</el-button>
+                                <el-button text size="small" @click="gotoAfterSale(row)" class="aftersale">售后</el-button>
                                 <el-button text size="small" class="aftersale">处理</el-button>
                             </div>
                         </div>
@@ -116,14 +117,16 @@
                 </el-table-column>
 
             </el-table>
-            <el-table @selection-change="handleSelectionChange" style="width: 100%" stripe :data="records"
+            <el-table @selection-change="handleSelectionChange" style="width: 100%" :header-cell-style="{
+                background: 'rgba(247, 247, 247, 1)', height: '40px'
+            }" :data="records"
                 v-show="scence == '3'">
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
                 <el-table-column prop="npn" label="铭牌SN" width="200" show-overflow-tooltip align="center">
                 </el-table-column>
                 <el-table-column label="维保信息" width="280" show-overflow-tooltip align="center">
-                    <template #="{ row, $index }">
+                    <template #="{ row }">
                         <el-popover placement="right" :width="200" trigger="click" style="">
                             <template #reference>
                                 <el-button
@@ -194,7 +197,7 @@
                 <el-table-column prop="wheelImuSn" label="天线1_SN" width="" show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column label="操作" show-overflow-tooltip align="center">
-                    <template #="{ row, $index }">
+                    <template #="{ row }">
                         <div class="edit-btn">
                             <div class="left">
                                 <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
@@ -206,8 +209,7 @@
                                 </el-popconfirm>
                             </div>
                             <div class="right">
-                                <el-button text size="small" @click="gotoAfterSale(row, $index)"
-                                    class="aftersale">售后</el-button>
+                                <el-button text size="small" @click="gotoAfterSale(row)" class="aftersale">售后</el-button>
                                 <el-button text size="small" class="aftersale">处理</el-button>
                             </div>
                         </div>
@@ -468,7 +470,7 @@ const cancel = () => {
     dialogVisible.value = false
     formRef.value.resetFields()
 }
-const gotoAfterSale = (row: any, $index: number) => {
+const gotoAfterSale = (row: any) => {
     console.log(row);
     $router.push({
         name: 'aftersale', query: { row: JSON.stringify(row), scence: JSON.stringify(scence.value) }
@@ -554,7 +556,7 @@ const openExportDia = () => {
 
         .btn1 {
             position: absolute;
-            left: 1703px;
+            left: 1603px;
             top: 114px;
             width: 107px;
             height: 32px;
@@ -565,7 +567,7 @@ const openExportDia = () => {
 
         .btn2 {
             position: absolute;
-            left: 1826px;
+            left: 1736px;
             top: 114px;
             width: 74px;
             height: 32px;
@@ -640,7 +642,7 @@ const openExportDia = () => {
         opacity: 1;
         border-radius: 2px;
 
-        border: 1px solid rgba(220, 223, 230, 1);
+        border:1px solid rgba(220, 223, 230, 1);
     }
 
 }
