@@ -1,7 +1,7 @@
 <!--  -->
 <template>
     <div>
-        <el-dialog v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'" width="544px" height="580px">
+        <el-dialog style="border-radius: 8px;" v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'" width="544px" height="580px">
             <el-form style="width: 100%" ref="formRef" :model="newRecords" :rules="rules">
                 <el-form-item label="设备类型" label-width="140px" prop="terminalType">
                     <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"

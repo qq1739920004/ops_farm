@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container">
+    <div class="app_container">
         <div class="middle-area">
             <div class="input_area">
                 <el-input placeholder="请输入SN号" class="input-with-select">
@@ -19,7 +19,9 @@
             </div>
         </div>
         <div class='table_container'>
-            <el-table style="width: 100%" :data="tableData">
+            <el-table :header-cell-style="{
+                background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px'
+            }" style="width: 100%" :data="tableData">
                 <el-table-column type="index" label="序号" width="80" align="center" />
 
                 <el-table-column label="铭牌SN" show-overflow-tooltip>
@@ -132,15 +134,15 @@
                 <el-table-column label="操作" width="350" show-overflow-tooltip>
                     <template #="{ row }">
                         <div class="tableBtn">
-                            <el-button class="elbutton" size="small" text>详情 </el-button>
+                            <el-button class="elbutton" size="small" text @click="gotoMachineDetail">详情 </el-button>
                             <el-popconfirm :title="`您确定要删除${row.one}?`" width="250px" icon="Delete">
                                 <template #reference>
                                     <el-button class="elbutton" size="small" text>历史轨迹</el-button>
                                 </template>
                             </el-popconfirm>
-                            <el-button text class="elbutton" size="small">远程调参</el-button>
+                            <el-button text class="elbutton" size="small" @click="gotoRemote">远程调参</el-button>
                             <el-button text class="elbutton" size="small">文件存储</el-button>
-                            <el-button text class="elbutton" size="small">注册</el-button>
+                            <el-button text class="elbutton" size="small" @click="gotoRegister">注册</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -148,12 +150,18 @@
         </div>
         <InputDia ref="inputD"></InputDia>
         <CarModuleDia ref="carModuleD"></CarModuleDia>
+        <MachineDetailDia ref="MachineD"></MachineDetailDia>
+        <RemoteAdjustDia ref="RemoteD"></RemoteAdjustDia>
+        <RegisterDia ref='RegisterD'></RegisterDia>
     </div>
 </template>
 
 <script setup lang='ts'>
 import InputDia from './components/inputDia.vue'
 import CarModuleDia from './components/carModuleDia.vue'
+import MachineDetailDia from './components/machineDetailDia.vue'
+import RemoteAdjustDia from './components/remoteAdjust.vue'
+import RegisterDia from './components/registerDia.vue'
 import { reactive, ref } from 'vue'
 const tableData = reactive([{
     one: '123',
@@ -170,6 +178,9 @@ const tableData = reactive([{
 }])
 const inputD = ref()
 const carModuleD = ref()
+const MachineD = ref()
+const RemoteD = ref()
+const RegisterD = ref()
 const search = () => {
 }
 const gotoInput = () => {
@@ -177,6 +188,15 @@ const gotoInput = () => {
 }
 const gotoCarModule = () => {
     carModuleD.value.dialogVisible = true
+}
+const gotoMachineDetail = () => {
+    MachineD.value.dialogVisible = true
+}
+const gotoRemote = () => {
+    RemoteD.value.dialogVisible = true
+}
+const gotoRegister = () => {
+    RegisterD.value.dialogVisible = true
 }
 
 </script>
