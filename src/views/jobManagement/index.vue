@@ -35,9 +35,9 @@
             </div>
         </div>
         <div class="tableArea">
-            <el-table :header-cell-style="{
-                background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px'
-            }">
+            <el-table
+                :header-cell-style="{ background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px' }"
+               >
                 <el-table-column type="index" width="80" label="序号" align="center" />
                 <el-table-column label="作业名称" width="180" show-overflow-tooltip>
                 </el-table-column>
@@ -149,7 +149,6 @@ const changeA = () => {
     .time {
         height: 32px;
         display: flex;
-        width: 800px;
         position: absolute;
         left: 1128px;
         top: 124px;

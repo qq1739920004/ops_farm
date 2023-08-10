@@ -14,7 +14,7 @@
                 <el-form-item label="铭牌SN" label-width="140px" prop="npn">
                     <el-input v-model="newRecords.npn"></el-input>
                 </el-form-item>
-                <el-form-item label="质保日期" label-width="140px" prop="expirationTime">
+                <el-form-item label="质保日期" label-width="140px"  prop="expirationTime">
                     <el-input v-model="newRecords.expirationTime"></el-input>
                 </el-form-item>
                 <el-form-item label="平板SN" label-width="140px" prop="sn">
@@ -35,10 +35,10 @@
                 <span class="dialog-footer">
                     <el-button type="danger" @click="cancel">取消</el-button>
                     <el-button type="primary" v-if="!newRecords.id" @click="submit">
-                        确定1
+                        确定
                     </el-button>
                     <el-button type="primary" v-else @click="editSubmit">
-                        确定2
+                        确定
                     </el-button>
                 </span>
             </template>
