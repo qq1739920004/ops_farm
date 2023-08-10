@@ -1,4 +1,4 @@
-
+// 请求
 export interface HelpHandlingObj {
     key: string
     status: number|null,
@@ -10,14 +10,13 @@ export interface HelpHandlingObj {
 }
 
 
-
+// 响应
 export interface ResponseData {
     message?: string,
     code?: number,
-
 }
 
-
+// 接收数据类型
 export interface RecordsObj {
     id: number,
     tel: string,
@@ -44,4 +43,20 @@ export interface HelpHandlingResponseData extends ResponseData {
 }
 export interface HelpHandlingUncountData extends ResponseData{
     data:number
+}
+
+// 响应-车辆参数获取
+export interface HelpHandlingCarParamData{
+    code:string,
+    data:{
+        carId:number,
+        updateTime: number,
+        createTime: number,
+        paramJson: string
+    }   
+}
+
+// 响应-参数变更记录
+export interface HelpHandlingParamChangeData{
+
 }

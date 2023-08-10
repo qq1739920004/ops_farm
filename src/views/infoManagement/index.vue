@@ -33,7 +33,7 @@
                 <el-table-column label="质保日期" width="140" show-overflow-tooltip>
                     <template #="{ row }">
                         <div v-if="row.expirationTime">{{ row.expirationTime.split(' ')[0] }}</div>
-                        
+
                         <div v-else>
                             <el-tag>123</el-tag>
                         </div>
@@ -72,7 +72,7 @@
 
             </el-table>
             <el-table @selection-change="handleSelectionChange" style="width: 100%" :header-cell-style="{
-                background: 'rgba(247, 247, 247, 1)', height: '40px'
+                background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px'
             }" :data="records" v-show="scence == '2'">
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
@@ -223,7 +223,8 @@
             </Pagination>
         </div>
         <div class="dialog">
-            <el-dialog v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'" width="544px" height="580px">
+            <el-dialog style="border-radius: 8px;" v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'"
+                width="544px" height="580px">
                 <el-form style="width: 100%" ref="formRef" :model="newRecords" :rules="rules">
                     <el-form-item label="设备类型" label-width="140px" prop="terminalType">
                         <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
@@ -383,7 +384,15 @@ const editInfo = async () => {
     }
 }
 const edit = (row: any) => {
-    dialogVisible.value = true
+    if (scence.value == '1') {
+        dialogVisible.value = true
+    }
+    if (scence.value == '2') {
+        G502D.value.dialogVisible = true
+    }
+    if (scence.value == '3') {
+        G501D.value.dialogVisible = true
+    }
     newRecords.carImuSn = row.carImuSn
     newRecords.hubSn = row.hubSn
     newRecords.antennaTwo = row.antennaTwo

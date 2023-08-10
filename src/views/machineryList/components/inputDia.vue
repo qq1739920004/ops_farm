@@ -1,7 +1,7 @@
 <!--  -->
 <template>
     <div>
-        <el-dialog v-model="dialogVisible" title="录入经销商设备" width="30%" center>
+        <el-dialog style="border-radius: 8px;" v-model="dialogVisible" title="录入经销商设备" width="30%" center>
             <div class="content">
                 <div class="up">
                     <span>经销商：</span>

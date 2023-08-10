@@ -11,7 +11,7 @@ const useAppStore = defineStore("app", {
             device: "desktop",
             // 主题配置
             themeSettings: {
-                layout: layout || 'vertical' // vertical 横屏 // horizontal 竖屏
+                layout: layout || 'vertical' // vertical 横屏 // horizontal 竖屏 
             } as Record<string, any>
         }
     ),

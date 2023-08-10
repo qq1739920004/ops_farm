@@ -107,7 +107,20 @@ export const constantRoutes = [ // 静态路由数据
         component: () => import("@/views/helpHandling/index.vue"),
         meta: {
           title: '求助处理',
-          icon: 'ChatDotSquare'
+          icon: 'ChatDotSquare',
+          
+        },
+
+      },
+      {
+        path: 'handle',
+        name:'handle',    
+        component: () => import("@/views/helpHandling/handle/index.vue"),
+        meta: {
+          title: '处理详情',
+          icon: 'Suitcase',
+          activeMenu:'/helpHandling',
+          hidden:true    
         },
       },
     ]
