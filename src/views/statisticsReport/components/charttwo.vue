@@ -33,7 +33,7 @@ function init() {
         },
         legend: {
             top: '60%',
-            right: '15%',
+            right: '10%',
             icon: 'circle',
             itemHeight: 20,
             itemGap: 50, // 修改间距
@@ -60,11 +60,7 @@ function init() {
                     show: false,
                     position: 'center'
                 },
-                legend: {
-                    orient: 'horizontal',
-                    x: 850,
-                    y: 400
-                },
+      
                 emphasis: {
                     label: {
                         show: true,
@@ -99,9 +95,9 @@ function init() {
 box-sizing: border-box;
  position: absolute;  
  top:91px;
- left: 230px; 
+ left: 200px; 
  img{
-    margin-right: 80px;
+    margin-right: 70px;
  }
 }
 </style>

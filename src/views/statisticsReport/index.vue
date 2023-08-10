@@ -55,6 +55,12 @@ import Chartfive from './components/chartfive.vue'
 import Chartsix from './components/chartsix.vue'
 import Chartseven from './components/chartseven.vue'
 
+import {getStatisticsReportfarmMachineAPI} from '@/api/statisticsReport/index'
+const getStatisticsReportfarmMachine=async()=>{
+    const res=await getStatisticsReportfarmMachineAPI()
+    console.log(res)
+}
+getStatisticsReportfarmMachine()
 </script>
 
 <style lang="scss" scoped>
@@ -73,7 +79,6 @@ import Chartseven from './components/chartseven.vue'
 
     box-shadow: 2px 2px 20px 2px rgba(0, 0, 0, .25);
     border-radius: 15px;
-    margin-left: 10px;
 
 }
 
@@ -93,7 +98,7 @@ import Chartseven from './components/chartseven.vue'
         flex-direction: column;
        position: relative;
        
-        width: 36%;
+        width: 32%;
     }
 
     .chart3 {
@@ -108,11 +113,11 @@ import Chartseven from './components/chartseven.vue'
     margin-top: 20px;
 
     .chart4 {
-        width: 50%;
+        width: 48%;
     }
 
     .chart5 {
-        width: 50%;
+        width: 48%;
     }
 
 }
@@ -124,11 +129,11 @@ import Chartseven from './components/chartseven.vue'
     margin-top: 20px;
 
     .chart6 {
-        width: 50%;
+        width: 48%;
     }
 
     .chart7 {
-        width: 50%;
+        width: 48%;
 
     }
 }

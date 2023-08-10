@@ -14,18 +14,24 @@
             <el-col :span=5 class=help_search_state>
                 <span>状态：</span>
                 <el-select v-model=helpHandling.status placeholder="请选择" @change="chooseStatus">
-                    <el-option value=0 label="待处理"  />
-                    <el-option value=1 label="已处理"  />
+                    <el-option value=0 label="待处理" />
+                    <el-option value=1 label="已处理" />
                 </el-select>
             </el-col>
-            <el-col :span=2 :offset=13>
-                <el-button class="el_col_wait" :icon=Search  type="danger" plain >待处理{{ helpHandlingUncount }}</el-button>
+            <el-col :span=2  :offset=13>
+                <el-tag type="danger" class="el_tag_uncount">
+                    <el-icon :size="20">
+                        <Edit />
+                    </el-icon>
+                    待处理{{ helpHandlingUncount }}
+                </el-tag>
             </el-col>
         </el-row>
 
         <el-row class=help_table>
             <el-table type=index :data=helpList :header-cell-style="{
-                background: 'rgba(240, 240, 240, 1)', color: '#000000'}">
+                background: 'rgba(240, 240, 240, 1)', color: '#000000'
+            }">
                 <el-table-column label=序号 type=index />
                 <el-table-column label=SN prop=sn />
                 <el-table-column label=状态 prop=status>
@@ -46,7 +52,7 @@
                 <el-table-column label=操作 prop=status>
                     <template #default="scope">
                         <el-button size="small" text type="success"
-                            @click="handleEdit(scope.$index, scope.row)">操作</el-button>
+                            @click="handleEdit( scope.row)">处理</el-button>
 
                     </template>
                 </el-table-column>
@@ -66,8 +72,8 @@
 import { reactive, ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import Pagination from '@/components/Pagination/index.vue'
-import { getHelpHandlingAPI, getHelpHandlingFinishAPI, getHelpHandlingUncountAPI } from '@/api/helpHanding/index'
-import type { RecordsObj, HelpHandlingObj, HelpHandlingResponseData,HelpHandlingUncountData } from '@/api/helpHanding/type'
+import { getHelpHandlingAPI, getHelpHandlingUncountAPI } from '@/api/helpHanding/index'
+import type { RecordsObj, HelpHandlingObj, HelpHandlingResponseData, HelpHandlingUncountData } from '@/api/helpHanding/type'
 
 
 const helpList = ref<RecordsObj[]>([])
@@ -112,10 +118,6 @@ const tsToStr = (nowtime: any) => {
     return GMT
 }
 
-const getHelpHandlingFinish = async () => {
-    await getHelpHandlingFinishAPI()
-}
-
 
 getHelpHandling()
 getHelpHandlingUncount()
@@ -129,12 +131,14 @@ const currentChange = (val: any) => {
 const search = () => {
     getHelpHandling()
 }
-const handleEdit = (index: number, row: HelpHandlingObj) => {
-    // 完成处理操作
-    row.status = 0
-    console.log(index, row.status)
-    getHelpHandlingFinish()
-
+import {useRouter} from 'vue-router'
+const $router = useRouter()
+const handleEdit = (row: RecordsObj) => {
+    
+    $router.push({
+        name:'handle',
+        query:{carId:row.carId}
+      });
 }
 
 // 状态查询
@@ -152,9 +156,19 @@ const chooseStatus = () => {
         font-size: 14px;
     }
 
-.el_col_wait{
-    background-color: transparent ;
+    .el_col_wait {
+        background-color: transparent;
+    }
+
 }
 
+.el_tag_uncount {
+    vertical-align: middle;
+    height: 35px;
+
+    .el-icon {
+        display: inline-block;
+        margin-right: 5px;
+    }
 }
 </style>

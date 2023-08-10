@@ -19,7 +19,7 @@ function init() {
 
     var option = {
         grid: {
-            right: 30,
+            right: 40,
             bottom: 30,
             top: 60,
             left: 50
