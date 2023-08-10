@@ -22,21 +22,27 @@ const carlist = reactive([{ rank: 1, name: 'xinjiang', carnum: 200 },
 
 
 <style scoped lang="scss">
-.rank_item {
-    display: flex;
-    margin-top: 10px;
+.rank {
 
-    .rank_picture {
-        margin-left: 40px;
+    .rank_item {
+        display: flex;
+        margin-top: 10px;
+        width: 100%;
 
-        h3 {
-            display: inline;
-            margin-left: 20px;
+        .rank_picture {
+            margin-left: 40px;
+            width: 50%;
+
+            h3 {
+                display: inline;
+                margin-left: 20px;
+            }
         }
-    }
 
-    .rank-ability {
-        margin-left: 180px
+        .rank-ability {
+            width: 20%;
+            margin-left: 180px
+        }
     }
 }
 </style>

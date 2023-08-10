@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 
 let themeSettings: any = localStorage.getItem('themeSettings')
 themeSettings = JSON.parse(themeSettings)
-const { layout } = themeSettings ?themeSettings :''
+
+const { layout } = themeSettings || ''
 
 const useAppStore = defineStore("app", {
     state: () => (
@@ -10,8 +11,7 @@ const useAppStore = defineStore("app", {
             device: "desktop",
             // 主题配置
             themeSettings: {
-                layout: layout || 'vertical' // vertical 横屏 // horizontal 竖屏
-                // layout: layout || 'vertical' // vertical 横屏 // horizontal 竖屏
+                layout: layout || 'vertical' // vertical 横屏 // horizontal 竖屏 
             } as Record<string, any>
         }
     ),

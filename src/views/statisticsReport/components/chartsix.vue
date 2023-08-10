@@ -26,10 +26,11 @@ function init() {
         },
         title: {
             text: '访问次数统计',
-            left: 10,
-            top: 10,
+            left: 26,
+            top: 16,
             textStyle: {
-                fontSize: 16,
+                color: 'rgb(0, 0, 0)',
+                fontSize: 24,
                 fontWeight: 'normal'
             }
         },
@@ -129,8 +130,8 @@ function init() {
 
 <style scoped lang="scss">
 .container {
-    width: 785px;
-    height: 248px;
+    width: 100%;
+    height: 100%;
     // background-color: pink;
 }
 </style>

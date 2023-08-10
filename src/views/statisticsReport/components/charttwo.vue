@@ -1,8 +1,17 @@
 
 <template>
-    <div class="container">
-        <div class="left" ref="main"></div>
+
+    <div class="container" ref="main">
+        
     </div>
+    <div class="pic">
+        <img src="@/assets/statisticsReport/xinhao1.png" alt="">
+        <img src="@/assets/statisticsReport/xinhao2.png" alt="">
+        <img src="@/assets/statisticsReport/xinhao3.png" alt="">
+    </div>
+    
+
+    
 </template>
 
 <script lang="ts" setup>
@@ -16,19 +25,24 @@ onMounted(
 )
 function init() {
 
-    var myChart = echarts.init(main.value, null, {
-        width: 600,
-        height: 140
-    });
+    var myChart = echarts.init(main.value,);
 
     var option = {
         tooltip: {
             trigger: 'item'
         },
         legend: {
-            top: '5%',
-            left: 'center',
-            icon: 'circle'
+            top: '60%',
+            right: '15%',
+            icon: 'circle',
+            itemHeight: 20,
+            itemGap: 50, // 修改间距
+            textStyle: {
+                fontSize: 20,
+                color: "black",
+                padding: [0, 0, 0, 20], // 修改文字和图标距离
+            },
+
         },
 
         series: [
@@ -37,6 +51,7 @@ function init() {
                 type: 'pie',
                 radius: ['40%', '70%'],
                 avoidLabelOverlap: true,
+                center: ['20%', '45%'],
                 itemStyle: {
                     borderColor: '#fff',
                     // borderWidth: 2
@@ -77,18 +92,17 @@ function init() {
 
 <style scoped lang="scss">
 .container {
-
-    display: flex;
-    justify-content: space-around;
-
-    .left {
-
-        margin-left: 10px;
-        background-color: pink;
-
-    }
-
-
+    width: 100%;
+    height: 100%;
+}
+.pic{
+box-sizing: border-box;
+ position: absolute;  
+ top:91px;
+ left: 230px; 
+ img{
+    margin-right: 80px;
+ }
 }
 </style>
 

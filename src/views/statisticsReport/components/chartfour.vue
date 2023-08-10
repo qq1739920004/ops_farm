@@ -25,12 +25,20 @@ function init() {
         yAxis: {
             type: 'value'
         }, grid: {
-            // 处理片周围的空白
-            top: '4%',
-            left: '3%',
-            right: '4%',
-            bottom: '8%',
-            containLabel: true
+            right: 30,
+            bottom: 30,
+            top: 60,
+            left: 50
+
+        }, title: {
+            text: '访问次数统计',
+            left: 26,
+            top: 16,
+            textStyle: {
+                color: 'rgb(0, 0, 0)',
+                fontSize: 24,
+                fontWeight: 'normal'
+            }
         },
         series: [
             {
@@ -47,7 +55,8 @@ function init() {
 
 <style scoped lang="scss">
 .container {
-    height: 248px;
+    width: 100%;
+    height: 100%;
 }
 </style>
 
