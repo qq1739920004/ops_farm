@@ -1,10 +1,12 @@
 import request from '@/utils/request'
-import { carModuleInfoResponseData, PageObj, newRecordsObj, editResponseData, changeResponseData, SaleResponseData, carModuleInfoOperationLogResponseData, carMoudleInfoDeleteResponseData } from './type'
-export function carModuleInfo_API(params: PageObj) {
+//信息模块接口
+// 分页查询
+import { carMoudleInfoGetLeftResponseData, carModuleInfoResponseData, PageObj, newRecordsObj, editResponseData, changeResponseData, carModuleInfoOperationLogResponseData, carMoudleInfoDeleteResponseData } from './type'
+export function carModuleInfo_API(data: PageObj) {
   return request<any, carModuleInfoResponseData>({
     url: "/carModuleInfo/page",
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 export function carModuleInfoSave_API(data: newRecordsObj) {
@@ -16,16 +18,15 @@ export function carModuleInfoSave_API(data: newRecordsObj) {
 }
 export function carModuleInfoUpdate_API(data: newRecordsObj) {
   return request<any, editResponseData>({
-    url: "/carModuleInfo/update",
+    url: `/carModuleInfo/update`,
     method: 'put',
     data
   })
 }
-export function carModuleInfoGet_API(data: newRecordsObj) {
-  return request<any, SaleResponseData>({
-    url: "/carModuleInfo/get",
+export function carModuleInfoGet_API(id: Number) {
+  return request<any, carMoudleInfoGetLeftResponseData>({
+    url: `/carModuleInfo/get?id=${id}`,
     method: 'get',
-    data
   })
 }
 export function carModuleInfoOperationLog_API(id: number) {

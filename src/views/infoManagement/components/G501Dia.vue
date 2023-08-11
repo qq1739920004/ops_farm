@@ -1,21 +1,22 @@
 <!--  -->
 <template>
     <div>
-        <el-dialog style="border-radius: 8px;" v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'" width="544px" height="580px">
-            <el-form style="width: 100%" ref="formRef" :model="newRecords" :rules="rules">
+        <el-dialog style="border-radius: 8px;" v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'" width="544px"
+            height="580px">
+            <el-form style="width: 100%" ref="formRef" :model="props.newRecords" :rules="rules">
                 <el-form-item label="设备类型" label-width="140px" prop="terminalType">
-                    <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
+                    <el-select v-model="props.newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
                         style="width:100%" prop="terminalType">
-                        <el-option value="G360" label="G360" />
-                        <el-option value="G502" label="G502" />
-                        <el-option value="G501" label="G501" />
+                        <el-option value="AG360" label="G360" />
+                        <el-option value="AG502" label="G502" />
+                        <el-option value="AG501" label="G501" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="铭牌SN" label-width="140px" prop="npn">
                     <el-input v-model="newRecords.npn"></el-input>
                 </el-form-item>
-                <el-form-item label="质保日期" label-width="140px" prop="expirationTime">
-                    <el-input v-model="newRecords.expirationTime"></el-input>
+                <el-form-item label="质保日期" label-width="140px" prop="warrantyDate">
+                    <el-input v-model="newRecords.warrantyDate"></el-input>
                 </el-form-item>
                 <el-form-item label="平板SN" label-width="140px" prop="sn">
                     <el-input v-model="newRecords.sn"></el-input>
@@ -23,8 +24,8 @@
                 <el-form-item label="电机SN" label-width="140px" prop="motorSn">
                     <el-input v-model="newRecords.motorSn"></el-input>
                 </el-form-item>
-                <el-form-item label="天线1_SN" label-width="140px" prop="wheelImuSn">
-                    <el-input v-model="newRecords.wheelImuSn"></el-input>
+                <el-form-item label="天线1_SN" label-width="140px" prop="antennaOne">
+                    <el-input v-model="newRecords.antennaOne"></el-input>
                 </el-form-item>
             </el-form>
 
@@ -44,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { carModuleInfoSave_API, carModuleInfoUpdate_API } from '@/api/infoManagement/index'
 import { changeResponseData, editResponseData } from "@/api/infoManagement/type"
@@ -53,27 +54,31 @@ const props = defineProps({
     newRecords: {
         type: Object,
         default: {
+            id: null,
             npn: '',
-            expirationTime: '',
+            warrantyDate: '',
             sn: '',
             motorSn: '',
-            wheelImuSn: '',
-            terminalType: 'G501'
+            antennaOne: '',
+            terminalType: 'AG501',
+            type: 'all'
         }
     }
 })
+const ApiData = reactive<any>({})
 const dialogVisible = ref<boolean>(false)
 defineExpose({ //
     dialogVisible,
     formRef
 });
 const editSubmit = async () => {
+    Object.assign(ApiData, props.newRecords)
     await formRef.value.validate()
     editInfo()
     dialogVisible.value = false
 }
 const editInfo = async () => {
-    const res: editResponseData = await carModuleInfoUpdate_API(props.newRecords.value)
+    const res: editResponseData = await carModuleInfoUpdate_API(ApiData)
     if (res.code == 200) {
         ElMessage({ type: 'success', message: '编辑成功' })
     }
@@ -86,7 +91,7 @@ const cancel = () => {
     formRef.value.resetFields()
 }
 const addInfo = async () => {
-    const res: changeResponseData = await carModuleInfoSave_API(props.newRecords.value)
+    const res: changeResponseData = await carModuleInfoSave_API(ApiData)
     if (res.code == 200) {
         ElMessage({ type: 'success', message: '添加成功' })
     }
@@ -95,23 +100,32 @@ const addInfo = async () => {
     }
 }
 const submit = async () => {
+    Object.assign(ApiData, props.newRecords)
     await formRef.value.validate()
     dialogVisible.value = false
     addInfo()
 }
+const validatorwarrantyDate = (rule: any, value: any, callBack: any) => {
+    let zz = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/
+    if (zz.test(value)) {
+        callBack();
+    } else {
+        callBack(new Error("时间的格式应为:2010-01-01 09:11:23!"));
+    }
+};
 const rules = {
-    terminalType: [{ required: true, message: '请输入活动名称', trigger: 'blur' }, { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }],
-    npn: [{ required: true, message: '请输入铭牌名称', trigger: 'blur' }, { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }],
-    expirationTime: [{ required: true, message: '请输入质保日期', trigger: 'blur' }],
+    terminalType: [{ required: true, message: '请选择种类', trigger: 'blur' },],
+    npn: [{ required: true, message: '请输入铭牌名称', trigger: 'blur' },],
+    warrantyDate: [{ required: true, validator: validatorwarrantyDate }],
     sn: [{ required: true, message: '请输入平板SN', trigger: 'blur' }],
     motorSn: [{ required: true, message: '请输入电机SN', trigger: 'blur' }],
-    wheelImuSn: [{ required: true, message: '天线1_SN', trigger: 'blur' }],
+    antennaOne: [{ required: true, message: '请输入天线1_SN', trigger: 'blur' }],
 }
 </script>
 
 <style lang="scss" scoped>
-    .dialog-footer {
-        display: flex;
-        justify-content: space-around;
-    }
+.dialog-footer {
+    display: flex;
+    justify-content: space-around;
+}
 </style>

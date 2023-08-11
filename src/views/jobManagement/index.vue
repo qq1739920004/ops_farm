@@ -36,8 +36,7 @@
         </div>
         <div class="tableArea">
             <el-table
-                :header-cell-style="{ background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px' }"
-               >
+                :header-cell-style="{ background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px' }">
                 <el-table-column type="index" width="80" label="序号" align="center" />
                 <el-table-column label="作业名称" width="180" show-overflow-tooltip>
                 </el-table-column>
@@ -115,32 +114,30 @@ const changeA = () => {
 
 <style lang="scss" scoped>
 .middle-area {
-    height: 86px;
+    height: 46px;
+    display: flex;
+    justify-content: space-between;
+    margin: 16px 10px 0 10px;
 
     .input_area {
+        display: flex;
+        width: 25%;
+        justify-content: space-between;
         .input-with-select {
-            position: absolute;
-            left: 220px;
-            top: 113px;
             width: 179px;
             height: 32px;
             opacity: 1;
             border-radius: 4px;
             background: rgba(255, 255, 255, 1);
-
             border: 1px solid rgba(220, 223, 230, 1);
         }
 
         .m-2 {
-            position: absolute;
-            left: 439px;
-            top: 113px;
             width: 179px;
             height: 32px;
             opacity: 1;
             border-radius: 4px;
             background: rgba(255, 255, 255, 1);
-
             border: 1px solid rgba(220, 223, 230, 1);
         }
 
@@ -149,13 +146,8 @@ const changeA = () => {
     .time {
         height: 32px;
         display: flex;
-        position: absolute;
-        left: 1128px;
-        top: 124px;
-
         .demo-date-picker {
             display: flex;
-
             .gang {
                 display: flex;
                 align-items: center;
@@ -202,11 +194,7 @@ const changeA = () => {
     }
 
     .button_area {
-        margin: 16px 10px;
-
         .btn1 {
-            position: absolute;
-            left: 1733px;
             top: 123px;
             width: 97px;
             height: 32px;
@@ -216,8 +204,6 @@ const changeA = () => {
         }
 
         .btn2 {
-            position: absolute;
-            left: 1685px;
             top: 124px;
             width: 32px;
             height: 32px;

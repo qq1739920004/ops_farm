@@ -9,6 +9,11 @@
     @select="elMenuSelect"
     :ellipsis="false"
   >
+    <el-menu-item :class="{ logo: true, logo_active: collapse }">
+      <img src="@/assets/logo.png" alt="" />
+      <span>司南耕耘</span>
+    </el-menu-item>
+
     <Slidebar-item
       v-for="route in router.options.routes"
       :key="route.path"
@@ -47,6 +52,38 @@ function elMenuSelect() {
 </script>
 
 <style lang="scss" scoped>
+.logo {
+  font-size: 18px;
+
+  img {
+    width: 40px;
+  }
+  span {
+    margin-left: 12px;
+  }
+}
+.logo_active {
+  padding: 0px !important;
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
+  animation-name: opacityKeyframes;
+  animation-duration: 2s;
+  span {
+    margin-left: 0px;
+  }
+}
+
+
+@keyframes opacityKeyframes {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .el-menu {
   border-right: none;
 }
