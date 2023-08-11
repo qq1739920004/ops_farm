@@ -203,15 +203,13 @@ const gotoRegister = () => {
 
 <style lang="scss" scoped>
 .middle-area {
-    height: 86px;
+    height: 46px;
+    display: flex;
+    justify-content: space-between;
+    margin: 16px 10px 0 10px;
 
     .input_area {
-        margin: 16px 10px;
-
         .input-with-select {
-            position: absolute;
-            left: 225px;
-            top: 116px;
             width: 290px;
             height: 32px;
             opacity: 1;
@@ -222,9 +220,6 @@ const gotoRegister = () => {
         }
 
         .m_2 {
-            position: absolute;
-            left: 540px;
-            top: 116px;
             width: 179px;
             height: 32px;
             opacity: 1;
@@ -236,12 +231,8 @@ const gotoRegister = () => {
     }
 
     .button_area {
-        margin: 16px 10px;
 
         .btn1 {
-            position: absolute;
-            left: 1573px;
-            top: 116px;
             width: 131px;
             height: 32px;
             opacity: 1;
@@ -250,9 +241,6 @@ const gotoRegister = () => {
         }
 
         .btn2 {
-            position: absolute;
-            left: 1714px;
-            top: 116px;
             width: 116px;
             height: 32px;
             opacity: 1;
@@ -279,5 +267,4 @@ const gotoRegister = () => {
         }
 
     }
-}
-</style>
+}</style>

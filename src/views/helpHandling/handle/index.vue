@@ -24,10 +24,21 @@
             <div class="card_title">参数信息</div>
             <div class="secondTitle">
                 <span>|</span>
-                <span>车辆参数</span>
+                <span>差分信息</span>
             </div>
             <div class="message">
-               ---
+                ---
+            </div>
+
+            <div class="secondTitle">
+                <span>|</span>
+                <span>车辆参数</span>
+            </div>
+            <div class="message">               
+                <div v-for="(value, name, index)  in carParam.value" :key="index">
+                    <span>{{ name + ':' }}</span>
+                    <span>{{ value }}</span>
+                </div>              
             </div>
             <div class="secondTitle">
                 <span>|</span>
@@ -44,7 +55,10 @@
                 <span>PID参数</span>
             </div>
             <div class="message">
-                ---
+                <div v-for="(value, name, index)  in PIDParam.value" :key="index">
+                    <span>{{ name + ':' }}</span>
+                    <span>{{ value }}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -53,12 +67,18 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted, ref, reactive } from 'vue'
-import { getHelpHandlingCarParamAPI, getHelpHandlingParamChangeRecordAPI, getHelpHandlingCalibParamAPI, getHelpHandlingFinishAPI } from '@/api/helpHanding/index'
-import type { HelpHandlingCarParamData } from '@/api/helpHanding/type'
+import { getHelpHandlingCarParamAPI, getHelpHandlingCalibParamAPI,getHelpHandlingAlarmRecordAPI, getHelpHandlingFinishAPI, getHelpHandlinPIDParamAPI,getHelpHandlingParamChangeAPI } from '@/api/helpHanding/index'
+import type { HelpHandlingParamData } from '@/api/helpHanding/type'
 
 const $router = useRouter()
 let $route = useRoute()
 let carId = ref<string>('')
+// 报警
+const alarmRecord = reactive<any>({
+})
+// 参数更改响应数据
+const paramChange = reactive<any>({
+})
 // 车辆参数响应数据
 const carParam = reactive<any>({
     carId: 0,
@@ -66,9 +86,11 @@ const carParam = reactive<any>({
     createTime: 0,
     paramJson: ''
 })
-
 // 校准参数响应数据
 const calibParam = reactive<any>({
+})
+// PID响应数据
+const PIDParam = reactive<any>({
 })
 
 // 返回求助处理页
@@ -83,43 +105,58 @@ onMounted(
         carId.value = ($route.query.carId as string)
     }
 )
+
+// 报警记录
+const getHelpHandlingAlarmRecord= async () => {
+    try{  const res: any = await getHelpHandlingAlarmRecordAPI(Number(carId.value))
+        alarmRecord.value = JSON.parse(res.data.paramJson)
+    console.log(paramChange.value)}
+    catch(err){
+        console.log(err)
+    } 
+}
+// 参数变更记录
+const getHelpHandlingParamChange = async () => {
+    try{  const res: HelpHandlingParamData = await getHelpHandlingParamChangeAPI(Number(carId.value))
+    paramChange.value = JSON.parse(res.data.paramJson)
+    console.log(paramChange.value)}
+    catch(err){
+        console.log(err)
+    } 
+}
 // 获取车辆参数
 const getHelpHandlingCarParam = async () => {
-    const res: HelpHandlingCarParamData = await getHelpHandlingCarParamAPI(Number(carId.value))
-    carParam.value = res.data
+    const res: HelpHandlingParamData = await getHelpHandlingCarParamAPI(Number(carId.value))
+    carParam.value = JSON.parse(res.data.paramJson)
 }
-// 获取参数描述
-const getHelpHandlingParamChangeRecord = async () => {
-    try {
-        const res: any = await getHelpHandlingParamChangeRecordAPI(Number(carId.value))
-        carParam.value = res.data
-    } catch { }
-
-}
-// 校准参数
+// 获取校准参数
 const getHelpHandlingCalibParam = async () => {
-    const res: any = await getHelpHandlingCalibParamAPI(Number(carId.value))
+    const res: HelpHandlingParamData = await getHelpHandlingCalibParamAPI(Number(carId.value))
     calibParam.value = JSON.parse(res.data.paramJson)
-    console.log(' calibParam.value', calibParam.value)
-
 }
+// 获取PID参数
+const getHelpHandlinPIDParam = async () => {
+    const res: HelpHandlingParamData = await getHelpHandlinPIDParamAPI(Number(carId.value))
+    PIDParam.value = JSON.parse(res.data.paramJson)
+}
+getHelpHandlingAlarmRecord()
+getHelpHandlingParamChange()
 getHelpHandlingCarParam()
-getHelpHandlingParamChangeRecord()
 getHelpHandlingCalibParam()
+getHelpHandlinPIDParam()
 
 // 完成处理请求
 const getHelpHandlingFinish = async () => {
     try {
-        await getHelpHandlingFinishAPI(Number(carId.value))
+       await getHelpHandlingFinishAPI(Number(carId.value),1)
+       console.log('chenggong')
     } catch (err: any) {
-
+        console.log('error')
     }
 }
-
+// 完成处理按钮
 const handle = () => {
-    // statues 0
     getHelpHandlingFinish()
-    console.log('---finish')
 }
 
 </script>
@@ -190,4 +227,5 @@ const handle = () => {
         }
 
     }
-}</style>
+}
+</style>
