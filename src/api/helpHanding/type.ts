@@ -45,8 +45,8 @@ export interface HelpHandlingUncountData extends ResponseData{
     data:number
 }
 
-// 响应-车辆参数获取
-export interface HelpHandlingCarParamData{
+// 响应-车辆、PID、校准、参数获取
+export interface HelpHandlingParamData{
     code:string,
     data:{
         carId:number,
