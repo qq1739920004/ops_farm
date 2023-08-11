@@ -7,39 +7,39 @@
                 <div class="leftcontent">
                     <el-row :gutter="16">
                         <el-col :span="11" :offset="2">
-                            客户名称:{{ saleObj.username }}
+                            客户名称:{{ topvalue.username }}
                         </el-col>
                         <el-col :span="11">
-                            手机号码:{{ saleObj.tel }}
+                            手机号码:{{ topvalue.tel }}
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="24" :offset="3">
-                            经销商：{{ saleObj.companyName }}
+                            经销商：{{ topvalue.companyName }}
                         </el-col>
                     </el-row>
                     <el-row :gutter="16">
                         <el-col :span="10" :offset="3">
-                            创建人:{{ saleObj.creatorName }}
+                            创建人:{{ topvalue.creatorName }}
                         </el-col>
                         <el-col :span="9">
-                            注册码:{{ saleObj.code }}
+                            注册码:{{ topvalue.code }}
                         </el-col>
                     </el-row>
                     <el-row :gutter="16">
                         <el-col :span="11" :offset="2">
-                            罗网期限:{{ saleObj.netDate.split(' ')[0] }}
+                            罗网期限:{{ topvalue.netDate?.split(' ')[0] }}
                         </el-col>
                         <el-col :span="11">
-                            质保期限:{{ saleObj.expirationTime.split(' ')[0] }}
+                            质保期限:{{ topvalue.warrantyDate?.split(' ')[0] }}
                         </el-col>
                     </el-row>
                     <el-row :gutter="16">
                         <el-col :span="11" :offset="2">
-                            软件期限{{ saleObj.satelliteDate.split(' ')[0] }}
+                            软件期限{{ topvalue.expirationTime?.split(' ')[0] }}
                         </el-col>
                         <el-col :span="11">
-                            星基期限:{{ saleObj.warrantyDate.split(' ')[0] }}
+                            星基期限:{{ topvalue.satelliteDate?.split(' ')[0] }}
                         </el-col>
                     </el-row>
                 </div>
@@ -52,7 +52,7 @@
                             铭牌SN:
                         </el-col>
                         <el-col :span='8'>
-                            {{ saleObj.npn }}
+                            {{ topvalue.npn || '/' }}
                         </el-col>
                     </el-row>
                     <el-row :gutter="16">
@@ -60,9 +60,9 @@
                             平板SN:
                         </el-col>
                         <el-col :span='8'>
-                            <el-input v-model="saleObj.sn" class="input-with-select">
+                            <el-input v-model="topvalue.sn" class="input-with-select">
                                 <template #append>
-                                    <el-button @click="changeBtn"
+                                    <el-button @click="changeSnBtn(topvalue.sn)"
                                         style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
                                 </template>
                             </el-input>
@@ -74,9 +74,9 @@
                             电机SN:
                         </el-col>
                         <el-col :span='8'>
-                            <el-input v-model="saleObj.motorSn" class="input-with-select">
+                            <el-input v-model="topvalue.motorSn" class="input-with-select">
                                 <template #append>
-                                    <el-button @click="changeBtn"
+                                    <el-button @click="changeMotorSnBtn(topvalue.motorSn)"
                                         style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
                                 </template>
                             </el-input>
@@ -88,9 +88,9 @@
                             车身SN
                         </el-col>
                         <el-col :span='8'>
-                            <el-input v-model="saleObj.carImuSn" class="input-with-select">
+                            <el-input v-model="topvalue.carImuSn" class="input-with-select">
                                 <template #append>
-                                    <el-button @click="changeBtn"
+                                    <el-button @click="changeCarImuSnBtn(topvalue.carImuSn)"
                                         style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
                                 </template>
                             </el-input>
@@ -102,9 +102,9 @@
                             前轮SN
                         </el-col>
                         <el-col :span='8'>
-                            <el-input v-model="saleObj.steeringWheelSn" class="input-with-select">
+                            <el-input v-model="topvalue.wheelImuSn" class="input-with-select">
                                 <template #append>
-                                    <el-button @click="changeBtn"
+                                    <el-button @click="changeWheelImuSnBtn(topvalue.wheelImuSn)"
                                         style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
                                 </template>
                             </el-input>
@@ -116,9 +116,9 @@
                             天线_1SN
                         </el-col>
                         <el-col :span='8'>
-                            <el-input v-model="saleObj.motorSn" class="input-with-select">
+                            <el-input v-model="topvalue.antennaOne" class="input-with-select">
                                 <template #append>
-                                    <el-button @click="changeBtn"
+                                    <el-button @click="changeAntennaOneBtn(topvalue.antennaOne)"
                                         style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
                                 </template>
                             </el-input>
@@ -130,9 +130,9 @@
                             天线_2SN
                         </el-col>
                         <el-col :span='8'>
-                            <el-input v-model="saleObj.wheelImuSn" class="input-with-select">
+                            <el-input v-model="topvalue.antennaTwo" class="input-with-select">
                                 <template #append>
-                                    <el-button @click="changeBtn"
+                                    <el-button @click="changeAntennaTwoBtn(topvalue.antennaTwo)"
                                         style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
                                 </template>
                             </el-input>
@@ -144,9 +144,9 @@
                             HUB_SN
                         </el-col>
                         <el-col :span='8'>
-                            <el-input v-model="saleObj.hubSn" class="input-with-select">
+                            <el-input v-model="topvalue.hubSn" class="input-with-select">
                                 <template #append>
-                                    <el-button @click="changeBtn"
+                                    <el-button @click="changeHubSnBtn(topvalue.hubSn)"
                                         style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
                                 </template>
                             </el-input>
@@ -158,9 +158,9 @@
                             一体机SN
                         </el-col>
                         <el-col :span='8'>
-                            <el-input v-model="saleObj.carImuSn" class="input-with-select">
+                            <el-input v-model="topvalue.sn" class="input-with-select">
                                 <template #append>
-                                    <el-button @click="changeBtn"
+                                    <el-button @click="changeSnBtn(topvalue.sn)"
                                         style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
                                 </template>
                             </el-input>
@@ -172,11 +172,11 @@
         </div>
         <div class="bottomarea">
             <div class="bottomtitle">
-                变更记录
+                <div>变更信息</div>
+                <el-button @click="getInfo">
+                    加载信息
+                </el-button>
             </div>
-            <el-button @click="getInfo">
-                加载信息
-            </el-button>
             <div class="main">
                 <el-table :data="tableData" style="width: 100%;" :row-style="{ height: '60px' }"
                     :cell-style="{ padding: '10px' }">
@@ -191,9 +191,9 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { RecordsObj, SaleResponseData, carModuleInfoOperationLogResponseData, LogObj } from "@/api/infoManagement/type"
+import { RecordsObj, carModuleInfoOperationLogResponseData, LogObj, carMoudleInfoGetLeftResponseData, MoudleInfoGetLeftObj } from "@/api/infoManagement/type"
 import { reactive, ref } from 'vue';
-import { carModuleInfoGet_API, carModuleInfoOperationLog_API } from '@/api/infoManagement/index'
+import { carModuleInfoGet_API, carModuleInfoOperationLog_API, carModuleInfoUpdate_API } from '@/api/infoManagement/index'
 import { ElMessage } from 'element-plus'
 const scence = ref<string>('')
 let $route = useRoute()
@@ -225,22 +225,118 @@ const saleObj = reactive<RecordsObj>({
     sn: '',
     type: ''
 })
+const topvalue = reactive<MoudleInfoGetLeftObj>({
+    id: 0,
+    terminalType: '',
+    npn: '',
+    sn: '',
+    hubSn: '',
+    motorSn: '',
+    steeringWheelSn: '',
+    carImuSn: '',
+    wheelImuSn: '',
+    antennaOne: '',
+    antennaTwo: '',
+    superCattleModuleInfo: '',
+    warrantyDate: '',
+    satelliteDate: '',
+    expirationTime: '',
+    netDate: '',
+    username: '',
+    userId: 0,
+    companyId: 0,
+    companyName: '',
+    tel: '',
+    creatorName: '',
+    creatorId: 0,
+    code: ''
+})
 Object.assign(saleObj, JSON.parse($route.query.row as string))
 const tableData = reactive<LogObj[]>([])
 const getInfo = async () => {
     const res: carModuleInfoOperationLogResponseData = await carModuleInfoOperationLog_API(saleObj.id as number)
+    console.log(res);
     Object.assign(tableData, res.data)
+
 }
-const changeBtn = async () => {
-    const res: SaleResponseData = await carModuleInfoGet_API(saleObj)
+const getTopInfo = async () => {
+    const res: carMoudleInfoGetLeftResponseData = await carModuleInfoGet_API(saleObj.id as number)
+    Object.assign(topvalue, res.data)
+}
+getTopInfo()
+const changeSnBtn = async (val: string) => {
+    const res: any = await carModuleInfoUpdate_API({ 'sn': val, 'type': '', 'id': topvalue.id })
     if (res.code == 200) {
         ElMessage({ type: 'success', message: '编辑成功' })
-        Object.assign(saleObj, res.data)
+        getTopInfo
     }
     else {
         ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
+const changeMotorSnBtn = async (val: string) => {
+    const res: any = await carModuleInfoUpdate_API({ 'motorSn': val, 'type': '', 'id': topvalue.id })
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '编辑成功' })
+        getTopInfo
+    }
+    else {
+        ElMessage({ type: 'error', message: '编辑失败' })
+    }
+}
+
+const changeCarImuSnBtn = async (val: string) => {
+    const res: any = await carModuleInfoUpdate_API({ 'carImuSn': val, 'type': '', 'id': topvalue.id })
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '编辑成功' })
+        getTopInfo
+    }
+    else {
+        ElMessage({ type: 'error', message: '编辑失败' })
+    }
+}
+const changeWheelImuSnBtn = async (val: string) => {
+    const res: any = await carModuleInfoUpdate_API({ 'wheelImuSn': val, 'type': '', 'id': topvalue.id })
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '编辑成功' })
+        getTopInfo
+    }
+    else {
+        ElMessage({ type: 'error', message: '编辑失败' })
+    }
+}
+
+const changeAntennaOneBtn = async (val: string) => {
+    const res: any = await carModuleInfoUpdate_API({ 'antennaOne': val, 'type': '', 'id': topvalue.id })
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '编辑成功' })
+        getTopInfo
+    }
+    else {
+        ElMessage({ type: 'error', message: '编辑失败' })
+    }
+}
+const changeAntennaTwoBtn = async (val: string) => {
+    const res: any = await carModuleInfoUpdate_API({ 'antennaTwo': val, 'type': '', 'id': topvalue.id })
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '编辑成功' })
+        getTopInfo
+    }
+    else {
+        ElMessage({ type: 'error', message: '编辑失败' })
+    }
+}
+const changeHubSnBtn = async (val: string) => {
+    const res: any = await carModuleInfoUpdate_API({ 'hubSn': val, 'type': '', 'id': topvalue.id })
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '编辑成功' })
+        getTopInfo
+    }
+    else {
+        ElMessage({ type: 'error', message: '编辑失败' })
+    }
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -337,15 +433,14 @@ const changeBtn = async () => {
         height: 468px;
 
         .bottomtitle {
-            position: absolute;
-            left: 260px;
-            top: 460px;
+            width: 15%;
+            display: flex;
+            height: 50px;
+            align-items: center;
+            justify-content: space-around;
         }
 
         .el-button {
-            position: absolute;
-            left: 358px;
-            top: 457px;
             width: 104px;
             height: 32px;
             opacity: 1;
@@ -355,10 +450,8 @@ const changeBtn = async () => {
         }
 
         .main {
+            margin-left: 120px;
             padding: 20px 8px 0px 8px;
-            position: absolute;
-            left: 358px;
-            top: 504px;
             width: 755px;
             height: 376px;
             opacity: 1;

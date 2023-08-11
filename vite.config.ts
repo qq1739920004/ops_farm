@@ -45,8 +45,8 @@ export default defineConfig({
     proxy: {
       // 反向代理解决跨域
       '/dev-api': {
-        // target:'http://140.207.166.210:9030',
-        target: "http://127.0.0.1:4523/m1/2885822-0-default",
+        target:'http://140.207.166.210:9030/gateway/farm',
+        // target: "http://127.0.0.1:4523/m1/2885822-0-default",
         changeOrigin: true,
         rewrite: (path) =>
           path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
