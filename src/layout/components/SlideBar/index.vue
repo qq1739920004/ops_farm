@@ -9,7 +9,10 @@
     @select="elMenuSelect"
     :ellipsis="false"
   >
-    <el-menu-item :class="{ logo: true, logo_active: collapse }">
+    <el-menu-item
+      @click="router.go(-1)"
+      :class="{ logo: true, logo_active: collapse }"
+    >
       <img src="@/assets/logo.png" alt="" />
       <span>司南耕耘</span>
     </el-menu-item>
@@ -54,9 +57,8 @@ function elMenuSelect() {
 <style lang="scss" scoped>
 .logo {
   font-size: 18px;
-
   img {
-    width: 40px;
+    width: 45px;
   }
   span {
     margin-left: 12px;
@@ -68,12 +70,11 @@ function elMenuSelect() {
   justify-content: center !important;
   align-items: center;
   animation-name: opacityKeyframes;
-  animation-duration: 2s;
+  animation-duration: 1s;
   span {
     margin-left: 0px;
   }
 }
-
 
 @keyframes opacityKeyframes {
   from {

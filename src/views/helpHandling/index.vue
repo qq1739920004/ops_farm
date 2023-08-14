@@ -18,7 +18,7 @@
                     <el-option value=1 label="已处理" />
                 </el-select>
             </el-col>
-            <el-col :span=2  :offset=13>
+            <el-col :span=2 :offset=13>
                 <el-tag type="danger" class="el_tag_uncount">
                     <el-icon :size="20">
                         <Edit />
@@ -29,7 +29,7 @@
         </el-row>
 
         <el-row class=help_table>
-            <el-table type=index :data=helpList :header-cell-style="{
+            <el-table type=index  @sort-change="changeTableSort" :data=helpList :header-cell-style="{
                 background: 'rgba(240, 240, 240, 1)', color: '#000000'
             }">
                 <el-table-column label=序号 type=index />
@@ -42,7 +42,11 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label=求助时间 prop=helpTime sortable />
+                <el-table-column label=求助时间 prop=helpTime :sortable="'custom'">
+           
+                </el-table-column>
+
+
                 <el-table-column label=处理时间 prop=handleTime sortable />
                 <el-table-column label=历时 prop=consumeTime />
                 <el-table-column label=处理人 prop=handlerName />
@@ -51,8 +55,7 @@
                 <el-table-column label=备注 prop=info />
                 <el-table-column label=操作 prop=status>
                     <template #default="scope">
-                        <el-button size="small" text type="success"
-                            @click="handleEdit( scope.row)">处理</el-button>
+                        <el-button size="small" text type="success" @click="handleEdit(scope.row)">处理</el-button>
 
                     </template>
                 </el-table-column>
@@ -83,11 +86,41 @@ const helpHandling = reactive<HelpHandlingObj>({
     key: "",
     status: null,
     currentPage: 1,
-    pageSize: 1,
-    helpTimeOrder: 1,
-    handleTimeOrder: 1,
-    assignTimeOrder: 1
+    pageSize: 10,
+    helpTimeOrder: 0,
+    handleTimeOrder: 0,
+    assignTimeOrder: 0
 })
+
+
+const changeTableSort=(column:any)=>{
+   
+    if(column.prop==='helpTime'){
+        if(column.order==='ascending'){
+            helpHandling.helpTimeOrder=2
+            getHelpHandling()
+            console.log('helpTime升序')
+        }else if(column.order==='descending'){
+            helpHandling.helpTimeOrder=1
+            getHelpHandling()
+            console.log('helpTime降序')
+        }
+        
+    }else if(column.prop==='handleTime'){
+        if(column.order==='ascending'){
+            helpHandling.handleTimeOrder=2
+            getHelpHandling()
+            console.log('handletime升序')
+        }else if(column.order==='descending'){
+            helpHandling.handleTimeOrder=1
+            getHelpHandling()
+            console.log('handletime降序')
+        }
+       
+    }else{
+
+    }
+}
 
 const getHelpHandling = async () => {
     const res: HelpHandlingResponseData = await getHelpHandlingAPI(helpHandling)
@@ -131,14 +164,14 @@ const currentChange = (val: any) => {
 const search = () => {
     getHelpHandling()
 }
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 const $router = useRouter()
 const handleEdit = (row: RecordsObj) => {
-    
+
     $router.push({
-        name:'handle',
-        query:{carId:row.carId}
-      });
+        name: 'handle',
+        query: { carId: row.carId }
+    });
 }
 
 // 状态查询

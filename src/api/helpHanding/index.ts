@@ -1,5 +1,6 @@
 import request from '@/utils/request'
-import { HelpHandlingObj, HelpHandlingResponseData,HelpHandlingUncountData,HelpHandlingCarParamData } from './type'
+import { HelpHandlingObj, HelpHandlingResponseData,HelpHandlingUncountData,HelpHandlingParamData } from './type'
+
 // 分页查询求助处理列表s
 export function getHelpHandlingAPI(params: HelpHandlingObj) {
     return request<any, HelpHandlingResponseData>({
@@ -19,21 +20,23 @@ export function getHelpHandlingUncountAPI() {
 
 
 // 完成处理
-export function getHelpHandlingFinishAPI(carId:number) {
+export function getHelpHandlingFinishAPI(carId:number,status:number) {
     return request<any,HelpHandlingUncountData>({
-        url: `help/update?carId=${carId}`,
+        url: `help/update?carId=${carId}&${status}`,
         method: 'get',
     })
 }
 
 
-// 车辆参数
-export function getHelpHandlingCarParamAPI(carId:number) {
-    return request<any,HelpHandlingCarParamData>({
-        url: `/param/carParam/get?carId=${carId}`,
+// 参数更改
+export function getHelpHandlingParamChangeAPI(carId:number) {
+    return request<any,any>({
+        url: `/param/paramChangeRecord/get?carId=${carId}`,
         method: 'get',       
     })
 }
+
+
 // 报警记录
 export function getHelpHandlingAlarmRecordAPI(carId:number) {
     return request<any,any>({
@@ -41,18 +44,26 @@ export function getHelpHandlingAlarmRecordAPI(carId:number) {
         method: 'get',      
     })
 }
-// 参数更改记录
-export function getHelpHandlingParamChangeRecordAPI(carId:number) {
-    return request<any,any>({
-        url: `param/paramChangeRecord/get?carId=${carId}`,
+
+
+// 车辆参数
+export function getHelpHandlingCarParamAPI(carId:number) {
+    return request<any,HelpHandlingParamData>({
+        url: `/param/carParam/get?carId=${carId}`,
+        method: 'get',       
+    })
+}
+// 校准参数
+export function getHelpHandlingCalibParamAPI(carId:number) {
+    return request<any,HelpHandlingParamData>({
+        url: `param/calibParam/get?carId=${carId}`,
         method: 'get',      
     })
 }
-
-// 校准参数
-export function getHelpHandlingCalibParamAPI(carId:number) {
-    return request<any,any>({
-        url: `param/calibParam/get?carId=${carId}`,
+// PID参数
+export function getHelpHandlinPIDParamAPI(carId:number) {
+    return request<any,HelpHandlingParamData>({
+        url: `param/pidParam/get?carId=${carId}`,
         method: 'get',      
     })
 }
