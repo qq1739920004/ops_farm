@@ -2,15 +2,15 @@
     <div class="app_container">
         <div class="middle-area">
             <div class="input_area">
-                <el-input placeholder="请输入SN号" class="input-with-select">
+                <el-input placeholder="请输入SN号" v-model="pageInfo.key" class="input-with-select"
+                    @keyup.enter.native="search">
                     <template #append>
                         <el-button icon="Search" @click="search" />
                     </template>
                 </el-input>
-                <el-select class="m_2" placeholder="请选择">
-                    <el-option value="G360" label="G360" />
-                    <el-option value="G502" label="G502" />
-                    <el-option value="G501" label="G501" />
+                <el-select class="m_2" placeholder="请选择" v-model="pageInfo.companyId" @blur="changeBlur">
+                    <el-option value="1" label="公司/经销商" />
+                    <el-option value="2" label="全部" />
                 </el-select>
             </div>
             <div class="button_area">
@@ -19,10 +19,10 @@
             </div>
         </div>
         <div class='table_container'>
-            <el-table :header-cell-style="{
+            <el-table :default-sort="{ prop: 'createtime', order: 'descending' }" :header-cell-style="{
                 background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px'
-            }" style="width: 100%" :data="tableData">
-                <el-table-column type="index" label="序号" width="80" align="center" />
+            }" style="width: 100%" :data="carNewList">
+                <el-table-column type="index" label="序号" width="60" align="center" />
 
                 <el-table-column label="铭牌SN" show-overflow-tooltip>
                     <template #default="scope">
@@ -30,30 +30,30 @@
                             <el-icon>
                                 <MapLocation style="color:rgba(82, 196, 26, 1); width: 16px; height: 16px;" />
                             </el-icon>
-                            <span style="margin-left: 10px">{{ scope.row.one }}</span>
+                            <span style="margin-left: 10px">{{ scope.row.npn }}</span>
                         </div>
                     </template>
                 </el-table-column>
 
-                <el-table-column label="SN" show-overflow-tooltip prop="one">
+                <el-table-column label="SN" show-overflow-tooltip prop="sn">
 
                 </el-table-column>
 
-                <el-table-column label="车主姓名" show-overflow-tooltip prop="one">
+                <el-table-column label="车主姓名" show-overflow-tooltip prop="userName">
 
                 </el-table-column>
 
-                <el-table-column label="车辆型号" show-overflow-tooltip prop="one" />
+                <el-table-column label="车辆型号" show-overflow-tooltip prop="model" />
 
                 <el-table-column label="设备所在地" show-overflow-tooltip>
                     <template #="{ row }">
                         <div style="color: rgba(130, 130, 130, 1)">
-                            {{ row.place }}
+                            {{ row.province }}
                         </div>
                     </template>
                 </el-table-column>
 
-                <el-table-column label="类型" show-overflow-tooltip prop="one">
+                <el-table-column label="类型" show-overflow-tooltip prop="terminalType">
 
                 </el-table-column>
 
@@ -79,7 +79,7 @@
                                     罗网
                                 </el-col>
                                 <el-col :span="15">
-                                    {{ row.createtime.split(' ')[0] }}
+                                    {{ row.netDate?.split(' ')[0] }}
                                 </el-col>
                             </el-row>
                             <el-row :gutter="16"
@@ -88,7 +88,7 @@
                                     软件
                                 </el-col>
                                 <el-col :span="15">
-                                    {{ row.createtime.split(' ')[0] }}
+                                    {{ row.expirationTime?.split(' ')[0] }}
                                 </el-col>
                             </el-row>
                             <el-row :gutter="16"
@@ -97,7 +97,7 @@
                                     星基
                                 </el-col>
                                 <el-col :span="15">
-                                    {{ row.createtime.split(' ')[0] }}
+                                    {{ row.satelliteDate?.split(' ')[0] }}
                                 </el-col>
                             </el-row>
                             <el-row :gutter="16"
@@ -106,35 +106,39 @@
                                     质保
                                 </el-col>
                                 <el-col :span="15">
-                                    {{ row.createtime.split(' ')[0] }}
+                                    {{ row.warrantyDate?.split(' ')[0] }}
                                 </el-col>
                             </el-row>
                         </el-popover>
                     </template>
                 </el-table-column>
-                <el-table-column label="最近上线时间" show-overflow-tooltip prop="one">
-
+                <el-table-column sortable label="最近上线时间" show-overflow-tooltip prop="createtime" width="140">
+                    <template #="{ row }">
+                        {{ row.lastOnlineTime?.split(' ')[0] }}
+                    </template>
                 </el-table-column>
 
-                <el-table-column label="公司/经销商" show-overflow-tooltip prop="one">
+                <el-table-column label="公司/经销商" show-overflow-tooltip prop="companyName">
                 </el-table-column>
 
                 <el-table-column label="星基" show-overflow-tooltip align="center">
                     <template #="{ row }">
-                        <el-switch v-model="row.flag" class="ml-2" inline-prompt active-text="开" inactive-text="关"
-                            style="width: 48px;height: 20px; --el-switch-on-color: #13ce66; --el-switch-off-color: rgba(204, 204, 204, 1)" /></template>
+                        <el-switch v-model="row.isTransfer" class="ml-2" inline-prompt active-text="开" inactive-text="关"
+                            style="width: 48px;height: 20px; --el-switch-on-color: #13ce66; --el-switch-off-color: rgba(204, 204, 204, 1)" />
+                    </template>
                 </el-table-column>
                 <el-table-column label="数据存储" align="center">
                     <template #="{ row }">
-                        <el-switch v-model="row.flag" class="ml-2" inline-prompt active-text="开" inactive-text="关"
-                            style="width: 48px;height: 20px; --el-switch-on-color: #13ce66; --el-switch-off-color: rgba(204, 204, 204, 1)" /></template>
+                        <el-switch v-model="row.isTransfer" class="ml-2" inline-prompt active-text="开" inactive-text="关"
+                            style="width: 48px;height: 20px; --el-switch-on-color: #13ce66; --el-switch-off-color: rgba(204, 204, 204, 1)" />
+                    </template>
                 </el-table-column>
 
                 <!-- 说明  离线和自动驾驶状态不可编辑 -->
                 <el-table-column label="操作" width="350" show-overflow-tooltip>
                     <template #="{ row }">
                         <div class="tableBtn">
-                            <el-button class="elbutton" size="small" text @click="gotoMachineDetail">详情 </el-button>
+                            <el-button class="elbutton" size="small" text @click="gotoMachineDetail(row.id)">详情 </el-button>
                             <el-popconfirm :title="`您确定要删除${row.one}?`" width="250px" icon="Delete">
                                 <template #reference>
                                     <el-button class="elbutton" size="small" text>历史轨迹</el-button>
@@ -148,9 +152,14 @@
                 </el-table-column>
             </el-table>
         </div>
+        <div class="bottom">
+            <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
+                @pageChange="currentChange">
+            </Pagination>
+        </div>
         <InputDia ref="inputD"></InputDia>
         <CarModuleDia ref="carModuleD"></CarModuleDia>
-        <MachineDetailDia ref="MachineD"></MachineDetailDia>
+        <MachineDetailDia ref="MachineD" :carId="carId"></MachineDetailDia>
         <RemoteAdjustDia ref="RemoteD"></RemoteAdjustDia>
         <RegisterDia ref='RegisterD'></RegisterDia>
     </div>
@@ -158,30 +167,41 @@
 
 <script setup lang='ts'>
 import InputDia from './components/inputDia.vue'
+import Pagination from '@/components/Pagination/index.vue'
 import CarModuleDia from './components/carModuleDia.vue'
 import MachineDetailDia from './components/machineDetailDia.vue'
 import RemoteAdjustDia from './components/remoteAdjust.vue'
 import RegisterDia from './components/registerDia.vue'
 import { reactive, ref } from 'vue'
-const tableData = reactive([{
-    one: '123',
-    two: '321',
-    three: '11',
-    four: '11',
-    five: '11',
-    six: '11',
-    seven: '13333',
-    flag: false,
-    createtime: "2021-11-08 00:58:11",
-    place: '新疆'
-
-}])
+import { carNewList_API } from '@/api/machineryList/index'
+import { newListObj, carNewListResponseData, pageInfo } from '@/api/machineryList/type'
+const total = ref<number>(10)
+const pageInfo = reactive<pageInfo>({
+    key: '',
+    currentPage: 1,
+    pageSize: 3,
+    companyId: '',
+    order: '1'
+})
 const inputD = ref()
 const carModuleD = ref()
 const MachineD = ref()
 const RemoteD = ref()
 const RegisterD = ref()
+// 车辆列表
+const carNewList = ref<newListObj[]>([])
+// 车辆ID 
+const carId = ref<number>()
 const search = () => {
+    getCarList()
+}
+const changeBlur = () => {
+    getCarList()
+}
+const currentChange = (val: any) => {
+    pageInfo.currentPage = val.currentPage
+    pageInfo.pageSize = val.pageSize
+    getCarList()
 }
 const gotoInput = () => {
     inputD.value.dialogVisible = true
@@ -189,7 +209,8 @@ const gotoInput = () => {
 const gotoCarModule = () => {
     carModuleD.value.dialogVisible = true
 }
-const gotoMachineDetail = () => {
+const gotoMachineDetail = (val: any) => {
+    carId.value = val
     MachineD.value.dialogVisible = true
 }
 const gotoRemote = () => {
@@ -198,6 +219,13 @@ const gotoRemote = () => {
 const gotoRegister = () => {
     RegisterD.value.dialogVisible = true
 }
+// 获取车辆列表
+const getCarList = async () => {
+    const res: carNewListResponseData = await carNewList_API(pageInfo)
+    carNewList.value = res.data.records
+    total.value = res.data.total
+}
+getCarList()
 
 </script>
 
@@ -207,7 +235,6 @@ const gotoRegister = () => {
     display: flex;
     justify-content: space-between;
     margin: 16px 10px 0 10px;
-
     .input_area {
         .input-with-select {
             width: 290px;
@@ -267,4 +294,5 @@ const gotoRegister = () => {
         }
 
     }
-}</style>
+}
+</style>

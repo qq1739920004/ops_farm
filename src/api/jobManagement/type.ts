@@ -1,0 +1,51 @@
+export interface Responsenumber {
+    message?: string,
+    code?: number,
+}
+
+export interface PageObj {
+    companyId: number,
+    carId: number,
+    currentPage: number,
+    pageSize: number,
+    st: string,
+    et: string,
+    name: string
+}
+
+export interface paddyWorkObj {
+    id: number,
+    name: string,
+    workType: number,
+    workedArea: number,
+    createtime: string,
+    updatetime: string,
+    position: string,
+    sn: string,
+    npn: string,
+    carName: string,
+    toolName: string,
+    userName: string,
+    lineptax: number,
+    lineptay: number,
+    lineptah: number,
+    lineptbx: number,
+    lineptby: number,
+    lineptbh: number,
+    workmode: number,
+    workpoints: string,
+    curvepointsnum: number,
+    bendpointsnum: number,
+    startpoint: number,
+    endpoint: number,
+    baseline: number,
+    direction: number,
+    minradius: number
+}
+
+export interface paddyWorkListResponsenumber extends Responsenumber {
+    data: {
+        total: number,
+        records: paddyWorkObj[]
+    }
+}
