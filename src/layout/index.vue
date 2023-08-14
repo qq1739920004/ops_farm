@@ -5,14 +5,17 @@
       <SlideBar :collapse="collapse" />
       <el-container>
         <el-header height="50px">
-          <SvgIcon
-            @click="changeCollapse"
-            cursor="pointer"
-            :icon="collapse ? 'exit-fold' : 'fold'"
-            color="#fff"
-            size="24"
-          />
-          <!-- <Breadcrumb /> -->
+          <div class="header_content">
+            <SvgIcon
+              @click="changeCollapse"
+              cursor="pointer"
+              :icon="collapse ? 'exit-fold' : 'fold'"
+              color="#fff"
+              size="24"
+            />
+            <Breadcrumb />
+          </div>
+
           <Navbar />
         </el-header>
         <el-main>
@@ -57,7 +60,7 @@ import { watchEffect, ref } from "vue";
 import SlideBar from "./components/SlideBar/index.vue";
 import Navbar from "./components/Navbar.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
-// import Breadcrumb from "./components/Breadcrumb/index.vue";
+import Breadcrumb from "./components/Breadcrumb/index.vue";
 import AppMain from "./components/AppMain.vue";
 import { useWindowSize } from "@vueuse/core";
 import useAppStore from "@/store/app";
@@ -119,6 +122,13 @@ function changeCollapse() {
       justify-content: space-between;
       align-items: center;
       background-color: #192035;
+      .header_content {
+        display: flex;
+        align-items: center;
+        .svg-icon {
+          margin-right: 12px;
+        }
+      }
     }
   }
 }

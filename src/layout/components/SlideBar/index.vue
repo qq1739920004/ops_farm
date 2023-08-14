@@ -10,7 +10,7 @@
     :ellipsis="false"
   >
     <el-menu-item
-      @click="router.go(-1)"
+      onclick="location.href='/'"
       :class="{ logo: true, logo_active: collapse }"
     >
       <img src="@/assets/logo.png" alt="" />
@@ -57,6 +57,7 @@ function elMenuSelect() {
 <style lang="scss" scoped>
 .logo {
   font-size: 18px;
+  transition: all 1s;
   img {
     width: 45px;
   }
@@ -65,9 +66,9 @@ function elMenuSelect() {
   }
 }
 .logo_active {
-  padding: 0px !important;
+  transition: all 1s;
   display: flex;
-  justify-content: center !important;
+  justify-content: center;
   align-items: center;
   animation-name: opacityKeyframes;
   animation-duration: 1s;
