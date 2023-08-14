@@ -42,7 +42,7 @@
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) > Date.parse(new Date().toString())">
                             {{
-                                row.netDate.split(' ')[0] }}</div>
+                                row.warrantyDate.split(' ')[0] }}</div>
                         <div v-if="!row.warrantyDate">
                             <el-tag class="mx-1" type="danger" effect="dark">未激活</el-tag>
                         </div>
@@ -292,7 +292,7 @@
                 width="544px" height="580px">
                 <el-form style="width: 100%" ref="formRef" :model="newRecords" :rules="rules">
                     <el-form-item label="设备类型" label-width="140px" prop="terminalType">
-                        <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
+                        <el-select disabled v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
                             style="width:100%" prop="terminalType">
                             <el-option value="AG360" label="G360" />
                             <el-option value="AG502" label="G502" />
@@ -305,7 +305,6 @@
                     <el-form-item label="质保日期" label-width="140px" prop="warrantyDate">
                         <el-input v-model="newRecords.warrantyDate"></el-input>
                     </el-form-item>
-
                     <el-form-item label="一体机SN" label-width="140px" prop="sn">
                         <el-input v-model="newRecords.sn"></el-input>
                     </el-form-item>
@@ -339,8 +338,8 @@
                 </template>
             </el-dialog>
         </div>
-        <G502Dia ref="G502D" :newRecords=newRecords></G502Dia>
-        <G501Dia ref="G501D" :newRecords=newRecords></G501Dia>
+        <G502Dia @push="pushValue" ref="G502D" :newRecords=newRecords></G502Dia>
+        <G501Dia @push="pushValue" ref="G501D" :newRecords=newRecords></G501Dia>
         <exporDia ref="exporD"></exporDia>
     </div>
 </template>
@@ -389,10 +388,14 @@ const newRecords = reactive<newRecordsObj>({
 })
 
 let formRef = ref()
+const pushValue = () => {
+    getInfoMangementInfo()
+}
 const getInfoMangementInfo = async () => {
     const res: carModuleInfoResponseData = await carModuleInfo_API(pageInfo)
     records.value = res.data.records
     total.value = res.data.total
+
 }
 const handleSelectionChange = (val: any) => {
     multipleSelection.value = val
@@ -508,7 +511,6 @@ watch(
 const editSubmit = async () => {
     await formRef.value.validate()
     editInfo()
-    pageInfo.key = ''
     getInfoMangementInfo()
     dialogVisible.value = false
 }
@@ -600,8 +602,9 @@ const openExportDia = () => {
         align-items: center;
 
         .input-with-select {
+            margin-right: 30px;
             margin-left: 10px;
-            width: 280px;
+            width: 240px;
             height: 32px;
             opacity: 1;
             border-radius: 2px;

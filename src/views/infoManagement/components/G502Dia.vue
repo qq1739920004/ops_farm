@@ -4,7 +4,7 @@
         <el-dialog v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'" width="544px" height="580px">
             <el-form style="width: 100%" ref="formRef" :model="newRecords" :rules="rules">
                 <el-form-item label="设备类型" label-width="140px" prop="terminalType">
-                    <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
+                    <el-select disabled v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
                         style="width:100%" prop="terminalType">
                         <el-option value="AG360" label="G360" />
                         <el-option value="AG502" label="G502" />
@@ -74,7 +74,7 @@ defineExpose({ //
     dialogVisible,
     formRef,
 });
-
+const emits = defineEmits(['push'])
 const editSubmit = async () => {
     Object.assign(ApiData, props.newRecords)
     await formRef.value.validate()
@@ -82,10 +82,10 @@ const editSubmit = async () => {
     dialogVisible.value = false
 }
 const editInfo = async () => {
-
     const res: editResponseData = await carModuleInfoUpdate_API(ApiData)
     if (res.code == 200) {
         ElMessage({ type: 'success', message: '编辑成功' })
+        emits('push', '')
     }
     else {
         ElMessage({ type: 'error', message: '编辑失败' })
@@ -99,6 +99,7 @@ const addInfo = async () => {
     const res: changeResponseData = await carModuleInfoSave_API(ApiData)
     if (res.code == 200) {
         ElMessage({ type: 'success', message: '添加成功' })
+        emits('push', '')
     }
     else {
         ElMessage({ type: 'error', message: '添加失败' })

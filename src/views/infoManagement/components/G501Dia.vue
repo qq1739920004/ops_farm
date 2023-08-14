@@ -5,7 +5,7 @@
             height="580px">
             <el-form style="width: 100%" ref="formRef" :model="props.newRecords" :rules="rules">
                 <el-form-item label="设备类型" label-width="140px" prop="terminalType">
-                    <el-select v-model="props.newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
+                    <el-select disabled v-model="props.newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
                         style="width:100%" prop="terminalType">
                         <el-option value="AG360" label="G360" />
                         <el-option value="AG502" label="G502" />
@@ -65,6 +65,7 @@ const props = defineProps({
         }
     }
 })
+const emits = defineEmits(['push'])
 const ApiData = reactive<any>({})
 const dialogVisible = ref<boolean>(false)
 defineExpose({ //
@@ -81,6 +82,7 @@ const editInfo = async () => {
     const res: editResponseData = await carModuleInfoUpdate_API(ApiData)
     if (res.code == 200) {
         ElMessage({ type: 'success', message: '编辑成功' })
+        emits('push', '')
     }
     else {
         ElMessage({ type: 'error', message: '编辑失败' })
@@ -94,6 +96,7 @@ const addInfo = async () => {
     const res: changeResponseData = await carModuleInfoSave_API(ApiData)
     if (res.code == 200) {
         ElMessage({ type: 'success', message: '添加成功' })
+        emits('push', '')
     }
     else {
         ElMessage({ type: 'error', message: '添加失败' })

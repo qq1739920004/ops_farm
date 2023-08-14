@@ -2,12 +2,12 @@
     <div class='app_container'>
         <div class="middle-area">
             <div class="input_area">
-                <el-select v-model="pageInfo.company" class="input-with-select" placeholder="请选择" @blur="changeBlur">
+                <el-select v-model="pageInfo.companyId" class="input-with-select" placeholder="请选择" @blur="changeBlur">
                     <el-option value="xxxxxxxxxx" label="xxxxx" />
                     <el-option value="xxxxxxxxxx" label="xxxxx" />
                     <el-option value="xxxxxxxxxx" label="xxxxx" />
                 </el-select>
-                <el-select v-model="pageInfo.car" class="m-2" placeholder="请选择" @blur="changeBlur">
+                <el-select v-model="pageInfo.carId" class="m-2" placeholder="请选择" @blur="changeBlur">
                     <el-option value="xxx" label="xxx" />
                     <el-option value="xxx" label="xxx" />
                     <el-option value="xxx" label="xxx" />
@@ -36,40 +36,98 @@
         </div>
         <div class="tableArea">
             <el-table
-                :header-cell-style="{ background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px' }">
+                :header-cell-style="{ background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px' }"
+                :data="paddyWorkList">
                 <el-table-column type="index" width="80" label="序号" align="center" />
-                <el-table-column label="作业名称" width="180" show-overflow-tooltip>
+                <el-table-column label="作业名称" show-overflow-tooltip prop="name" align="center">
                 </el-table-column>
-                <el-table-column label="作业类型" width="140" show-overflow-tooltip>
+                <el-table-column label="作业类型" show-overflow-tooltip align="center">
+                    <template #="{ row }">
+                        <el-tag v-if="row.workType" type="success" round
+                            style="color:rgba(0, 125, 117, 1);width: 50px;height: 23px;background-color:rgba(168, 232, 227, 1)">播种</el-tag>
+                    </template>
                 </el-table-column>
-                <el-table-column label="作业面积" width="" show-overflow-tooltip>
+                <el-table-column label="作业面积" show-overflow-tooltip align="center">
+                    <template #="{ row }">
+                        {{ row.workedArea }}亩</template>
                 </el-table-column>
-                <el-table-column label="作业周期" width="" show-overflow-tooltip />
-                <el-table-column label="作业地点" width="" show-overflow-tooltip>
+                <el-table-column label="作业周期" width="200" show-overflow-tooltip align="center">
+                    <template #="{ row }">
+                        <el-row justify="center">
+                            {{ row.createtime }}
+                        </el-row>
+                        <el-row justify="center">
+                            {{ row.updatetime }}
+                        </el-row>
+                    </template>
                 </el-table-column>
-                <el-table-column label="SN" width="" show-overflow-tooltip>
+                <el-table-column label="作业地点" prop="position" show-overflow-tooltip>
                 </el-table-column>
-                <el-table-column label="铭牌号" width="" show-overflow-tooltip>
+                <el-table-column label="SN" show-overflow-tooltip prop="sn">
                 </el-table-column>
-                <el-table-column label="所属车辆" width="" show-overflow-tooltip>
+                <el-table-column label="铭牌号" show-overflow-tooltip prop="npn">
+                </el-table-column>
+                <el-table-column label="所属车辆" show-overflow-tooltip prop="carName">
                 </el-table-column>
 
             </el-table>
+        </div>
+        <div class="bottom">
+            <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
+                @pageChange="currentChange">
+            </Pagination>
         </div>
     </div>
 </template>
 
 <script setup lang='ts'>
 import { reactive, ref, watch } from 'vue'
-const pageInfo = reactive({
-    car: '车辆',
-    key: '',
-    company: '智能合作社'
+import Pagination from '@/components/Pagination/index.vue'
+import { paddyWorkList_API } from '@/api/jobManagement/index'
+import { PageObj, paddyWorkListResponsenumber, paddyWorkObj } from '@/api/jobManagement/type'
+
+// 时间格式转换
+function add0(m: any) {
+    return m < 10 ? '0' + m : m;
+}
+const formartDate = (val: Date) => {
+    var y = val.getFullYear();
+    var m = val.getMonth() + 1;
+    var d = val.getDate();
+    var h = val.getHours();
+    var mm = val.getMinutes();
+    var s = val.getSeconds();
+    return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s);
+}
+// 提交数据
+const pageInfo = reactive<PageObj>({
+    carId: 0,
+    name: '',
+    companyId: 0,
+    currentPage: 1,
+    pageSize: 3,
+    st: formartDate(new Date()),
+    et: formartDate(new Date())
 })
+
 const value1 = ref<Date>(new Date())
 const value2 = ref<Date>(new Date())
 const isActive = ref<number>(1)
-const a = ref('')
+const a = ref<Date>()
+const total = ref<number>(10)
+const currentChange = (val: any) => {
+    pageInfo.currentPage = val.currentPage
+    pageInfo.pageSize = val.pageSize
+}
+// 获取列表数据
+const paddyWorkList = ref<paddyWorkObj[]>([])
+const getPaddyWorkList = async () => {
+    const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
+    total.value = res.data.total
+    paddyWorkList.value = res.data.records
+}
+getPaddyWorkList()
+// 监视日期，起始日期大于末尾日期则交换
 watch(() => [value1.value, value2.value], () => {
     if (value2.value && value1.value && value2.value.getTime() < value1.value.getTime()) {
         a.value = value1.value
@@ -77,6 +135,7 @@ watch(() => [value1.value, value2.value], () => {
         value2.value = a.value
     }
 })
+// 禁止选择今日以后的日期
 const disabledDate = (time: Date) => {
     return time.getTime() > Date.now()
 }
@@ -86,30 +145,46 @@ const changeBlur = () => {
 const openExportDia = () => {
 
 }
+//今天
 const onDayClick = () => {
     isActive.value = 1;
     value1.value = new Date();
     value2.value = new Date();
+    pageInfo.st = formartDate(value1.value)
+    pageInfo.et = formartDate(value2.value)
+    getPaddyWorkList()
 }
+//这个月
 const onMonthClick = () => {
     isActive.value = 2;
     value2.value = new Date();
     const start = new Date();
     start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
     value1.value = start
+    pageInfo.st = formartDate(value1.value)
+    pageInfo.et = formartDate(value2.value)
+    getPaddyWorkList()
 }
+// 这一年
 const onYearClick = () => {
     isActive.value = 3;
     value2.value = new Date();
     const start = new Date();
     start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
     value1.value = start
+    pageInfo.st = formartDate(value1.value)
+    pageInfo.et = formartDate(value2.value)
+    getPaddyWorkList()
 }
+// 事件改变回调
 const changeA = () => {
+    pageInfo.st = formartDate(value1.value)
+    pageInfo.et = formartDate(value2.value)
+    getPaddyWorkList()
     isActive.value = 0;
-    console.log('value改变');
-
 }
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -123,6 +198,7 @@ const changeA = () => {
         display: flex;
         width: 25%;
         justify-content: space-between;
+
         .input-with-select {
             width: 179px;
             height: 32px;
@@ -146,8 +222,10 @@ const changeA = () => {
     .time {
         height: 32px;
         display: flex;
+
         .demo-date-picker {
             display: flex;
+
             .gang {
                 display: flex;
                 align-items: center;
