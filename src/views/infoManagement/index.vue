@@ -35,16 +35,17 @@
                 </el-table-column>
                 <el-table-column label="质保日期" width="140" show-overflow-tooltip>
                     <template #="{ row }">
-                        <div
-                            v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
-                            <el-tag class="mx-1" effect="dark">已到期</el-tag>
-                        </div>
+                        <el-tag
+                            style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
+                            class="mx-1" effect="dark">已到期</el-tag>
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) > Date.parse(new Date().toString())">
                             {{
                                 row.warrantyDate.split(' ')[0] }}</div>
                         <div v-if="!row.warrantyDate">
-                            <el-tag class="mx-1" type="danger" effect="dark">未激活</el-tag>
+                            <el-tag
+                                style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
+                                class="mx-1" type="danger" effect="dark">未激活</el-tag>
                         </div>
                     </template>
                 </el-table-column>
@@ -111,16 +112,17 @@
                 </el-table-column>
                 <el-table-column label="质保日期" width="140" show-overflow-tooltip>
                     <template #="{ row }">
-                        <div
-                            v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
-                            <el-tag class="mx-1" effect="dark">已到期</el-tag>
-                        </div>
+                        <el-tag
+                            style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
+                            class="mx-1" effect="dark">已到期</el-tag>
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) > Date.parse(new Date().toString())">
                             {{
                                 row.warrantyDate.split(' ')[0] }}</div>
                         <div v-if="!row.warrantyDate">
-                            <el-tag class="mx-1" type="danger" effect="dark">未激活</el-tag>
+                            <el-tag
+                                style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
+                                class="mx-1" type="danger" effect="dark">未激活</el-tag>
                         </div>
                     </template>
                 </el-table-column>

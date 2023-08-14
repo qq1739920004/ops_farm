@@ -159,7 +159,7 @@
         </div>
         <InputDia ref="inputD"></InputDia>
         <CarModuleDia ref="carModuleD"></CarModuleDia>
-        <MachineDetailDia ref="MachineD" :carId="carId" ></MachineDetailDia>
+        <MachineDetailDia ref="MachineD" :carId="carId"></MachineDetailDia>
         <RemoteAdjustDia ref="RemoteD"></RemoteAdjustDia>
         <RegisterDia ref='RegisterD'></RegisterDia>
     </div>
@@ -201,6 +201,7 @@ const changeBlur = () => {
 const currentChange = (val: any) => {
     pageInfo.currentPage = val.currentPage
     pageInfo.pageSize = val.pageSize
+    getCarList()
 }
 const gotoInput = () => {
     inputD.value.dialogVisible = true
@@ -234,7 +235,6 @@ getCarList()
     display: flex;
     justify-content: space-between;
     margin: 16px 10px 0 10px;
-
     .input_area {
         .input-with-select {
             width: 290px;

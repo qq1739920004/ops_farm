@@ -1,12 +1,13 @@
 <!--  -->
 <template>
     <div>
-        <el-dialog style="border-radius: 8px;" v-model="dialogVisible" title="录入经销商设备" width="30%" center>
+        <el-dialog @open="getInputList" style="border-radius: 8px;" v-model="dialogVisible" title="录入经销商设备" width="30%"
+            center>
             <div class="content">
                 <div class="up">
                     <span>经销商：</span>
                     <el-select v-model="selectValue" class="m-2" placeholder="请选择经销商">
-                        <el-option label="123" :value="123" />
+                        <el-option v-for="item in carDealerList" :label="item.name" :value="item.name" :key="item.id"></el-option> 
                     </el-select>
                 </div>
                 <div class="down">
@@ -40,13 +41,19 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { carDealer_API } from '@/api/machineryList/index'
+import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 const dialogVisible = ref<boolean>(false)
+const carDealerList = ref<carDealerObj[]>([])
 const selectValue = ref('')
 defineExpose({
     dialogVisible
 }
 )
-
+const getInputList = async () => {
+    const res: carDealerResponseData = await carDealer_API()
+    carDealerList.value = res.data
+}
 </script>
 
 <style lang="scss" scoped>

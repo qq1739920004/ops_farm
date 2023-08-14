@@ -118,6 +118,7 @@ const total = ref<number>(10)
 const currentChange = (val: any) => {
     pageInfo.currentPage = val.currentPage
     pageInfo.pageSize = val.pageSize
+    getPaddyWorkList()
 }
 // 获取列表数据
 const paddyWorkList = ref<paddyWorkObj[]>([])

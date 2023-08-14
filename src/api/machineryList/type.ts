@@ -90,3 +90,10 @@ export interface carNewDetailObj {
 export interface carNewDetailResponseData extends ResponseData {
     data: carNewDetailObj
 }
+export interface carDealerObj {
+    id:string,
+    name:number
+}
+export interface carDealerResponseData extends ResponseData {
+    data:carDealerObj[]
+}
