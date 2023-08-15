@@ -29,7 +29,7 @@
         </el-row>
 
         <el-row class=help_table>
-            <el-table type=index  @sort-change="changeTableSort" :data=helpList :header-cell-style="{
+            <el-table type=index @sort-change="changeTableSort" :data=helpList :header-cell-style="{
                 background: 'rgba(240, 240, 240, 1)', color: '#000000'
             }">
                 <el-table-column label=序号 type=index />
@@ -43,7 +43,7 @@
                 </el-table-column>
 
                 <el-table-column label=求助时间 prop=helpTime :sortable="'custom'">
-           
+
                 </el-table-column>
 
 
@@ -77,7 +77,7 @@ import { Search } from '@element-plus/icons-vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { getHelpHandlingAPI, getHelpHandlingUncountAPI } from '@/api/helpHanding/index'
 import type { RecordsObj, HelpHandlingObj, HelpHandlingResponseData, HelpHandlingUncountData } from '@/api/helpHanding/type'
-
+import { useRouter } from 'vue-router'
 
 const helpList = ref<RecordsObj[]>([])
 const total = ref<number>(10)
@@ -93,31 +93,31 @@ const helpHandling = reactive<HelpHandlingObj>({
 })
 
 
-const changeTableSort=(column:any)=>{
-   
-    if(column.prop==='helpTime'){
-        if(column.order==='ascending'){
-            helpHandling.helpTimeOrder=2
+const changeTableSort = (column: any) => {
+
+    if (column.prop === 'helpTime') {
+        if (column.order === 'ascending') {
+            helpHandling.helpTimeOrder = 2
             getHelpHandling()
             console.log('helpTime升序')
-        }else if(column.order==='descending'){
-            helpHandling.helpTimeOrder=1
+        } else if (column.order === 'descending') {
+            helpHandling.helpTimeOrder = 1
             getHelpHandling()
             console.log('helpTime降序')
         }
-        
-    }else if(column.prop==='handleTime'){
-        if(column.order==='ascending'){
-            helpHandling.handleTimeOrder=2
+
+    } else if (column.prop === 'handleTime') {
+        if (column.order === 'ascending') {
+            helpHandling.handleTimeOrder = 2
             getHelpHandling()
             console.log('handletime升序')
-        }else if(column.order==='descending'){
-            helpHandling.handleTimeOrder=1
+        } else if (column.order === 'descending') {
+            helpHandling.handleTimeOrder = 1
             getHelpHandling()
             console.log('handletime降序')
         }
-       
-    }else{
+
+    } else {
 
     }
 }
@@ -164,7 +164,7 @@ const currentChange = (val: any) => {
 const search = () => {
     getHelpHandling()
 }
-import { useRouter } from 'vue-router'
+
 const $router = useRouter()
 const handleEdit = (row: RecordsObj) => {
 
@@ -181,27 +181,24 @@ const chooseStatus = () => {
 </script>
 
 <style lang=scss scoped>
-.app_container {
+
     .help_search {
+        width: 100%;
         height: 60px;
-        padding-left: 17px;
+
         padding-top: 8px;
         font-size: 14px;
+
+        .el_tag_uncount {
+            vertical-align: middle;
+            height: 35px;
+
+            .el-icon {
+                display: inline-block;
+                margin-right: 5px;
+            }
+        }
     }
 
-    .el_col_wait {
-        background-color: transparent;
-    }
 
-}
-
-.el_tag_uncount {
-    vertical-align: middle;
-    height: 35px;
-
-    .el-icon {
-        display: inline-block;
-        margin-right: 5px;
-    }
-}
 </style>

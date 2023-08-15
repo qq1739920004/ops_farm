@@ -144,7 +144,8 @@
                                     <el-button class="elbutton" size="small" text>历史轨迹</el-button>
                                 </template>
                             </el-popconfirm>
-                            <el-button text class="elbutton" size="small" @click="gotoRemote">远程调参</el-button>
+                            <el-button text class="elbutton" size="small"
+                                @click="gotoRemote(row.terminalType)">远程调参</el-button>
                             <el-button text class="elbutton" size="small">文件存储</el-button>
                             <el-button text class="elbutton" size="small" @click="gotoRegister">注册</el-button>
                         </div>
@@ -160,7 +161,9 @@
         <InputDia ref="inputD"></InputDia>
         <CarModuleDia ref="carModuleD"></CarModuleDia>
         <MachineDetailDia ref="MachineD" :carId="carId"></MachineDetailDia>
-        <RemoteAdjustDia ref="RemoteD"></RemoteAdjustDia>
+        <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType"></RemoteAdjustDia360>
+        <RemoteAdjustDia302 ref="RemoteD302" :terminalType="terminalType"></RemoteAdjustDia302>
+        <RemoteAdjustDia502 ref="RemoteD502" :terminalType="terminalType"></RemoteAdjustDia502>
         <RegisterDia ref='RegisterD'></RegisterDia>
     </div>
 </template>
@@ -170,7 +173,9 @@ import InputDia from './components/inputDia.vue'
 import Pagination from '@/components/Pagination/index.vue'
 import CarModuleDia from './components/carModuleDia.vue'
 import MachineDetailDia from './components/machineDetailDia.vue'
-import RemoteAdjustDia from './components/remoteAdjust.vue'
+import RemoteAdjustDia360 from './components/remoteAdjust.vue'
+import RemoteAdjustDia302 from './components/remoteAdjust302.vue'
+import RemoteAdjustDia502 from './components/remoteAdjust502.vue'
 import RegisterDia from './components/registerDia.vue'
 import { reactive, ref } from 'vue'
 import { carNewList_API } from '@/api/machineryList/index'
@@ -187,11 +192,14 @@ const inputD = ref()
 const carModuleD = ref()
 const MachineD = ref()
 const RemoteD = ref()
+const RemoteD302 = ref()
+const RemoteD502 = ref()
 const RegisterD = ref()
 // 车辆列表
 const carNewList = ref<newListObj[]>([])
 // 车辆ID 
 const carId = ref<number>()
+const terminalType = ref<string>('')
 const search = () => {
     getCarList()
 }
@@ -213,8 +221,18 @@ const gotoMachineDetail = (val: any) => {
     carId.value = val
     MachineD.value.dialogVisible = true
 }
-const gotoRemote = () => {
-    RemoteD.value.dialogVisible = true
+const gotoRemote = (val: any) => {
+    terminalType.value = val
+    if (terminalType.value == 'AG306') {
+        RemoteD.value.dialogVisible = true
+    } if (terminalType.value == 'AG302') {
+        RemoteD302.value.dialogVisible = true
+    } if (terminalType.value == 'AG502') {
+        RemoteD502.value.dialogVisible = true
+    } else {
+        RemoteD.value.dialogVisible = true
+    }
+
 }
 const gotoRegister = () => {
     RegisterD.value.dialogVisible = true
@@ -235,6 +253,7 @@ getCarList()
     display: flex;
     justify-content: space-between;
     margin: 16px 10px 0 10px;
+
     .input_area {
         .input-with-select {
             width: 290px;

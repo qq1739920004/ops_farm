@@ -4,7 +4,7 @@
         <el-dialog style="border-radius: 8px;" v-model="dialogVisible" title="远程管理" width="1112px" height="496px" center>
             <div class="top">
                 <span>车辆名称：</span>
-                <span>车辆类型：{{ props.terminalType }}</span>306
+                <span>车辆类型：{{ props.terminalType }}</span>502
             </div>
             <div class="menuArea">
                 <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"

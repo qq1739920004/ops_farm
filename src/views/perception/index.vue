@@ -9,21 +9,26 @@
             <div class="bottom">
                 <div class="left">
                     <Workarea class="workarea" :carArea="carArea" />
-                    <Year class="year" />
+                    <Year class="year" :totalArea="totalArea" :todayArea="todayArea" />
                 </div>
 
                 <div class="middle">mmmm</div>
-                <div class="right">right</div>
+                <div class="right">
+                    <Online class="online"></Online>
+                    <State class="state"></State>
+                </div>
             </div>
         </div>
     </div>
 </template>
   
 <script setup lang='ts'>
-import { ref, onMounted } from "vue";
+import { ref, onMounted} from "vue";
 import Top from "./component/top.vue";
 import Year from "./component/year.vue";
 import Workarea from "./component/workarea.vue";
+import State from "./component/state.vue";
+import Online from "./component/online.vue"
 import { getMonitorAPI } from '@/api/perception/index.ts'
 import type { MonitorObj } from '@/api/perception/type'
 
@@ -39,14 +44,22 @@ function getScale(w = 1920, h = 937) {
     const wh = window.innerHeight / h;
     return ww < wh ? ww : wh;
 }
+
+
 // 监测数据
 const monitorData = ref<MonitorObj>()
+
 // 各车辆作业面积
 const carArea = ref<object>({})
+
+const todayArea=ref<number>()
+const totalArea=ref<number>()
 const getMonitor = async () => {
     const res = await getMonitorAPI()
     monitorData.value=res.data
     carArea.value = res.data.carArea
+    todayArea.value=res.data.todayArea
+    totalArea.value=res.data.totalArea
 }
 
 getMonitor()
@@ -106,6 +119,14 @@ getMonitor()
 
         .right {
             flex: 1;
+            .online{
+                height: 270px;
+                
+            }
+            .state{
+                height: 400px;
+               
+            }
         }
     }
 }

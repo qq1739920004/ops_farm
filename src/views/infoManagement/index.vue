@@ -5,7 +5,7 @@
                 <el-input placeholder="请输入SN号" v-model="pageInfo.key" class="input-with-select"
                     @keyup.enter.native="search">
                     <template #append>
-                        <el-button :icon="Search" @click="search" />
+                        <el-button icon="Search" @click="search" />
                     </template>
                 </el-input>
                 <div class="kind">
@@ -18,8 +18,8 @@
                 </el-select>
             </div>
             <div class="button_area">
-                <el-button type="success" class="btn1" :icon="Search" @click="openExportDia">导出</el-button>
-                <el-button type="success" class="btn2" :icon="Plus" @click="openDialog">新建</el-button>
+                <el-button type="success" class="btn1" icon="Search" @click="openExportDia">导出</el-button>
+                <el-button type="success" class="btn2" icon="Plus" @click="openDialog">新建</el-button>
             </div>
         </div>
         <div>
@@ -352,7 +352,6 @@ import G501Dia from './components/G501Dia.vue'
 import exporDia from './components/exporDia.vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { reactive, ref, nextTick, watch } from 'vue'
-import { Search, Plus } from '@element-plus/icons-vue'
 import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API, carModuleInfoOperationDelete_API } from '@/api/infoManagement/index'
 import { ElMessage } from 'element-plus'
 import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj, changeResponseData, editResponseData, carMoudleInfoDeleteResponseData } from "@/api/infoManagement/type"
