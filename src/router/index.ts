@@ -127,17 +127,13 @@ export const constantRoutes = [ // 静态路由数据
   },
   {
     path: '/perception',
-    component: Layout,
-    children: [
-      {
-        path: '',
-        component: () => import("@/views/perception/index.vue"),
+    component: () => import("@/views/perception/index.vue"),
         meta: {
           title: '感知平台',
           icon: 'ChatSquare'
         },
-      },
-    ]
+    // component: Layout,
+
   },
 
 

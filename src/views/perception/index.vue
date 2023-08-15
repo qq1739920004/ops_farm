@@ -1,121 +1,112 @@
 <template>
-    <div class='app_container'>
-        <!-- 面向经销展示内容区 -->
+    <div class="container">
+        <!-- 内容展示区 -->
         <div class="screen" ref="screen">
-            <Top />
-
+            <div class="top">
+                <Top :monitorData ="monitorData "/>
+            </div>
 
             <div class="bottom">
                 <div class="left">
-                    <div class="left1">
-                        <div class="title">
-                            <el-icon>
-                                <CaretLeft />
-                            </el-icon>
-                            各车辆作业面积
-                            <el-icon>
-                                <CaretRight />
-                            </el-icon>
-                        </div>
-                        <div class="contain">
-
-                        </div>
-
-                    </div>
-                    <div class="left2">当年统计数</div>
+                    <Workarea class="workarea" :carArea="carArea" />
+                    <Year class="year" />
                 </div>
-                <div class="middle">middle</div>
-                <div class="right">
-                    <div class="right1">各类型农机在线数</div>
-                    <div class="right2">状态通知栏</div>
-                </div>
+
+                <div class="middle">mmmm</div>
+                <div class="right">right</div>
             </div>
-
-
         </div>
     </div>
 </template>
-
+  
 <script setup lang='ts'>
-import { ref, } from 'vue'
-import Top from '../perception/component/top.vue'
-let screen = ref()
+import { ref, onMounted } from "vue";
+import Top from "./component/top.vue";
+import Year from "./component/year.vue";
+import Workarea from "./component/workarea.vue";
+import { getMonitorAPI } from '@/api/perception/index.ts'
+import type { MonitorObj } from '@/api/perception/type'
+
+let screen = ref();
+onMounted(() => {
+    screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
+});
+window.onresize = () => {
+    screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
+};
+function getScale(w = 1920, h = 937) {
+    const ww = window.innerWidth / w;
+    const wh = window.innerHeight / h;
+    return ww < wh ? ww : wh;
+}
+// 监测数据
+const monitorData = ref<MonitorObj>()
+// 各车辆作业面积
+const carArea = ref<object>({})
+const getMonitor = async () => {
+    const res = await getMonitorAPI()
+    monitorData.value=res.data
+    carArea.value = res.data.carArea
+}
+
+getMonitor()
+
+// 实时监听
 
 </script>
+  
+<style lang="scss" scoped>
+.container {
+    height: 100vh;
+    width: 100vw;
+    background: url(../perception/image/scene.png),
+        url(../perception/image/border.png) no-repeat;
+    background-color: rgba(2, 28, 14, 1);
+    background-size: cover, contain;
+    background-position: center;
+    color: white;
 
-<style lang="scss" scoped>  .app_container {
-      background: url(../perception/image/map.png), url(../perception/image/border.png) no-repeat;
-      background-color: rgba(2, 28, 14, 1);
-      background-size: cover, 1680px 870px;
-      background-position: 20px, 10px;
-      color: white;
+    .screen {
+        width: 1920px;
+        height: 937px;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform-origin: left top;
+    }
 
-      .screen {
-          margin: 15px;
-          min-width: 1100px;
-          background: no-repeat;
-          background-size: contain;
-          height: 860px;
+    .top {
+        width: 100%;
+        height: 223px;
+    }
 
-
-
-          .bottom {
-
-              display: flex;
-              height: 84%;
+    .bottom {
+        display: flex;
+        height: 714px;
 
 
-              .right {
-                  flex: 1;
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: space-around;
+        .left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
 
-                  .right1 {
-                      height: 35%;
-                      border: 1px solid rgba(67, 207, 124, 1);
-                  }
+            .workarea {
+                height: 400px;
+            }
 
-                  .right2 {
-                      height: 55%;
-                      border: 1px solid rgba(67, 207, 124, 1);
-                  }
-              }
+            .year {
+                height: 270px;
+            }
 
-              .middle {
-                  flex: 2;
-                  flex-direction: column;
-              }
+        }
 
-              .left {
-                  flex: 1;
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: space-around;
+        .middle {
+            flex: 2;
+        }
 
-                  .left1 {
-                      //   border: 1px solid rgba(67, 207, 124, 1);
-                      height: 50%;
-
-                      .title {
-
-                          height: 40px;
-                          line-height: 40px;
-                          
-                          background: linear-gradient(to right, rgba(31, 61, 43, 1), rgba(48, 117, 76, 0));
-                          border: 2px solid;
-                          border-image: linear-gradient(to right, rgb(63, 255, 140), rgba(48, 117, 76, 0)) 1;
-                          border-left-style:none;
-                          border-right-style:none;
-                        }
-                  }
-
-                  .left2 {
-                      border: 1px solid rgba(67, 207, 124, 1);
-                      height: 40%;
-                  }
-              }
-          }
-      }
-
-  }</style>
+        .right {
+            flex: 1;
+        }
+    }
+}
+</style>
