@@ -86,4 +86,7 @@ onBeforeMount(() => {
   font-weight: 400 !important;
   color:#fff;
 }
+:deep(.el-breadcrumb__inner) {
+  color:#fff !important;
+}
 </style>
