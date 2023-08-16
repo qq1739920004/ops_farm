@@ -1,6 +1,7 @@
 <template>
   <!-- 宽屏 -->
   <div v-if="appStore.device == 'desktop'" class="app-layout-desktop">
+    <!-- 竖屏 -->
     <el-container v-if="appStore.themeSettings.layout == 'vertical'">
       <SlideBar :collapse="collapse" />
       <el-container>
@@ -23,7 +24,7 @@
         </el-main>
       </el-container>
     </el-container>
-
+    <!-- 横屏 -->
     <el-container v-else>
       <el-header height="50px">
         <SlideBar />
@@ -126,7 +127,7 @@ function changeCollapse() {
         display: flex;
         align-items: center;
         .svg-icon {
-          margin-right: 12px;
+          margin-right: 16px;
         }
       }
     }

@@ -418,7 +418,7 @@ const changeHubSnBtn = async (val: string) => {
                         height: 32px;
                         opacity: 1;
                         border-radius: 2px;
-                        border: 1px solid rgba(220, 223, 230, 1);
+                        border: 1px  rgba(220, 223, 230, 1);
                     }
 
                 }

@@ -37,7 +37,7 @@
                 </div>
                 <div class="line line1 ">
                     <div>创建人电话:</div>
-                    <div class="data">{{ NewDetail.tel }}</div>
+                    <div class="data">{{ NewDetail.creatorTel }}</div>
                     <div>向日葵SN:</div>
                     <div class="data">{{ NewDetail.sunFlowerSn }}</div>
                     <div>软件版本:</div>

@@ -570,38 +570,18 @@ const openExportDia = () => {
 </script>
 
 <style lang="scss" scoped>
-.top-bar {
-    top: 60px;
-    width: 100%;
-    height: 40px;
-    opacity: 1;
-    background: rgba(245, 245, 245, 1);
 
-    // .title {
-    //     padding-top: 7px;
-    //     margin-left: 40px;
-    //     width: 72px;
-    //     height: 27px;
-    //     opacity: 1;
-    //     font-size: 18px;
-    //     font-weight: 400;
-    //     letter-spacing: 0px;
-    //     line-height: 26.06px;
-    //     color: rgba(0, 0, 0, 1);
-    // }
-}
 
 .middle-area {
-    height: 56px;
+    height: 60px;
     display: flex;
     justify-content: space-between;
-    margin: 16px 10px 0 10px;
-
+    margin: 0 10px 0 10px;
+    align-items: center;
 
     .input_area {
         display: flex;
         align-items: center;
-
         .input-with-select {
             margin-right: 30px;
             margin-left: 10px;
@@ -631,9 +611,7 @@ const openExportDia = () => {
             height: 32px;
             opacity: 1;
             border-radius: 4px;
-            background: rgba(255, 255, 255, 1);
-
-            border: 1px solid rgba(220, 223, 230, 1);
+            border: 1px  rgba(220, 223, 230, 1);
         }
 
     }

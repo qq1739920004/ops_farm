@@ -1,32 +1,43 @@
+
 import { defineStore } from 'pinia'
+import { useStorage } from "@vueuse/core";
+import { ref } from 'vue'
 
-let themeSettings: any = localStorage.getItem('themeSettings')
-themeSettings = JSON.parse(themeSettings)
 
-const { layout } = themeSettings || ''
+const useAppStore = defineStore("app", () => {
+    const defaultThemeSettings = { // 主题默认配置
+        layout: 'vertical', // layout
+        themeColor: '#67ae5b' // 主题颜色
+    }
 
-const useAppStore = defineStore("app", {
-    state: () => (
-        {
-            device: "desktop",
-            // 主题配置
-            themeSettings: {
-                layout: layout || 'vertical' // vertical 横屏 // horizontal 竖屏 
-            } as Record<string, any>
-        }
-    ),
+    const device = ref('desktop') // 屏幕类型
+    const themeSettings = useStorage('themeSettings', defaultThemeSettings) as Record<string, any>
 
-    actions: {
-        updateDevice(device: string) {
-            this.device = device
-        },
-        updateThemeSettings(key: string, value: any) {
-            this.themeSettings[key] = value
-            localStorage.setItem('themeSettings', JSON.stringify(this.themeSettings))
-        },
+
+    setPrimaryColor()
+
+    // 修改屏幕类型
+    function updateDevice(arg: string) {
+        device.value = arg
+    }
+    // 修改主题配置
+    function updateThemeSettings(key: string, val: any) {
+        themeSettings.value[key] = val
+        setPrimaryColor()
 
     }
 
-})
+    // 设置主题颜色
+    function setPrimaryColor() {
+        document.documentElement.style.setProperty("--el-color-primary", themeSettings.value.themeColor);
+    }
 
+    return {
+        device,
+        themeSettings,
+        updateDevice,
+        updateThemeSettings,
+    }
+
+})
 export default useAppStore
