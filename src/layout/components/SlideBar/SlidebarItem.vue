@@ -1,4 +1,4 @@
-<template v-if="!item.meta || !item.meta.hidden">
+<template>
   <!-- 只包含一个子路由节点的路由，显示其【唯一子路由】 -->
   <template
     v-if="
@@ -7,14 +7,14 @@
     "
   >
     <el-menu-item
-      v-if="onlyOneChild.meta"
+      v-if="onlyOneChild.meta && !onlyOneChild.meta.hidden"
       @click="changeRouter(resolvePath(onlyOneChild.path))"
       :index="resolvePath(onlyOneChild.path)"
     >
-      <el-icon>
+      <el-icon v-if="onlyOneChild.meta.icon">
         <component :is="onlyOneChild.meta.icon"></component>
       </el-icon>
-      <span>
+      <span v-if="onlyOneChild.meta.title">
         {{ onlyOneChild.meta.title }}
       </span>
     </el-menu-item>
@@ -22,7 +22,7 @@
   <!-- 包含多个子路由  -->
   <el-sub-menu v-else :index="resolvePath(item.path)" teleported>
     <template #title>
-      <el-icon>
+      <el-icon v-if="item.meta && item.meta.icon">
         <component :is="item.meta.icon"></component>
       </el-icon>
       <span v-if="item.meta && item.meta.title">{{ item.meta.title }}</span>
