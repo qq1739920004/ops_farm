@@ -4,18 +4,18 @@
         <el-dialog style="border-radius: 8px;" v-model="dialogVisible" title="远程管理" width="1112px" height="496px" center>
             <div class="top">
                 <span>车辆名称：</span>
-                <span>车辆类型：{{ props.terminalType }}</span>306
+                <span>车辆类型：{{ props.terminalType }}</span>360
             </div>
             <div class="menuArea">
                 <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
                     active-text-color="rgba(76, 176, 79, 1)" active-background-color="rgba(76, 176, 79, 1)">
                     <el-menu-item index="1">车辆参数</el-menu-item>
                     <el-menu-item index="2">校准参数</el-menu-item>
-                    <el-menu-item index="3" v-if="carKind != 'AG502'">PID参数</el-menu-item>
+                    <!-- <el-menu-item index="3" v-if="carKind != 'AG502'">PID参数</el-menu-item>
                     <el-menu-item index="9" v-if="carKind == 'AG302'">PID曲线参数</el-menu-item>
-                    <el-menu-item index="10" v-if="carKind == 'AG302'">PID超低速参数</el-menu-item>
-                    <el-menu-item index="4" v-if="carKind == 'AG502'">基本参数</el-menu-item>
-                    <el-menu-item index="8" v-if="carKind == 'AG502'">高级参数1</el-menu-item>
+                    <el-menu-item index="10" v-if="carKind == 'AG302'">PID超低速参数</el-menu-item> -->
+                    <el-menu-item index="4" >基本参数</el-menu-item>
+                    <el-menu-item index="8">高级参数1</el-menu-item>
                     <el-menu-item index="5">差分设置</el-menu-item>
                     <el-menu-item index="6">在线升级</el-menu-item>
                     <el-menu-item index="7">日志回传</el-menu-item>

@@ -123,13 +123,19 @@
 
                 <el-table-column label="星基" show-overflow-tooltip align="center">
                     <template #="{ row }">
-                        <el-switch v-model="row.isTransfer" class="ml-2" inline-prompt active-text="开" inactive-text="关"
+                        <!-- v-model="row.satelliteStatus" 
+                            :active-value="1"
+                            :inactive-value="0" -->
+                        <el-switch v-model="stitch" :before-change="beforeSwitchChange" @change="changeCarStatus(row)"
+                            :active-value="1" :inactive-value="0" class="ml-2" inline-prompt active-text="开"
+                            inactive-text="关"
                             style="width: 48px;height: 20px; --el-switch-on-color: #13ce66; --el-switch-off-color: rgba(204, 204, 204, 1)" />
                     </template>
                 </el-table-column>
                 <el-table-column label="数据存储" align="center">
                     <template #="{ row }">
-                        <el-switch v-model="row.isTransfer" class="ml-2" inline-prompt active-text="开" inactive-text="关"
+                        <el-switch :before-change="beforeSwitchChange" @change="changeLogStatus(row.sn, row.isTransfer)"
+                            v-model="row.isTransfer" class="ml-2" inline-prompt active-text="开" inactive-text="关"
                             style="width: 48px;height: 20px; --el-switch-on-color: #13ce66; --el-switch-off-color: rgba(204, 204, 204, 1)" />
                     </template>
                 </el-table-column>
@@ -139,11 +145,7 @@
                     <template #="{ row }">
                         <div class="tableBtn">
                             <el-button class="elbutton" size="small" text @click="gotoMachineDetail(row.id)">详情 </el-button>
-                            <el-popconfirm :title="`您确定要删除${row.one}?`" width="250px" icon="Delete">
-                                <template #reference>
-                                    <el-button class="elbutton" size="small" text>历史轨迹</el-button>
-                                </template>
-                            </el-popconfirm>
+                            <el-button class="elbutton" size="small" text>历史轨迹</el-button>
                             <el-button text class="elbutton" size="small"
                                 @click="gotoRemote(row.terminalType)">远程调参</el-button>
                             <el-button text class="elbutton" size="small">文件存储</el-button>
@@ -178,8 +180,8 @@ import RemoteAdjustDia302 from './components/remoteAdjust302.vue'
 import RemoteAdjustDia502 from './components/remoteAdjust502.vue'
 import RegisterDia from './components/registerDia.vue'
 import { reactive, ref } from 'vue'
-import { carNewList_API } from '@/api/machineryList/index'
-import { newListObj, carNewListResponseData, pageInfo } from '@/api/machineryList/type'
+import { carNewList_API, carStatus_API, logOpen_API, logClose_API } from '@/api/machineryList/index'
+import { newListObj, carNewListResponseData, pageInfo, carStatusObj } from '@/api/machineryList/type'
 const total = ref<number>(10)
 const pageInfo = reactive<pageInfo>({
     key: '',
@@ -188,6 +190,7 @@ const pageInfo = reactive<pageInfo>({
     companyId: '',
     order: '1'
 })
+const stitch = ref<number>(1)
 const inputD = ref()
 const carModuleD = ref()
 const MachineD = ref()
@@ -200,6 +203,14 @@ const carNewList = ref<newListObj[]>([])
 // 车辆ID 
 const carId = ref<number>()
 const terminalType = ref<string>('')
+// 星基请求参数
+const carStatus = ref<carStatusObj>({
+    'ids': [],
+    'commandType': 0,
+    'commandStatus': 0
+})
+const switchStatus = ref<boolean>(false)
+
 const search = () => {
     getCarList()
 }
@@ -243,17 +254,49 @@ const getCarList = async () => {
     carNewList.value = res.data.records
     total.value = res.data.total
 }
+
+
+// 取消首次触发change钩子
+const beforeSwitchChange = (val: any) => {
+    switchStatus.value = true;
+    return switchStatus.value;
+}
+
+// 更改星基状态
+const changeCarStatus = async (val: any) => {
+    if (switchStatus) {
+        carStatus.value.ids = val.id
+        carStatus.value.commandType = 11
+        carStatus.value.commandStatus = val.satelliteStatus
+    }
+    await carStatus_API(carStatus.value)
+
+
+}
+
+// 更改日志上传状态
+const changeLogStatus = async (val: any, val2: any) => {
+    if (switchStatus) {
+        console.log(val, val2);
+        if (val2 == true) {
+            await logOpen_API(val)
+        } else {
+            await logClose_API(val)
+        }
+
+    }
+}
 getCarList()
 
 </script>
 
 <style lang="scss" scoped>
 .middle-area {
-    height: 46px;
+    height: 60px;
     display: flex;
     justify-content: space-between;
-    margin: 16px 10px 0 10px;
-
+    margin: 0px 10px 0 10px;
+    align-items: center;
     .input_area {
         .input-with-select {
             width: 290px;
@@ -261,7 +304,7 @@ getCarList()
             opacity: 1;
             border-radius: 4px;
             background: rgba(255, 255, 255, 1);
-            border: 1px solid rgba(220, 223, 230, 1);
+            border: 1px  rgba(220, 223, 230, 1);
             margin-right: 40px;
         }
 
@@ -271,7 +314,7 @@ getCarList()
             opacity: 1;
             border-radius: 4px;
             background: rgba(255, 255, 255, 1);
-            border: 1px solid rgba(220, 223, 230, 1);
+            border: 1px rgba(220, 223, 230, 1);
         }
 
     }
