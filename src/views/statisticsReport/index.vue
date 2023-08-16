@@ -20,22 +20,22 @@
         </div>
         <div class='center'>
             <div class="chart4">
-                <!-- <div class="chart_title">功能统计</div> -->
+     
                 <Chartfour></Chartfour>
             </div>
             <div class="chart5">
-                <!-- <div class="chart_title">运输统计</div> -->
+              
                 <Chartfive></Chartfive>
             </div>
         </div>
 
         <div class="bottom">
             <div class="chart6">
-                <!-- <div class="chart_title">访问次数统计</div> -->
+             
                 <Chartsix></Chartsix>
             </div>
             <div class="chart7">
-                <!-- <div class="chart_title">车辆分布与作业信息</div> -->
+               
                 <Chartseven></Chartseven>
             </div>
         </div>
@@ -43,10 +43,6 @@
 </template>
 
 <script setup lang='ts'>
-
-
-//引入echarts
-
 import Chartone from './components/chartone.vue'
 import Charttwo from './components/charttwo.vue'
 import Chartthree from './components/chartthree.vue'
@@ -57,8 +53,12 @@ import Chartseven from './components/chartseven.vue'
 
 import {getStatisticsReportfarmMachineAPI} from '@/api/statisticsReport/index'
 const getStatisticsReportfarmMachine=async()=>{
+   try{
     const res=await getStatisticsReportfarmMachineAPI()
     console.log(res)
+   }catch(err){
+    console.log(err)
+   }    
 }
 getStatisticsReportfarmMachine()
 </script>
@@ -76,10 +76,8 @@ getStatisticsReportfarmMachine()
 .chart5,
 .chart6,
 .chart7 {
-
     box-shadow: 2px 2px 20px 2px rgba(0, 0, 0, .25);
     border-radius: 15px;
-
 }
 
 .top {
@@ -97,7 +95,6 @@ getStatisticsReportfarmMachine()
         display: flex;
         flex-direction: column;
        position: relative;
-       
         width: 32%;
     }
 

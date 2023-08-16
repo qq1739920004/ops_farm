@@ -36,7 +36,6 @@ const initEcharts = () => {
 watch(props, (newValue) => {
   option.yAxis.data = Object.keys(newValue.carArea)
   option.series[0].data = Object.values(newValue.carArea)
-  // console.log('=====',newValue.carArea,'000',option.series[0].data,'9999',Object.values(newValue.carArea))
   initEcharts()
 })
 

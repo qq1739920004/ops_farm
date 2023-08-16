@@ -12,10 +12,10 @@
                     <Year class="year" :totalArea="totalArea" :todayArea="todayArea" />
                 </div>
 
-                <div class="middle">mmmm</div>
+                <div class="middle"></div>
                 <div class="right">
-                    <Online class="online"></Online>
-                    <State class="state"></State>
+                    <Online class="online" :typeCounts="typeCounts"></Online>
+                    <State class="state" :provinceCars="provinceCars"></State>
                 </div>
             </div>
         </div>
@@ -54,12 +54,20 @@ const carArea = ref<object>({})
 
 const todayArea=ref<number>()
 const totalArea=ref<number>()
+// 各类型农机在线数
+const typeCounts=ref<object>({})
+// 各省车辆状态
+const provinceCars=ref<object>({})
+
 const getMonitor = async () => {
     const res = await getMonitorAPI()
     monitorData.value=res.data
     carArea.value = res.data.carArea
     todayArea.value=res.data.todayArea
     totalArea.value=res.data.totalArea
+    typeCounts.value=res.data.typeCounts
+    provinceCars.value=res.data.provinceCars
+
 }
 
 getMonitor()
@@ -86,13 +94,10 @@ getMonitor()
         left: 50%;
         top: 50%;
         transform-origin: left top;
-    }
-
-    .top {
+        .top {
         width: 100%;
         height: 223px;
     }
-
     .bottom {
         display: flex;
         height: 714px;
@@ -119,15 +124,22 @@ getMonitor()
 
         .right {
             flex: 1;
+            display: flex;
+            flex-direction: column;
             .online{
                 height: 270px;
                 
             }
             .state{
                 height: 400px;
-               
+            
             }
         }
     }
+    }
+
+   
+
+    
 }
 </style>
