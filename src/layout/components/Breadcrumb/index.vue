@@ -26,7 +26,6 @@ const pathCompile = (path: string) => {
   const toPath = compile(path);
   return toPath(params);
 };
-console.log(currentRoute.matched,'---29')
 const breadcrumbs = ref([] as Array<RouteLocationMatched>);
 
 function getBreadcrumb() {

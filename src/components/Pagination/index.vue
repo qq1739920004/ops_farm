@@ -1,7 +1,6 @@
 <template>
   <div class="Pagination_component">
     <el-pagination
-      style="padding-bottom: 20px"
       class="pagination"
       background
       @size-change="handleSizeChange"
@@ -48,4 +47,10 @@ function handleCurrentChange(val: number) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.Pagination_component {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0px;
+}
+</style>
