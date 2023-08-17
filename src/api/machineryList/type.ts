@@ -56,24 +56,6 @@ export interface carNewListResponseData extends ResponseData {
 
 export interface carNewDetailObj {
     id: number,
-    npn: string,
-    sn: string,
-    name: string,
-    userName: string,
-    model: string,
-    province: string,
-    terminalType: string,
-    expirationTime: string,
-    warrantyDate: string,
-    satelliteDate: string,
-    netDate: string,
-    lastOnlineTime: string,
-    companyName: string,
-    satelliteStatus: number,
-    codePower: boolean,
-    isTransfer: boolean,
-    version: number,
-    type: number,
     onlineTcp: number,
     driveState: number,
     factory: string,
@@ -84,22 +66,42 @@ export interface carNewDetailObj {
     softwareVersion: string,
     createTime: string,
     updateTime: string,
+    sn: string,
+    name: string,
+    companyName: string,
+    userName: string,
+    model: string,
+    lastOnlineTime: string,
     lastAutoDriveTime: string,
-    tel: string
+    board: string,
+    ec20: string,
+    radioStation: string,
+    carImu: string,
+    carImuSn: string,
+    wheelImu: string,
+    wheelImuSn: string,
+    motor: string,
+    motorSn: string,
+    steeringWheel: string,
+    steeringWheelSn: string,
+    hubBluetooth: string,
+    hub: string,
+    hubSn: string
+
 }
 export interface carNewDetailResponseData extends ResponseData {
     data: carNewDetailObj
 }
 export interface carDealerObj {
-    id:string,
-    name:number
+    id: string,
+    name: number
 }
 export interface carDealerResponseData extends ResponseData {
-    data:carDealerObj[]
+    data: carDealerObj[]
 }
 // 控制星基开关参数
 export interface carStatusObj {
-    ids:number[],
+    ids: number[],
     commandType: number,
     commandStatus: number
 }
