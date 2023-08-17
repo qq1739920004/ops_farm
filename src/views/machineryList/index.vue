@@ -14,8 +14,8 @@
                 </el-select>
             </div>
             <div class="button_area">
-                <el-button type="success" class="btn1" @click="gotoInput">录入经销商设备</el-button>
-                <el-button type="success" class="btn2" @click="gotoCarModule">查看车型模版</el-button>
+                <el-button type="primary" class="btn1" @click="gotoInput">录入经销商设备</el-button>
+                <el-button type="primary" class="btn2" @click="gotoCarModule">查看车型模版</el-button>
             </div>
         </div>
         <div class='table_container'>
@@ -144,10 +144,11 @@
                 <el-table-column label="操作" width="350" show-overflow-tooltip>
                     <template #="{ row }">
                         <div class="tableBtn">
-                            <el-button class="elbutton" size="small" text @click="gotoMachineDetail(row.id)">详情 </el-button>
+                            <el-button class="elbutton" size="small" text
+                                @click="gotoMachineDetail(row.id, row.terminalType)">详情 </el-button>
                             <el-button class="elbutton" size="small" text>历史轨迹</el-button>
                             <el-button text class="elbutton" size="small"
-                                @click="gotoRemote(row.terminalType)">远程调参</el-button>
+                                @click="gotoRemote(row.terminalType, row.version, row.type, row.id)">远程调参</el-button>
                             <el-button text class="elbutton" size="small">文件存储</el-button>
                             <el-button text class="elbutton" size="small" @click="gotoRegister">注册</el-button>
                         </div>
@@ -162,10 +163,13 @@
         </div>
         <InputDia ref="inputD"></InputDia>
         <CarModuleDia ref="carModuleD"></CarModuleDia>
-        <MachineDetailDia ref="MachineD" :carId="carId"></MachineDetailDia>
-        <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType"></RemoteAdjustDia360>
-        <RemoteAdjustDia302 ref="RemoteD302" :terminalType="terminalType"></RemoteAdjustDia302>
-        <RemoteAdjustDia502 ref="RemoteD502" :terminalType="terminalType"></RemoteAdjustDia502>
+        <MachineDetailDia ref="MachineD" :carId="carId" :terminalType="terminalType"></MachineDetailDia>
+        <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType" :version="version" :type="type" :carId="carId">
+        </RemoteAdjustDia360>
+        <RemoteAdjustDia302 ref="RemoteD302" :terminalType="terminalType" :version="version" :type="type" :carId="carId">
+        </RemoteAdjustDia302>
+        <RemoteAdjustDia502 ref="RemoteD502" :terminalType="terminalType" :version="version" :type="type" :carId="carId">
+        </RemoteAdjustDia502>
         <RegisterDia ref='RegisterD'></RegisterDia>
     </div>
 </template>
@@ -179,7 +183,7 @@ import RemoteAdjustDia360 from './components/remoteAdjust.vue'
 import RemoteAdjustDia302 from './components/remoteAdjust302.vue'
 import RemoteAdjustDia502 from './components/remoteAdjust502.vue'
 import RegisterDia from './components/registerDia.vue'
-import { reactive, ref } from 'vue'
+import { reactive, ref, nextTick } from 'vue'
 import { carNewList_API, carStatus_API, logOpen_API, logClose_API } from '@/api/machineryList/index'
 import { newListObj, carNewListResponseData, pageInfo, carStatusObj } from '@/api/machineryList/type'
 const total = ref<number>(10)
@@ -198,6 +202,8 @@ const RemoteD = ref()
 const RemoteD302 = ref()
 const RemoteD502 = ref()
 const RegisterD = ref()
+const version = ref<string>('')
+const type = ref<string>('')
 // 车辆列表
 const carNewList = ref<newListObj[]>([])
 // 车辆ID 
@@ -228,13 +234,17 @@ const gotoInput = () => {
 const gotoCarModule = () => {
     carModuleD.value.dialogVisible = true
 }
-const gotoMachineDetail = (val: any) => {
+const gotoMachineDetail = (val: any, val2: any) => {
     carId.value = val
+    terminalType.value = val2
     MachineD.value.dialogVisible = true
 }
-const gotoRemote = (val: any) => {
+const gotoRemote = (val: any, val2: any, val3: any, val4: any) => {
     terminalType.value = val
-    if (terminalType.value == 'AG306') {
+    version.value = val2
+    type.value = val3
+    carId.value = val4
+    if (terminalType.value == 'AG360') {
         RemoteD.value.dialogVisible = true
     } if (terminalType.value == 'AG302') {
         RemoteD302.value.dialogVisible = true
@@ -243,6 +253,9 @@ const gotoRemote = (val: any) => {
     } else {
         RemoteD.value.dialogVisible = true
     }
+    nextTick(() => {
+        RemoteD.value.carFormRef?.clearValidate()
+    })
 
 }
 const gotoRegister = () => {
@@ -297,6 +310,7 @@ getCarList()
     justify-content: space-between;
     margin: 0px 10px 0 10px;
     align-items: center;
+
     .input_area {
         .input-with-select {
             width: 290px;
@@ -304,7 +318,7 @@ getCarList()
             opacity: 1;
             border-radius: 4px;
             background: rgba(255, 255, 255, 1);
-            border: 1px  rgba(220, 223, 230, 1);
+            border: 1px rgba(220, 223, 230, 1);
             margin-right: 40px;
         }
 
@@ -319,24 +333,6 @@ getCarList()
 
     }
 
-    .button_area {
-
-        .btn1 {
-            width: 131px;
-            height: 32px;
-            opacity: 1;
-            border-radius: 4px;
-            background: rgba(76, 176, 79, 1);
-        }
-
-        .btn2 {
-            width: 116px;
-            height: 32px;
-            opacity: 1;
-            border-radius: 4px;
-            background: rgba(76, 176, 79, 1);
-        }
-    }
 }
 
 .table_container {
