@@ -2,15 +2,17 @@
     <div class='app_container'>
         <div class="middle-area">
             <div class="input_area">
-                <el-select v-model="pageInfo.companyId" class="input-with-select" placeholder="请选择" @blur="changeBlur">
-                    <el-option value="xxxxxxxxxx" label="xxxxx" />
-                    <el-option value="xxxxxxxxxx" label="xxxxx" />
-                    <el-option value="xxxxxxxxxx" label="xxxxx" />
+                <el-select v-model="pageInfo.companyId" class="input-with-select" placeholder="请选择" @blur="changeBlur1">
+                    <el-option :value="0" label="xxxxx0" />
+                    <el-option :value="1" label="xxxxx1" />
+                    <el-option :value="2" label="xxxxx2" />
+                    <el-option :value="3" label="xxxxx3" />
                 </el-select>
-                <el-select v-model="pageInfo.carId" class="m-2" placeholder="请选择" @blur="changeBlur">
-                    <el-option value="xxx" label="xxx" />
-                    <el-option value="xxx" label="xxx" />
-                    <el-option value="xxx" label="xxx" />
+                <el-select v-model="pageInfo.carId" class="m-2" placeholder="请选择" @blur="changeBlur2">
+                    <el-option :value="0" label="xxx0" />
+                    <el-option :value="1" label="xxx1" />
+                    <el-option :value="2" label="xxx2" />
+                    <el-option :value="3" label="xxx3" />
                 </el-select>
             </div>
             <div class="time">
@@ -140,8 +142,11 @@ watch(() => [value1.value, value2.value], () => {
 const disabledDate = (time: Date) => {
     return time.getTime() > Date.now()
 }
-const changeBlur = () => {
-
+const changeBlur1 = (val: any) => {
+    getPaddyWorkList()
+}
+const changeBlur2 = () => {
+    getPaddyWorkList()
 }
 const openExportDia = () => {
 
@@ -190,10 +195,12 @@ const changeA = () => {
 
 <style lang="scss" scoped>
 .middle-area {
-    height: 46px;
     display: flex;
     justify-content: space-between;
-    margin: 16px 10px 0 10px;
+    margin: 0px 10px 0 10px;
+    height: 60px;
+    align-items: center;
+    
 
     .input_area {
         display: flex;
@@ -206,7 +213,7 @@ const changeA = () => {
             opacity: 1;
             border-radius: 4px;
             background: rgba(255, 255, 255, 1);
-            border: 1px solid rgba(220, 223, 230, 1);
+            border: 1px  rgba(220, 223, 230, 1);
         }
 
         .m-2 {
@@ -215,7 +222,7 @@ const changeA = () => {
             opacity: 1;
             border-radius: 4px;
             background: rgba(255, 255, 255, 1);
-            border: 1px solid rgba(220, 223, 230, 1);
+            border: 1px  rgba(220, 223, 230, 1);
         }
 
     }
@@ -274,7 +281,6 @@ const changeA = () => {
 
     .button_area {
         .btn1 {
-            top: 123px;
             width: 97px;
             height: 32px;
             opacity: 1;
@@ -283,7 +289,6 @@ const changeA = () => {
         }
 
         .btn2 {
-            top: 124px;
             width: 32px;
             height: 32px;
             opacity: 1;

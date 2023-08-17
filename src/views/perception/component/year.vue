@@ -7,9 +7,9 @@
             <span>◂</span>
         </div>
 
-        <div class="charts">
-            <div class="chart_today" ref="bar1">--</div>
-            <div class="chart_year" ref="bar2">22</div>
+        <div class="charts" id="myChart">
+            <div class="chart_today" ref="bar1"></div>
+            <div class="chart_year" ref="bar2"></div>
         </div>
 
     </div>
@@ -17,7 +17,7 @@
     
 <script setup lang='ts'>
 import * as echarts from 'echarts'
-import { ref,  watch } from 'vue'
+import { ref, watch ,onUnmounted} from 'vue'
 
 const props = defineProps({
     totalArea: {
@@ -32,27 +32,53 @@ const props = defineProps({
 
 let todayArea = ref<number>()
 let totalArea = ref<number>()
-watch(props, (newValue) => {
-    
-    todayArea.value = newValue.todayArea
-    totalArea.value = newValue.totalArea
-    option1.series[0].data=[todayArea.value,100-todayArea.value ]
-    option2.series[0].data=[totalArea.value,100-totalArea.value ]
-    initEcharts()  
-});
-
 let bar1 = ref();
 let bar2 = ref();
+
+let myChart=echarts
+
+
 // onMounted(() => {
-    
-//    initEcharts()
+//     // initEcharts()
+
 // })
 
 
-const initEcharts=()=>{
-    let mycharts1 = echarts.init(bar1.value)
-    mycharts1.setOption(option1)
+
+watch(props, (newValue) => {
+    todayArea.value = newValue.todayArea
+    totalArea.value = newValue.totalArea
+    option1.series[0].data = [todayArea.value, 100 - todayArea.value]
+    option2.series[0].data = [totalArea.value, 100 - totalArea.value]
+    initEcharts()
+});
+
+onUnmounted(() => {
+      // 销毁图表
+      echarts.dispose;
+    });
+
+
+// 渐变色
+const gradientColor = {
+    type: 'linear',
+    x: 0,
+    y: 0,
+    x2: 0,
+    y2: 1,
+    colorStops: [{
+        offset: 0,
+        color: 'rgba(38, 255, 251, 1)'
+    }, {
+        offset: 1,
+        color: 'rgba(0, 255, 166, 1)'
+    }]
+};
+const initEcharts = () => {
+    let mycharts1 = myChart.init(bar1.value)
     let mycharts2 = echarts.init(bar2.value)
+
+    mycharts1.setOption(option1)
     mycharts2.setOption(option2)
 }
 
@@ -68,7 +94,7 @@ let option1 = {
         {
             name: 'Access From',
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['40%', '60%'],
             avoidLabelOverlap: false,
             label: {
                 show: false,
@@ -84,10 +110,22 @@ let option1 = {
             labelLine: {
                 show: false
             },
-            data: [
-                0,0,
+            itemStyle: {
+                color: function (colors: any) {
+                    var colorList = [
+                        'rgba(0, 255, 166, 0.1)',
+                        gradientColor
+                    ];
+                    return colorList[colors.dataIndex];
+                }
 
-            ]
+
+            },
+            data: [
+                0, 0,
+
+            ],
+
         }
     ]
 };
@@ -104,7 +142,7 @@ let option2 = {
         {
             name: 'Access From',
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['40%', '60%'],
             avoidLabelOverlap: false,
             label: {
                 show: false,
@@ -117,12 +155,21 @@ let option2 = {
                     fontWeight: 'bold'
                 }
             },
+            itemStyle: {
+                color: function (colors: any) {
+                    var colorList = [
+                        'rgba(0, 255, 166, 0.1)',
+                        gradientColor
+
+                    ];
+                    return colorList[colors.dataIndex];
+                }
+            },
             labelLine: {
                 show: false
             },
             data: [
-                0,0,
-
+                0, 0,
             ]
         }
     ]
@@ -161,7 +208,7 @@ let option2 = {
 
         >div {
             width: 50%;
-            background-color: rgb(233, 208, 212, 0.2);
+            // background-color: rgb(233, 208, 212, 0.2);
 
         }
 

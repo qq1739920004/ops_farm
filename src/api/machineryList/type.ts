@@ -97,3 +97,9 @@ export interface carDealerObj {
 export interface carDealerResponseData extends ResponseData {
     data:carDealerObj[]
 }
+// 控制星基开关参数
+export interface carStatusObj {
+    ids:number[],
+    commandType: number,
+    commandStatus: number
+}

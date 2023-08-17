@@ -7,14 +7,41 @@
             <span>◂</span>
         </div>
 
-        <div class="charts" >
-            
+        <div class="state">
+            <ul>
+                <li v-for="(item,index) in props.provinceCars" :key="index">
+                    
+                    <div class="state_time">20210202</div>
+                    <div class="state_main">
+                        <span class="circle">●</span>
+                        <div   class="state_bar">
+                            
+                            <span>{{item.name}}</span>
+                            <span>{{item.cityName}}</span>
+                            <span>
+                                <el-tag  type="danger"  size="small" effect="dark">离线</el-tag></span>       
+                        </div>
+
+                    </div>
+                </li>
+            </ul>
         </div>
 
     </div>
 </template>
     
 <script setup lang='ts'>
+
+const props = defineProps({
+    provinceCars: {
+        type: Object
+    }
+})
+// let list=ref
+// watch(props, (newValue) => {
+//     JSON.parse(JSON.stringify(newValue.provinceCars))
+//     console.log('prps:', newValue.provinceCars)
+// })
 
 </script>
 <style lang="scss" scoped>
@@ -43,6 +70,64 @@
         }
     }
 
- 
+    .state {
+        height: calc(100% - 40px);
+        
+        // background-color: rgb(233, 208, 212, 0.1);
+
+        ul>li {
+           margin-top: 10px;
+          padding-top: 10px;
+          
+            height: 60px;
+            font-size: 12px;
+            // background-color: rgba(136, 32, 49);
+
+        }
+        .state_time{
+            padding-left: 40px;    
+        }
+        .state_main {
+            padding-left: 5px;
+            // height: 40px;
+            height: calc(100% - 20px);
+            display: flex;
+
+            // background-color: rgba(6, 235, 147, 0.2);
+            .circle {
+                padding-left: 5px;
+                flex: 1;
+                color: rgb(255, 12, 12,0.5);
+            }
+
+            .state_bar {
+                position: relative;
+
+                background: url(../image/rectangle_red.png) no-repeat;
+                background-size: 100% 100%;
+                flex: 20;
+                line-height: 30px;
+                padding: 0 15px;
+
+                span:first-child {
+
+                    position: absolute;
+                    left: 20px;
+                }
+
+                span:nth-child(2) {
+                    position: absolute;
+                    right: 80px;
+                    // color: blue;
+                }
+                span:nth-child(3) {
+                   padding-top: 5px;
+                    position: absolute;
+                   right: 80px;
+                    // color: blue;
+                }
+            }
+        }
+    }
 }
 </style>
