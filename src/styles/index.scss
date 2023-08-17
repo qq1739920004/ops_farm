@@ -1,6 +1,14 @@
 @import "./reset";
 
 .app_container {
-    padding: 10px;
+    padding: 12px;
 }
-
+.app_card {
+    box-sizing: border-box;
+    padding: 16px;
+    overflow-x: hidden;
+    background-color: var(--el-bg-color);
+    border: 1px solid var(--el-border-color-light);
+    border-radius: 6px;
+    box-shadow: 0 0 12px rgb(0 0 0 / 5%);
+}

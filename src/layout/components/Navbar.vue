@@ -96,14 +96,11 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import useAppstore from "@/store/app";
-import SvgIcon from "@/components/SvgIcon/index.vue";
 import { useFullscreen } from "@vueuse/core";
-// import { useDark, useToggle } from "@vueuse/core";
-// const isDark = useDark();
+import SvgIcon from "@/components/SvgIcon/index.vue";
 const { locale } = useI18n();
 const appStore = useAppstore();
 const { isFullscreen, toggle } = useFullscreen();
-// const toggleDark = useToggle(isDark);
 let drawer = ref(false);
 
 // 主题颜色
@@ -126,10 +123,9 @@ function changeNavgation(arg: string) {
   appStore.updateThemeSettings("layout", arg);
 }
 function changeIsDark() {
-
   appStore.updateIsDark();
 }
-
+// 修改语言
 function changeLang(value: string) {
   locale.value = value;
 }

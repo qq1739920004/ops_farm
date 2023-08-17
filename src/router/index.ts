@@ -62,15 +62,15 @@ export const constantRoutes = [ // 静态路由数据
       },
       {
         path: 'aftersale',
-        name:'aftersale',
+        name: 'aftersale',
         component: () => import("@/views/infoManagement/aftersale/index.vue"),
         meta: {
           title: '信息管理',
           icon: 'Suitcase',
-          activeMenu:'/infoManagement',
-          hidden:true
+          activeMenu: '/infoManagement',
+          hidden: true
         },
-       
+
       },
     ]
   },
@@ -108,19 +108,19 @@ export const constantRoutes = [ // 静态路由数据
         meta: {
           title: '求助处理',
           icon: 'ChatDotSquare',
-          
+
         },
 
       },
       {
         path: 'handle',
-        name:'handle',    
+        name: 'handle',
         component: () => import("@/views/helpHandling/handle/index.vue"),
         meta: {
           title: '处理详情',
           icon: 'Suitcase',
-          activeMenu:'/helpHandling',
-          hidden:true    
+          activeMenu: '/helpHandling',
+          hidden: true
         },
       },
     ]
@@ -128,14 +128,27 @@ export const constantRoutes = [ // 静态路由数据
   {
     path: '/perception',
     component: () => import("@/views/perception/index.vue"),
-        meta: {
-          title: '感知平台',
-          icon: 'ChatSquare'
-        },
+    meta: {
+      title: '感知平台',
+      icon: 'ChatSquare'
+    },
     // component: Layout,
 
   },
-
+  {
+    path: '/tableSearch',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import("@/views/tableSearch/index.vue"),
+        meta: {
+          title: 'tableSearch',
+          icon: 'Message'
+        },
+      },
+    ]
+  },
 
 
 ]
