@@ -3,7 +3,7 @@
 
         <el-row :gutter="16">
         <el-col :span="8">
-            <el-statistic :value="2661" value-style="font-size:48px">
+            <el-statistic :value=fmData?.device.onlineDevice value-style="font-size:48px">
                 <template #suffix>
                     <el-icon :size="10">
                         <Top />
@@ -17,7 +17,7 @@
         </el-col>
 
         <el-col :span="8">
-            <el-statistic :value="2661" value-style="font-size:48px">
+            <el-statistic :value=fmData?.workArea.todayArea value-style="font-size:48px">
                 <template #suffix>
 
                     <el-icon :size="10">
@@ -32,7 +32,7 @@
         </el-col>
 
         <el-col :span="8">
-            <el-statistic :value="2661" value-style="font-size:48px">
+            <el-statistic :value=fmData?.car.newCar value-style="font-size:48px">
                 <template #suffix>
 
                     <el-icon :size="10">
@@ -53,7 +53,24 @@
 </template>
   
 <script lang="ts" setup>
+import { watch,ref,PropType, onMounted } from 'vue';
+import type{ FarmMachineObj } from '@/api/statisticsReport/type';
 
+const props = defineProps({
+    farmMachineData: {
+        type: Object as PropType<FarmMachineObj> 
+    }
+})
+const fmData=ref<FarmMachineObj>()
+
+onMounted(()=>{
+    fmData.value=props.farmMachineData
+})
+
+watch(props, (newValue) => {
+    fmData.value=newValue.farmMachineData
+    console.log('  farmMachineData', props.farmMachineData)
+});
 
 
 </script>
@@ -65,9 +82,7 @@
 
     .el-statistic {
         margin-left: 12px;
-
         .el-icon {
-            margin-left: 4px;
             color: rgba(67, 207, 124, 1);
             background-color: rgba(222, 255, 235, 1);
         }

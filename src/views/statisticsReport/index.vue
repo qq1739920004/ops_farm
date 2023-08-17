@@ -2,8 +2,8 @@
     <div class="app_container">
         <div class="top">
             <div class="chart1">
-                <div class="chart_title">实时统计</div>
-                <Chartone></Chartone>
+                <div class="chart_title" >实时统计</div>
+                <Chartone :farmMachineData="farmMachineData"></Chartone>
             </div>
             <div class="chart2">
                 <div class="chart_title">网络状况</div>
@@ -15,7 +15,7 @@
             <div class="chart3">
                 <div class="chart_title">省份在线车辆排名</div>
 
-                <Chartthree> </Chartthree>
+                <Chartthree :farmMachineData="farmMachineData"> </Chartthree>
             </div>
         </div>
         <div class='center'>
@@ -50,17 +50,31 @@ import Chartfour from './components/chartfour.vue'
 import Chartfive from './components/chartfive.vue'
 import Chartsix from './components/chartsix.vue'
 import Chartseven from './components/chartseven.vue'
-
+import {ref} from 'vue'
 import {getStatisticsReportfarmMachineAPI} from '@/api/statisticsReport/index'
+import type {FarmMachineObj} from '@/api/statisticsReport/type'
+
+const farmMachineData=ref<FarmMachineObj>()
+
+
+// 农机数据统计
 const getStatisticsReportfarmMachine=async()=>{
    try{
     const res=await getStatisticsReportfarmMachineAPI()
-    console.log(res)
+    farmMachineData.value=res.data
+    // console.log(res.data)
    }catch(err){
     console.log(err)
    }    
 }
+// // 功能统计，参数同步统计
+// const getStatisticsWx=async()=>{
+//     const res=await getStatisticsWxAPI()
+//     console.log(res)
+ 
+// }
 getStatisticsReportfarmMachine()
+
 </script>
 
 <style lang="scss" scoped>
