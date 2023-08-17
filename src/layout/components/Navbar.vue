@@ -42,6 +42,30 @@
   <!--  -->
   <el-drawer v-model="drawer" :with-header="false">
     <span>主题设置</span>
+    <div class="item theme_item">
+      <el-divider>主题</el-divider>
+      <div>
+        <el-switch
+          inline-prompt
+          v-model="appStore.isDark"
+          @change="changeIsDark"
+          active-icon="Sunny"
+          inactive-icon="Moon"
+        />
+      </div>
+    </div>
+
+    <div class="item themeColor_item">
+      <el-divider>主题颜色</el-divider>
+      <ul>
+        <li
+          v-for="(color, index) in themeColors"
+          :key="index"
+          :style="{ background: color }"
+          @click="changeThemeColor(color)"
+        />
+      </ul>
+    </div>
     <div class="item layout_item">
       <el-divider>导航设置</el-divider>
       <ul class="layout">
@@ -65,17 +89,6 @@
         </el-tooltip>
       </ul>
     </div>
-    <div class="item themeColor_item">
-      <el-divider>主题颜色</el-divider>
-      <ul>
-        <li
-          v-for="(color, index) in themeColors"
-          :key="index"
-          :style="{ background: color }"
-          @click="changeThemeColor(color)"
-        />
-      </ul>
-    </div>
   </el-drawer>
 </template>
 
@@ -85,9 +98,12 @@ import { useI18n } from "vue-i18n";
 import useAppstore from "@/store/app";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import { useFullscreen } from "@vueuse/core";
+// import { useDark, useToggle } from "@vueuse/core";
+// const isDark = useDark();
 const { locale } = useI18n();
 const appStore = useAppstore();
 const { isFullscreen, toggle } = useFullscreen();
+// const toggleDark = useToggle(isDark);
 let drawer = ref(false);
 
 // 主题颜色
@@ -108,6 +124,10 @@ function changeThemeColor(arg1: string) {
 
 function changeNavgation(arg: string) {
   appStore.updateThemeSettings("layout", arg);
+}
+function changeIsDark() {
+
+  appStore.updateIsDark();
 }
 
 function changeLang(value: string) {
@@ -137,81 +157,85 @@ function changeLang(value: string) {
   }
 }
 .el-drawer {
+  .theme_item {
+    div {
+      display: flex;
+      justify-content: center;
+    }
+  }
   .themeColor_item {
     ul {
-      display:flex;
+      display: flex;
       justify-content: center;
       li {
         width: 30px;
         height: 30px;
         margin-left: 12px;
         cursor: pointer;
-        border-radius:3px;
-
+        border-radius: 3px;
       }
     }
   }
-    .layout {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      width: 100%;
-      height: 50px;
+  .layout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 100%;
+    height: 50px;
 
-      &-item {
-        position: relative;
-        width: 18%;
-        height: 45px;
-        overflow: hidden;
-        cursor: pointer;
-        background: #f0f2f5;
-        border-radius: 4px;
-      }
-
-      &-item.is-active {
-        border: 2px solid var(--el-color-primary);
-      }
-
-      &-mix div:nth-child(1) {
-        width: 100%;
-        height: 30%;
-        background: #1b2a47;
-        box-shadow: 0 0 1px #888;
-      }
-
-      &-mix div:nth-child(2) {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 30%;
-        height: 70%;
-        background: #1b2a47;
-        box-shadow: 0 0 1px #888;
-      }
-
-      &-top div:nth-child(1) {
-        width: 100%;
-        height: 30%;
-        background: #1b2a47;
-        box-shadow: 0 0 1px #888;
-      }
-
-      &-left div:nth-child(1) {
-        width: 30%;
-        height: 100%;
-        background: #1b2a47;
-      }
-
-      &-left div:nth-child(2) {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 70%;
-        height: 30%;
-        background: #fff;
-        box-shadow: 0 0 1px #888;
-      }
+    &-item {
+      position: relative;
+      width: 18%;
+      height: 45px;
+      overflow: hidden;
+      cursor: pointer;
+      background: #f0f2f5;
+      border-radius: 4px;
     }
-  
+
+    &-item.is-active {
+      border: 2px solid var(--el-color-primary);
+    }
+
+    &-mix div:nth-child(1) {
+      width: 100%;
+      height: 30%;
+      background: #1b2a47;
+      box-shadow: 0 0 1px #888;
+    }
+
+    &-mix div:nth-child(2) {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 30%;
+      height: 70%;
+      background: #1b2a47;
+      box-shadow: 0 0 1px #888;
+    }
+
+    &-top div:nth-child(1) {
+      width: 100%;
+      height: 30%;
+      background: #1b2a47;
+      box-shadow: 0 0 1px #888;
+    }
+
+    &-left div:nth-child(1) {
+      width: 30%;
+      height: 100%;
+      background: #1b2a47;
+    }
+
+    &-left div:nth-child(2) {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 70%;
+      height: 30%;
+      background: #fff;
+      box-shadow: 0 0 1px #888;
+    }
+  }
 }
 </style>

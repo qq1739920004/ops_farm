@@ -1,9 +1,10 @@
 <template>
-    <el-row :gutter="16">
+   
+
+        <el-row :gutter="16">
         <el-col :span="8">
             <el-statistic :value="2661" value-style="font-size:48px">
                 <template #suffix>
-
                     <el-icon :size="10">
                         <Top />
                     </el-icon>
@@ -47,6 +48,8 @@
 
 
     </el-row>
+  
+   
 </template>
   
 <script lang="ts" setup>
@@ -56,6 +59,7 @@
 </script>
   
 <style scoped>
+
 .el-col {
     text-align: center;
 

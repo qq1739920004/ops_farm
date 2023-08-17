@@ -5,14 +5,14 @@
                 <div>
                     <el-input placeholder=请输入SN、电话 class=input-with-select v-model=helpHandling.key>
                         <template #append>
-                            <el-button :icon=Search @click=search() />
+                            <el-button icon=Search @click=search() />
                         </template>
                     </el-input>
                 </div>
             </el-col>
 
             <el-col :span=5 class=help_search_state>
-                <span>状态：</span>
+                <div class="help_search_zt">状态：</div>
                 <el-select v-model=helpHandling.status placeholder="请选择" @change="chooseStatus">
                     <el-option value=0 label="待处理" />
                     <el-option value=1 label="已处理" />
@@ -73,7 +73,6 @@
 
 <script setup lang='ts'>
 import { reactive, ref } from 'vue'
-import { Search } from '@element-plus/icons-vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { getHelpHandlingAPI, getHelpHandlingUncountAPI } from '@/api/helpHanding/index'
 import type { RecordsObj, HelpHandlingObj, HelpHandlingResponseData, HelpHandlingUncountData } from '@/api/helpHanding/type'
@@ -184,11 +183,18 @@ const chooseStatus = () => {
 
     .help_search {
         width: 100%;
-        height: 60px;
-
-        padding-top: 8px;
+        height: 40px;
         font-size: 14px;
 
+       
+       .help_search_state{
+        display: flex;
+        .help_search_zt{
+            width: 60px;
+            text-align: center;
+            line-height: 30px;
+        } 
+      
         .el_tag_uncount {
             vertical-align: middle;
             height: 35px;
@@ -198,6 +204,8 @@ const chooseStatus = () => {
                 margin-right: 5px;
             }
         }
+       }
+
     }
 
 
