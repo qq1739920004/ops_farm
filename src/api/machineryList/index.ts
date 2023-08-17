@@ -3,9 +3,8 @@ import { carNewListResponseData, pageInfo, carNewDetailResponseData, carDealerRe
 // 农机列表API接口// 分页查询
 export function carNewList_API(data: pageInfo) {
     return request<any, carNewListResponseData>({
-        url: "/car/new/list",
+        url: `/car/new/list?companyId=${data.companyId}&key=${data.key}&currentPage=${data.currentPage}&pageSize=${data.pageSize}&order=${data.order}`,
         method: 'post',
-        data
     })
 }
 // 车辆详情/car/new/detail

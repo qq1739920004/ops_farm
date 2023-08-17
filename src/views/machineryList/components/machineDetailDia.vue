@@ -7,7 +7,7 @@
                 <div class="line line1">
                     <div>SN:</div>
                     <div class="data">{{ NewDetail.sn }}</div>
-                    <div>在线装填:</div>
+                    <div>在线状态:</div>
                     <div v-if="NewDetail.onlineTcp != 0" class="data ">在线 <span class="circle"></span></div>
                     <div v-else class="data">离线 <span class="circle2"></span></div>
                     <div>驾驶状态:</div>
@@ -19,12 +19,10 @@
                     <div>车主姓名:</div>
                     <div class="data">{{ NewDetail.userName }}</div>
                 </div>
-                <div class="line line1 ">
-                    <div>在线装填:</div>
-                    <div class="data">{{ NewDetail.driveState }}</div>
-                    <div>车辆名称:</div>
+                <div class="line line2 ">
+                    <div class="tit">车辆名称:</div>
                     <div class="data">{{ NewDetail.name }}</div>
-                    <div>车辆厂家:</div>
+                    <div class="tit">车辆厂家:</div>
                     <div class="data">{{ NewDetail.factory }}</div>
                 </div>
                 <div class="line line1">
@@ -49,12 +47,50 @@
                     <div class="tit">更新时间: </div>
                     <div class="data">{{ NewDetail.updateTime?.split(' ')[0] }}</div>
                 </div>
+               <div v-if="props.terminalType == 'AG360'">
                 <div class="line line2 ">
-                    <div class="tit">最近上线时间:</div>
-                    <div class="data">{{ NewDetail.lastOnlineTime?.split(' ')[0] }}</div>
-                    <div class="tit">最近自动驾驶时间: </div>
+                    <div class="tit">板卡固件号:</div>
+                    <div class="data">{{ NewDetail.board }}</div>
+                    <div class="tit">EC20固件号: </div>
                     <div class="data">{{ NewDetail.lastAutoDriveTime?.split(' ')[0] }}</div>
                 </div>
+                <div class="line line2 ">
+                    <div class="tit">电台固件号:</div>
+                    <div class="data">{{ NewDetail.radioStation }}</div>
+                    <div class="tit">车身IMU固件号: </div>
+                    <div class="data">{{ NewDetail.carImu }}</div>
+                </div>
+                <div class="line line2 ">
+                    <div class="tit">车身IMU_SN:</div>
+                    <div class="data">{{ NewDetail.carImuSn }}</div>
+                    <div class="tit">前轮IMU固件号: </div>
+                    <div class="data">{{ NewDetail.wheelImu }}</div>
+                </div>
+                <div class="line line2 ">
+                    <div class="tit">前轮IMU_SN:</div>
+                    <div class="data">{{ NewDetail.wheelImuSn }}</div>
+                    <div class="tit">电机固件号: </div>
+                    <div class="data">{{ NewDetail.motor }}</div>
+                </div>
+                <div class="line line2 ">
+                    <div class="tit">电机SN:</div>
+                    <div class="data">{{ NewDetail.motorSn }}</div>
+                    <div class="tit">多功能方向盘固件号: </div>
+                    <div class="data">{{ NewDetail.steeringWheel }}</div>
+                </div>
+                <div class="line line2 ">
+                    <div class="tit">多功能方向盘SN:</div>
+                    <div class="data">{{ NewDetail.steeringWheelSn }}</div>
+                    <div class="tit">Hub蓝牙固件号: </div>
+                    <div class="data">{{ NewDetail.hubBluetooth }}</div>
+                </div>
+                <div class="line line2 ">
+                    <div class="tit">Hub固件号:</div>
+                    <div class="data">{{ NewDetail.hubSn }}</div>
+                    <div class="tit">Hub_SN: </div>
+                    <div class="data">{{ NewDetail.hub }}</div>
+                </div>
+               </div>
             </div>
         </el-dialog>
     </div>
@@ -70,27 +106,9 @@ defineExpose({
     dialogVisible
 }
 )
-const props = defineProps(['carId'])
+const props = defineProps(['carId','terminalType'])
 const NewDetail = reactive<carNewDetailObj>({
     "id": 0,
-    "npn": "",
-    "sn": "",
-    "name": "",
-    "userName": "",
-    "model": "",
-    "province": "",
-    "terminalType": "",
-    "expirationTime": "",
-    "warrantyDate": "",
-    "satelliteDate": "",
-    "netDate": "",
-    "lastOnlineTime": "",
-    "companyName": "",
-    "satelliteStatus": 0,
-    "codePower": false,
-    "isTransfer": false,
-    "version": 0,
-    "type": 0,
     "onlineTcp": 0,
     "driveState": 0,
     "factory": "",
@@ -101,8 +119,27 @@ const NewDetail = reactive<carNewDetailObj>({
     "softwareVersion": "",
     "createTime": "",
     "updateTime": "",
+    "sn": "",
+    "name": "",
+    "companyName": "",
+    "userName": "",
+    "model": "",
+    "lastOnlineTime": "",
     "lastAutoDriveTime": "",
-    "tel": ""
+    "board": "",
+    "ec20": "",
+    "radioStation": "",
+    "carImu": "",
+    "carImuSn": "",
+    "wheelImu": "",
+    "wheelImuSn": "",
+    "motor": "",
+    "motorSn": "",
+    "steeringWheel": "",
+    "steeringWheelSn": "",
+    "hubBluetooth": "",
+    "hub": "",
+    "hubSn": ""
 })
 
 
@@ -153,6 +190,7 @@ const getNewDetail = async () => {
                 display: inline-block;
                 margin-right: 5px;
             }
+
             .circle2 {
                 width: 10px;
                 height: 10px;
