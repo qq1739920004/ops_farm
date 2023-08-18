@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class='table_container'>
-            <el-table :default-sort="{ prop: 'createtime', order: 'descending' }" :header-cell-style="{
+            <el-table @sort-change="changesort" :header-cell-style="{
                 background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px'
             }" style="width: 100%" :data="carNewList">
                 <el-table-column type="index" label="序号" width="60" align="center" />
@@ -118,7 +118,10 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="公司/经销商" show-overflow-tooltip prop="companyName">
+                <el-table-column label="公司/经销商" show-overflow-tooltip align="center">
+                    <template #="{ row }">
+                        {{ row.companyName || '/' }}
+                    </template>
                 </el-table-column>
 
                 <el-table-column label="星基" show-overflow-tooltip align="center">
@@ -126,9 +129,9 @@
                         <!-- v-model="row.satelliteStatus" 
                             :active-value="1"
                             :inactive-value="0" -->
-                        <el-switch v-model="stitch" :before-change="beforeSwitchChange" @change="changeCarStatus(row)"
-                            :active-value="1" :inactive-value="0" class="ml-2" inline-prompt active-text="开"
-                            inactive-text="关"
+                        <el-switch v-model="row.satelliteStatus" :before-change="beforeSwitchChange"
+                            @change="changeCarStatus(row)" :active-value="1" :inactive-value="0" class="ml-2" inline-prompt
+                            active-text="开" inactive-text="关"
                             style="width: 48px;height: 20px; --el-switch-on-color: #13ce66; --el-switch-off-color: rgba(204, 204, 204, 1)" />
                     </template>
                 </el-table-column>
@@ -148,7 +151,7 @@
                                 @click="gotoMachineDetail(row.id, row.terminalType)">详情 </el-button>
                             <el-button class="elbutton" size="small" text>历史轨迹</el-button>
                             <el-button text class="elbutton" size="small"
-                                @click="gotoRemote(row.terminalType, row.version, row.type, row.id)">远程调参</el-button>
+                                @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn)">远程调参</el-button>
                             <el-button text class="elbutton" size="small">文件存储</el-button>
                             <el-button text class="elbutton" size="small" @click="gotoRegister">注册</el-button>
                         </div>
@@ -164,7 +167,8 @@
         <InputDia ref="inputD"></InputDia>
         <CarModuleDia ref="carModuleD"></CarModuleDia>
         <MachineDetailDia ref="MachineD" :carId="carId" :terminalType="terminalType"></MachineDetailDia>
-        <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType" :version="version" :type="type" :carId="carId">
+        <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
+            :sn="sn">
         </RemoteAdjustDia360>
         <RemoteAdjustDia302 ref="RemoteD302" :terminalType="terminalType" :version="version" :type="type" :carId="carId">
         </RemoteAdjustDia302>
@@ -175,6 +179,7 @@
 </template>
 
 <script setup lang='ts'>
+import { ElMessage } from 'element-plus'
 import InputDia from './components/inputDia.vue'
 import Pagination from '@/components/Pagination/index.vue'
 import CarModuleDia from './components/carModuleDia.vue'
@@ -194,7 +199,7 @@ const pageInfo = reactive<pageInfo>({
     companyId: '',
     order: '1'
 })
-const stitch = ref<number>(1)
+const sn = ref()
 const inputD = ref()
 const carModuleD = ref()
 const MachineD = ref()
@@ -228,6 +233,18 @@ const currentChange = (val: any) => {
     pageInfo.pageSize = val.pageSize
     getCarList()
 }
+const changesort = (val: any) => {
+    // if (pageInfo.order == '1') { pageInfo.order = '2' }
+    // else { pageInfo.order = '1' }
+    // getCarList()
+
+    switch (val.order) {
+        case 'ascending': pageInfo.order = '2'; break
+        case 'descending': pageInfo.order = '1'; break
+        case null: pageInfo.order = '1'; break
+    }
+    getCarList()
+}
 const gotoInput = () => {
     inputD.value.dialogVisible = true
 }
@@ -239,11 +256,12 @@ const gotoMachineDetail = (val: any, val2: any) => {
     terminalType.value = val2
     MachineD.value.dialogVisible = true
 }
-const gotoRemote = (val: any, val2: any, val3: any, val4: any) => {
+const gotoRemote = (val: any, val2: any, val3: any, val4: any, val5: any) => {
     terminalType.value = val
     version.value = val2
     type.value = val3
     carId.value = val4
+    sn.value = val5
     if (terminalType.value == 'AG360') {
         RemoteD.value.dialogVisible = true
     } if (terminalType.value == 'AG302') {
@@ -278,12 +296,18 @@ const beforeSwitchChange = (val: any) => {
 // 更改星基状态
 const changeCarStatus = async (val: any) => {
     if (switchStatus) {
-        carStatus.value.ids = val.id
+        carStatus.value.ids.push(val.id)
         carStatus.value.commandType = 11
         carStatus.value.commandStatus = val.satelliteStatus
     }
-    await carStatus_API(carStatus.value)
-
+    const res = await carStatus_API(carStatus.value)
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '修改成功' })
+    }
+    else {
+        ElMessage({ type: 'error', message: '修改失败' })
+    }
+    carStatus.value.ids = []
 
 }
 
@@ -292,9 +316,21 @@ const changeLogStatus = async (val: any, val2: any) => {
     if (switchStatus) {
         console.log(val, val2);
         if (val2 == true) {
-            await logOpen_API(val)
+            const res = await logOpen_API(val)
+            if (res.code == 200) {
+                ElMessage({ type: 'success', message: '修改成功' })
+            }
+            else {
+                ElMessage({ type: 'error', message: '修改失败' })
+            }
         } else {
-            await logClose_API(val)
+            const res = await logClose_API(val)
+            if (res.code == 200) {
+                ElMessage({ type: 'success', message: '修改成功' })
+            }
+            else {
+                ElMessage({ type: 'error', message: '修改失败' })
+            }
         }
 
     }

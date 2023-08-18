@@ -11,6 +11,7 @@ export interface pageInfo {
     companyId: string,
     order: string
 }
+
 export interface newListObj {
     id: number,
     npn: string,
@@ -28,7 +29,7 @@ export interface newListObj {
     companyName: string,
     satelliteStatus: number,
     codePower: boolean,
-    isTransfer: Boolean,
+    isTransfer: boolean,
     version: number,
     type: number,
     onlineTcp: number,
@@ -42,7 +43,23 @@ export interface newListObj {
     createTime: string,
     updateTime: string,
     lastAutoDriveTime: string,
-    tel: string
+    tel: string,
+    workPattern: number,
+    protocol: number,
+    radioChannel: number,
+    radioStatus: number,
+    radioPower: number,
+    insideHost: string,
+    insidePort: number,
+    insideSourceNode: string,
+    insideUsername: string,
+    insidePassword: string,
+    extendHost: string,
+    extendPort: number,
+    extendSourceNode: string,
+    extendUsername: string,
+    extendPassword: string,
+    deviceId: number,
 }
 
 export interface carNewListResponseData extends ResponseData {
