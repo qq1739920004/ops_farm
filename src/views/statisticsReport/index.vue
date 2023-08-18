@@ -62,19 +62,17 @@ const setCurTime = () => {
 }
 const timer=setInterval(()=>{
     setCurTime()
-},10000)
-
-
+},1000)
 
 
 onMounted(()=>{
-    clearInterval(timer)
+    
     getStatisticsReportfarmMachine()
 })
 
 watch(curTime,()=>{
     getStatisticsReportfarmMachine()
-    console.log("刷新数据")
+
 })
 
 
@@ -87,9 +85,10 @@ const getStatisticsReportfarmMachine=async()=>{
     farmMachineData.value=res.data
     // console.log(res.data)
    }catch(err){
-    console.log(err,'haha')
+    console.log(err)
    }    
 }
+
 // // 功能统计，参数同步统计
 // const getStatisticsWx=async()=>{
 //     const res=await getStatisticsWxAPI()
