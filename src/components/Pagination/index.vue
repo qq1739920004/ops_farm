@@ -51,6 +51,6 @@ function handleCurrentChange(val: number) {
 .Pagination_component {
   display: flex;
   justify-content: center;
-  margin: 12px 0px;
+  margin-top: 12px;
 }
 </style>

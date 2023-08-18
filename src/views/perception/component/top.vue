@@ -12,21 +12,21 @@
         <div>
           <img src="../../perception/image/top_number1.png" alt="" />
           <div class="word">
-            <p>{{monitorData.todayArea}}</p>
+            <p>{{ monitorData.todayArea }}</p>
             <p>当前在线数 </p>
           </div>
         </div>
         <div>
           <img src="../../perception/image/top_number2.png" alt="" />
           <div class="word">
-            <p>{{monitorData.addNowYearDevice}}</p>
+            <p>{{ monitorData.addNowYearDevice }}</p>
             <p>当年新增农机</p>
           </div>
         </div>
         <div>
           <img src="../../perception/image/top_number3.png" alt="" />
           <div class="word">
-            <p>{{monitorData.totalDevice}}</p>
+            <p>{{ monitorData.totalDevice }}</p>
             <p>农机总数</p>
           </div>
         </div>
@@ -58,34 +58,34 @@
 // defineProps(['monitorData'])
 
 defineProps({
-  monitorData:{
-    type:Object ,
-    
-    default:{
-    onlineDevice: 0,
-    addNowYearDevice: 0,
-    totalDevice: 0,
-    activeDevice: 0,
-    todayArea: 0,
-    totalArea: 0,
-    typeCounts: [
-      {
-        typeName: '',
-        onlineCount: 0,
-        totalCount: 0
+  monitorData: {
+    type: Object,
+
+    default: {
+      onlineDevice: 0,
+      addNowYearDevice: 0,
+      totalDevice: 0,
+      activeDevice: 0,
+      todayArea: 0,
+      totalArea: 0,
+      typeCounts: [
+        {
+          typeName: '',
+          onlineCount: 0,
+          totalCount: 0
+        }
+      ],
+      provinceCars: [
+        {
+          name: '',
+          totalNum: 0,
+          onlineNum: 0
+        }
+      ],
+      carArea: {
+        key: 0
       }
-    ],
-    provinceCars: [
-      {
-        name: '',
-        totalNum: 0,
-        onlineNum: 0
-      }
-    ],
-    carArea: {
-      key: 0
-    }
-  
+
     }
   }
 })

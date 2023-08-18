@@ -15,33 +15,15 @@
     
 <script setup lang='ts'>
 import * as echarts from 'echarts'
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted,onUnmounted } from 'vue'
 
 let bar = ref()
-const props = defineProps({
-    typeCounts: {
-        type: Object
-    }
-})
-const initEcharts = () => {
-    let mycharts = echarts.init(bar.value)
-    mycharts.setOption(option)
-}
+var mycharts: any;
 let dataList = [{
     typeName: "car",
     onlineCount: 0,
     totalCount: 0
 }]
-
-watch(props, (newValue) => {
-
-    dataList = JSON.parse(JSON.stringify(newValue.typeCounts))
-    option.yAxis.data = dataList.map(r => r.typeName)
-    option.series[0].data = dataList.map(r => r.onlineCount)
-    initEcharts()
-})
-
-
 const option = {
     backgroundColor: "",
     tooltip: {
@@ -85,7 +67,7 @@ const option = {
     },
     series: [
         {
-           
+
             type: "bar",
             symbol: "path://M1 1,L140 1,L140 15,L1 15,Z",
             symbolKeepAspect: false,
@@ -149,6 +131,35 @@ const option = {
         },
     ],
 };
+const props = defineProps({
+    typeCounts: {
+        type: Object
+    }
+})
+
+const initEcharts = () => {
+    mycharts = echarts.init(bar.value)
+    mycharts.setOption(option)
+}
+
+
+onMounted(() => {
+    initEcharts()
+})
+
+watch(props, (newValue) => {
+
+    dataList = JSON.parse(JSON.stringify(newValue.typeCounts))
+    option.yAxis.data = dataList.map(r => r.typeName)
+    option.series[0].data = dataList.map(r => r.onlineCount)
+    mycharts.setOption(option)
+})
+
+onUnmounted(() => {
+    mycharts.dispose;
+});
+
+
 
 </script>
 <style lang="scss" scoped>
@@ -179,7 +190,7 @@ const option = {
 
     .charts {
         height: calc(100% - 40px);
-        
+
     }
 
 

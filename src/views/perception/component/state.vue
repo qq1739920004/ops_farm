@@ -9,17 +9,17 @@
 
         <div class="state">
             <ul>
-                <li v-for="(item,index) in props.provinceCars" :key="index">
-                    
+                <li v-for="(item, index) in props.provinceCars" :key="index">
+
                     <div class="state_time">20210202</div>
                     <div class="state_main">
                         <span class="circle">●</span>
-                        <div   class="state_bar">
-                            
-                            <span>{{item.name}}</span>
-                            <span>{{item.cityName}}</span>
+                        <div class="state_bar">
+
+                            <span>{{ item.name }}</span>
+                            <span>{{ item.cityName }}</span>
                             <span>
-                                <el-tag  type="danger"  size="small" effect="dark">离线</el-tag></span>       
+                                <el-tag type="danger" size="small" effect="dark">离线</el-tag></span>
                         </div>
 
                     </div>
@@ -37,10 +37,9 @@ const props = defineProps({
         type: Object
     }
 })
-// let list=ref
+
 // watch(props, (newValue) => {
-//     JSON.parse(JSON.stringify(newValue.provinceCars))
-//     console.log('prps:', newValue.provinceCars)
+//     JSON.parse(JSON.stringify(newValue.provinceCars))   
 // })
 
 </script>
@@ -72,32 +71,32 @@ const props = defineProps({
 
     .state {
         height: calc(100% - 40px);
-        
+
         // background-color: rgb(233, 208, 212, 0.1);
 
         ul>li {
-           margin-top: 10px;
-          padding-top: 10px;
-          
+            margin-top: 10px;
+            padding-top: 10px;
+
             height: 60px;
             font-size: 12px;
-            // background-color: rgba(136, 32, 49);
+        }
 
+        .state_time {
+            padding-left: 40px;
         }
-        .state_time{
-            padding-left: 40px;    
-        }
+
         .state_main {
             padding-left: 5px;
             // height: 40px;
             height: calc(100% - 20px);
             display: flex;
 
-            // background-color: rgba(6, 235, 147, 0.2);
+
             .circle {
                 padding-left: 5px;
                 flex: 1;
-                color: rgb(255, 12, 12,0.5);
+                color: rgb(255, 12, 12, 0.5);
             }
 
             .state_bar {
@@ -118,16 +117,16 @@ const props = defineProps({
                 span:nth-child(2) {
                     position: absolute;
                     right: 80px;
-                    // color: blue;
+
                 }
+
                 span:nth-child(3) {
-                   padding-top: 5px;
+                    padding-top: 5px;
                     position: absolute;
-                   right: 80px;
-                    // color: blue;
+                    right: 80px;
+
                 }
             }
         }
     }
-}
-</style>
+}</style>

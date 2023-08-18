@@ -13,13 +13,16 @@
 
 <style lang="scss" scoped>
 .app-main {
+  min-height: 100%;
+  height: 100%;
+  background-color: var(--el-bg-color-page);
+
   // position: relative;
   // width: 100%;
 
   // /* 50= navbar  50  */
   // min-height: calc(100vh - 50px);
   // overflow: hidden;
-  // background-color: var(--el-bg-color-page);
 }
 
 // .fixed-header + .app-main {

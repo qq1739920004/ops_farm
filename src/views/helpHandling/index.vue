@@ -1,40 +1,37 @@
 <template>
     <div class='app_container'>
-        <el-row class=help_search :gutter=40>
-            <el-col :span=4 class=help_search_phone>
-                <div>
-                    <el-input placeholder=请输入SN、电话 class=input-with-select v-model=helpHandling.key>
-                        <template #append>
-                            <el-button icon=Search @click=search() />
-                        </template>
-                    </el-input>
-                </div>
-            </el-col>
-
-            <el-col :span=5 class=help_search_state>
-                <div class="help_search_zt">状态：</div>
+        <!-- 搜索 -->
+        <div class="search_container app_card">
+            <div>
+                <el-input placeholder=请输入SN、电话 v-model=helpHandling.key>
+                    <template #append>
+                        <el-button icon=Search @click=search() />
+                    </template>
+                </el-input>
+            </div>
+            <div class="state">
+                <span>状态：</span>
                 <el-select v-model=helpHandling.status placeholder="请选择" @change="chooseStatus">
                     <el-option value=0 label="待处理" />
                     <el-option value=1 label="已处理" />
                 </el-select>
-            </el-col>
-            <el-col :span=2 :offset=13>
+            </div>
+            <div class="tag">
                 <el-tag type="danger" class="el_tag_uncount">
                     <el-icon :size="20">
                         <Edit />
                     </el-icon>
                     待处理{{ helpHandlingUncount }}
                 </el-tag>
-            </el-col>
-        </el-row>
+            </div>
+        </div>
 
-        <el-row class=help_table>
-            <el-table type=index @sort-change="changeTableSort" :data=helpList :header-cell-style="{
-                background: 'rgba(240, 240, 240, 1)', color: '#000000'
-            }">
-                <el-table-column label=序号 type=index />
-                <el-table-column label=SN prop=sn />
-                <el-table-column label=状态 prop=status>
+        <!-- 表格 -->
+        <div class="table_container app_card">
+            <el-table type=index @sort-change="changeTableSort" :data=helpList stripe>
+                <el-table-column label=序号 type=index align="center" width="60px"/>
+                <el-table-column label=SN prop=sn align="center"/>
+                <el-table-column label=状态 prop=status align="center">
                     <template #default=scope>
                         <el-tag>
                             {{ scope.row["state"] == 1 ? "已处理" : "待处理" }}
@@ -42,31 +39,29 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label=求助时间 prop=helpTime :sortable="'custom'">
-
+                <el-table-column label=求助时间 prop=helpTime :sortable="'custom'"  align="center">
                 </el-table-column>
 
 
-                <el-table-column label=处理时间 prop=handleTime sortable />
-                <el-table-column label=历时 prop=consumeTime />
-                <el-table-column label=处理人 prop=handlerName />
-                <el-table-column label=管理员 prop=managerName />
-                <el-table-column label=指派时间 prop=assignTime />
+                <el-table-column label=处理时间 prop=handleTime sortable align="center"/>
+                <el-table-column label=历时 prop=consumeTime align="center"/>
+                <el-table-column label=处理人 prop=handlerName align="center"/>
+                <el-table-column label=管理员 prop=managerName align="center"/>
+                <el-table-column label=指派时间 prop=assignTime align="center"/>
                 <el-table-column label=备注 prop=info />
-                <el-table-column label=操作 prop=status>
+                <el-table-column label=操作 prop=status align="center">
                     <template #default="scope">
                         <el-button size="small" text type="success" @click="handleEdit(scope.row)">处理</el-button>
 
                     </template>
                 </el-table-column>
             </el-table>
-        </el-row>
-
-        <el-row type=flex justify=center>
             <Pagination :total=total :currentPage=helpHandling.currentPage :pageSize=helpHandling.pageSize
                 @pageChange=currentChange>
             </Pagination>
-        </el-row>
+        </div>
+
+
 
     </div>
 </template>
@@ -180,33 +175,29 @@ const chooseStatus = () => {
 </script>
 
 <style lang=scss scoped>
+.search_container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    
 
-    .help_search {
-        width: 100%;
-        height: 40px;
-        font-size: 14px;
-
-       
-       .help_search_state{
-        display: flex;
-        .help_search_zt{
-            width: 60px;
-            text-align: center;
-            line-height: 30px;
-        } 
-      
-        .el_tag_uncount {
-            vertical-align: middle;
-            height: 35px;
-
-            .el-icon {
-                display: inline-block;
-                margin-right: 5px;
-            }
-        }
-       }
-
+    .state{
+        margin-left: 10px;       
     }
+    .tag{
+        margin-left: auto;
+    }
+    .el_tag_uncount {
+        margin-right: 0px;
+        vertical-align: middle;
+        height: 35px;
+        
 
-
+        .el-icon {
+            display: inline-block;
+            margin-right: 5px;
+        }
+    }
+}
 </style>

@@ -17,8 +17,7 @@
     
 <script setup lang='ts'>
 import * as echarts from 'echarts'
-import { ref, watch ,onUnmounted} from 'vue'
-
+import { ref, watch, onUnmounted, onMounted } from 'vue'
 const props = defineProps({
     totalArea: {
         type: Number,
@@ -29,36 +28,13 @@ const props = defineProps({
         default: 0,
     },
 });
-
 let todayArea = ref<number>()
 let totalArea = ref<number>()
+
 let bar1 = ref();
 let bar2 = ref();
-
-let myChart=echarts
-
-
-// onMounted(() => {
-//     // initEcharts()
-
-// })
-
-
-
-watch(props, (newValue) => {
-    todayArea.value = newValue.todayArea
-    totalArea.value = newValue.totalArea
-    option1.series[0].data = [todayArea.value, 100 - todayArea.value]
-    option2.series[0].data = [totalArea.value, 100 - totalArea.value]
-    initEcharts()
-});
-
-onUnmounted(() => {
-      // 销毁图表
-      echarts.dispose;
-    });
-
-
+var mycharts1: any;
+var mycharts2: any;
 // 渐变色
 const gradientColor = {
     type: 'linear',
@@ -74,14 +50,6 @@ const gradientColor = {
         color: 'rgba(0, 255, 166, 1)'
     }]
 };
-const initEcharts = () => {
-    let mycharts1 = myChart.init(bar1.value)
-    let mycharts2 = echarts.init(bar2.value)
-
-    mycharts1.setOption(option1)
-    mycharts2.setOption(option2)
-}
-
 let option1 = {
     tooltip: {
         trigger: 'item'
@@ -174,7 +142,38 @@ let option2 = {
         }
     ]
 };
-// console.log('option',option.series[0].data)
+
+
+const initEcharts = () => {
+    mycharts1 = echarts.init(bar1.value)
+    mycharts2 = echarts.init(bar2.value)
+
+    mycharts1.setOption(option1)
+    mycharts2.setOption(option2)
+}
+onMounted(() => {
+    initEcharts()
+})
+
+
+
+watch(props, (newValue) => {
+    todayArea.value = newValue.todayArea
+    totalArea.value = newValue.totalArea
+    option1.series[0].data = [todayArea.value, 100 - todayArea.value]
+    option2.series[0].data = [totalArea.value, 100 - totalArea.value]
+
+    mycharts1.setOption(option1)
+    mycharts2.setOption(option2)
+});
+
+onUnmounted(() => {
+    mycharts1.dispose;
+    mycharts2.dispose;
+});
+
+
+
 </script>
 <style lang="scss" scoped>
 .box {
