@@ -23,7 +23,7 @@
 </template>
   
 <script setup lang='ts'>
-import { ref, onMounted} from "vue";
+import { ref, onMounted,onUnmounted,watch} from "vue";
 import Top from "./component/top.vue";
 import Year from "./component/year.vue";
 import Workarea from "./component/workarea.vue";
@@ -31,21 +31,6 @@ import State from "./component/state.vue";
 import Online from "./component/online.vue"
 import { getMonitorAPI } from '@/api/perception/index.ts'
 import type { MonitorObj } from '@/api/perception/type'
-
-let screen = ref();
-onMounted(() => {
-    screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
-});
-window.onresize = () => {
-    screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
-};
-function getScale(w = 1920, h = 937) {
-    const ww = window.innerWidth / w;
-    const wh = window.innerHeight / h;
-    return ww < wh ? ww : wh;
-}
-
-
 // 监测数据
 const monitorData = ref<MonitorObj>()
 
@@ -67,10 +52,45 @@ const getMonitor = async () => {
     totalArea.value=res.data.totalArea
     typeCounts.value=res.data.typeCounts
     provinceCars.value=res.data.provinceCars
-
 }
 
-getMonitor()
+// 屏幕
+let screen = ref();
+// 当前时间
+const curTime = ref<number>(Date.now())
+
+const setCurTime = () => {
+  curTime.value = Date.now()
+}
+// 定时器
+const timer=setInterval(()=>{
+    setCurTime()
+},10000)
+
+
+watch(curTime,()=>{
+    getMonitor()
+})
+
+onMounted(() => {
+    getMonitor()
+    screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
+});
+
+onUnmounted(()=>{
+    clearInterval(timer)
+})
+
+
+window.onresize = () => {
+    screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
+};
+function getScale(w = 1920, h = 937) {
+    const ww = window.innerWidth / w;
+    const wh = window.innerHeight / h;
+    return ww < wh ? ww : wh;
+}
+
 
 // 实时监听
 

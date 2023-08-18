@@ -44,8 +44,7 @@ onMounted(() => {
 })
 
 watch(props, (newValue) => {
-    fmData.value = newValue.farmMachineData
-    console.log('ccfarmMachineData', props.farmMachineData?.provinceRank[1])
+    fmData.value = newValue.farmMachineData   
 });
 </script>
 

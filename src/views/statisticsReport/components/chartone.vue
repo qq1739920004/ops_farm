@@ -69,7 +69,6 @@ onMounted(()=>{
 
 watch(props, (newValue) => {
     fmData.value=newValue.farmMachineData
-    console.log('  farmMachineData', props.farmMachineData)
 });
 
 

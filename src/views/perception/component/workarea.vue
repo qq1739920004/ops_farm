@@ -14,31 +14,12 @@
     
 <script setup lang='ts'>
 import * as echarts from 'echarts'
-import { ref, toRaw, watch } from 'vue'
+import { ref, toRaw, watch, onUnmounted, onMounted } from 'vue'
 
 const props = defineProps(['carArea'])
 const carname = toRaw(props.carArea)
-
 const listy = Object.values(carname)
 const listx = Object.keys(carname)
-// 模拟数据
-// listx.push('car2','car1',)
-// listy.push(12,13,)
-
-// 获取图表节点
-let bar = ref();
-
-
-const initEcharts = () => {
-  let mycharts = echarts.init(bar.value)
-  mycharts.setOption(option)
-}
-watch(props, (newValue) => {
-  option.yAxis.data = Object.keys(newValue.carArea)
-  option.series[0].data = Object.values(newValue.carArea)
-  initEcharts()
-})
-
 const option = {
   xAxis: {
     type: 'value',
@@ -79,6 +60,30 @@ const option = {
     }
   ]
 };
+// 获取图表节点
+let bar = ref();
+var mycharts: any;
+
+const initEcharts = () => {
+  mycharts = echarts.init(bar.value)
+  mycharts.setOption(option)
+}
+
+onMounted(() => {
+  initEcharts()
+})
+
+
+watch(props, (newValue) => {
+  option.yAxis.data = Object.keys(newValue.carArea)
+  option.series[0].data = Object.values(newValue.carArea)
+  mycharts.setOption(option)
+})
+
+onUnmounted(() => {
+  mycharts.dispose;
+});
+
 </script>
 
 <style lang="scss" scoped>

@@ -50,11 +50,34 @@ import Chartfour from './components/chartfour.vue'
 import Chartfive from './components/chartfive.vue'
 import Chartsix from './components/chartsix.vue'
 import Chartseven from './components/chartseven.vue'
-import {ref} from 'vue'
+import {onUnmounted, ref, watch,onMounted} from 'vue'
 import {getStatisticsReportfarmMachineAPI} from '@/api/statisticsReport/index'
 import type {FarmMachineObj} from '@/api/statisticsReport/type'
-
 const farmMachineData=ref<FarmMachineObj>()
+
+
+const curTime = ref<number>(Date.now())
+const setCurTime = () => {
+  curTime.value = Date.now()
+}
+const timer=setInterval(()=>{
+    setCurTime()
+},10000)
+
+
+
+
+onMounted(()=>{
+    clearInterval(timer)
+    getStatisticsReportfarmMachine()
+})
+
+watch(curTime,()=>{
+    getStatisticsReportfarmMachine()
+    console.log("刷新数据")
+})
+
+
 
 
 // 农机数据统计
@@ -64,7 +87,7 @@ const getStatisticsReportfarmMachine=async()=>{
     farmMachineData.value=res.data
     // console.log(res.data)
    }catch(err){
-    console.log(err)
+    console.log(err,'haha')
    }    
 }
 // // 功能统计，参数同步统计
@@ -73,7 +96,10 @@ const getStatisticsReportfarmMachine=async()=>{
 //     console.log(res)
  
 // }
-getStatisticsReportfarmMachine()
+
+onUnmounted(()=>{
+    clearInterval(timer)
+})
 
 </script>
 

@@ -37,10 +37,9 @@ const props = defineProps({
         type: Object
     }
 })
-// let list=ref
+
 // watch(props, (newValue) => {
-//     JSON.parse(JSON.stringify(newValue.provinceCars))
-//     console.log('prps:', newValue.provinceCars)
+//     JSON.parse(JSON.stringify(newValue.provinceCars))   
 // })
 
 </script>
