@@ -3,16 +3,10 @@
         <div class="middle-area">
             <div class="input_area">
                 <el-select v-model="pageInfo.companyId" class="input-with-select" placeholder="请选择" @blur="changeBlur1">
-                    <el-option :value="0" label="xxxxx0" />
-                    <el-option :value="1" label="xxxxx1" />
-                    <el-option :value="2" label="xxxxx2" />
-                    <el-option :value="3" label="xxxxx3" />
+                    <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
                 <el-select v-model="pageInfo.carId" class="m-2" placeholder="请选择" @blur="changeBlur2">
-                    <el-option :value="0" label="xxx0" />
-                    <el-option :value="1" label="xxx1" />
-                    <el-option :value="2" label="xxx2" />
-                    <el-option :value="3" label="xxx3" />
+                    <el-option v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id" :key="item.id"></el-option>
                 </el-select>
             </div>
             <div class="time">
@@ -85,8 +79,10 @@
 <script setup lang='ts'>
 import { reactive, ref, watch } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
-import { paddyWorkList_API } from '@/api/jobManagement/index'
-import { PageObj, paddyWorkListResponsenumber, paddyWorkObj } from '@/api/jobManagement/type'
+import { paddyWorkList_API, getCarDealerList_API } from '@/api/jobManagement/index'
+import { carDealer_API } from '@/api/machineryList/index'
+import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, dealerCarResponseData } from '@/api/jobManagement/type'
+import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 
 // 时间格式转换
 function add0(m: any) {
@@ -103,25 +99,39 @@ const formartDate = (val: Date) => {
 }
 // 提交数据
 const pageInfo = reactive<PageObj>({
-    carId: 0,
+    carId: 10005,
     name: '',
-    companyId: 0,
+    companyId: 3,
     currentPage: 1,
     pageSize: 3,
-    st: formartDate(new Date()),
-    et: formartDate(new Date())
+    st: '',
+    et: ''
 })
-
-const value1 = ref<Date>(new Date())
-const value2 = ref<Date>(new Date())
-const isActive = ref<number>(1)
+const CarDealerList = reactive<dealerCarObj[]>([])
+const value1 = ref<Date>()
+const value2 = ref<Date>()
+const isActive = ref<number>(0)
 const a = ref<Date>()
 const total = ref<number>(10)
+// 页码变化
 const currentChange = (val: any) => {
     pageInfo.currentPage = val.currentPage
     pageInfo.pageSize = val.pageSize
     getPaddyWorkList()
 }
+// 经销商列表
+const dealerList = ref<carDealerObj[]>([])
+const getDealerList = async () => {
+    const res: carDealerResponseData = await carDealer_API()
+    dealerList.value = res.data
+}
+getDealerList()
+// 获取经销商下车辆列表
+const getDealerCarList = async () => {
+    const res: dealerCarResponseData = await getCarDealerList_API(pageInfo.companyId)
+    Object.assign(CarDealerList, res.data)
+}
+getDealerCarList()
 // 获取列表数据
 const paddyWorkList = ref<paddyWorkObj[]>([])
 const getPaddyWorkList = async () => {
@@ -200,7 +210,7 @@ const changeA = () => {
     margin: 0px 10px 0 10px;
     height: 60px;
     align-items: center;
-    
+
 
     .input_area {
         display: flex;
@@ -213,7 +223,7 @@ const changeA = () => {
             opacity: 1;
             border-radius: 4px;
             background: rgba(255, 255, 255, 1);
-            border: 1px  rgba(220, 223, 230, 1);
+            border: 1px rgba(220, 223, 230, 1);
         }
 
         .m-2 {
@@ -222,7 +232,7 @@ const changeA = () => {
             opacity: 1;
             border-radius: 4px;
             background: rgba(255, 255, 255, 1);
-            border: 1px  rgba(220, 223, 230, 1);
+            border: 1px rgba(220, 223, 230, 1);
         }
 
     }

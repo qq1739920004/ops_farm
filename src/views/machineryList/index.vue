@@ -151,7 +151,7 @@
                                 @click="gotoMachineDetail(row.id, row.terminalType)">详情 </el-button>
                             <el-button class="elbutton" size="small" text>历史轨迹</el-button>
                             <el-button text class="elbutton" size="small"
-                                @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn)">远程调参</el-button>
+                                @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.name)">远程调参</el-button>
                             <el-button text class="elbutton" size="small">文件存储</el-button>
                             <el-button text class="elbutton" size="small" @click="gotoRegister">注册</el-button>
                         </div>
@@ -168,13 +168,16 @@
         <CarModuleDia ref="carModuleD"></CarModuleDia>
         <MachineDetailDia ref="MachineD" :carId="carId" :terminalType="terminalType"></MachineDetailDia>
         <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
-            :sn="sn">
+            :sn="sn" :name="name">
         </RemoteAdjustDia360>
-        <RemoteAdjustDia302 ref="RemoteD302" :terminalType="terminalType" :version="version" :type="type" :carId="carId">
+        <RemoteAdjustDia302 ref="RemoteD302" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
+            :sn="sn" :name="name">
         </RemoteAdjustDia302>
-        <RemoteAdjustDia502 ref="RemoteD502" :terminalType="terminalType" :version="version" :type="type" :carId="carId">
+        <RemoteAdjustDia502 ref="RemoteD502" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
+            :sn="sn" :name="name">
         </RemoteAdjustDia502>
         <RegisterDia ref='RegisterD'></RegisterDia>
+        
     </div>
 </template>
 
@@ -209,6 +212,7 @@ const RemoteD502 = ref()
 const RegisterD = ref()
 const version = ref<string>('')
 const type = ref<string>('')
+const name = ref<string>('')
 // 车辆列表
 const carNewList = ref<newListObj[]>([])
 // 车辆ID 
@@ -256,20 +260,19 @@ const gotoMachineDetail = (val: any, val2: any) => {
     terminalType.value = val2
     MachineD.value.dialogVisible = true
 }
-const gotoRemote = (val: any, val2: any, val3: any, val4: any, val5: any) => {
+const gotoRemote = (val: any, val2: any, val3: any, val4: any, val5: any, val6: any) => {
     terminalType.value = val
     version.value = val2
     type.value = val3
     carId.value = val4
     sn.value = val5
+    name.value = val6
     if (terminalType.value == 'AG360') {
         RemoteD.value.dialogVisible = true
     } if (terminalType.value == 'AG302') {
         RemoteD302.value.dialogVisible = true
     } if (terminalType.value == 'AG502') {
         RemoteD502.value.dialogVisible = true
-    } else {
-        RemoteD.value.dialogVisible = true
     }
     nextTick(() => {
         RemoteD.value.carFormRef?.clearValidate()
@@ -288,7 +291,7 @@ const getCarList = async () => {
 
 
 // 取消首次触发change钩子
-const beforeSwitchChange = (val: any) => {
+const beforeSwitchChange = () => {
     switchStatus.value = true;
     return switchStatus.value;
 }

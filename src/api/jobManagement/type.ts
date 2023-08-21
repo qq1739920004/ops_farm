@@ -1,4 +1,4 @@
-export interface Responsenumber {
+export interface ResponseData {
     message?: string,
     code?: number,
 }
@@ -43,9 +43,18 @@ export interface paddyWorkObj {
     minradius: number
 }
 
-export interface paddyWorkListResponsenumber extends Responsenumber {
+export interface paddyWorkListResponsenumber extends ResponseData {
     data: {
         total: number,
         records: paddyWorkObj[]
     }
+}
+
+export interface dealerCarObj {
+    id: number,
+    nameNpn: string,
+    sn: number
+}
+export interface dealerCarResponseData extends ResponseData {
+    data: dealerCarObj[]
 }

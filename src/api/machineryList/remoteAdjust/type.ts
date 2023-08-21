@@ -1,3 +1,5 @@
+import { newListObj } from "../type"
+
 export interface ResponseData {
     message?: string,
     code?: number,
@@ -75,6 +77,9 @@ export interface paramcalibParamData extends ResponseData {
         paramJson: string
     }
 }
+export interface paramAdvanced1ParamData extends ResponseData {
+    data: paramcalibParamData
+}
 // 获取源节点参数
 export interface paramSourceNodeREsponseData extends ResponseData {
     data: string[]
@@ -138,11 +143,15 @@ export interface updateCarResponseData extends ResponseData {
 export interface updateCarObj {
     id: number,
     workPattern: string,
-    insideHost: string,
-    insidePort: number,
-    insideSourceNode: string | null,
-    insideUsername: string,
-    insidePassword: string
+    insideHost?: string,
+    insidePort?: number,
+    insideSourceNode?: string | null,
+    insideUsername?: string,
+    insidePassword?: string,
+    protocol?: number,
+    radioChannel?: number,
+    radioStatus?: number,
+    radioPower?: number,
 }
 export interface carProductpackageObj {
     pid: string,
@@ -193,4 +202,11 @@ export interface GetcarProductpackageObj {
 }
 export interface GetcarProductpackageResponseData extends ResponseData {
     data: GetcarProductpackageObj[]
+}
+// 在线升级参数更新
+export interface CarpackageUpgradeInfoObj {
+    installPackageId: number,
+    sn: string,
+    updateModel?: string,
+    upgradeWay: number
 }

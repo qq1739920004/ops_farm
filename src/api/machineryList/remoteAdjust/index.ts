@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { paramDescribeObj, paramDescribeResponseData, paramCarParamResponseData, paramcalibParamData, updateInfoObj, SourceObj, paramSourceNodeREsponseData, updateCarResponseData, updateCarObj,carProductpackageObj,GetcarProductpackageResponseData } from './type'
+import { paramDescribeObj, paramDescribeResponseData, paramCarParamResponseData, paramcalibParamData, updateInfoObj, SourceObj, paramSourceNodeREsponseData, updateCarResponseData, updateCarObj, carProductpackageObj, GetcarProductpackageResponseData, CarpackageUpgradeInfoObj } from './type'
 // 获取远程参数列表
 export function paramParamDescribe_API(data: paramDescribeObj) {
     return request<any, paramDescribeResponseData>({
@@ -52,6 +52,51 @@ export function updatePidParm_API(params: updateInfoObj) {
         params
     })
 }
+// 基本参数basicParamParam_API
+export function basicParam_API(carId: Number) {
+    return request<any, paramcalibParamData>({
+        url: `/param/basicParam/get?carId=${carId}`,
+        method: 'get',
+    })
+}
+// PID曲线参数
+export function pidCurveParam_API(carId: Number) {
+    return request<any, paramcalibParamData>({
+        url: `/param/pidCurveParam/get?carId=${carId}`,
+        method: 'get',
+    })
+}
+// PID曲线参数更新
+export function updatePidCurveParm_API(params: updateInfoObj) {
+    return request<any, any>({
+        url: '/param/pidCurveParam/update',
+        method: 'post',
+        params
+    })
+}
+// 更新基本参数
+export function updateBasicParm_API(params: updateInfoObj) {
+    return request<any, any>({
+        url: '/param/basicParam/update',
+        method: 'post',
+        params
+    })
+}
+// PID超低速曲线参数/param/pidSlsParam/get
+export function pidSlsParam_API(carId: Number) {
+    return request<any, paramcalibParamData>({
+        url: `/param/pidSlsParam/get?carId=${carId}`,
+        method: 'get',
+    })
+}
+// PID超低速曲线参数更新/param/pidSlsParam/update
+export function updatepidSlsParam_API(params: updateInfoObj) {
+    return request<any, any>({
+        url: '/param/pidSlsParam/update',
+        method: 'post',
+        params
+    })
+}
 // 差分设置获取源节点
 export function getSourceNode_path(params: SourceObj) {
     return request<any, paramSourceNodeREsponseData>({
@@ -73,6 +118,37 @@ export function GetcarProductpackage_API(params: carProductpackageObj) {
     return request<any, GetcarProductpackageResponseData>({
         url: '/car/productPackage',
         method: 'get',
+        params
+    })
+}
+// 在线升级更新 /car/packageUpgrade
+export function packageUpgradeCar_API(params: CarpackageUpgradeInfoObj) {
+    return request<any, any>({
+        url: '/car/packageUpgrade',
+        method: 'post',
+        params
+    })
+}
+// 获取PID曲线参数/param/pidCurveParam/get
+export function GetParamPidCurveParam_API(params: carProductpackageObj) {
+    return request<any, GetcarProductpackageResponseData>({
+        url: '/car/productPackage',
+        method: 'get',
+        params
+    })
+}
+// 获取高级参数数据
+export function getAdvanced1Param_API(carId: Number) {
+    return request<any, any>({
+        url: `/param/advanced1Param/get?carId=${carId}`,
+        method: 'get',
+    })
+}
+// 更新高级参数数据
+export function advanced1ParamUpdate_API(params: updateInfoObj) {
+    return request<any, any>({
+        url: '/param/advanced1Param/update',
+        method: 'post',
         params
     })
 }

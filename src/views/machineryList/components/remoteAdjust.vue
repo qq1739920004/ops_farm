@@ -4,8 +4,8 @@
         <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" v-model="dialogVisible" title="远程管理" width="1112px"
             height="496px" center>
             <div class="top">
-                <span>车辆名称：</span>
-                <span>车辆类型：{{ props.terminalType }}</span>360
+                <span style="margin-right: 20px;">车辆名称：{{ props.name || '/' }}</span>
+                <span>车辆类型：{{ props.terminalType }}</span>
             </div>
             <div class="menuArea">
                 <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
@@ -13,11 +13,6 @@
                     <el-menu-item index="1">车辆参数</el-menu-item>
                     <el-menu-item index="2">校准参数</el-menu-item>
                     <el-menu-item index="3">PID参数</el-menu-item>
-                    <!--
-                    <el-menu-item index="9" v-if="carKind == 'AG302'">PID曲线参数</el-menu-item>
-                    <el-menu-item index="10" v-if="carKind == 'AG302'">PID超低速参数</el-menu-item> -->
-                    <!-- <el-menu-item index="4">基本参数</el-menu-item>
-                    <el-menu-item index="8">高级参数1</el-menu-item> -->
                     <el-menu-item index="5" @click="gotoChafen">差分设置</el-menu-item>
                     <el-menu-item index="6">在线升级</el-menu-item>
                     <el-menu-item index="7">日志回传</el-menu-item>
@@ -179,17 +174,18 @@
                             <el-form-item class="item" label="版本选择：" prop="name">
                                 <el-select style=" width: 280px;
                 height: 32px;" v-model="formLabelAlign.filename">
-                                    <el-option v-for="(item,index) in productList" :key="index" :value="index" :label="item.filename"></el-option>
+                                    <el-option v-for="(item, index) in productList" :key="index" :value="index"
+                                        :label="item.filename"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
                     </el-row>
 
                     <div class="buttonarea">
-                        <el-button type="danger">强制升级</el-button>
+                        <el-button type="danger" @click="updateProductListBtn">强制升级</el-button>
                     </div>
                 </el-form>
-                <!--
+
                 <el-form v-show="activeIndex == '7'" :rules="rules" :inline="true" :label-position="labelPosition"
                     label-width="160px" :model="formLabelAlign" style="max-width: 1012px;margin-bottom:20px">
 
@@ -209,7 +205,7 @@
                     <div class="buttonarea">
                         <el-button type="primary">回传</el-button>
                     </div>
-                </el-form> -->
+                </el-form>
             </div>
         </el-dialog>
     </div>
@@ -219,7 +215,7 @@
 import { ElMessage } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, carParamsDataObj, paramsParamObj, paramCarParamResponseData, paramcalibParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, updateCarResponseData, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
-import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, pidParamParam_API, getSourceNode_path, updateCar_API, updatePidParm_API, updateCalibParam_API, GetcarProductpackage_API } from '@/api/machineryList/remoteAdjust/index'
+import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, pidParamParam_API, getSourceNode_path, updateCar_API, updatePidParm_API, updateCalibParam_API, GetcarProductpackage_API, packageUpgradeCar_API } from '@/api/machineryList/remoteAdjust/index'
 import { carNewList_API } from '@/api/machineryList/index'
 import { pageInfo } from '@/api/machineryList/type'
 
@@ -227,7 +223,7 @@ const carFormRef = ref()
 const dialogVisible = ref<boolean>(false)
 const activeIndex = ref<string>('1')
 const labelPosition = ref('right')
-const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn'])
+const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn', 'name'])
 const carParamsData = ref<carParamsDataObj[] | null>([])
 const CalibTitleData = ref<carParamsDataObj[] | null>([])
 const PidTitleData = ref<{}[] | null>([])
@@ -317,13 +313,8 @@ const formLabelAlign = reactive({
     radio1: '11',
     radio2: '2',
     pid: '11001',
-    filename:0
+    filename: 0
 })
-
-const getProductList = async () => {
-    const res: GetcarProductpackageResponseData = await GetcarProductpackage_API({ 'pid': formLabelAlign.pid, 'versionType': formLabelAlign.radio2 })
-    productList.value = res.data
-}
 
 const paramDescribeList = ref<paramDescribeObj>({
     version: '',
@@ -401,7 +392,7 @@ const getCarParams = async (val: string) => {
 // 获取车辆参数对应的值
 const getParamParams = async () => {
     const res: paramCarParamResponseData = await paramCarParam_API(props.carId)
-    Object.assign(paramParamsData, JSON.parse(res.data.paramJson))
+    res.data ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
 }
 const openRemoteAdjust = () => {
     // 强制更改index为1
@@ -451,7 +442,7 @@ const updatePidParams = async () => {
     }
 
 }
-// 更新校准参数更新校准数据updateCalibParam_API
+// 更新校准参数更新校准数据
 const updateCalibParams = async () => {
     updateInfo.value.carId = props.carId
     updateInfo.value.paramJson = (JSON.stringify(PidParamsData))
@@ -467,18 +458,18 @@ const updateCalibParams = async () => {
 // 获取校准参数对应的值
 const getCalib = async () => {
     const res: paramcalibParamData = await paramCalibParam_API(props.carId)
-    Object.assign(CalibParamsData, JSON.parse(res.data.paramJson))
+    res.data ?Object.assign(CalibParamsData, JSON.parse(res.data.paramJson)):''
 }
 // PID参数对应的值
 const getPid = async () => {
     const res: paramcalibParamData = await pidParamParam_API((props.carId))
-    Object.assign(PidParamsData, JSON.parse(res.data.paramJson))
+    res.data ?Object.assign(PidParamsData, JSON.parse(res.data.paramJson)):''
 }
 
 const dateValue = ref<Date[]>([new Date(), new Date()])
 
 const changeDate = () => {
-    console.log(dateValue.value);
+    console.log(formartDate(dateValue.value[0]), formartDate(dateValue.value[1]));
 
 }
 const handleSelect = (key: string) => {
@@ -533,6 +524,25 @@ const gotoChafen = () => {
     workPattern.value.type = '3'
 }
 
+// 获取在线升级数据
+const getProductList = async () => {
+    const res: GetcarProductpackageResponseData = await GetcarProductpackage_API({ 'pid': formLabelAlign.pid, 'versionType': formLabelAlign.radio2 })
+    productList.value = res.data
+}
+// 在线升级更新数据
+const updateProductList = async () => {
+    const res: any = await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'updateModel': formLabelAlign.radio1, 'upgradeWay': 2 })
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '修改成功' })
+    }
+    else {
+        ElMessage({ type: 'error', message: '修改失败' })
+    }
+}
+const updateProductListBtn = () => {
+    updateProductList()
+}
+
 const disabledDate = (time: Date) => {
     return time.getTime() > Date.now()
 }
@@ -560,6 +570,20 @@ const rules = {
     Vehicle18: [{ required: true, message: '请输入值', trigger: 'blur' }],
 
 
+}
+
+// 时间格式转换
+function add0(m: any) {
+    return m < 10 ? '0' + m : m;
+}
+const formartDate = (val: Date) => {
+    var y = val.getFullYear();
+    var m = val.getMonth() + 1;
+    var d = val.getDate();
+    var h = val.getHours();
+    var mm = val.getMinutes();
+    var s = val.getSeconds();
+    return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s);
 }
 </script>
 
