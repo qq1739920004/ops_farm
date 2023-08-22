@@ -1,12 +1,13 @@
 <template>
     <div class='app_container'>
-        <div class="middle-area">
+        <div class="search_container app_card">
             <div class="input_area">
                 <el-select v-model="pageInfo.companyId" class="input-with-select" placeholder="请选择" @blur="changeBlur1">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
                 <el-select v-model="pageInfo.carId" class="m-2" placeholder="请选择" @blur="changeBlur2">
-                    <el-option v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id" :key="item.id"></el-option>
+                    <el-option v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
+                        :key="item.id"></el-option>
                 </el-select>
             </div>
             <div class="time">
@@ -26,57 +27,22 @@
                 </div>
             </div>
             <div class="button_area">
-                <el-button type="success" class="btn1" @click="openExportDia">导出</el-button>
-                <el-button icon="MapLocation" class="btn2"></el-button>
+                <el-button type="primary"  @click="openExportDia">导出</el-button>
+                <el-button type="primary" icon="MapLocation" class="btn2"></el-button>
             </div>
         </div>
-        <div class="tableArea">
-            <el-table
-                :header-cell-style="{ background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px' }"
-                :data="paddyWorkList">
-                <el-table-column type="index" width="80" label="序号" align="center" />
-                <el-table-column label="作业名称" show-overflow-tooltip prop="name" align="center">
-                </el-table-column>
-                <el-table-column label="作业类型" show-overflow-tooltip align="center">
-                    <template #="{ row }">
-                        <el-tag v-if="row.workType" type="success" round
-                            style="color:rgba(0, 125, 117, 1);width: 50px;height: 23px;background-color:rgba(168, 232, 227, 1)">播种</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column label="作业面积" show-overflow-tooltip align="center">
-                    <template #="{ row }">
-                        {{ row.workedArea }}亩</template>
-                </el-table-column>
-                <el-table-column label="作业周期" width="200" show-overflow-tooltip align="center">
-                    <template #="{ row }">
-                        <el-row justify="center">
-                            {{ row.createtime }}
-                        </el-row>
-                        <el-row justify="center">
-                            {{ row.updatetime }}
-                        </el-row>
-                    </template>
-                </el-table-column>
-                <el-table-column label="作业地点" prop="position" show-overflow-tooltip>
-                </el-table-column>
-                <el-table-column label="SN" show-overflow-tooltip prop="sn">
-                </el-table-column>
-                <el-table-column label="铭牌号" show-overflow-tooltip prop="npn">
-                </el-table-column>
-                <el-table-column label="所属车辆" show-overflow-tooltip prop="carName">
-                </el-table-column>
-
-            </el-table>
-        </div>
-        <div class="bottom">
+        <div class="table_container app_card">
+            <sn-table :paddyWorkList="paddyWorkList"></sn-table>
             <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
                 @pageChange="currentChange">
             </Pagination>
         </div>
+
     </div>
 </template>
 
 <script setup lang='ts'>
+import snTable from './components/sn-table.vue'
 import { reactive, ref, watch } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { paddyWorkList_API, getCarDealerList_API } from '@/api/jobManagement/index'
@@ -97,6 +63,8 @@ const formartDate = (val: Date) => {
     var s = val.getSeconds();
     return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s);
 }
+// 获取列表数据
+const paddyWorkList = ref<paddyWorkObj[]>([])
 // 提交数据
 const pageInfo = reactive<PageObj>({
     carId: 10005,
@@ -132,8 +100,7 @@ const getDealerCarList = async () => {
     Object.assign(CarDealerList, res.data)
 }
 getDealerCarList()
-// 获取列表数据
-const paddyWorkList = ref<paddyWorkObj[]>([])
+// 获取数据
 const getPaddyWorkList = async () => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
     total.value = res.data.total
@@ -194,8 +161,8 @@ const onYearClick = () => {
 }
 // 事件改变回调
 const changeA = () => {
-    pageInfo.st = formartDate(value1.value)
-    pageInfo.et = formartDate(value2.value)
+    pageInfo.st = formartDate(value1.value as Date)
+    pageInfo.et = formartDate(value2.value as Date)
     getPaddyWorkList()
     isActive.value = 0;
 }
@@ -204,12 +171,11 @@ const changeA = () => {
 </script>
 
 <style lang="scss" scoped>
-.middle-area {
+.search_container {
     display: flex;
     justify-content: space-between;
-    margin: 0px 10px 0 10px;
-    height: 60px;
-    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
 
 
     .input_area {

@@ -1,6 +1,6 @@
 <template>
     <div class='app_container'>
-        <div class="middle-area">
+        <div class="search_container app_card">
             <div class="input_area">
                 <el-input placeholder="请输入SN号" v-model="pageInfo.key" class="input-with-select"
                     @keyup.enter.native="search">
@@ -17,100 +17,95 @@
                     <el-option value="AG501" label="G501" />
                 </el-select>
             </div>
-            <div class="button_area">
-                <el-button type="success" class="btn1" icon="Search" @click="openExportDia">导出</el-button>
-                <el-button type="success" class="btn2" icon="Plus" @click="openDialog">新建</el-button>
+            <div>
+                <el-button type="primary" icon="Search" @click="openExportDia">导出</el-button>
+                <el-button type="primary" icon="Plus" @click="openDialog">新建</el-button>
             </div>
         </div>
-        <div>
-            <el-table :header-cell-style="{
-                background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px'
-            }" @selection-change="handleSelectionChange" style="width: 100%" :data="records" v-show="scence == '1'">
+        <div class="table_container app_card">
+            <el-table @selection-change="handleSelectionChange" :data="records" v-show="scence == '1'" stripe>
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
-                <el-table-column label="铭牌SN" width="180" show-overflow-tooltip>
+                <el-table-column label="铭牌SN" align="center">
                     <template #="{ row }">
                         {{ row.npn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="质保日期" width="140" show-overflow-tooltip>
+                <el-table-column label="质保日期" align="center">
                     <template #="{ row }">
-                        <el-tag
-                            style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
-                            class="mx-1" effect="dark">已到期</el-tag>
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) > Date.parse(new Date().toString())">
-                            {{
-                                row.warrantyDate.split(' ')[0] }}</div>
+                            {{ row.warrantyDate.split(' ')[0] }}</div>
                         <div v-if="!row.warrantyDate">
                             <el-tag
                                 style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
                                 class="mx-1" type="danger" effect="dark">未激活</el-tag>
                         </div>
+                        <div v-else> <el-tag
+                                style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
+                                class="mx-1" effect="dark">已到期</el-tag></div>
                     </template>
                 </el-table-column>
-                <el-table-column label="一体机SN" width="" show-overflow-tooltip>
+                <el-table-column label="一体机SN" align="center">
                     <template #="{ row }">
                         {{ row.sn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="HUB_SN" width="" show-overflow-tooltip>
+                <el-table-column label="HUB_SN" align="center">
                     <template #="{ row }">
                         {{ row.hubSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="电机SN" width="" show-overflow-tooltip>
+                <el-table-column label="电机SN" align="center">
                     <template #="{ row }">
                         {{ row.motorSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="多功能方向盘SN" width="" show-overflow-tooltip>
+                <el-table-column label="多功能方向盘SN" align="center">
                     <template #="{ row }">
                         {{ row.steeringWheelSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="车身IMU_SN" width="" show-overflow-tooltip>
+                <el-table-column label="车身IMU_SN" align="center">
                     <template #="{ row }">
                         {{ row.carImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="前轮IMU_SN" width="" show-overflow-tooltip>
+                <el-table-column label="前轮IMU_SN" align="center">
                     <template #="{ row }">
                         {{ row.wheelImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" show-overflow-tooltip align="center">
+                <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
                             <div class="left">
-                                <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
+                                <el-button type="primary" link @click="edit(row)">编辑 </el-button>
                                 <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
                                     @confirm="removeTradeMark(row.id)">
                                     <template #reference>
-                                        <el-button class="delete" size="small" text>删除</el-button>
+                                        <el-button type="danger" link>删除</el-button>
                                     </template>
                                 </el-popconfirm>
                             </div>
                             <div class="right">
-                                <el-button text size="small" @click="gotoAfterSale(row)" class="aftersale">售后</el-button>
-                                <el-button text size="small" class="aftersale">处理</el-button>
+                                <el-button type="primary" link @click="gotoAfterSale(row)">售后</el-button>
+                                <el-button type="primary" link>处理</el-button>
                             </div>
                         </div>
                     </template>
                 </el-table-column>
 
             </el-table>
-            <el-table @selection-change="handleSelectionChange" style="width: 100%" :header-cell-style="{
-                background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px'
-            }" :data="records" v-show="scence == '2'">
+            <el-table @selection-change="handleSelectionChange" :data="records" v-show="scence == '2'" stripe>
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
-                <el-table-column label="铭牌SN" width="180" show-overflow-tooltip>
+                <el-table-column label="铭牌SN" align="center">
                     <template #="{ row }">
                         {{ row.npn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="质保日期" width="140" show-overflow-tooltip>
+                <el-table-column label="质保日期" align="center">
                     <template #="{ row }">
                         <el-tag
                             style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
@@ -126,63 +121,61 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="平板SN" width="" show-overflow-tooltip>
+                <el-table-column label="平板SN" align="center">
                     <template #="{ row }">
                         {{ row.sn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="电机SN" width="" show-overflow-tooltip>
+                <el-table-column label="电机SN" align="center">
                     <template #="{ row }">
                         {{ row.motorSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="车身SN" width="" show-overflow-tooltip>
+                <el-table-column label="车身SN" align="center">
                     <template #="{ row }">
                         {{ row.carImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="天线1_SN" width="" show-overflow-tooltip>
+                <el-table-column label="天线1_SN" align="center">
                     <template #="{ row }">
                         {{ row.antennaOne || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="天线2_SN" width="" show-overflow-tooltip>
+                <el-table-column label="天线2_SN" align="center">
                     <template #="{ row }">
                         {{ row.antennaTwo || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" show-overflow-tooltip align="center">
+                <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
                             <div class="left">
-                                <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
+                                <el-button type="primary" link @click="edit(row)">编辑 </el-button>
                                 <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
                                     @confirm="removeTradeMark(row.id)">
                                     <template #reference>
-                                        <el-button class="delete" size="small" text>删除</el-button>
+                                        <el-button type="danger" link>删除</el-button>
                                     </template>
                                 </el-popconfirm>
                             </div>
                             <div class="right">
-                                <el-button text size="small" @click="gotoAfterSale(row)" class="aftersale">售后</el-button>
-                                <el-button text size="small" class="aftersale">处理</el-button>
+                                <el-button type="primary" link @click="gotoAfterSale(row)">售后</el-button>
+                                <el-button type="primary" link>处理</el-button>
                             </div>
                         </div>
                     </template>
                 </el-table-column>
 
             </el-table>
-            <el-table @selection-change="handleSelectionChange" style="width: 100%" :header-cell-style="{
-                background: 'rgba(247, 247, 247, 1)', height: '40px'
-            }" :data="records" v-show="scence == '3'">
+            <el-table @selection-change="handleSelectionChange" :data="records" v-show="scence == '3'" stripe>
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
-                <el-table-column label="铭牌SN" width="200" show-overflow-tooltip align="center">
+                <el-table-column label="铭牌SN" width="200" align="center">
                     <template #="{ row }">
                         {{ row.npn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="维保信息" width="280" show-overflow-tooltip align="center">
+                <el-table-column label="维保信息" align="center">
                     <template #="{ row }">
                         <el-popover placement="right" :width="200" trigger="hover" style="">
                             <template #reference>
@@ -237,54 +230,51 @@
                         </el-popover>
                     </template>
                 </el-table-column>
-                <el-table-column label="平板SN" width="" show-overflow-tooltip>
+                <el-table-column label="平板SN" align="center">
                     <template #="{ row }">
                         {{ row.sn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="电机SN" width="" show-overflow-tooltip>
+                <el-table-column label="电机SN" align="center">
                     <template #="{ row }">
                         {{ row.motorSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="车身SN" width="" show-overflow-tooltip>
+                <el-table-column label="车身SN" align="center">
                     <template #="{ row }">
                         {{ row.carImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="前轮SN" width="" show-overflow-tooltip>
+                <el-table-column label="前轮SN" align="center">
                     <template #="{ row }">
                         {{ row.wheelImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="天线1_SN" width="" show-overflow-tooltip>
+                <el-table-column label="天线1_SN" align="center">
                     <template #="{ row }">
                         {{ row.antennaOne || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" show-overflow-tooltip align="center">
+                <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
                             <div class="left">
-                                <el-button class="edit" size="small" @click="edit(row)" text>编辑 </el-button>
+                                <el-button type="primary" link @click="edit(row)">编辑 </el-button>
                                 <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
                                     @confirm="removeTradeMark(row.id)">
                                     <template #reference>
-                                        <el-button class="delete" size="small" text>删除</el-button>
+                                        <el-button type="danger" link>删除</el-button>
                                     </template>
                                 </el-popconfirm>
                             </div>
                             <div class="right">
-                                <el-button text size="small" @click="gotoAfterSale(row)" class="aftersale">售后</el-button>
-                                <el-button text size="small" class="aftersale">处理</el-button>
+                                <el-button type="primary" link @click="gotoAfterSale(row)">售后</el-button>
+                                <el-button type="primary" link>处理</el-button>
                             </div>
                         </div>
                     </template>
                 </el-table-column>
-
             </el-table>
-        </div>
-        <div class="bottom">
             <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
                 @pageChange="currentChange">
             </Pagination>
@@ -570,18 +560,16 @@ const openExportDia = () => {
 </script>
 
 <style lang="scss" scoped>
-
-
-.middle-area {
-    height: 60px;
+.search_container {
     display: flex;
     justify-content: space-between;
-    margin: 0 10px 0 10px;
-    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
 
     .input_area {
         display: flex;
         align-items: center;
+
         .input-with-select {
             margin-right: 30px;
             margin-left: 10px;
@@ -611,30 +599,11 @@ const openExportDia = () => {
             height: 32px;
             opacity: 1;
             border-radius: 4px;
-            border: 1px  rgba(220, 223, 230, 1);
+            border: 1px rgba(220, 223, 230, 1);
         }
 
     }
 
-    .button_area {
-        margin: 16px 10px;
-
-        .btn1 {
-            width: 107px;
-            height: 32px;
-            opacity: 1;
-            border-radius: 4px;
-            background: rgba(76, 176, 79, 1);
-        }
-
-        .btn2 {
-            width: 74px;
-            height: 32px;
-            opacity: 1;
-            border-radius: 4px;
-            background: rgba(76, 176, 79, 1);
-        }
-    }
 
 }
 
@@ -642,39 +611,10 @@ const openExportDia = () => {
     display: flex;
     align-items: center;
 
-    .left {
-        .edit {
-            margin-left: 10px;
-            margin-right: -15px;
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            line-height: 20.27px;
-            color: rgba(76, 176, 79, 1);
-            text-align: left;
-            vertical-align: top;
-        }
-
-        .delete {
-            margin-right: -15px;
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            line-height: 20.27px;
-            color: rgba(255, 87, 51, 1);
-            text-align: left;
-            vertical-align: top;
-        }
-    }
-
     .right {
         display: flex;
         flex-direction: column;
         align-items: end;
-
-        .aftersale {
-            color: rgba(76, 176, 79, 1);
-        }
     }
 }
 
@@ -684,7 +624,6 @@ const openExportDia = () => {
 }
 
 .dialog {
-
     .dia-input-words {
         font-size: 16px;
         font-weight: 400;
@@ -700,7 +639,6 @@ const openExportDia = () => {
         height: 32px;
         opacity: 1;
         border-radius: 2px;
-
         border: 1px solid rgba(220, 223, 230, 1);
     }
 

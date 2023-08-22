@@ -57,7 +57,7 @@ defineExpose({ //
     height: 316px;
     opacity: 1;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 1);
+
 
     .mainArea {
         font-size: 16px;

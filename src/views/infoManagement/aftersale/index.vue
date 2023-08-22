@@ -341,6 +341,8 @@ const changeHubSnBtn = async (val: string) => {
 
 <style lang="scss" scoped>
 .app-container {
+    height: 100%;
+    background-color: #fff;
     .middle-area {
         height: 24.25rem;
         margin-top: 20px;

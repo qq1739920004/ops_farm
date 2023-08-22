@@ -1,6 +1,6 @@
 <template>
     <div class="app_container">
-        <div class="middle-area">
+        <div class="search_container app_card">
             <div class="input_area">
                 <el-input placeholder="请输入SN号" v-model="pageInfo.key" class="input-with-select"
                     @keyup.enter.native="search">
@@ -14,17 +14,14 @@
                 </el-select>
             </div>
             <div class="button_area">
-                <el-button type="primary" class="btn1" @click="gotoInput">录入经销商设备</el-button>
-                <el-button type="primary" class="btn2" @click="gotoCarModule">查看车型模版</el-button>
+                <el-button type="primary" @click="gotoInput">录入经销商设备</el-button>
+                <el-button type="primary" @click="gotoCarModule">查看车型模版</el-button>
             </div>
         </div>
-        <div class='table_container'>
-            <el-table @sort-change="changesort" :header-cell-style="{
-                background: 'rgba(247, 247, 247, 1)', height: '40px', color: 'rgba(0, 0, 0, 1)', font: '14px'
-            }" style="width: 100%" :data="carNewList">
+        <div class="table_container app_card">
+            <el-table @sort-change="changesort" :data="carNewList" stripe>
                 <el-table-column type="index" label="序号" width="60" align="center" />
-
-                <el-table-column label="铭牌SN" show-overflow-tooltip>
+                <el-table-column label="铭牌SN" align="center">
                     <template #default="scope">
                         <div style="display: flex; align-items: center">
                             <el-icon>
@@ -34,30 +31,21 @@
                         </div>
                     </template>
                 </el-table-column>
-
-                <el-table-column label="SN" show-overflow-tooltip prop="sn">
-
+                <el-table-column label="SN" align="center" prop="sn">
                 </el-table-column>
-
-                <el-table-column label="车主姓名" show-overflow-tooltip prop="userName">
-
+                <el-table-column label="车主姓名" align="center" prop="userName">
                 </el-table-column>
-
-                <el-table-column label="车辆型号" show-overflow-tooltip prop="model" />
-
-                <el-table-column label="设备所在地" show-overflow-tooltip>
+                <el-table-column label="车辆型号" align="center" prop="model" />
+                <el-table-column label="设备所在地" align="center">
                     <template #="{ row }">
                         <div style="color: rgba(130, 130, 130, 1)">
                             {{ row.province }}
                         </div>
                     </template>
                 </el-table-column>
-
-                <el-table-column label="类型" show-overflow-tooltip prop="terminalType">
-
+                <el-table-column label="类型" align="center" prop="terminalType">
                 </el-table-column>
-
-                <el-table-column label="过期时间" show-overflow-tooltip>
+                <el-table-column label="过期时间" align="center">
                     <template #="{ row }">
                         <el-popover placement="right" :width="200" trigger="hover" style="">
                             <template #reference>
@@ -112,19 +100,17 @@
                         </el-popover>
                     </template>
                 </el-table-column>
-                <el-table-column sortable label="最近上线时间" show-overflow-tooltip prop="createtime" width="140">
+                <el-table-column sortable label="最近上线时间" align="center" prop="createtime">
                     <template #="{ row }">
                         {{ row.lastOnlineTime?.split(' ')[0] }}
                     </template>
                 </el-table-column>
-
-                <el-table-column label="公司/经销商" show-overflow-tooltip align="center">
+                <el-table-column label="公司/经销商" align="center">
                     <template #="{ row }">
                         {{ row.companyName || '/' }}
                     </template>
                 </el-table-column>
-
-                <el-table-column label="星基" show-overflow-tooltip align="center">
+                <el-table-column label="星基" align="center">
                     <template #="{ row }">
                         <!-- v-model="row.satelliteStatus" 
                             :active-value="1"
@@ -142,28 +128,23 @@
                             style="width: 48px;height: 20px; --el-switch-on-color: #13ce66; --el-switch-off-color: rgba(204, 204, 204, 1)" />
                     </template>
                 </el-table-column>
-
                 <!-- 说明  离线和自动驾驶状态不可编辑 -->
-                <el-table-column label="操作" width="350" show-overflow-tooltip>
+                <el-table-column label="操作" align="center" width="340">
                     <template #="{ row }">
-                        <div class="tableBtn">
-                            <el-button class="elbutton" size="small" text
-                                @click="gotoMachineDetail(row.id, row.terminalType)">详情 </el-button>
-                            <el-button class="elbutton" size="small" text>历史轨迹</el-button>
-                            <el-button text class="elbutton" size="small"
-                                @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.name)">远程调参</el-button>
-                            <el-button text class="elbutton" size="small">文件存储</el-button>
-                            <el-button text class="elbutton" size="small" @click="gotoRegister">注册</el-button>
-                        </div>
+                        <el-button type="primary" link @click="gotoMachineDetail(row.id, row.terminalType)">详情</el-button>
+                        <el-button type="primary" link>历史轨迹</el-button>
+                        <el-button type="primary" link
+                            @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.name)">远程调参</el-button>
+                        <el-button type="primary" link>文件存储</el-button>
+                        <el-button type="primary" link @click="gotoRegister">注册</el-button>
                     </template>
                 </el-table-column>
             </el-table>
-        </div>
-        <div class="bottom">
             <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
                 @pageChange="currentChange">
             </Pagination>
         </div>
+
         <InputDia ref="inputD"></InputDia>
         <CarModuleDia ref="carModuleD"></CarModuleDia>
         <MachineDetailDia ref="MachineD" :carId="carId" :terminalType="terminalType"></MachineDetailDia>
@@ -177,7 +158,7 @@
             :sn="sn" :name="name">
         </RemoteAdjustDia502>
         <RegisterDia ref='RegisterD'></RegisterDia>
-        
+
     </div>
 </template>
 
@@ -343,12 +324,11 @@ getCarList()
 </script>
 
 <style lang="scss" scoped>
-.middle-area {
-    height: 60px;
+.search_container {
     display: flex;
     justify-content: space-between;
-    margin: 0px 10px 0 10px;
-    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
 
     .input_area {
         .input-with-select {
@@ -376,19 +356,8 @@ getCarList()
 
 .table_container {
     .tableBtn {
-        .elbutton {
-            width: 57px;
-            height: 21px;
-            opacity: 1;
-            /** 文本1 */
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            line-height: 20.27px;
-            color: rgba(76, 176, 79, 1);
-            text-align: left;
-            vertical-align: top;
-        }
+        display: flex;
+
 
     }
 }
