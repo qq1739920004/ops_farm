@@ -4,31 +4,32 @@
         <el-dialog style="border-radius: 8px;" v-model="dialogVisible" title="注册设备" width="630px">
             <div class="content">
                 <div class="up">
-                    <span>注册设备SN号：</span>
+                    <span>注册设备SN号：{{ props.sn }}</span>
 
                 </div>
                 <div class="down">
                     <div>注册时长：</div>
-                    <el-radio-group v-model="radio" class="ml-4">
-                        <el-radio :label="3" size="small">Option A</el-radio>
-                        <el-radio :label="6" size="small">Option B</el-radio>
-                        <el-radio :label="9" size="small">Option C</el-radio>
-                        <el-radio :label="10" size="small">Option A</el-radio>
-                        <el-radio :label="11" size="small">Option B</el-radio>
-                        <el-radio :label="12" size="small">Option C</el-radio>
-                        <el-radio :label="13" size="small">Option A</el-radio>
-                        <el-radio :label="14" size="small">Option B</el-radio>
-                        <el-radio :label="15" size="small">Option C</el-radio>
+                    <el-radio-group v-model="date" class="ml-4">
+                        <el-radio :label="3">3天</el-radio>
+                        <el-radio :label="-1">立即过期</el-radio>
+                        <el-radio :label="7">7天</el-radio>
+                        <el-radio :label="15">15天</el-radio>
+                        <el-radio :label="20">20天</el-radio>
+                        <el-radio :label="30">1个月</el-radio>
+                        <el-radio :label="60">2个月</el-radio>
+                        <el-radio :label="180">6个月</el-radio>
+                        <el-radio :label="365">一年</el-radio>
+                        <el-radio :label="65535">永久</el-radio>
                     </el-radio-group>
                 </div>
             </div>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button @click="dialogVisible = false" style="color:rgba(76, 176, 79, 1)" link>下载模版</el-button>
-                    <el-button type="primary"
-                        style="background-color:rgba(76, 176, 79, 1);color:'#fff'; width: 100px;height: 38px;margin-left:50px"
-                        @click="dialogVisible = false">
-                        录入
+                    <el-button type="danger" @click="dialogVisible = false">
+                        取消
+                    </el-button>
+                    <el-button type="primary" @click="activationAddBtn">
+                        配置
                     </el-button>
                 </span>
             </template>
@@ -38,13 +39,23 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { activationCodeAdd_API } from '@/api/machineryList/index'
 const dialogVisible = ref<boolean>(false)
+const props = defineProps(['carId', 'sn', 'deviceId'])
 defineExpose({
     dialogVisible
 }
 )
-const radio = ref('3')
-
+const date = ref(3)
+const activationAddBtn = async () => {
+    dialogVisible.value = false
+    await activationCodeAdd_API({
+        carId: props.carId,
+        oemSn: props.sn,
+        deviceId: props.deviceId,
+        date: date.value
+    })
+}
 </script>
 
 <style lang="scss" scoped>

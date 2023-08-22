@@ -34,6 +34,7 @@
             <el-table-column label="所属车辆" prop="carName">
             </el-table-column>
         </el-table>
+        <slot></slot>
 </template>
 
 <script setup lang="ts">

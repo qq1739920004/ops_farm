@@ -1,288 +1,286 @@
 <!--  -->
 <template>
-    <div class="outsider">
-        <el-dialog @open="openRemoteAdjust" style="border-radius: 8px;" v-model="dialogVisible" title="远程管理" width="1112px"
-            height="516px" center>
-            <div class="top">
-                <span>车辆名称：</span>
-                <span>车辆类型：{{ props.terminalType }}</span>
-            </div>
-            <div class="menuArea">
-                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-                    active-text-color="rgba(76, 176, 79, 1)" active-background-color="rgba(76, 176, 79, 1)">
-                    <el-menu-item index="1">车辆参数</el-menu-item>
-                    <el-menu-item index="2">校准参数</el-menu-item>
-                    <el-menu-item index="3">PID参数</el-menu-item>
-                    <el-menu-item index="9">PID曲线参数</el-menu-item>
-                    <el-menu-item index="10">PID超低速参数</el-menu-item>
-                    <el-menu-item index="5" @click="gotoChafen">差分设置</el-menu-item>
-                    <el-menu-item index="6">在线升级</el-menu-item>
-                    <el-menu-item index="7">日志回传</el-menu-item>
-                </el-menu>
+    <el-dialog @open="openRemoteAdjust" style="border-radius: 8px;" v-model="dialogVisible" title="远程管理" width="1112px"
+        height="516px" center>
+        <div class="top">
+            <span>车辆名称：</span>
+            <span>车辆类型：{{ props.terminalType }}</span>
+        </div>
+        <div class="menuArea">
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+                active-text-color="rgba(76, 176, 79, 1)" active-background-color="rgba(76, 176, 79, 1)">
+                <el-menu-item index="1">车辆参数</el-menu-item>
+                <el-menu-item index="2">校准参数</el-menu-item>
+                <el-menu-item index="3">PID参数</el-menu-item>
+                <el-menu-item index="9">PID曲线参数</el-menu-item>
+                <el-menu-item index="10">PID超低速参数</el-menu-item>
+                <el-menu-item index="5" @click="gotoChafen">差分设置</el-menu-item>
+                <el-menu-item index="6">在线升级</el-menu-item>
+                <el-menu-item index="7">日志回传</el-menu-item>
+            </el-menu>
 
-            </div>
-            <div class="mainContent">
-                <el-form ref="carFormRef" v-show="activeIndex == '1'" :rules="rules" :inline="true"
-                    :label-position="labelPosition" label-width="160px" :model="paramParamsData"
-                    style="max-width: 1012px;margin-bottom:20px">
-                    <el-row>
-                        <el-col v-if="carParamsData" :span="12" v-for="(value, key, index) in carParamsData" :key="index">
-                            <el-form-item class="item" :label="carParamsData[key].name" :prop="key">
-                                <el-input style=" width: 280px;height: 32px;" v-model="paramParamsData[key as never]" />
-                            </el-form-item>
-                        </el-col>
-                        <el-col v-else :span="24" align="center">
-                            无数据
-                        </el-col>
-                    </el-row>
-                    <div class="buttonarea">
-                        <el-button style="margin-right: 100px;" type="danger">取消</el-button>
-                        <el-button type="primary" @click="updateCarParams">确定</el-button>
-                    </div>
-                </el-form>
-                <el-form v-show="activeIndex == '2'" :rules="rules" :inline="true" :label-position="labelPosition"
-                    label-width="160px" :model="CalibParamsData" style="max-width: 1012px;margin-bottom:20px">
-                    <el-row>
-                        <el-col v-if="CalibTitleData" :span="12" v-for="(value, key, index) in CalibTitleData" :key="index">
-                            <el-form-item class="item" :label="CalibTitleData[key].name" :prop="key">
-                                <el-input style=" width: 280px;height: 32px;" v-model="CalibParamsData[key as never]" />
-                            </el-form-item>
-                        </el-col>
-                        <el-col v-else :span="24" align="center">
-                            无数据
-                        </el-col>
-                    </el-row>
-                    <div class="buttonarea">
-                        <el-button type="primary" @click="updateCalibParams">确定</el-button>
-                    </div>
-                </el-form>
-                <el-form v-show="activeIndex == '3'" :rules="rules" :inline="true" :label-position="labelPosition"
-                    label-width="160px" :model="PidParamsData" style="max-width: 1012px;margin-bottom:20px">
-                    <el-row>
-                        <el-col v-if="PidTitleData" :span="12" v-for="(value, key, index) in PidTitleData" :key="index">
-                            <el-form-item class="item" :label="(PidTitleData[key].name)" :prop="key">
-                                <el-input style=" width: 280px;height: 32px;" v-model="PidParamsData[key]" />
-                            </el-form-item>
-                        </el-col>
-                        <el-col v-else :span="24" align="center">
-                            无数据
-                        </el-col>
-                    </el-row>
-                    <div class="buttonarea">
-                        <el-button type="primary" @click="updatePidParams">确定</el-button>
-                    </div>
-                </el-form>
-                <el-form v-show="activeIndex == '9'" :rules="rules" :inline="true" :label-position="labelPosition"
-                    label-width="160px" :model="pidCurveList" style="max-width: 1012px;margin-bottom:20px">
-                    <el-row>
-                        <el-col v-if="PidCurveTitleData" :span="12" v-for="(value, key, index) in PidCurveTitleData"
-                            :key="index">
-                            <el-form-item class="item" :label="(PidCurveTitleData[key].name)" :prop="key">
-                                <el-input style=" width: 280px;height: 32px;" v-model="pidCurveList[key]" />
-                            </el-form-item>
-                        </el-col>
-                        <el-col v-else :span="24" align="center">
-                            无数据
-                        </el-col>
-                    </el-row>
-                    <div class="buttonarea">
-                        <el-button type="primary" @click="updatePidCurveParams">确定</el-button>
-                    </div>
-                </el-form>
-                <el-form v-show="activeIndex == '10'" :rules="rules" :inline="true" :label-position="labelPosition"
-                    label-width="160px" :model="pidSupLowList" style="max-width: 1012px;margin-bottom:20px">
-                    <el-row>
-                        <el-col v-if="PidSupLowTitleData" :span="12" v-for="(value, key, index) in PidSupLowTitleData"
-                            :key="index">
-                            <el-form-item class="item" :label="(PidSupLowTitleData[key].name)" :prop="key">
-                                <el-input style=" width: 280px;height: 32px;" v-model="pidSupLowList[key]" />
-                            </el-form-item>
-                        </el-col>
-                        <el-col v-else :span="24" align="center">
-                            无数据
-                        </el-col>
-                    </el-row>
-                    <div class="buttonarea">
-                        <el-button type="primary" @click="updatePidSupLowParams">确定</el-button>
-                    </div>
-                </el-form>
-                <el-form v-show="activeIndex == '5'" :rules="rules" :inline="true" :label-position="labelPosition"
-                    label-width="160px" :model="chaFenlist" style="max-width: 1012px;margin-bottom:20px">
+        </div>
+        <div class="mainContent">
+            <el-form ref="carFormRef" v-show="activeIndex == '1'" :rules="rules" :inline="true"
+                :label-position="labelPosition" label-width="160px" :model="paramParamsData"
+                style="max-width: 1012px;margin-bottom:20px">
+                <el-row>
+                    <el-col v-if="carParamsData" :span="12" v-for="(value, key, index) in carParamsData" :key="index">
+                        <el-form-item class="item" :label="carParamsData[key].name" :prop="key">
+                            <el-input style=" width: 280px;height: 32px;" v-model="paramParamsData[key as never]" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col v-else :span="24" align="center">
+                        无数据
+                    </el-col>
+                </el-row>
+                <div class="buttonarea">
+                    <el-button style="margin-right: 100px;" type="danger">取消</el-button>
+                    <el-button type="primary" @click="updateCarParams">确定</el-button>
+                </div>
+            </el-form>
+            <el-form v-show="activeIndex == '2'" :rules="rules" :inline="true" :label-position="labelPosition"
+                label-width="160px" :model="CalibParamsData" style="max-width: 1012px;margin-bottom:20px">
+                <el-row>
+                    <el-col v-if="CalibTitleData" :span="12" v-for="(value, key, index) in CalibTitleData" :key="index">
+                        <el-form-item class="item" :label="CalibTitleData[key].name" :prop="key">
+                            <el-input style=" width: 280px;height: 32px;" v-model="CalibParamsData[key as never]" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col v-else :span="24" align="center">
+                        无数据
+                    </el-col>
+                </el-row>
+                <div class="buttonarea">
+                    <el-button type="primary" @click="updateCalibParams">确定</el-button>
+                </div>
+            </el-form>
+            <el-form v-show="activeIndex == '3'" :rules="rules" :inline="true" :label-position="labelPosition"
+                label-width="160px" :model="PidParamsData" style="max-width: 1012px;margin-bottom:20px">
+                <el-row>
+                    <el-col v-if="PidTitleData" :span="12" v-for="(value, key, index) in PidTitleData" :key="index">
+                        <el-form-item class="item" :label="(PidTitleData[key].name)" :prop="key">
+                            <el-input style=" width: 280px;height: 32px;" v-model="PidParamsData[key]" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col v-else :span="24" align="center">
+                        无数据
+                    </el-col>
+                </el-row>
+                <div class="buttonarea">
+                    <el-button type="primary" @click="updatePidParams">确定</el-button>
+                </div>
+            </el-form>
+            <el-form v-show="activeIndex == '9'" :rules="rules" :inline="true" :label-position="labelPosition"
+                label-width="160px" :model="pidCurveList" style="max-width: 1012px;margin-bottom:20px">
+                <el-row>
+                    <el-col v-if="PidCurveTitleData" :span="12" v-for="(value, key, index) in PidCurveTitleData"
+                        :key="index">
+                        <el-form-item class="item" :label="(PidCurveTitleData[key].name)" :prop="key">
+                            <el-input style=" width: 280px;height: 32px;" v-model="pidCurveList[key]" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col v-else :span="24" align="center">
+                        无数据
+                    </el-col>
+                </el-row>
+                <div class="buttonarea">
+                    <el-button type="primary" @click="updatePidCurveParams">确定</el-button>
+                </div>
+            </el-form>
+            <el-form v-show="activeIndex == '10'" :rules="rules" :inline="true" :label-position="labelPosition"
+                label-width="160px" :model="pidSupLowList" style="max-width: 1012px;margin-bottom:20px">
+                <el-row>
+                    <el-col v-if="PidSupLowTitleData" :span="12" v-for="(value, key, index) in PidSupLowTitleData"
+                        :key="index">
+                        <el-form-item class="item" :label="(PidSupLowTitleData[key].name)" :prop="key">
+                            <el-input style=" width: 280px;height: 32px;" v-model="pidSupLowList[key]" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col v-else :span="24" align="center">
+                        无数据
+                    </el-col>
+                </el-row>
+                <div class="buttonarea">
+                    <el-button type="primary" @click="updatePidSupLowParams">确定</el-button>
+                </div>
+            </el-form>
+            <el-form v-show="activeIndex == '5'" :rules="rules" :inline="true" :label-position="labelPosition"
+                label-width="160px" :model="chaFenlist" style="max-width: 1012px;margin-bottom:20px">
+                <el-row style="margin-bottom: 10px;">
+                    <el-col :span="12" :offset="6">
+                        <el-form-item class="item" label="工作模式：" prop="name">
+                            <el-select v-model="workPattern.type" style=" width: 280px;
+                height: 32px;">
+                                <el-option label="内置网络" :value="'1'" />
+                                <el-option label="罗网" :value="'3'" disabled />
+                                <el-option label="内置电台" :value="0"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+                <div v-show="workPattern.type == '1'">
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="工作模式：" prop="name">
-                                <el-select v-model="workPattern.type" style=" width: 280px;
-                height: 32px;">
-                                    <el-option label="内置网络" :value="'1'" />
-                                    <el-option label="罗网" :value="'3'" disabled />
-                                    <el-option label="内置电台" :value="0"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-
-                    </el-row>
-                    <div v-show="workPattern.type == '1'">
-                        <el-row style="margin-bottom: 10px;">
-                            <el-col :span="12" :offset="6">
-                                <el-form-item class="item" label="服务器IP:" prop="name">
-                                    <el-input style=" width: 280px;
+                            <el-form-item class="item" label="服务器IP:" prop="name">
+                                <el-input style=" width: 280px;
                 height: 32px;" v-model="chaFenlist.insideHost" />
-                                </el-form-item>
-                            </el-col>
+                            </el-form-item>
+                        </el-col>
 
-                        </el-row>
-                        <el-row style="margin-bottom: 10px;">
-                            <el-col :span="12" :offset="6">
-                                <el-form-item class="item" label="端口：" prop="name">
-                                    <el-input style=" width: 280px;
+                    </el-row>
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="12" :offset="6">
+                            <el-form-item class="item" label="端口：" prop="name">
+                                <el-input style=" width: 280px;
                 height: 32px;" v-model="chaFenlist.insidePort" />
-                                </el-form-item>
-                            </el-col>
+                            </el-form-item>
+                        </el-col>
 
-                        </el-row>
-                        <el-row style="margin-bottom: 10px;">
-                            <el-col :span="12" :offset="6">
-                                <el-form-item class="item" label="源节点：" prop="name">
-                                    <el-select style=" width: 280px;
+                    </el-row>
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="12" :offset="6">
+                            <el-form-item class="item" label="源节点：" prop="name">
+                                <el-select style=" width: 280px;
                 height: 32px;" v-model="chaFenlist.insideSourceNode">
-                                        <el-option v-for="(item, index) in sourceNode" :key="index" :label="item"
-                                            :value="item" />
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row style="margin-bottom: 10px;">
-                            <el-col :span="12" :offset="6">
-                                <el-form-item class="item" label="用户名：" prop="name">
-                                    <el-input style=" width: 280px;
-                height: 32px;" v-model="chaFenlist.insideUsername" />
-                                </el-form-item>
-                            </el-col>
-
-                        </el-row>
-                        <el-row style="margin-bottom: 10px;">
-                            <el-col :span="12" :offset="6">
-                                <el-form-item class="item" label="密码：" prop="name">
-                                    <el-input type="password" show-password style=" width: 280px;
-                height: 32px;" v-model="chaFenlist.insidePassword" />
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <div class="buttonarea">
-                            <el-button class="btn3" style="" @click="getExtendSourceNode">获取源节点</el-button>
-                            <el-button type="primary" @click="updateChafenData">设置</el-button>
-                        </div>
-                    </div>
-                    <div v-show="workPattern.type == '0'">
-                        <el-row style="margin-bottom: 10px;">
-                            <el-col :span="12" :offset="6">
-                                <el-form-item class="item" label="协议：" prop="protocol">
-                                    <el-select style=" width: 280px;
-                height: 32px;" v-model="chaFenlist.protocol">
-                                        <el-option label="MAC" :value="0" />
-                                        <el-option label="TT450S" :value="1" />
-                                        <el-option label="Transparent" :value="2" />
-                                        <el-option label="South" :value="3" />
-
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-
-                        </el-row>
-                        <el-row style="margin-bottom: 10px;">
-                            <el-col :span="12" :offset="6">
-                                <el-form-item class="item" label="信道：" prop="radioChannel">
-                                    <el-select style=" width: 280px;
-                height: 32px;" v-model="chaFenlist.radioChannel">
-                                        <el-option v-if="chaFenlist.protocol === 2" label="自定义" :value="0" />
-                                        <!-- <el-option v-for="item in radioChannelOptions" :key="item" :label="item" :value="item"></el-option> -->
-                                        <el-option v-for="(value, key) in radioChannelOptions" :key="key" :label="value"
-                                            :value="value" />
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                            <el-input-number v-show="chaFenlist.radioChannel === 0" label="自定义" :value="0" v-model="custom"
-                                clearable size="small" :min="410" :max="470" :step="0.0125" :step-strictly="true"
-                                :precision="4" style="position: relative; top: 5px; height: 30px" />
-                        </el-row>
-                        <el-row style="margin-bottom: 10px;">
-                            <el-col :span="12" :offset="6">
-                                <el-form-item class="item" label="模式：" prop="radioStatus">
-                                    <el-select style=" width: 280px;
-                height: 32px;" v-model="chaFenlist.radioStatus">
-                                        <el-option label="TX_MODE" :value="0" />
-                                        <el-option label="RX_MODE" :value="1" />
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row style="margin-bottom: 10px;">
-                            <el-col :span="12" :offset="6">
-                                <el-form-item class="item" label="功率：" prop="radioPower">
-                                    <el-select style=" width: 280px;
-                height: 32px;" v-model="chaFenlist.radioPower">
-                                        <el-option label="0.5W" :value="0.5" />
-                                        <el-option label="1W" :value="1" />
-                                        <el-option label="2W" :value="2" />
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <div class="buttonarea">
-                            <el-button type="primary" @click="updateChafenData2">设置</el-button>
-                        </div>
-                    </div>
-                </el-form>
-
-                <el-form v-show="activeIndex == '6'" :rules="rules" :inline="true" :label-position="labelPosition"
-                    label-width="160px" :model="formLabelAlign" style="max-width: 1012px;margin-bottom:20px">
-                    <div class="mktitle">
-                        双天线一体机
-                    </div>
-                    <el-row>
-                        <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="版本类型：" prop="name" style="margin-top: 20px;">
-                                <el-radio-group text-color="rgba(76, 176, 79, 1)" style="transform: translateY(-5px);"
-                                    v-model="formLabelAlign.radio2" class="ml-4">
-                                    <el-radio label="1" size="large" style="margin-right: 30px;">正式版</el-radio>
-                                    <el-radio label="2" size="large" style="margin-right: 30px;">测试版</el-radio>
-                                </el-radio-group>
-                            </el-form-item>
-                        </el-col>
-
-                    </el-row>
-                    <el-row style="margin-bottom: 20px;">
-                        <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="版本选择：" prop="name">
-                                <el-select v-if="productList.length >= 1" style=" width: 280px;
-                height: 32px;" v-model="formLabelAlign.filename">
-                                    <el-option v-for="(item, index) in productList" :key="index" :value="index"
-                                        :label="item.filename"></el-option>
+                                    <el-option v-for="(item, index) in sourceNode" :key="index" :label="item"
+                                        :value="item" />
                                 </el-select>
-                                <div v-else style=" width: 280px;height: 32px;">
-                                    该设备没有固件包
-                                </div>
                             </el-form-item>
                         </el-col>
                     </el-row>
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="12" :offset="6">
+                            <el-form-item class="item" label="用户名：" prop="name">
+                                <el-input style=" width: 280px;
+                height: 32px;" v-model="chaFenlist.insideUsername" />
+                            </el-form-item>
+                        </el-col>
 
-                    <div class="buttonarea">
-                        <el-button type="danger" :disabled="productList.length >= 1 ? false : true"
-                            @click="updateProductListBtn" >强制升级</el-button>
-                    </div>
-                </el-form>
-
-                <el-form v-show="activeIndex == '7'" :rules="rules" :inline="true" :label-position="labelPosition"
-                    label-width="160px" :model="formLabelAlign" style="max-width: 1012px;margin-bottom:20px">
-                    <el-row>
-                        <el-col align="center">
-                            AG302以及AG302_Android的日志回传功能暂未开放
+                    </el-row>
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="12" :offset="6">
+                            <el-form-item class="item" label="密码：" prop="name">
+                                <el-input type="password" show-password style=" width: 280px;
+                height: 32px;" v-model="chaFenlist.insidePassword" />
+                            </el-form-item>
                         </el-col>
                     </el-row>
-                </el-form>
-            </div>
-        </el-dialog>
-    </div>
+                    <div class="buttonarea">
+                        <el-button class="btn3" style="" @click="getExtendSourceNode">获取源节点</el-button>
+                        <el-button type="primary" @click="updateChafenData">设置</el-button>
+                    </div>
+                </div>
+                <div v-show="workPattern.type == '0'">
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="12" :offset="6">
+                            <el-form-item class="item" label="协议：" prop="protocol">
+                                <el-select style=" width: 280px;
+                height: 32px;" v-model="chaFenlist.protocol">
+                                    <el-option label="MAC" :value="0" />
+                                    <el-option label="TT450S" :value="1" />
+                                    <el-option label="Transparent" :value="2" />
+                                    <el-option label="South" :value="3" />
+
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+
+                    </el-row>
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="12" :offset="6">
+                            <el-form-item class="item" label="信道：" prop="radioChannel">
+                                <el-select style=" width: 280px;
+                height: 32px;" v-model="chaFenlist.radioChannel">
+                                    <el-option v-if="chaFenlist.protocol === 2" label="自定义" :value="0" />
+                                    <!-- <el-option v-for="item in radioChannelOptions" :key="item" :label="item" :value="item"></el-option> -->
+                                    <el-option v-for="(value, key) in radioChannelOptions" :key="key" :label="value"
+                                        :value="value" />
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-input-number v-show="chaFenlist.radioChannel === 0" label="自定义" :value="0" v-model="custom"
+                            clearable size="small" :min="410" :max="470" :step="0.0125" :step-strictly="true" :precision="4"
+                            style="position: relative; top: 5px; height: 30px" />
+                    </el-row>
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="12" :offset="6">
+                            <el-form-item class="item" label="模式：" prop="radioStatus">
+                                <el-select style=" width: 280px;
+                height: 32px;" v-model="chaFenlist.radioStatus">
+                                    <el-option label="TX_MODE" :value="0" />
+                                    <el-option label="RX_MODE" :value="1" />
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin-bottom: 10px;">
+                        <el-col :span="12" :offset="6">
+                            <el-form-item class="item" label="功率：" prop="radioPower">
+                                <el-select style=" width: 280px;
+                height: 32px;" v-model="chaFenlist.radioPower">
+                                    <el-option label="0.5W" :value="0.5" />
+                                    <el-option label="1W" :value="1" />
+                                    <el-option label="2W" :value="2" />
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <div class="buttonarea">
+                        <el-button type="primary" @click="updateChafenData2">设置</el-button>
+                    </div>
+                </div>
+            </el-form>
+
+            <el-form v-show="activeIndex == '6'" :rules="rules" :inline="true" :label-position="labelPosition"
+                label-width="160px" :model="formLabelAlign" style="max-width: 1012px;margin-bottom:20px">
+                <div class="mktitle">
+                    双天线一体机
+                </div>
+                <el-row>
+                    <el-col :span="12" :offset="6">
+                        <el-form-item class="item" label="版本类型：" prop="name" style="margin-top: 20px;">
+                            <el-radio-group text-color="rgba(76, 176, 79, 1)" style="transform: translateY(-5px);"
+                                v-model="formLabelAlign.radio2" class="ml-4">
+                                <el-radio label="1" size="large" style="margin-right: 30px;">正式版</el-radio>
+                                <el-radio label="2" size="large" style="margin-right: 30px;">测试版</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+                <el-row style="margin-bottom: 20px;">
+                    <el-col :span="12" :offset="6">
+                        <el-form-item class="item" label="版本选择：" prop="name">
+                            <el-select v-if="productList.length >= 1" style=" width: 280px;
+                height: 32px;" v-model="formLabelAlign.filename">
+                                <el-option v-for="(item, index) in productList" :key="index" :value="index"
+                                    :label="item.filename"></el-option>
+                            </el-select>
+                            <div v-else style=" width: 280px;height: 32px;">
+                                该设备没有固件包
+                            </div>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <div class="buttonarea">
+                    <el-button type="danger" :disabled="productList.length >= 1 ? false : true"
+                        @click="updateProductListBtn">强制升级</el-button>
+                </div>
+            </el-form>
+
+            <el-form v-show="activeIndex == '7'" :rules="rules" :inline="true" :label-position="labelPosition"
+                label-width="160px" :model="formLabelAlign" style="max-width: 1012px;margin-bottom:20px">
+                <el-row>
+                    <el-col align="center">
+                        AG302以及AG302_Android的日志回传功能暂未开放
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
+    </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -728,149 +726,138 @@ const rules = {
 
 
 }
-
-// 时间格式转换
-function add0(m: any) {
-    return m < 10 ? '0' + m : m;
-}
 </script>
-
 <style lang="scss" scoped>
-.outsider {
-    width: 1012px;
-    height: 496px;
+.top {
+    position: absolute;
+    top: 61px;
+    left: 20px;
 
-    .top {
+    span {
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        line-height: 20.27px;
+        color: rgba(0, 0, 0, 1);
+    }
+}
+
+.menuArea {
+    .el-menu-demo {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .el-menu-item {
+        margin: 10px 12px 0 12px;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        line-height: 23.17px;
+        color: rgba(70, 75, 84, 1);
+
+
+    }
+
+    .el-menu-item:focus,
+    .el-menu-item:hover {
+        outline: 0;
+        background-color: #0263a3;
+        color: rgba(70, 75, 84, 1);
+        background-color: #fff;
+    }
+}
+
+.mainContent {
+    margin-top: 40px;
+    width: 100%;
+    height: 260px;
+    overflow-y: scroll;
+    position: relative;
+
+    .mktitle {
         position: absolute;
-        top: 61px;
-        left: 20px;
-
-        span {
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            line-height: 20.27px;
-            color: rgba(0, 0, 0, 1);
-        }
+        top: 0px;
+        left: 417px;
+        width: 96px;
+        height: 24px;
+        opacity: 1;
+        /** 文本1 */
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        line-height: 23.17px;
+        color: rgba(0, 0, 0, 1);
     }
 
-    .menuArea {
-        .el-menu-demo {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .el-menu-item {
-            margin: 10px 12px 0 12px;
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            line-height: 23.17px;
-            color: rgba(70, 75, 84, 1);
-
-
-        }
-
-        .el-menu-item:focus,
-        .el-menu-item:hover {
-            outline: 0;
-            background-color: #0263a3;
-            color: rgba(70, 75, 84, 1);
-            background-color: #fff;
-        }
+    ::v-deep(.item .el-form-item__label) {
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        line-height: 23.17px;
+        color: rgba(0, 0, 0, 1);
+        display: block;
+        height: 32px;
+        line-height: 16px;
+        display: flex;
+        align-items: center;
     }
 
-    .mainContent {
-        margin-top: 40px;
+    ::v-deep(.ml-4 .el-radio__label:hover) {
+        color: rgba(76, 176, 79, 1);
+
+    }
+
+    ::v-deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
+        color: rgba(76, 176, 79, 1);
+    }
+
+    ::v-deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
+        background: rgba(76, 176, 79, 1);
+        border-color: rgba(76, 176, 79, 1);
+    }
+
+    ::v-deep(.ml-4 .el-radio__inner:hover) {
+        border-color: rgba(76, 176, 79, 1);
+    }
+
+
+
+    .buttonarea {
         width: 100%;
-        height: 260px;
-        overflow-y: scroll;
-        position: relative;
+        text-align: center;
+        margin-top: 20px;
 
-        .mktitle {
-            position: absolute;
-            top: 0px;
-            left: 417px;
-            width: 96px;
-            height: 24px;
+        .btn1 {
+            width: 100px;
+            height: 38px;
             opacity: 1;
-            /** 文本1 */
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            line-height: 23.17px;
-            color: rgba(0, 0, 0, 1);
+            border-radius: 4px;
+            background: rgba(255, 93, 56, 1);
         }
 
-        ::v-deep(.item .el-form-item__label) {
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            line-height: 23.17px;
-            color: rgba(0, 0, 0, 1);
-            display: block;
-            height: 32px;
-            line-height: 16px;
-            display: flex;
-            align-items: center;
+        .btn2 {
+            width: 100px;
+            height: 38px;
+            opacity: 1;
+            border-radius: 4px;
+            background: rgba(76, 176, 79, 1)
         }
 
-        ::v-deep(.ml-4 .el-radio__label:hover) {
-            color: rgba(76, 176, 79, 1);
-
+        .btn3 {
+            width: 112px;
+            height: 40px;
         }
 
-        ::v-deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
-            color: rgba(76, 176, 79, 1);
+        .btn4 {
+            width: 144px;
+            height: 38px;
+            opacity: 1;
+            border-radius: 4px;
+            background: rgba(255, 93, 56, 1);
         }
-
-        ::v-deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
-            background: rgba(76, 176, 79, 1);
-            border-color: rgba(76, 176, 79, 1);
-        }
-
-        ::v-deep(.ml-4 .el-radio__inner:hover) {
-            border-color: rgba(76, 176, 79, 1);
-        }
-
-
-
-        .buttonarea {
-            width: 100%;
-            text-align: center;
-            margin-top: 20px;
-
-            .btn1 {
-                width: 100px;
-                height: 38px;
-                opacity: 1;
-                border-radius: 4px;
-                background: rgba(255, 93, 56, 1);
-            }
-
-            .btn2 {
-                width: 100px;
-                height: 38px;
-                opacity: 1;
-                border-radius: 4px;
-                background: rgba(76, 176, 79, 1)
-            }
-
-            .btn3 {
-                width: 112px;
-                height: 40px;
-            }
-
-            .btn4 {
-                width: 144px;
-                height: 38px;
-                opacity: 1;
-                border-radius: 4px;
-                background: rgba(255, 93, 56, 1);
-            }
-        }
-
-
     }
+
+
 }
 </style>

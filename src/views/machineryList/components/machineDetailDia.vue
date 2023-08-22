@@ -1,7 +1,6 @@
 <!--  -->
 <template>
-    <div>
-        <el-dialog style="border-radius: 8px;" @open="getNewDetail" v-model="dialogVisible" title="详情" width="893px"
+        <el-dialog  @open="getNewDetail" v-model="dialogVisible" title="详情" width="903px"
             height="392px">
             <div class="tableData">
                 <div class="line line1">
@@ -93,7 +92,6 @@
                </div>
             </div>
         </el-dialog>
-    </div>
 </template>
 
 <script setup lang="ts">

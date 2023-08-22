@@ -5,11 +5,13 @@ export interface ResponseData {
 // 分页type
 
 export interface pageInfo {
-    key: string,
+    key?: string,
     currentPage: number,
     pageSize: number,
-    companyId: string,
-    order: string
+    companyId?: string,
+    order: string,
+    cityCode?: string,
+    provinceCode?: string
 }
 
 export interface newListObj {
@@ -121,4 +123,10 @@ export interface carStatusObj {
     ids: number[],
     commandType: number,
     commandStatus: number
+}
+export interface activationCodeObj {
+    oemSn:string,
+    date:number,
+    carId:number,
+    deviceId:number
 }

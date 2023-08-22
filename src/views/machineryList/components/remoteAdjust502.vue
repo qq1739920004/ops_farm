@@ -1,6 +1,5 @@
 <!--  -->
 <template>
-    <div class="outsider">
         <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" v-model="dialogVisible" title="远程管理" width="1112px"
             height="496px" center>
             <div class="top">
@@ -176,7 +175,6 @@
                 </el-form>
             </div>
         </el-dialog>
-    </div>
 </template>
 
 <script setup lang="ts">
@@ -543,10 +541,6 @@ const rules = {
 </script>
 
 <style lang="scss" scoped>
-.outsider {
-    width: 1012px;
-    height: 496px;
-
     .top {
         position: absolute;
         top: 61px;
@@ -664,5 +658,5 @@ const rules = {
 
 
     }
-}
+
 </style>

@@ -27,17 +27,19 @@
                 </div>
             </div>
             <div class="button_area">
-                <el-button type="primary"  @click="openExportDia">导出</el-button>
+                <el-button type="primary" @click="openExportDia">导出</el-button>
                 <el-button type="primary" icon="MapLocation" class="btn2"></el-button>
             </div>
         </div>
         <div class="table_container app_card">
-            <sn-table :paddyWorkList="paddyWorkList"></sn-table>
-            <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
-                @pageChange="currentChange">
-            </Pagination>
+            <sn-table :paddyWorkList="paddyWorkList">
+                <div>
+                    <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
+                        @pageChange="currentChange">
+                    </Pagination>
+                </div>
+            </sn-table>
         </div>
-
     </div>
 </template>
 
@@ -45,11 +47,12 @@
 import snTable from './components/sn-table.vue'
 import { reactive, ref, watch } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
-import { paddyWorkList_API, getCarDealerList_API } from '@/api/jobManagement/index'
+import { paddyWorkList_API, getCarDealerList_API, getPaddyWorkExport_API } from '@/api/jobManagement/index'
 import { carDealer_API } from '@/api/machineryList/index'
 import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, dealerCarResponseData } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 
+// 控制table显示与否
 // 时间格式转换
 function add0(m: any) {
     return m < 10 ? '0' + m : m;
@@ -68,7 +71,7 @@ const paddyWorkList = ref<paddyWorkObj[]>([])
 // 提交数据
 const pageInfo = reactive<PageObj>({
     carId: 10005,
-    name: '',
+    name: '1',
     companyId: 3,
     currentPage: 1,
     pageSize: 3,
@@ -119,14 +122,14 @@ watch(() => [value1.value, value2.value], () => {
 const disabledDate = (time: Date) => {
     return time.getTime() > Date.now()
 }
-const changeBlur1 = (val: any) => {
+const changeBlur1 = () => {
     getPaddyWorkList()
 }
 const changeBlur2 = () => {
     getPaddyWorkList()
 }
-const openExportDia = () => {
-
+const openExportDia = async () => {
+    await getPaddyWorkExport_API(pageInfo)
 }
 //今天
 const onDayClick = () => {
@@ -273,6 +276,8 @@ const changeA = () => {
             background: rgba(255, 255, 255, 1);
             color: rgba(67, 207, 124, 1);
         }
+
+
     }
 
 }
