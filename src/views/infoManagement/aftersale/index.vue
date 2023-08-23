@@ -1,191 +1,194 @@
 <!--  -->
 <template>
-    <div class="app-container">
-        <div class="middle-area">
-            <div class="left">
-                <div class="lefttitle">基本信息</div>
-                <div class="leftcontent">
-                    <el-row :gutter="16">
-                        <el-col :span="11" :offset="2">
-                            客户名称:{{ topvalue.username }}
-                        </el-col>
-                        <el-col :span="11">
-                            手机号码:{{ topvalue.tel }}
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="24" :offset="3">
-                            经销商：{{ topvalue.companyName }}
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16">
-                        <el-col :span="10" :offset="3">
-                            创建人:{{ topvalue.creatorName }}
-                        </el-col>
-                        <el-col :span="9">
-                            注册码:{{ topvalue.code }}
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16">
-                        <el-col :span="11" :offset="2">
-                            罗网期限:{{ topvalue.netDate?.split(' ')[0] }}
-                        </el-col>
-                        <el-col :span="11">
-                            质保期限:{{ topvalue.warrantyDate?.split(' ')[0] }}
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16">
-                        <el-col :span="11" :offset="2">
-                            软件期限{{ topvalue.expirationTime?.split(' ')[0] }}
-                        </el-col>
-                        <el-col :span="11">
-                            星基期限:{{ topvalue.satelliteDate?.split(' ')[0] }}
-                        </el-col>
-                    </el-row>
+    <div class="app_container ">
+        <div class="table_container app_card">
+            <div class="middle-area">
+                <div class="left ">
+                    <div class="lefttitle">基本信息</div>
+                    <div class="leftcontent">
+                        <el-row :gutter="16">
+                            <el-col :span="11" :offset="2">
+                                客户名称:{{ topvalue.username }}
+                            </el-col>
+                            <el-col :span="11">
+                                手机号码:{{ topvalue.tel }}
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24" :offset="3">
+                                经销商：{{ topvalue.companyName }}
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16">
+                            <el-col :span="10" :offset="3">
+                                创建人:{{ topvalue.creatorName }}
+                            </el-col>
+                            <el-col :span="9">
+                                注册码:{{ topvalue.code }}
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16">
+                            <el-col :span="11" :offset="2">
+                                罗网期限:{{ topvalue.netDate?.split(' ')[0] }}
+                            </el-col>
+                            <el-col :span="11">
+                                质保期限:{{ topvalue.warrantyDate?.split(' ')[0] }}
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16">
+                            <el-col :span="11" :offset="2">
+                                软件期限{{ topvalue.expirationTime?.split(' ')[0] }}
+                            </el-col>
+                            <el-col :span="11">
+                                星基期限:{{ topvalue.satelliteDate?.split(' ')[0] }}
+                            </el-col>
+                        </el-row>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="righttitle">部件</div>
+                    <div class="rightcontent">
+                        <el-row :gutter="2">
+                            <el-col :span="3" :offset="2">
+                                铭牌SN:
+                            </el-col>
+                            <el-col :span='8'>
+                                {{ topvalue.npn || '/' }}
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16">
+                            <el-col :span="3" :offset="2">
+                                平板SN:
+                            </el-col>
+                            <el-col :span='8'>
+                                <el-input v-model="topvalue.sn" class="input-with-select">
+                                    <template #append>
+                                        <el-button @click="changeSnBtn(topvalue.sn)"
+                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                    </template>
+                                </el-input>
+
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16">
+                            <el-col :span="3" :offset="2">
+                                电机SN:
+                            </el-col>
+                            <el-col :span='8'>
+                                <el-input v-model="topvalue.motorSn" class="input-with-select">
+                                    <template #append>
+                                        <el-button @click="changeMotorSnBtn(topvalue.motorSn)"
+                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                    </template>
+                                </el-input>
+
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16" v-if="scence != '1'">
+                            <el-col :span="3" :offset="2">
+                                车身SN
+                            </el-col>
+                            <el-col :span='8'>
+                                <el-input v-model="topvalue.carImuSn" class="input-with-select">
+                                    <template #append>
+                                        <el-button @click="changeCarImuSnBtn(topvalue.carImuSn)"
+                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                    </template>
+                                </el-input>
+
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16" v-if="scence != '1'">
+                            <el-col :span="3" :offset="2">
+                                前轮SN
+                            </el-col>
+                            <el-col :span='8'>
+                                <el-input v-model="topvalue.wheelImuSn" class="input-with-select">
+                                    <template #append>
+                                        <el-button @click="changeWheelImuSnBtn(topvalue.wheelImuSn)"
+                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                    </template>
+                                </el-input>
+
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16" v-if="scence != '1'">
+                            <el-col :span="3" :offset="2">
+                                天线_1SN
+                            </el-col>
+                            <el-col :span='8'>
+                                <el-input v-model="topvalue.antennaOne" class="input-with-select">
+                                    <template #append>
+                                        <el-button @click="changeAntennaOneBtn(topvalue.antennaOne)"
+                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                    </template>
+                                </el-input>
+
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16" v-if="scence == '2'">
+                            <el-col :span="3" :offset="2">
+                                天线_2SN
+                            </el-col>
+                            <el-col :span='8'>
+                                <el-input v-model="topvalue.antennaTwo" class="input-with-select">
+                                    <template #append>
+                                        <el-button @click="changeAntennaTwoBtn(topvalue.antennaTwo)"
+                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                    </template>
+                                </el-input>
+
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16" v-if="scence == '1'">
+                            <el-col :span="3" :offset="2">
+                                HUB_SN
+                            </el-col>
+                            <el-col :span='8'>
+                                <el-input v-model="topvalue.hubSn" class="input-with-select">
+                                    <template #append>
+                                        <el-button @click="changeHubSnBtn(topvalue.hubSn)"
+                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                    </template>
+                                </el-input>
+
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16" v-if="scence == '1'">
+                            <el-col :span="3" :offset="2">
+                                一体机SN
+                            </el-col>
+                            <el-col :span='8'>
+                                <el-input v-model="topvalue.sn" class="input-with-select">
+                                    <template #append>
+                                        <el-button @click="changeSnBtn(topvalue.sn)"
+                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                    </template>
+                                </el-input>
+
+                            </el-col>
+                        </el-row>
+                    </div>
                 </div>
             </div>
-            <div class="right">
-                <div class="righttitle">部件</div>
-                <div class="rightcontent">
-                    <el-row :gutter="2">
-                        <el-col :span="3" :offset="2">
-                            铭牌SN:
-                        </el-col>
-                        <el-col :span='8'>
-                            {{ topvalue.npn || '/' }}
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16">
-                        <el-col :span="3" :offset="2">
-                            平板SN:
-                        </el-col>
-                        <el-col :span='8'>
-                            <el-input v-model="topvalue.sn" class="input-with-select">
-                                <template #append>
-                                    <el-button @click="changeSnBtn(topvalue.sn)"
-                                        style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
-                                </template>
-                            </el-input>
-
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16">
-                        <el-col :span="3" :offset="2">
-                            电机SN:
-                        </el-col>
-                        <el-col :span='8'>
-                            <el-input v-model="topvalue.motorSn" class="input-with-select">
-                                <template #append>
-                                    <el-button @click="changeMotorSnBtn(topvalue.motorSn)"
-                                        style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
-                                </template>
-                            </el-input>
-
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16" v-if="scence != '1'">
-                        <el-col :span="3" :offset="2">
-                            车身SN
-                        </el-col>
-                        <el-col :span='8'>
-                            <el-input v-model="topvalue.carImuSn" class="input-with-select">
-                                <template #append>
-                                    <el-button @click="changeCarImuSnBtn(topvalue.carImuSn)"
-                                        style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
-                                </template>
-                            </el-input>
-
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16" v-if="scence != '1'">
-                        <el-col :span="3" :offset="2">
-                            前轮SN
-                        </el-col>
-                        <el-col :span='8'>
-                            <el-input v-model="topvalue.wheelImuSn" class="input-with-select">
-                                <template #append>
-                                    <el-button @click="changeWheelImuSnBtn(topvalue.wheelImuSn)"
-                                        style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
-                                </template>
-                            </el-input>
-
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16" v-if="scence != '1'">
-                        <el-col :span="3" :offset="2">
-                            天线_1SN
-                        </el-col>
-                        <el-col :span='8'>
-                            <el-input v-model="topvalue.antennaOne" class="input-with-select">
-                                <template #append>
-                                    <el-button @click="changeAntennaOneBtn(topvalue.antennaOne)"
-                                        style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
-                                </template>
-                            </el-input>
-
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16" v-if="scence == '2'">
-                        <el-col :span="3" :offset="2">
-                            天线_2SN
-                        </el-col>
-                        <el-col :span='8'>
-                            <el-input v-model="topvalue.antennaTwo" class="input-with-select">
-                                <template #append>
-                                    <el-button @click="changeAntennaTwoBtn(topvalue.antennaTwo)"
-                                        style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
-                                </template>
-                            </el-input>
-
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16" v-if="scence == '1'">
-                        <el-col :span="3" :offset="2">
-                            HUB_SN
-                        </el-col>
-                        <el-col :span='8'>
-                            <el-input v-model="topvalue.hubSn" class="input-with-select">
-                                <template #append>
-                                    <el-button @click="changeHubSnBtn(topvalue.hubSn)"
-                                        style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
-                                </template>
-                            </el-input>
-
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="16" v-if="scence == '1'">
-                        <el-col :span="3" :offset="2">
-                            一体机SN
-                        </el-col>
-                        <el-col :span='8'>
-                            <el-input v-model="topvalue.sn" class="input-with-select">
-                                <template #append>
-                                    <el-button @click="changeSnBtn(topvalue.sn)"
-                                        style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
-                                </template>
-                            </el-input>
-
-                        </el-col>
-                    </el-row>
+            <div class="bottomarea">
+                <div class="bottomtitle">
+                    <div>变更信息</div>
+                    <el-button @click="getInfo">
+                        加载信息
+                    </el-button>
+                </div>
+                <div class="main">
+                    <el-table :data="tableData" style="width: 100%;" :row-style="{ height: '60px' }"
+                        :cell-style="{ padding: '10px' }">
+                        <el-table-column type="index" label="序号" width="80" />
+                        <el-table-column prop="dateTime" label="时间" width="200" />
+                        <el-table-column prop="operation" label="操作" />
+                    </el-table>
                 </div>
             </div>
         </div>
-        <div class="bottomarea">
-            <div class="bottomtitle">
-                <div>变更信息</div>
-                <el-button @click="getInfo">
-                    加载信息
-                </el-button>
-            </div>
-            <div class="main">
-                <el-table :data="tableData" style="width: 100%;" :row-style="{ height: '60px' }"
-                    :cell-style="{ padding: '10px' }">
-                    <el-table-column type="index" label="序号" width="80" />
-                    <el-table-column prop="dateTime" label="时间" width="200" />
-                    <el-table-column prop="operation" label="操作" />
-                </el-table>
-            </div>
-        </div>
+
     </div>
 </template>
 
@@ -340,12 +343,11 @@ const changeHubSnBtn = async (val: string) => {
 </script>
 
 <style lang="scss" scoped>
-.app-container {
-    height: 100%;
-    background-color: #fff;
+.app_container {
+
+
     .middle-area {
         height: 24.25rem;
-        margin-top: 20px;
         border-bottom: 1px solid rgba(235, 238, 245, 1);
         display: flex;
 
@@ -420,7 +422,7 @@ const changeHubSnBtn = async (val: string) => {
                         height: 32px;
                         opacity: 1;
                         border-radius: 2px;
-                        border: 1px  rgba(220, 223, 230, 1);
+                        border: 1px rgba(220, 223, 230, 1);
                     }
 
                 }

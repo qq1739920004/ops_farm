@@ -71,7 +71,7 @@ const paddyWorkList = ref<paddyWorkObj[]>([])
 // 提交数据
 const pageInfo = reactive<PageObj>({
     carId: 10005,
-    name: '1',
+    name: '',
     companyId: 3,
     currentPage: 1,
     pageSize: 3,
@@ -129,7 +129,9 @@ const changeBlur2 = () => {
     getPaddyWorkList()
 }
 const openExportDia = async () => {
-    await getPaddyWorkExport_API(pageInfo)
+    const res = await getPaddyWorkExport_API(pageInfo)
+    console.log(res);
+    
 }
 //今天
 const onDayClick = () => {

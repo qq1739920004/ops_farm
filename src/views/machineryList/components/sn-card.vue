@@ -136,7 +136,7 @@ const status = reactive({
 const currentPage = ref<number>(1)
 const pageSize = ref<number>(10)
 const total = ref<number>(10)
-const registerAuthority = ref<boolean>(false)
+// const registerAuthority = ref<boolean>(false)
 const order = ref('1')
 // 获取省份数据
 const getProvinceDataNewList = async () => {

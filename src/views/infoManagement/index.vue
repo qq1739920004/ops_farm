@@ -284,7 +284,7 @@
                 width="544px" height="580px">
                 <el-form style="width: 100%" ref="formRef" :model="newRecords" :rules="rules">
                     <el-form-item label="设备类型" label-width="140px" prop="terminalType">
-                        <el-select disabled v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
+                        <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
                             style="width:100%" prop="terminalType">
                             <el-option value="AG360" label="G360" />
                             <el-option value="AG502" label="G502" />
@@ -332,19 +332,17 @@
         </div>
         <G502Dia @push="pushValue" ref="G502D" :newRecords=newRecords></G502Dia>
         <G501Dia @push="pushValue" ref="G501D" :newRecords=newRecords></G501Dia>
-        <exporDia ref="exporD"></exporDia>
     </div>
 </template>
 
 <script setup lang='ts'>
 import G502Dia from './components/G502Dia.vue'
 import G501Dia from './components/G501Dia.vue'
-import exporDia from './components/exporDia.vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { reactive, ref, nextTick, watch } from 'vue'
-import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API, carModuleInfoOperationDelete_API } from '@/api/infoManagement/index'
+import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API, carModuleInfoOperationDelete_API, CarModuleInfoExport_API } from '@/api/infoManagement/index'
 import { ElMessage } from 'element-plus'
-import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj, changeResponseData, editResponseData, carMoudleInfoDeleteResponseData } from "@/api/infoManagement/type"
+import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj, changeResponseData, editResponseData, carMoudleInfoDeleteResponseData, } from "@/api/infoManagement/type"
 import { useRouter } from 'vue-router'
 const pageInfo = reactive<PageObj>({
     key: '',
@@ -359,7 +357,6 @@ const records = ref<RecordsObj[]>([])
 const dialogVisible = ref<boolean>(false)
 const G502D = ref()
 const G501D = ref()
-const exporD = ref()
 const multipleSelection = ref<RecordsObj[]>([])
 const newRecords = reactive<newRecordsObj>({
     carImuSn: "",
@@ -554,8 +551,47 @@ const gotoAfterSale = (row: any) => {
         name: 'aftersale', query: { row: JSON.stringify(row), scence: JSON.stringify(scence.value) }
     })
 }
+function download(blobUrl: any) {
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.download = '<文件名>';
+    a.href = blobUrl;
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(blobUrl);
+}
+// downLoadFile(row) {
+//       let query = {
+//         query1: this.query1,
+//         query2: "prefix=" + row.path,
+//       };
+//       bucketDownload_path({}, query).then((res) => {
+//         let blob = res;
+//         let downloadElement = document.createElement("a");
+//         // 创建下载的链接
+//         let href = window.URL.createObjectURL(blob);
+//         downloadElement.href = href;
+//         downloadElement.download = row.path;
+//         document.body.appendChild(downloadElement);
+//         downloadElement.click();
+//         document.body.removeChild(downloadElement);
+//         window.URL.revokeObjectURL(href);
+//       });
+//     },
 const openExportDia = () => {
-    exporD.value.dialogVisible = true
+    CarModuleInfoExport_API(pageInfo).then((res) => {
+        let blob = res
+        console.log(blob);
+        let downloadElement = document.createElement("a");
+        let href = window.URL.createObjectURL(blob);
+        downloadElement.href = href;
+        downloadElement.download = '信息管理';
+        document.body.appendChild(downloadElement);
+        downloadElement.click();
+        document.body.removeChild(downloadElement);
+        window.URL.revokeObjectURL(href);
+    })
+
 }
 </script>
 

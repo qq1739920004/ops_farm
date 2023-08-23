@@ -5,7 +5,7 @@
             height="580px">
             <el-form style="width: 100%" ref="formRef" :model="props.newRecords" :rules="rules">
                 <el-form-item label="设备类型" label-width="140px" prop="terminalType">
-                    <el-select disabled v-model="props.newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
+                    <el-select v-model="props.newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
                         style="width:100%" prop="terminalType">
                         <el-option value="AG360" label="G360" />
                         <el-option value="AG502" label="G502" />

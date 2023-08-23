@@ -39,5 +39,15 @@ export function carModuleInfoOperationDelete_API(data: any) {
   return request<any, carMoudleInfoDeleteResponseData>({
     url: `/carModuleInfo/delete?id=${data}`,
     method: 'delete',
+
+  })
+}
+// 文件导出
+export function CarModuleInfoExport_API(data: PageObj) {
+  return request<any, any>({
+    url: '/carModuleInfo/export',
+    method: 'post',
+    data,
+    responseType: 'blob'
   })
 }

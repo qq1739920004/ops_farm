@@ -21,7 +21,7 @@
 
         </div>
         <div class="mainContent">
-            <el-form ref="carFormRef" v-show="activeIndex == '1'" :rules="rules" :inline="true"
+            <el-form ref="carFormRef" v-show="activeIndex == '1'" :rules="carParamRules" :inline="true"
                 :label-position="labelPosition" label-width="160px" :model="paramParamsData"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
@@ -39,8 +39,9 @@
                     <el-button type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form v-show="activeIndex == '2'" :rules="rules" :inline="true" :label-position="labelPosition"
-                label-width="160px" :model="CalibParamsData" style="max-width: 1012px;margin-bottom:20px">
+            <el-form ref="calibFormRef" v-show="activeIndex == '2'" :rules="CalibParamRules" :inline="true"
+                :label-position="labelPosition" label-width="160px" :model="CalibParamsData"
+                style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="CalibTitleData" :span="12" v-for="(value, key, index) in CalibTitleData" :key="index">
                         <el-form-item class="item" :label="CalibTitleData[key].name" :prop="key">
@@ -55,8 +56,9 @@
                     <el-button type="primary" @click="updateCalibParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form v-show="activeIndex == '3'" :rules="rules" :inline="true" :label-position="labelPosition"
-                label-width="160px" :model="PidParamsData" style="max-width: 1012px;margin-bottom:20px">
+            <el-form ref="pidFormRef" v-show="activeIndex == '3'" :rules="pibParamRules" :inline="true"
+                :label-position="labelPosition" label-width="160px" :model="PidParamsData"
+                style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="PidTitleData" :span="12" v-for="(value, key, index) in PidTitleData" :key="index">
                         <el-form-item class="item" :label="(PidTitleData[key].name)" :prop="key">
@@ -71,8 +73,9 @@
                     <el-button type="primary" @click="updatePidParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form v-show="activeIndex == '9'" :rules="rules" :inline="true" :label-position="labelPosition"
-                label-width="160px" :model="pidCurveList" style="max-width: 1012px;margin-bottom:20px">
+            <el-form ref="pidCurveRef" v-show="activeIndex == '9'" :rules="pidCurveRules" :inline="true"
+                :label-position="labelPosition" label-width="160px" :model="pidCurveList"
+                style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="PidCurveTitleData" :span="12" v-for="(value, key, index) in PidCurveTitleData"
                         :key="index">
@@ -88,8 +91,9 @@
                     <el-button type="primary" @click="updatePidCurveParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form v-show="activeIndex == '10'" :rules="rules" :inline="true" :label-position="labelPosition"
-                label-width="160px" :model="pidSupLowList" style="max-width: 1012px;margin-bottom:20px">
+            <el-form ref="supLowFormRef" v-show="activeIndex == '10'" :rules="pidSupLowRules" :inline="true"
+                :label-position="labelPosition" label-width="160px" :model="pidSupLowList"
+                style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="PidSupLowTitleData" :span="12" v-for="(value, key, index) in PidSupLowTitleData"
                         :key="index">
@@ -105,11 +109,12 @@
                     <el-button type="primary" @click="updatePidSupLowParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form v-show="activeIndex == '5'" :rules="rules" :inline="true" :label-position="labelPosition"
-                label-width="160px" :model="chaFenlist" style="max-width: 1012px;margin-bottom:20px">
+            <el-form ref="moudleRef" v-show="activeIndex == '5'" :rules="rules" :inline="true"
+                :label-position="labelPosition" label-width="160px" :model="chaFenlist"
+                style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="12" :offset="6">
-                        <el-form-item class="item" label="工作模式：" prop="name">
+                        <el-form-item class="item" label="工作模式：" prop="type">
                             <el-select v-model="workPattern.type" style=" width: 280px;
                 height: 32px;">
                                 <el-option label="内置网络" :value="'1'" />
@@ -123,7 +128,7 @@
                 <div v-show="workPattern.type == '1'">
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="服务器IP:" prop="name">
+                            <el-form-item class="item" label="服务器IP:" prop="insideHost">
                                 <el-input style=" width: 280px;
                 height: 32px;" v-model="chaFenlist.insideHost" />
                             </el-form-item>
@@ -132,7 +137,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="端口：" prop="name">
+                            <el-form-item class="item" label="端口：" prop="insidePort">
                                 <el-input style=" width: 280px;
                 height: 32px;" v-model="chaFenlist.insidePort" />
                             </el-form-item>
@@ -141,7 +146,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="源节点：" prop="name">
+                            <el-form-item class="item" label="源节点：" prop="insideSourceNode">
                                 <el-select style=" width: 280px;
                 height: 32px;" v-model="chaFenlist.insideSourceNode">
                                     <el-option v-for="(item, index) in sourceNode" :key="index" :label="item"
@@ -152,7 +157,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="用户名：" prop="name">
+                            <el-form-item class="item" label="用户名：" prop="insideUsername">
                                 <el-input style=" width: 280px;
                 height: 32px;" v-model="chaFenlist.insideUsername" />
                             </el-form-item>
@@ -161,7 +166,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="密码：" prop="name">
+                            <el-form-item class="item" label="密码：" prop="insidePassword">
                                 <el-input type="password" show-password style=" width: 280px;
                 height: 32px;" v-model="chaFenlist.insidePassword" />
                             </el-form-item>
@@ -233,8 +238,9 @@
                 </div>
             </el-form>
 
-            <el-form v-show="activeIndex == '6'" :rules="rules" :inline="true" :label-position="labelPosition"
-                label-width="160px" :model="formLabelAlign" style="max-width: 1012px;margin-bottom:20px">
+            <el-form ref="formLabelAlignRef" v-show="activeIndex == '6'" :rules="rules" :inline="true"
+                :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
+                style="max-width: 1012px;margin-bottom:20px">
                 <div class="mktitle">
                     双天线一体机
                 </div>
@@ -284,14 +290,20 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
-import { ref, reactive } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref, reactive, computed } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, carParamsDataObj, paramsParamObj, paramCarParamResponseData, paramcalibParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, updateCarResponseData, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
 import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, pidParamParam_API, getSourceNode_path, updateCar_API, updatePidParm_API, updateCalibParam_API, GetcarProductpackage_API, packageUpgradeCar_API, pidCurveParam_API, updatePidCurveParm_API, pidSlsParam_API, updatepidSlsParam_API } from '@/api/machineryList/remoteAdjust/index'
 import { carNewList_API } from '@/api/machineryList/index'
 import { pageInfo } from '@/api/machineryList/type'
 
 const carFormRef = ref()
+const calibFormRef = ref()
+const pidFormRef = ref()
+const pidCurveRef = ref()
+const moudleRef = ref()
+const formLabelAlignRef = ref()
+const supLowFormRef = ref()
 const dialogVisible = ref<boolean>(false)
 const activeIndex = ref<string>('1')
 const labelPosition = ref('right')
@@ -356,30 +368,6 @@ defineExpose({
     carFormRef
 }
 )
-// {
-//     'label': '9', 'name': 'AG302'
-// }, {
-//     'label': '10', 'name': 'EC20配置文件'
-// }, {
-//     'label': '13', 'name': '电台'
-// }, {
-//     'label': '15', 'name': '车身IMU'
-// },
-// {
-//     'label': '16', 'name': '车轮IMU'
-// },
-// {
-//     'label': '17', 'name': '电机'
-// },
-// {
-//     'label': '18', 'name': '多功能方向盘'
-// },
-// {
-//     'label': '20', 'name': 'Hub'
-// },
-// {
-//     'label': '21', 'name': 'Hub蓝牙'
-// }
 const formLabelAlign = reactive({
     name: '',
     region: '',
@@ -535,67 +523,163 @@ const openRemoteAdjust = () => {
 }
 // 更新车辆参数
 const updateCarParams = async () => {
-    updateInfo.value.carId = props.carId
-    updateInfo.value.paramJson = (JSON.stringify(paramParamsData))
-    const res = await paramCarParamUpdate_API(updateInfo.value)
-    if (res.code == 200) {
-        ElMessage({ type: 'success', message: '修改成功' })
-    }
-    else {
-        ElMessage({ type: 'error', message: '修改失败' })
-    }
+    await carFormRef.value.validate()
+    ElMessageBox.confirm(
+        '此操作将覆盖当前车辆所有参数，是否继续？',
+        'Warning',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(() => {
+            updateInfo.value.carId = props.carId
+            updateInfo.value.paramJson = (JSON.stringify(paramParamsData))
+            paramCarParamUpdate_API(updateInfo.value).then((res) => {
+                if (res.code == 200) {
+                    ElMessage({ type: 'success', message: '修改成功' })
+                }
+                else {
+                    ElMessage({ type: 'error', message: '修改失败' })
+                }
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: 'Delete canceled',
+            })
+        })
 }
 // 更新PID参数
 const updatePidParams = async () => {
-    updateInfo.value.carId = props.carId
-    updateInfo.value.paramJson = (JSON.stringify(PidParamsData))
-    const res = await updatePidParm_API(updateInfo.value)
-    if (res.code == 200) {
-        ElMessage({ type: 'success', message: '修改成功' })
-    }
-    else {
-        ElMessage({ type: 'error', message: '修改失败' })
-    }
+    await pidFormRef.value.validate()
+    ElMessageBox.confirm(
+        '此操作将覆盖当前车辆所有参数，是否继续？',
+        'Warning',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(() => {
+            updateInfo.value.carId = props.carId
+            updateInfo.value.paramJson = (JSON.stringify(PidParamsData))
+            updatePidParm_API(updateInfo.value).then((res) => {
+                if (res.code == 200) {
+                    ElMessage({ type: 'success', message: '修改成功' })
+                }
+                else {
+                    ElMessage({ type: 'error', message: '修改失败' })
+                }
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: 'Delete canceled',
+            })
+        })
 
 }
 // 更新PID曲线参数
 const updatePidCurveParams = async () => {
-    updateInfo.value.carId = props.carId
-    updateInfo.value.paramJson = (JSON.stringify(pidCurveList))
-    const res = await updatePidCurveParm_API(updateInfo.value)
-    if (res.code == 200) {
-        ElMessage({ type: 'success', message: '修改成功' })
-    }
-    else {
-        ElMessage({ type: 'error', message: '修改失败' })
-    }
+    await pidCurveRef.value.validate()
+    ElMessageBox.confirm(
+        '此操作将覆盖当前车辆所有参数，是否继续？',
+        'Warning',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(() => {
+            updateInfo.value.carId = props.carId
+            updateInfo.value.paramJson = (JSON.stringify(pidCurveList))
+            updatePidCurveParm_API(updateInfo.value).then((res) => {
+                if (res.code == 200) {
+                    ElMessage({ type: 'success', message: '修改成功' })
+                }
+                else {
+                    ElMessage({ type: 'error', message: '修改失败' })
+                }
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: 'Delete canceled',
+            })
+        })
 
 }
 // 更新超低速曲线参数
+
 const updatePidSupLowParams = async () => {
-    updatepidSlsParam_API
-    updateInfo.value.carId = props.carId
-    updateInfo.value.paramJson = (JSON.stringify(pidSupLowList))
-    const res = await updatepidSlsParam_API(updateInfo.value)
-    if (res.code == 200) {
-        ElMessage({ type: 'success', message: '修改成功' })
-    }
-    else {
-        ElMessage({ type: 'error', message: '修改失败' })
-    }
+    await supLowFormRef.value.validate()
+    ElMessageBox.confirm(
+        '此操作将覆盖当前车辆所有参数，是否继续？',
+        'Warning',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(() => {
+            updateInfo.value.carId = props.carId
+            updateInfo.value.paramJson = (JSON.stringify(pidSupLowList))
+            updatepidSlsParam_API(updateInfo.value).then((res) => {
+                if (res.code == 200) {
+                    ElMessage({ type: 'success', message: '修改成功' })
+                }
+                else {
+                    ElMessage({ type: 'error', message: '修改失败' })
+                }
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: 'Delete canceled',
+            })
+        })
+
 }
 
 // 更新校准参数更新校准数据updateCalibParam_API
 const updateCalibParams = async () => {
-    updateInfo.value.carId = props.carId
-    updateInfo.value.paramJson = (JSON.stringify(PidParamsData))
-    const res = await updateCalibParam_API(updateInfo.value)
-    if (res.code == 200) {
-        ElMessage({ type: 'success', message: '修改成功' })
-    }
-    else {
-        ElMessage({ type: 'error', message: '修改失败' })
-    }
+    await calibFormRef.value.validate()
+    ElMessageBox.confirm(
+        '此操作将覆盖当前车辆所有参数，是否继续？',
+        'Warning',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(() => {
+            updateInfo.value.carId = props.carId
+            updateInfo.value.paramJson = (JSON.stringify(CalibParamsData))
+            updateCalibParam_API(updateInfo.value).then((res) => {
+                if (res.code == 200) {
+                    ElMessage({ type: 'success', message: '修改成功' })
+                }
+                else {
+                    ElMessage({ type: 'error', message: '修改失败' })
+                }
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: 'Delete canceled',
+            })
+        })
 
 }
 // 获取校准参数对应的值
@@ -638,20 +722,39 @@ const getExtendSourceNode = () => {
 }
 // 更新差分数据
 const updateChafenData = async () => {
-    const res: updateCarResponseData = await updateCar_API({
-        id: props.carId,
-        workPattern: workPattern.value.type,
-        insideHost: chaFenlist.value.insideHost,
-        insidePort: chaFenlist.value.insidePort,
-        insideSourceNode: chaFenlist.value.insideSourceNode,
-        insideUsername: chaFenlist.value.insideUsername,
-        insidePassword: chaFenlist.value.insidePassword
-    })
-    if (res.code == 200) {
-        ElMessage({ type: 'success', message: '更新成功' })
-    } else {
-        ElMessage({ type: 'error', message: '更新失败' })
-    }
+    await moudleRef.value.validate()
+    ElMessageBox.confirm(
+        '此操作将覆盖当前车辆所有参数，是否继续？',
+        'Warning',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        })
+        .then(() => {
+            updateCar_API({
+                id: props.carId,
+                workPattern: workPattern.value.type,
+                insideHost: chaFenlist.value.insideHost,
+                insidePort: chaFenlist.value.insidePort,
+                insideSourceNode: chaFenlist.value.insideSourceNode,
+                insideUsername: chaFenlist.value.insideUsername,
+                insidePassword: chaFenlist.value.insidePassword
+            }).then((res) => {
+                if (res.code == 200) {
+                    ElMessage({ type: 'success', message: '修改成功' })
+                }
+                else {
+                    ElMessage({ type: 'error', message: '修改失败' })
+                }
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: 'Delete canceled',
+            })
+        })
 
 }
 const updateChafenData2 = async () => {
@@ -705,27 +808,171 @@ const updateProductListBtn = () => {
 
 
 const rules = {
-    Vehicle01: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle10: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle11: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle12: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle13: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle14: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle02: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle03: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle04: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle05: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle06: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle07: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle08: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle09: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle15: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle16: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle17: [{ required: true, message: '请输入值', trigger: 'blur' }],
-    Vehicle18: [{ required: true, message: '请输入值', trigger: 'blur' }],
-
-
+    type: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    insideHost: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    insidePort: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    insideSourceNode: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    insideUsername: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    insidePassword: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    radio1: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    radio2: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    filename: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    protocol: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    radioStatus: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    radioChannel: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    radioPower: [{ required: true, message: '请输入值', trigger: 'blur' }],
 }
+const parseVerification = (objItem: { type: string, name: string, range: string }) => {
+
+    let temRule = [];
+    if (objItem.type === "String") {
+        let rule1 = {
+            min: 1,
+            max: 20,
+            message: "长度在 1 到 20 个字符",
+            trigger: "blur",
+        };
+        temRule.push(rule1);
+    }
+    if (objItem.type === "int") {
+        if (typeof objItem.range === "string") {
+            let [min, max] = objItem.range.split(",").map((element: any) => {
+                return Number(element);
+            });
+            // let rule2 = { min: min, max: max, message: `长度在 ${min} 到 ${max} 位`, trigger: 'blur' };
+            let checkInt = (rule: any, value: any, callback: Any) => {
+                // 判断数字
+                let checkNumber = (input: any) => {
+                    let testRe = /^[1-9]\d*|0$/;
+                    return testRe.test(input);
+                };
+                if (!value && value !== 0) {
+                    return callback(new Error("请输入参数"));
+                }
+                if (!checkNumber(value)) {
+                    return callback(new Error("值必须为整型"));
+                }
+                if (value < min || value > max) {
+                    return callback(new Error(`范围 ${min} 到 ${max} `));
+                }
+                callback();
+            };
+            let rule2 = { validator: checkInt, trigger: "blur" };
+            temRule.push(rule2);
+        }
+        if (Array.isArray(objItem.range)) {
+            //
+        }
+    }
+    if (objItem.type === "double") {
+        if (objItem.range === "") {
+            // let rule3 = { min: 1, max: 8, message: '长度在 1 到 8 位', trigger: 'blur' };
+            // temRule.push(rule3);
+            let checkDouble = (rule: any, value: any, callback: any) => {
+                // 判断数字
+                let checkNumber = (input: any) => {
+                    let testRe = /^[-]?[0-9]+.?[0-9]*/;
+                    return testRe.test(input);
+                };
+                if (!value && value !== 0) {
+                    return callback(new Error("请输入参数"));
+                }
+                if (!checkNumber(value)) {
+                    return callback(new Error("参数必须为数字"));
+                }
+                callback();
+            };
+            let rule3 = { validator: checkDouble, trigger: "blur" };
+            temRule.push(rule3);
+        }
+        if (objItem.range !== "") {
+            let checkDouble = (rule: any, value: any, callback: any) => {
+                // 判断数字
+                let checkNumber = (input: any) => {
+                    let testRe = /^[-]?[0-9]+.?[0-9]*/;
+                    return testRe.test(input);
+                };
+                let [min, max] = objItem.range.split(",").map((element: any) => {
+                    return Number(element);
+                });
+                if (!value && value !== 0) {
+                    return callback(new Error("请输入参数"));
+                }
+                if (!checkNumber(value)) {
+                    return callback(new Error("参数必须为数字"));
+                }
+                if (value < min || value > max) {
+                    return callback(new Error(`范围 ${min}到${max}`));
+                }
+                callback();
+            };
+            let rule4 = { validator: checkDouble, trigger: "blur" };
+            temRule.push(rule4);
+        }
+    }
+    return temRule;
+}
+const carParamRules = computed(() => {
+    let rules = {};
+    for (let key in carParamsData.value) {
+        let temRule = [];
+        let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+        temRule.push(rule1);
+        let rule2 = parseVerification(carParamsData.value[key]);
+        temRule.push.apply(temRule, rule2);
+        rules[key] = temRule;
+    }
+    return rules;
+})
+const CalibParamRules = computed(() => {
+    let rules = {};
+    for (let key in CalibTitleData.value) {
+        let temRule = [];
+        let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+        temRule.push(rule1);
+        let rule2 = parseVerification(CalibTitleData.value[key]);
+        temRule.push.apply(temRule, rule2);
+        rules[key] = temRule;
+    }
+    return rules;
+})
+const pibParamRules = computed(() => {
+    let rules = {};
+    for (let key in PidTitleData.value) {
+        let temRule = [];
+        let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+        temRule.push(rule1);
+        let rule2 = parseVerification(PidTitleData.value[key]);
+        temRule.push.apply(temRule, rule2);
+        rules[key] = temRule;
+    }
+    return rules;
+})
+const pidCurveRules = computed(() => {
+    let rules = {};
+    for (let key in PidCurveTitleData.value) {
+        let temRule = [];
+        let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+        temRule.push(rule1);
+        let rule2 = parseVerification(PidCurveTitleData.value[key]);
+        temRule.push.apply(temRule, rule2);
+        rules[key] = temRule;
+    }
+    return rules;
+})
+const pidSupLowRules = computed(() => {
+    let rules = {};
+    for (let key in PidSupLowTitleData.value) {
+        let temRule = [];
+        let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+        temRule.push(rule1);
+        let rule2 = parseVerification(PidSupLowTitleData.value[key]);
+        temRule.push.apply(temRule, rule2);
+        rules[key] = temRule;
+    }
+    return rules;
+})
+
 </script>
 <style lang="scss" scoped>
 .top {

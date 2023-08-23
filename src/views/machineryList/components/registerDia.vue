@@ -10,14 +10,7 @@
                 <div class="down">
                     <div>注册时长：</div>
                     <el-radio-group v-model="date" class="ml-4">
-                        <el-radio :label="3">3天</el-radio>
                         <el-radio :label="-1">立即过期</el-radio>
-                        <el-radio :label="7">7天</el-radio>
-                        <el-radio :label="15">15天</el-radio>
-                        <el-radio :label="20">20天</el-radio>
-                        <el-radio :label="30">1个月</el-radio>
-                        <el-radio :label="60">2个月</el-radio>
-                        <el-radio :label="180">6个月</el-radio>
                         <el-radio :label="365">一年</el-radio>
                         <el-radio :label="65535">永久</el-radio>
                     </el-radio-group>
@@ -46,7 +39,7 @@ defineExpose({
     dialogVisible
 }
 )
-const date = ref(3)
+const date = ref(365)
 const activationAddBtn = async () => {
     dialogVisible.value = false
     await activationCodeAdd_API({

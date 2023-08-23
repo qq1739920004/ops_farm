@@ -46,6 +46,18 @@ export const constantRoutes = [ // 静态路由数据
           icon: 'CreditCard'
         },
       },
+      {
+        path: 'taskManage',
+        name: 'taskManage',
+        component: () => import("@/views/jobManagement/taskManage/index.vue"),
+        meta: {
+          title: '作业管理',
+          icon: 'CreditCard',
+          activeMenu: '/jobManagement',
+          hidden: true
+        },
+
+      },
     ]
   },
   {
