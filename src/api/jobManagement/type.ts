@@ -5,11 +5,11 @@ export interface ResponseData {
 
 export interface PageObj {
     companyId: number,
-    carId: number,
+    carId: number|string,
     currentPage: number,
     pageSize: number,
-    st: string,
-    et: string,
+    st?: string,
+    et?: string,
     name: string
 }
 

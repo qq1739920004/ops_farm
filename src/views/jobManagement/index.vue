@@ -28,7 +28,8 @@
             </div>
             <div class="button_area">
                 <el-button type="primary" @click="openExportDia">导出</el-button>
-                <el-button type="primary" icon="MapLocation" class="btn2"></el-button>
+                <el-button type="primary" @click="router.push({ path: '/jobManagement/taskManage' })" icon="MapLocation"
+                    class="btn2"></el-button>
             </div>
         </div>
         <div class="table_container app_card">
@@ -51,7 +52,7 @@ import { paddyWorkList_API, getCarDealerList_API, getPaddyWorkExport_API } from 
 import { carDealer_API } from '@/api/machineryList/index'
 import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, dealerCarResponseData } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
-
+import router from '@/router'
 // 控制table显示与否
 // 时间格式转换
 function add0(m: any) {
@@ -123,7 +124,9 @@ const disabledDate = (time: Date) => {
     return time.getTime() > Date.now()
 }
 const changeBlur1 = () => {
-    getPaddyWorkList()
+    getDealerCarList()
+    pageInfo.carId = '请选择'
+    paddyWorkList.value = []
 }
 const changeBlur2 = () => {
     getPaddyWorkList()
@@ -131,7 +134,7 @@ const changeBlur2 = () => {
 const openExportDia = async () => {
     const res = await getPaddyWorkExport_API(pageInfo)
     console.log(res);
-    
+
 }
 //今天
 const onDayClick = () => {

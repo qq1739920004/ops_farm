@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import App from '@/App.vue'
 
 import '@/styles/index.scss'
-
 // 本地SVG图标
 import 'virtual:svg-icons-register';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
@@ -14,6 +13,11 @@ import router from '@/router'
 import { createPinia } from 'pinia'
 
 import i18n from '@/lang'
+// import * as L from "leaflet";
+// import "leaflet/dist/leaflet.css";
+// import "leaflet.pm";
+// import "leaflet.pm/dist/leaflet.pm.css";
+
 
 const pinia = createPinia()
 const app = createApp(App)
