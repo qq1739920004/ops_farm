@@ -1,7 +1,12 @@
 <!--  -->
 <template>
     <div class="page7_child6_container">
-        <div id="child6_map" class="">123</div>
+        <div id="child6_map" class=""></div>
+        <div class="map_selector">
+            <el-select v-model="mapId" placeholder="" size="small" @change="hangleSelectChange">
+                <el-option v-for="(item, index) in mapOptions" :key="index" :label="item.mapName" :value="item.mapId" />
+            </el-select>
+        </div>
         <div class="head_top">
             <div class="left">
                 <el-button type='primary' icon="back" @click="router.go(-1)">返回</el-button>
@@ -52,6 +57,9 @@ import { getCarDealerList_API, paddyWorkList_API } from '@/api/jobManagement/ind
 import { carDealer_API } from '@/api/machineryList/index'
 import router from '@/router'
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "leaflet.pm";
+import "leaflet.pm/dist/leaflet.pm.css";
 // import L from 'leaflet'
 // 提交的车辆数组
 const ids = ref<[]>([])
@@ -157,6 +165,20 @@ const tileUrl = reactive<any>({
 
 })
 const mapId = ref(0)
+const mapOptions = reactive([
+    {
+        mapName: '卫星地图',
+        mapId: 0,
+    },
+    {
+        mapName: '高德地图',
+        mapId: 1,
+    },
+    // {
+    //     mapName: '谷歌地图',
+    //     mapId: 2
+    // }
+])
 const initMap = (id = 0) => {
     map.value = L.map('child6_map',
         {
@@ -201,7 +223,7 @@ const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
         }
         if ('key' in tileUrl[mapName]) {
             options.key = tileUrl[mapName]['key']
-        } 
+        }
         for (let key in mapUrl) {
             let layer = L.tileLayer(mapUrl[key], options).addTo(map.value)
             tileLayer.push(layer as never)
@@ -210,6 +232,12 @@ const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
         console.log(error)
     }
 }
+
+const hangleSelectChange = (mapId: any) => {
+    handleMapChange(mapId)
+}
+
+
 // 数据相关
 const getDealerList = async () => {
     const res: carDealerResponseData = await carDealer_API()
@@ -254,18 +282,42 @@ watch(() => pageInfo.pageSize,
 
 <style lang="scss" scoped>
 .page7_child6_container {
-    .child6_map {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    #child6_map {
         height: 100%;
         width: 100%;
     }
 
-    .head_top {
+    .map_selector {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
         z-index: 999;
+        max-width: 110px;
+    }
+
+    .head_top {
+
         display: flex;
         justify-content: space-between;
         padding: 0px 10px;
 
+        .left {
+            z-index: 999;
+            position: absolute;
+            left: 47px;
+            top: 33px;
+        }
+
         .right {
+            z-index: 999;
+            position: absolute;
+            right: 47px;
+            top: 33px;
+
             .el_icon {
                 border-radius: 2px;
                 margin-left: auto;
