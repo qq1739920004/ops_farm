@@ -44,10 +44,23 @@ export default defineConfig({
     open: true, // 运行是否自动打开浏览器
     proxy: {
       // 反向代理解决跨域
+      '/dev-api/farmPoint': {
+        // target: 'http://140.207.166.210:9030/gateway/farm',
+        // target: "http://127.0.0.1:4523/m1/2885822-0-default",
+        // target: 'http://140.207.166.210:9030/farm',
+        // 位置点测试无网关
+        target:'http://140.207.166.210:9030/farmPoint',
+        changeOrigin: true,
+        rewrite: (path) =>
+          path.replace(new RegExp("^/dev-api/farmPoint"), ""), // 替换 /dev-api 为 target 接口地址
+
+      },
       '/dev-api': {
         // target: 'http://140.207.166.210:9030/gateway/farm',
         // target: "http://127.0.0.1:4523/m1/2885822-0-default",
         target: 'http://140.207.166.210:9030/farm',
+        // 位置点测试无网关
+        // target:'http://140.207.166.210:9030/farmPoint',
         changeOrigin: true,
         rewrite: (path) =>
           path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址

@@ -5,7 +5,7 @@ export interface ResponseData {
 
 export interface PageObj {
     companyId: number,
-    carId: number|string,
+    carId: number | string,
     currentPage: number,
     pageSize: number,
     st?: string,
@@ -40,7 +40,8 @@ export interface paddyWorkObj {
     endpoint: number,
     baseline: number,
     direction: number,
-    minradius: number
+    minradius: number,
+    checked?: boolean
 }
 
 export interface paddyWorkListResponsenumber extends ResponseData {

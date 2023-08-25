@@ -29,7 +29,7 @@
                     </div>
                     <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
                         <li v-for="(item, index) in paddyWorkList" :key="index"
-                            :class="ids.includes(item.id as never) ? 'infinite-list-item' : 'infinite-list-item2'">
+                            :class="item.checked ? 'infinite-list-item' : 'infinite-list-item2'">
                             <div class="li_title">
                                 作业{{ item.name }}
                             </div>
@@ -55,14 +55,20 @@ import { PageObj, dealerCarObj, dealerCarResponseData, paddyWorkObj, paddyWorkLi
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 import { getCarDealerList_API, paddyWorkList_API } from '@/api/jobManagement/index'
 import { carDealer_API } from '@/api/machineryList/index'
+import { historyList_path } from '@/api/jobManagement/taskManage/index'
 import router from '@/router'
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.pm";
 import "leaflet.pm/dist/leaflet.pm.css";
+import { ElMessage } from 'element-plus'
+import gcoord from 'gcoord'
+import a from '@/assets/jobManage/a.png'
+import b from '@/assets/jobManage/b.png'
+// import pointInChina from '@/utils/pointInChina'
 // import L from 'leaflet'
 // 提交的车辆数组
-const ids = ref<[]>([])
+const ids = ref<any>([337, 338])
 const isShow = ref<boolean>(true)
 // 提交数据
 const pageInfo = reactive<PageObj>({
@@ -179,6 +185,7 @@ const mapOptions = reactive([
     //     mapId: 2
     // }
 ])
+const markerCollect = reactive<any>({})
 const initMap = (id = 0) => {
     map.value = L.map('child6_map',
         {
@@ -189,7 +196,6 @@ const initMap = (id = 0) => {
     handleMapChange(mapId.value)
 }
 const handleMapChange = (mapId: any) => {
-
     switch (mapId) {
         case 0:
             changeTileLayer('Google', 'Satellite')
@@ -232,12 +238,198 @@ const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
         console.log(error)
     }
 }
-
-const hangleSelectChange = (mapId: any) => {
-    handleMapChange(mapId)
+// 更改底地图
+const hangleSelectChange = () => {
+    handleMapChange(mapId.value)
 }
+// 保存记录
+const saveMarker = (workId: any, markerObj: any) => {
+    try {
+        markerCollect[workId]['marker'] = markerObj
+    } catch (err) {
+        console.log(err)
+    }
+}
+// 画线
+const loadWorkData = async (workId: any) => {
+    const res = await historyList_path(workId)
+    let key = Object.keys(res.data)
+    let tranpatrnt = [] as any
+    getMachineInfo()
+    console.log(machine);
+    key.forEach((item, index) => {
+        if (!item.length || res.data[item] === null || !res.data[item].length) {
+            ElMessage.warning(`${item}暂无作业数据`);
+            return
+        }
+        let PointListTransed = res.data[item].map((item2: any) => {
+            return coorTransform([item2.posX as never, item2.posY as never], mapId.value) // 转换坐标
+        })
+        tranpatrnt.push(PointListTransed)
+        let line = L.polyline(PointListTransed, { color: '#00ff00' })
+            .addTo(map.value)
+            .bindPopup(`<div style='
+    width: 241px;
+    height: 289px;
+    opacity: 1;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 1);
+    position:relative
+'>
+<div style='width:50%;display:flex;
+    justify-content: end;'><div style="position:absolute"> <svg t="1692957369421" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6471" id="mx_n_1692957369422" width="16" height="16"><path d="M512 960c-254.784 0-384-59.904-384-178.112 0-84.416 133.12-139.648 265.856-158.336v-17.536c-79.68-58.24-118.464-159.936-118.464-309.952C275.392 150.784 362.368 64 508.096 64h7.808c145.792 0 232.768 86.784 232.768 232.064 0 56.448 0 223.808-117.568 310.144l-0.384 17.408C763.2 642.432 896 697.6 896 781.888 896 900.096 766.784 960 512 960zM508.032 120c-80.256 0-175.872 29.952-175.872 172.8 0 137.344 34.56 225.92 105.536 270.72 8.96 5.696 14.464 15.872 14.464 26.88v62.72a30.848 30.848 0 0 1-26.944 31.232c-145.728 15.232-242.368 71.232-242.368 101.568 0 97.6 179.008 118.08 329.152 118.08 150.208 0 329.152-20.48 329.152-118.08 0-30.336-96.64-86.4-242.368-101.568a30.912 30.912 0 0 1-26.88-31.936l1.28-62.72a31.744 31.744 0 0 1 14.4-26.176c71.168-44.928 104.32-130.944 104.32-270.72 0-142.848-95.68-172.8-175.936-172.8h-7.936z" fill="#4ce277" p-id="6472"></path></svg>${machine.value[index].name}</div></div>
+<div style='width:50%; >sn号:${item}</div>
+</div>`)
+            .openPopup()
+        // .bindPopup(`作业名称：${item}`)
+        saveMarker(ids.value[index], [{ markerObj: line, name: 'lines' }])
+    })
+    map.value.fitBounds(tranpatrnt)
+}
+//坐标转换
+const coorTransform = (point = [], mapType = 1) => {
+    //经纬度顺序 gcoor 需要 [116.403988, 39.914266] 经度在前
+    // if (!pointInChina(point)) {
+    //     return point
+    // }
+    let p: any = [point[1], point[0]]
+    switch (mapType) {
+        case 0:
+            let [a, b] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
+            return [b, a]
+        case 1:
+            let [c, d] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
+            return [d, c]
+        case 2:
+            let [e, f] = gcoord.transform(p, gcoord.WGS84, gcoord.BD09)
+            return [f, e]
+        case 3:
+            let [g, h] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
+            return [h, g]
+        default:
+            let [i, j] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
+            return [j, i]
+    }
+}
+// 地图绘制方法
+const addPathAB = (item: any) => {
+    try {
+        let pointA = coorTransform(
+            [item.lineptax as never, item.lineptay as never],
+            mapId.value
+        )
+        let pointB = coorTransform(
+            [item.lineptbx as never, item.lineptby as never],
+            mapId.value
+        )
+        let l1 = L.latLng(item.lineptax, item.lineptay)
+        let l2 = L.latLng(item.lineptbx, item.lineptby)
+        let distance = l1.distanceTo(l2).toFixed(0)
+        let iconA = L.icon({
+            iconUrl: a,
+            iconAnchor: [12, 30],
+            popupAnchor: [0, -30],
+        })
+        let iconB = L.icon({
+            iconUrl: b,
+            iconAnchor: [12, 30],
+            popupAnchor: [0, -30],
+        })
+        let markerA = L.marker(pointA as never, { icon: iconA }).addTo(map.value)
+        let markerB = L.marker(pointB as never, { icon: iconB }).addTo(map.value)
+        let line = L.polyline([pointA, pointB], {
+            color: 'red',
+            dashArray: [9, 9],
+        })
+            .bindTooltip(`AB点距离 ${distance} 米`, { permanent: true })
+            .addTo(map.value)
+        map.value.fitBounds([pointA, pointB])
+        let temMarkers = [
+            {
+                markerObj: markerA,
+                name: 'markerA',
+            },
+            {
+                markerObj: markerB,
+                name: 'markerB',
+            },
+            {
+                markerObj: line,
+                name: 'lineAB',
+            },
+        ]
+        saveMarker(item.id, temMarkers)
+        //绘制田块边界(全部上传GCJ02坐标，对应全部GCJ02地图，无需相互转换！！！)
+        if (item.borderpoints) {
+            let latlngs = JSON.parse(item.borderpoints)
+            let polygon = L.polygon(latlngs, { color: '#388BFE' }).addTo(map)
+            let tem = {
+                name: 'border',
+                markerObj: polygon,
+            }
+            saveMarker(item.id, [tem])
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+// 删除区域
+const removeMarker = (workId: any) => {
+    try {
+        if (markerCollect[workId]['marker'].length) {
+            let a = markerCollect[workId]['marker']
+            a.forEach((item: any) => {
+                if (item.markerObj) {
+                    map.value.removeLayer(item.markerObj)
+                }
+            })
+            markerCollect[workId]['marker'] = []
+        } else {
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+const hasMarker = (workId: any) => {
+    return markerCollect[workId]['marker'].length > 0
+}
+const machine = ref<any>([])
+const getMachineInfo = () => {
 
-
+    paddyWorkList.value.forEach((element: any) => {
+        if (ids.value.includes(element.id)) {
+            machine.value.push(element)
+        }
+    })
+}
+const hasMarkerField = (workId: any, field: any) => {
+    let a = markerCollect[workId]['marker'].find(
+        (element: any) => element.name === field
+    )
+    if (a && a[field] !== null) {
+        return true
+    } else {
+        return false
+    }
+}
+// 清除全部
+const clearAllMarkers = () => {
+    try {
+        for (let key in markerCollect) {
+            if (Object.keys(markerCollect).length) {
+                if (markerCollect[key]['marker'].length) {
+                    markerCollect[key]['marker'].forEach((item: any) => {
+                        if (item && item.markerObj) {
+                            map.value.removeLayer(item.markerObj)
+                        }
+                    })
+                }
+            }
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
 // 数据相关
 const getDealerList = async () => {
     const res: carDealerResponseData = await carDealer_API()
@@ -256,16 +448,33 @@ getDealerCarList()
 const getPaddyWorkList = async () => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
     paddyWorkList.value = res.data.records
-    ids.value.push(paddyWorkList.value[0].id as never)
+    let tem = res.data.records
+    tem.forEach((element) => {
+        markerCollect[element.id] = { marker: [], }
+        element.checked = false
+    })
+    // ids.value.push(paddyWorkList.value[0].id as never)
+    // paddyWorkList.value[0].checked = true
     total.value = res.data.total
 }
 getPaddyWorkList()
 const changeBlur1 = () => {
     getDealerCarList()
-    pageInfo.carId = '请选择'
+    clearAllMarkers()
+    Object.assign(markerCollect, {})
     paddyWorkList.value = []
+    pageInfo.currentPage = 1
+    pageInfo.pageSize = 7
+    pageInfo.carId = '请选择'
+    initMap()
+
 }
 const changeBlur2 = () => {
+    clearAllMarkers()
+    Object.assign(markerCollect, {})
+    pageInfo.currentPage = 1
+    pageInfo.pageSize = 7
+    paddyWorkList.value = []
     getPaddyWorkList()
 }
 
@@ -277,7 +486,37 @@ const load = () => {
 watch(() => pageInfo.pageSize,
     () => {
         getPaddyWorkList()
-    })
+    }
+)
+watch(() => ids.value,
+    () => {
+        paddyWorkList.value.forEach((item: any) => {
+            if (ids.value.includes(item.id as never)) {
+                item.checked = true
+            } else {
+                item.checked = false
+            }
+        })
+
+        // loadWorkData(['338', '339'].join())
+    }
+)
+watch(() => paddyWorkList.value,
+    (newData) => {
+        if (newData.length) {
+            newData.forEach((subItem) => {
+                if (subItem.checked) {
+                    if (!hasMarker(subItem.id)) {
+                        addPathAB(subItem)
+                    } if (!hasMarkerField(subItem.id, 'lines')) {
+                        loadWorkData(ids.value.join())
+                    }
+                } else {
+                    removeMarker([subItem.id].join())
+                }
+            })
+        }
+    }, { deep: true })
 </script>
 
 <style lang="scss" scoped>

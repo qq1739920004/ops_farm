@@ -10,10 +10,11 @@ export function getPaddyWorkGroupList_API(params: groupListDataObj) {
     })
 }
 
-export function historyList_path(data: string[]) {
+// 位置点服务测试网关
+export function historyList_path(data: string) {
     return request({
-        url: '/farm/paddyWork/history/list',
-        method: 'post',
+        url: `/farmPoint/paddyWork/history/list?ids=${data}`,
+        method: 'get',
         data
     })
 }
