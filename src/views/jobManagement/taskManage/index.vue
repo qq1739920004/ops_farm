@@ -715,7 +715,7 @@ watch(() => paddyWorkList.value,
                     height: 27px;
                     opacity: 1;
                     border-radius: 4px;
-                    background: rgba(67, 207, 124, 1);
+                    background: var(--el-color-primary);
                     color: #fff;
                     white-space: nowrap;
                 }
@@ -787,7 +787,7 @@ watch(() => paddyWorkList.value,
         opacity: 1;
         border-radius: 8px;
         color: #fff;
-        background-color: rgba(67, 207, 124, 1);
+        background-color: var(--el-color-primary);
         overflow: hidden;
         margin-left: auto;
         margin-right: 10px;
