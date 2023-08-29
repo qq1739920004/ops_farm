@@ -70,21 +70,21 @@ const activationAddBtn = async () => {
     }
 
     ::v-deep(.ml-4 .el-radio__label:hover) {
-        color: rgba(76, 176, 79, 1);
+        color: var(--el-color-primary);
 
     }
 
     ::v-deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
-        color: rgba(76, 176, 79, 1);
+        color: var(--el-color-primary);
     }
 
     ::v-deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
-        background: rgba(76, 176, 79, 1);
-        border-color: rgba(76, 176, 79, 1);
+        background: var(--el-color-primary);
+        border-color: var(--el-color-primary);
     }
 
     ::v-deep(.ml-4 .el-radio__inner:hover) {
-        border-color: rgba(76, 176, 79, 1);
+        border-color: var(--el-color-primary);
     }
 
     .up {

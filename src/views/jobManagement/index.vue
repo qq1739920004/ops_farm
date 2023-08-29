@@ -2,10 +2,10 @@
     <div class='app_container'>
         <div class="search_container app_card">
             <div class="input_area">
-                <el-select v-model="pageInfo.companyId" class="input-with-select" placeholder="请选择" @blur="changeBlur1">
+                <el-select v-model="pageInfo.companyId" class="input-with-select" placeholder="请选择" @change="changeBlur1">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
-                <el-select v-model="pageInfo.carId" class="m-2" placeholder="请选择" @blur="changeBlur2">
+                <el-select v-model="pageInfo.carId" class="m-2" placeholder="请选择" @change="changeBlur2">
                     <el-option v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
                         :key="item.id"></el-option>
                 </el-select>
@@ -169,9 +169,11 @@ const onYearClick = () => {
 }
 // 事件改变回调
 const changeA = () => {
-    pageInfo.st = formartDate(value1.value as Date)
-    pageInfo.et = formartDate(value2.value as Date)
-    getPaddyWorkList()
+    if (value1.value && value2.value) {
+        pageInfo.st = formartDate(value1.value as Date)
+        pageInfo.et = formartDate(value2.value as Date)
+        getPaddyWorkList()
+    }
     isActive.value = 0;
 }
 
@@ -264,22 +266,15 @@ const changeA = () => {
     }
 
     .button_area {
-        .btn1 {
-            width: 97px;
-            height: 32px;
-            opacity: 1;
-            border-radius: 4px;
-            background: rgba(76, 176, 79, 1);
-        }
 
         .btn2 {
             width: 32px;
             height: 32px;
             opacity: 1;
             border-radius: 4px;
-            border: 1.5px solid rgba(67, 207, 124, 1);
-            background: rgba(255, 255, 255, 1);
-            color: rgba(67, 207, 124, 1);
+            border: 1.5px solid var(--el-color-primary);
+            background-color: #fff;
+            color:var(--el-color-primary);
         }
 
 

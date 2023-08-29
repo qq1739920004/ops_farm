@@ -11,7 +11,7 @@
                 <div class="kind">
                     设备类型：
                 </div>
-                <el-select v-model="pageInfo.terminalType" class="m-2" placeholder="请选择" @blur="changeBlur">
+                <el-select v-model="pageInfo.terminalType" class="m-2" placeholder="请选择" @change="changeBlur">
                     <el-option value="AG360" label="G360" />
                     <el-option value="AG502" label="G502" />
                     <el-option value="AG501" label="G501" />
@@ -107,9 +107,6 @@
                 </el-table-column>
                 <el-table-column label="质保日期" align="center">
                     <template #="{ row }">
-                        <el-tag
-                            style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
-                            class="mx-1" effect="dark">已到期</el-tag>
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) > Date.parse(new Date().toString())">
                             {{
@@ -118,6 +115,11 @@
                             <el-tag
                                 style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
                                 class="mx-1" type="danger" effect="dark">未激活</el-tag>
+                        </div>
+                        <div v-else>
+                            <el-tag
+                                style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
+                                class="mx-1" effect="dark">已到期</el-tag>
                         </div>
                     </template>
                 </el-table-column>
@@ -179,8 +181,8 @@
                     <template #="{ row }">
                         <el-popover placement="right" :width="200" trigger="hover" style="">
                             <template #reference>
-                                <el-button
-                                    style="width: 52px;height: 26px;opacity: 1;border:1px rgba(222, 255, 235, 1) solid;background: rgba(222, 255, 235, 1);font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 20.27px;color: rgba(76, 176, 79, 1);text-align: left;vertical-align: top;">查看</el-button>
+                                <el-button type="primary"
+                                    style="width: 52px;height: 26px;opacity: 1;border:1px rgba(222, 255, 235, 1) solid;font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 20.27px;text-align: left;vertical-align: top;">查看</el-button>
                             </template>
                             <el-row :gutter="16"
                                 style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(202, 204, 207, 1);">

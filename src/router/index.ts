@@ -32,6 +32,18 @@ export const constantRoutes = [ // 静态路由数据
           icon: 'List'
         },
       },
+      {
+        path: 'taskMachine',
+        name: 'taskMachine',
+        component: () => import("@/views/machineryList/taskMachine.vue"),
+        meta: {
+          title: '农机列表',
+          icon: 'List',
+          activeMenu: '/machineryList',
+          hidden: true
+        },
+
+      },
     ]
   },
   {

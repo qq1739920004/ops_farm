@@ -8,7 +8,7 @@
         </div>
         <div class="menuArea">
             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-                active-text-color="rgba(76, 176, 79, 1)" active-background-color="rgba(76, 176, 79, 1)">
+                active-text-color="var(--el-color-primary)" active-background-color="var(--el-color-primary)">
                 <el-menu-item index="1">车辆参数</el-menu-item>
                 <el-menu-item index="2">校准参数</el-menu-item>
                 <el-menu-item index="3">PID参数</el-menu-item>
@@ -247,7 +247,7 @@
                 <el-row>
                     <el-col :span="12" :offset="6">
                         <el-form-item class="item" label="版本类型：" prop="name" style="margin-top: 20px;">
-                            <el-radio-group text-color="rgba(76, 176, 79, 1)" style="transform: translateY(-5px);"
+                            <el-radio-group text-color="var(--el-color-primary)" style="transform: translateY(-5px);"
                                 v-model="formLabelAlign.radio2" class="ml-4">
                                 <el-radio label="1" size="large" style="margin-right: 30px;">正式版</el-radio>
                                 <el-radio label="2" size="large" style="margin-right: 30px;">测试版</el-radio>
@@ -1051,21 +1051,21 @@ const pidSupLowRules = computed(() => {
     }
 
     ::v-deep(.ml-4 .el-radio__label:hover) {
-        color: rgba(76, 176, 79, 1);
+        color: var(--el-color-primary);
 
     }
 
     ::v-deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
-        color: rgba(76, 176, 79, 1);
+        color: var(--el-color-primary);
     }
 
     ::v-deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
-        background: rgba(76, 176, 79, 1);
-        border-color: rgba(76, 176, 79, 1);
+        background: var(--el-color-primary);
+        border-color: var(--el-color-primary);
     }
 
     ::v-deep(.ml-4 .el-radio__inner:hover) {
-        border-color: rgba(76, 176, 79, 1);
+        border-color: var(--el-color-primary);
     }
 
 
@@ -1088,7 +1088,7 @@ const pidSupLowRules = computed(() => {
             height: 38px;
             opacity: 1;
             border-radius: 4px;
-            background: rgba(76, 176, 79, 1)
+            background: var(--el-color-primary)
         }
 
         .btn3 {

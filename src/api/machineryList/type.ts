@@ -125,8 +125,43 @@ export interface carStatusObj {
     commandStatus: number
 }
 export interface activationCodeObj {
-    oemSn:string,
-    date:number,
-    carId:number,
-    deviceId:number
+    oemSn: string,
+    date: number,
+    carId: number,
+    deviceId: number
+}
+// 地图参数
+export interface PageInfoObj {
+    sn: string,
+    npn: string,
+    st: string,
+    et: string
+}
+export interface singleCarTrackResponseData extends ResponseData {
+    data: singleCarTrackObj[]
+}
+export interface singleCarTrackObj {
+    id: number,
+    deviceId: number | null,
+    posX: number,
+    posY: number,
+    posZ: number,
+    coordType: string,
+    solStat: number,
+    heading: number,
+    speed: number,
+    driveState: number,
+    satNum: number,
+    baseDist: number,
+    diffSource: number,
+    xOffset: number,
+    headingOffset: number,
+    netSignal: number,
+    gnssTime: number,
+    diffAge: number,
+    dirSolState: number,
+    cardUsage: number,
+    sn: string,
+    workName: string | null,
+    npn: string
 }

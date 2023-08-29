@@ -6,7 +6,7 @@
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <el-icon>
-                        <MapLocation style="color:rgba(82, 196, 26, 1); width: 16px; height: 16px;" />
+                        <MapLocation style="color:var(--el-color-primary); width: 16px; height: 16px;" />
                     </el-icon>
                     <span style="margin-left: 10px">{{ scope.row.npn }}</span>
                 </div>
@@ -30,8 +30,8 @@
             <template #="{ row }">
                 <el-popover placement="right" :width="200" trigger="hover" style="">
                     <template #reference>
-                        <el-button
-                            style="width: 52px;height: 26px;opacity: 1;border:1px rgba(222, 255, 235, 1) solid;background: rgba(222, 255, 235, 1);font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 20.27px;color: rgba(76, 176, 79, 1);text-align: left;vertical-align: top;">查看</el-button>
+                        <el-button type="primary"
+                            style="width: 52px;height: 26px;opacity: 1;border:1px rgba(222, 255, 235, 1) solid;font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 20.27px;text-align: left;vertical-align: top;">查看</el-button>
                     </template>
                     <el-row :gutter="16"
                         style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(202, 204, 207, 1);">
@@ -98,21 +98,21 @@
                             :inactive-value="0" -->
                 <el-switch v-model="row.satelliteStatus" :before-change="beforeSwitchChange" @change="changeCarStatus(row)"
                     :active-value="1" :inactive-value="0" class="ml-2" inline-prompt active-text="开" inactive-text="关"
-                    style="width: 48px;height: 20px; --el-switch-on-color: #13ce66; --el-switch-off-color: rgba(204, 204, 204, 1)" />
+                    style="width: 48px;height: 20px" />
             </template>
         </el-table-column>
         <el-table-column label="数据存储" align="center">
             <template #="{ row }">
                 <el-switch :before-change="beforeSwitchChange" @change="changeLogStatus(row.sn, row.isTransfer)"
                     v-model="row.isTransfer" class="ml-2" inline-prompt active-text="开" inactive-text="关"
-                    style="width: 48px;height: 20px; --el-switch-on-color: #13ce66; --el-switch-off-color: rgba(204, 204, 204, 1)" />
+                    style="width: 48px;height: 20px" />
             </template>
         </el-table-column>
         <!-- 说明  离线和自动驾驶状态不可编辑 -->
         <el-table-column label="操作" align="center" width="340">
             <template #="{ row }">
                 <el-button type="primary" link @click="gotoMachineDetail(row.id, row.terminalType)">详情</el-button>
-                <el-button type="primary" link>历史轨迹</el-button>
+                <el-button type="primary" link @click="gotoMap(row.sn, row.npn)">历史轨迹</el-button>
                 <el-button type="primary" link
                     @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.name)">远程调参</el-button>
                 <el-button type="primary" link>文件存储</el-button>
@@ -144,8 +144,9 @@ import RemoteAdjustDia360 from './remoteAdjust.vue'
 import RemoteAdjustDia302 from './remoteAdjust302.vue'
 import RemoteAdjustDia502 from './remoteAdjust502.vue'
 import RegisterDia from './registerDia.vue'
+import { useRouter } from 'vue-router'
 
-
+const router = useRouter();
 const props = defineProps(['carNewList'])
 const emits = defineEmits(['changeSort'])
 const switchStatus = ref<boolean>(false)
@@ -254,6 +255,11 @@ const gotoRemote = (val: any, val2: any, val3: any, val4: any, val5: any, val6: 
         RemoteD.value.carFormRef?.clearValidate()
     })
 
+}
+// 历史轨迹
+const gotoMap = (sn: string, npn: string) => {
+    console.log(sn, npn);
+    router.push({ path: 'machineryList/taskMachine', query: { sn, npn } })
 }
 </script>
 

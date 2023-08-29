@@ -61,10 +61,11 @@
                                 平板SN:
                             </el-col>
                             <el-col :span='8'>
+
                                 <el-input v-model="topvalue.sn" class="input-with-select">
                                     <template #append>
                                         <el-button @click="changeSnBtn(topvalue.sn)"
-                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
 
@@ -78,7 +79,7 @@
                                 <el-input v-model="topvalue.motorSn" class="input-with-select">
                                     <template #append>
                                         <el-button @click="changeMotorSnBtn(topvalue.motorSn)"
-                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
 
@@ -92,7 +93,7 @@
                                 <el-input v-model="topvalue.carImuSn" class="input-with-select">
                                     <template #append>
                                         <el-button @click="changeCarImuSnBtn(topvalue.carImuSn)"
-                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
 
@@ -106,7 +107,7 @@
                                 <el-input v-model="topvalue.wheelImuSn" class="input-with-select">
                                     <template #append>
                                         <el-button @click="changeWheelImuSnBtn(topvalue.wheelImuSn)"
-                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
 
@@ -120,7 +121,7 @@
                                 <el-input v-model="topvalue.antennaOne" class="input-with-select">
                                     <template #append>
                                         <el-button @click="changeAntennaOneBtn(topvalue.antennaOne)"
-                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
 
@@ -134,7 +135,7 @@
                                 <el-input v-model="topvalue.antennaTwo" class="input-with-select">
                                     <template #append>
                                         <el-button @click="changeAntennaTwoBtn(topvalue.antennaTwo)"
-                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
 
@@ -148,7 +149,7 @@
                                 <el-input v-model="topvalue.hubSn" class="input-with-select">
                                     <template #append>
                                         <el-button @click="changeHubSnBtn(topvalue.hubSn)"
-                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
 
@@ -162,7 +163,7 @@
                                 <el-input v-model="topvalue.sn" class="input-with-select">
                                     <template #append>
                                         <el-button @click="changeSnBtn(topvalue.sn)"
-                                            style=" width: 74px;height: 32px;background: rgba(76, 176, 79, 1); color:#fff">更换</el-button>
+                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
 
@@ -174,7 +175,7 @@
             <div class="bottomarea">
                 <div class="bottomtitle">
                     <div>变更信息</div>
-                    <el-button @click="getInfo">
+                    <el-button type="primary" @click="getInfo">
                         加载信息
                     </el-button>
                 </div>
@@ -344,8 +345,6 @@ const changeHubSnBtn = async (val: string) => {
 
 <style lang="scss" scoped>
 .app_container {
-
-
     .middle-area {
         height: 24.25rem;
         border-bottom: 1px solid rgba(235, 238, 245, 1);
@@ -449,8 +448,6 @@ const changeHubSnBtn = async (val: string) => {
             height: 32px;
             opacity: 1;
             border-radius: 4px;
-            background: rgba(76, 176, 79, 1);
-            color: #fff
         }
 
         .main {
