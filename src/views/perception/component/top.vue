@@ -33,7 +33,7 @@
         <div>
           <img src="../../perception/image/top_number4.png" alt="" />
           <div class="word">
-            <p>-</p>
+            <p>{{ monitorData.activeDevice }}</p>
             <p>已售农机数</p>
           </div>
         </div>
@@ -55,8 +55,6 @@
   </div>
 </template>
 <script setup lang='ts'>
-// defineProps(['monitorData'])
-
 defineProps({
   monitorData: {
     type: Object,
