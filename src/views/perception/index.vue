@@ -12,7 +12,9 @@
                     <Year class="year" :totalArea="totalArea" :todayArea="todayArea" />
                 </div>
 
-                <div class="middle"></div>
+                <div class="middle">
+                    <Carmap :provinceCars="provinceCars"></Carmap>
+                </div>
                 <div class="right">
                     <Online class="online" :typeCounts="typeCounts"></Online>
                     <State class="state" :provinceCars="provinceCars"></State>
@@ -26,6 +28,7 @@
 import { ref, onMounted,onUnmounted,watch} from "vue";
 import Top from "./component/top.vue";
 import Year from "./component/year.vue";
+import Carmap from "./component/carmap.vue";
 import Workarea from "./component/workarea.vue";
 import State from "./component/state.vue";
 import Online from "./component/online.vue"
@@ -52,6 +55,7 @@ const getMonitor = async () => {
     totalArea.value=res.data.totalArea
     typeCounts.value=res.data.typeCounts
     provinceCars.value=res.data.provinceCars
+   
 }
 
 // 屏幕
