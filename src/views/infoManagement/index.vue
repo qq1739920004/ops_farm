@@ -18,7 +18,10 @@
                 </el-select>
             </div>
             <div>
-                <el-button type="primary" icon="Search" @click="openExportDia">导出</el-button>
+                <el-button type="primary" @click="openExportDia">
+                    <el-icon class="el-icon--left">
+                        <SvgIcon icon="export" size="16" />
+                    </el-icon>导出</el-button>
                 <el-button type="primary" icon="Plus" @click="openDialog">新建</el-button>
             </div>
         </div>
@@ -41,7 +44,9 @@
                                 style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
                                 class="mx-1" type="danger" effect="dark">未激活</el-tag>
                         </div>
-                        <div v-else> <el-tag
+                        <div
+                            v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
+                            <el-tag
                                 style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
                                 class="mx-1" effect="dark">已到期</el-tag></div>
                     </template>
@@ -116,7 +121,7 @@
                                 style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
                                 class="mx-1" type="danger" effect="dark">未激活</el-tag>
                         </div>
-                        <div v-else>
+                        <div  v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
                             <el-tag
                                 style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
                                 class="mx-1" effect="dark">已到期</el-tag>
@@ -346,6 +351,7 @@ import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API, carM
 import { ElMessage } from 'element-plus'
 import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj, changeResponseData, editResponseData, carMoudleInfoDeleteResponseData, } from "@/api/infoManagement/type"
 import { useRouter } from 'vue-router'
+import SvgIcon from '@/components/SvgIcon/index.vue'
 const pageInfo = reactive<PageObj>({
     key: '',
     terminalType: 'AG360',
@@ -389,7 +395,6 @@ const getInfoMangementInfo = async () => {
 }
 const handleSelectionChange = (val: any) => {
     multipleSelection.value = val
-    console.log(multipleSelection.value);
 
 }
 const validatorwarrantyDate = (rule: any, value: any, callBack: any) => {
@@ -553,45 +558,18 @@ const gotoAfterSale = (row: any) => {
         name: 'aftersale', query: { row: JSON.stringify(row), scence: JSON.stringify(scence.value) }
     })
 }
-function download(blobUrl: any) {
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.download = '<文件名>';
-    a.href = blobUrl;
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(blobUrl);
-}
-// downLoadFile(row) {
-//       let query = {
-//         query1: this.query1,
-//         query2: "prefix=" + row.path,
-//       };
-//       bucketDownload_path({}, query).then((res) => {
-//         let blob = res;
-//         let downloadElement = document.createElement("a");
-//         // 创建下载的链接
-//         let href = window.URL.createObjectURL(blob);
-//         downloadElement.href = href;
-//         downloadElement.download = row.path;
-//         document.body.appendChild(downloadElement);
-//         downloadElement.click();
-//         document.body.removeChild(downloadElement);
-//         window.URL.revokeObjectURL(href);
-//       });
-//     },
 const openExportDia = () => {
     CarModuleInfoExport_API(pageInfo).then((res) => {
-        let blob = res
-        console.log(blob);
-        let downloadElement = document.createElement("a");
-        let href = window.URL.createObjectURL(blob);
-        downloadElement.href = href;
-        downloadElement.download = '信息管理';
-        document.body.appendChild(downloadElement);
-        downloadElement.click();
-        document.body.removeChild(downloadElement);
-        window.URL.revokeObjectURL(href);
+        let name = '信息.xlsx';
+        const type = 'application/vnd.ms-excel;charset=utf-8'; //excel文件
+        let u = window.URL.createObjectURL(new Blob([res], { type: type }));
+        let a = document.createElement('a');
+        a.download = name;
+        a.href = u;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
     })
 
 }

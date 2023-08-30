@@ -24,13 +24,14 @@
                     <el-option style="width: 200px;" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
                         :key="item.id"></el-option>
                 </el-select>
-                <div :class="isShow ? 'infiniteMenu' : 'infiniteMenu2'" v-if='paddyWorkList.length'>
+                <div :class="isShow ? 'infiniteMenu' : 'infiniteMenu2'">
                     <div class="el_icon" v-show="isShow" @click="changeisShow(false)">
                         +
                     </div>
                     <div class="el_icon" v-show="!isShow" @click="changeisShow(true)">
                         -
                     </div>
+                    <div class="empty_list" v-if='!paddyWorkList.length'>暂无数据</div>
                     <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
                         <li v-for="(item, index) in paddyWorkList" :key="index"
                             :class="item.checked ? 'infinite-list-item' : 'infinite-list-item2'">
@@ -67,8 +68,8 @@ import "leaflet.pm";
 import "leaflet.pm/dist/leaflet.pm.css";
 import { ElMessage } from 'element-plus'
 import gcoord from 'gcoord'
-// import a from '@/assets/jobManage/a.png'
-// import b from '@/assets/jobManage/b.png'
+import a from '@/assets/jobManage/a.png'
+import b from '@/assets/jobManage/b.png'
 // import pointInChina from '@/utils/pointInChina'
 // import L from 'leaflet'
 // 提交的车辆数组
@@ -338,68 +339,70 @@ const coorTransform = (point = [], mapType = 1) => {
     }
 }
 // 地图绘制方法
-// const addPathAB = (item: any) => {
-//     try {
-//         let pointA = coorTransform(
-//             [item.lineptax as never, item.lineptay as never],
-//             mapId.value
-//         )
-//         let pointB = coorTransform(
-//             [item.lineptbx as never, item.lineptby as never],
-//             mapId.value
-//         )
-//         let l1 = L.latLng(item.lineptax, item.lineptay)
-//         let l2 = L.latLng(item.lineptbx, item.lineptby)
-//         let distance = l1.distanceTo(l2).toFixed(0)
-//         let iconA = L.icon({
-//             iconUrl: a,
-//             iconAnchor: [12, 30],
-//             popupAnchor: [0, -30],
-//         })
-//         let iconB = L.icon({
-//             iconUrl: b,
-//             iconAnchor: [12, 30],
-//             popupAnchor: [0, -30],
-//         })
-//         let markerA = L.marker(pointA as never, { icon: iconA }).addTo(map.value)
-//         let markerB = L.marker(pointB as never, { icon: iconB }).addTo(map.value)
-//         let line = L.polyline([pointA, pointB], {
-//             color: 'red',
-//             dashArray: [9, 9],
-//         })
-//             .bindTooltip(`AB点距离 ${distance} 米`, { permanent: true })
-//             .addTo(map.value)
-//         map.value.fitBounds([pointA, pointB])
-//         let temMarkers = [
-//             {
-//                 markerObj: markerA,
-//                 name: 'markerA',
-//             },
-//             {
-//                 markerObj: markerB,
-//                 name: 'markerB',
-//             },
-//             {
-//                 markerObj: line,
-//                 name: 'lineAB',
-//             },
-//         ]
-//         saveMarker(item.id, temMarkers)
+const addPathAB = (item: any) => {
+    try {
+        console.log(item);
+        
+        let pointA = coorTransform(
+            [item.lineptax as never, item.lineptay as never],
+            mapId.value
+        )
+        let pointB = coorTransform(
+            [item.lineptbx as never, item.lineptby as never],
+            mapId.value
+        )
+        let l1 = L.latLng(item.lineptax, item.lineptay)
+        let l2 = L.latLng(item.lineptbx, item.lineptby)
+        let distance = l1.distanceTo(l2).toFixed(0)
+        let iconA = L.icon({
+            iconUrl: a,
+            iconAnchor: [12, 30],
+            popupAnchor: [0, -30],
+        })
+        let iconB = L.icon({
+            iconUrl: b,
+            iconAnchor: [12, 30],
+            popupAnchor: [0, -30],
+        })
+        let markerA = L.marker(pointA as never, { icon: iconA }).addTo(map.value)
+        let markerB = L.marker(pointB as never, { icon: iconB }).addTo(map.value)
+        let line = L.polyline([pointA, pointB], {
+            color: 'red',
+            dashArray: [9, 9],
+        })
+            .bindTooltip(`AB点距离 ${distance} 米`, { permanent: true })
+            .addTo(map.value)
+        map.value.fitBounds([pointA, pointB])
+        let temMarkers = [
+            {
+                markerObj: markerA,
+                name: 'markerA',
+            },
+            {
+                markerObj: markerB,
+                name: 'markerB',
+            },
+            {
+                markerObj: line,
+                name: 'lineAB',
+            },
+        ]
+        saveMarker(item.id, temMarkers)
 
-//         //绘制田块边界(全部上传GCJ02坐标，对应全部GCJ02地图，无需相互转换！！！)
-//         // if (item.borderpoints) {
-//         //     let latlngs = JSON.parse(item.borderpoints)
-//         //     let polygon = L.polygon(latlngs, { color: '#388BFE' }).addTo(map)
-//         //     let tem = {
-//         //         name: 'border',
-//         //         markerObj: polygon,
-//         //     }
-//         //     saveMarker(item.id, [tem])
-//         // }
-//     } catch (err) {
-//         console.log(err)
-//     }
-// }
+        //绘制田块边界(全部上传GCJ02坐标，对应全部GCJ02地图，无需相互转换！！！)
+        // if (item.borderpoints) {
+        //     let latlngs = JSON.parse(item.borderpoints)
+        //     let polygon = L.polygon(latlngs, { color: '#388BFE' }).addTo(map)
+        //     let tem = {
+        //         name: 'border',
+        //         markerObj: polygon,
+        //     }
+        //     saveMarker(item.id, [tem])
+        // }
+    } catch (err) {
+        console.log(err)
+    }
+}
 // 删除区域
 const removeMarker = (workId: any) => {
     try {
@@ -448,7 +451,9 @@ const clearAllMarkers = () => {
                     markerCollect[key]['marker'].forEach((item: any) => {
                         if (item && item.markerObj) {
                             map.value.removeLayer(item.markerObj)
+                           if(item && item.markerObj2) {
                             map.value.removeLayer(item.markerObj2)
+                           }
                         }
                     })
                 }
@@ -481,9 +486,12 @@ const getPaddyWorkList = async () => {
         markerCollect[element.id] = { marker: [] }
         element.checked = false
     })
-    // ids.value.push(paddyWorkList.value[0].id as never)
-    // paddyWorkList.value[0].checked = true
-    total.value = res.data.total
+    if (paddyWorkList.value.length) {
+        ids.value.push(paddyWorkList.value[0].id as never)
+        paddyWorkList.value[0].checked = true
+        total.value = res.data.total
+    }
+
 }
 getPaddyWorkList()
 const changeBlur1 = () => {
@@ -544,8 +552,7 @@ watch(() => paddyWorkList.value,
             newData.forEach((subItem) => {
                 if (subItem.checked) {
                     if (!hasMarker(subItem.id)) {
-                        // loadWorkData(subItem.id)
-                        // addPathAB(subItem)
+                         addPathAB(subItem)
                     } if (!hasMarkerField(subItem.id, 'lines')) {
                         loadWorkData(subItem.id)
                     }
@@ -622,6 +629,13 @@ watch(() => paddyWorkList.value,
                 width: 14px;
                 height: 14px;
                 border: 1px solid black;
+            }
+
+            .empty_list {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 10px;
             }
 
             .infiniteMenu {
@@ -930,6 +944,7 @@ watch(() => paddyWorkList.value,
 
     .popupBottom {
         margin-top: 10px;
+
         .leftt {
             font-size: 14px;
             line-height: 18px;

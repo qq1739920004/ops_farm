@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { activationCodeAdd_API } from '@/api/machineryList/index'
 const dialogVisible = ref<boolean>(false)
 const props = defineProps(['carId', 'sn', 'deviceId'])
@@ -42,12 +43,18 @@ defineExpose({
 const date = ref(365)
 const activationAddBtn = async () => {
     dialogVisible.value = false
-    await activationCodeAdd_API({
+    const res = await activationCodeAdd_API({
         carId: props.carId,
         oemSn: props.sn,
         deviceId: props.deviceId,
         date: date.value
     })
+    if (res.code == 200) {
+        ElMessage({ type: 'success', message: '注册成功' })
+    }
+    else {
+        ElMessage({ type: 'error', message: '注册失败' })
+    }
 }
 </script>
 

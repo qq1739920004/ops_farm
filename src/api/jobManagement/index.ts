@@ -20,8 +20,9 @@ export function getCarDealerList_API(companyId: number) {
 
 export function getPaddyWorkExport_API(data: PageObj) {
     return request<any, any>({
-        url: "/paddyWork/export",
-        method: 'get',
-        data: data,
+        url: '/paddyWork/export',
+        method: 'post',
+        responseType: 'blob',
+        data,
     })
 }
