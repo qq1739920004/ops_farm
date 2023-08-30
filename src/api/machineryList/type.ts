@@ -72,7 +72,6 @@ export interface carNewListResponseData extends ResponseData {
 }
 
 // 车辆详情type
-
 export interface carNewDetailObj {
     id: number,
     onlineTcp: number,
@@ -89,6 +88,7 @@ export interface carNewDetailObj {
     name: string,
     companyName: string,
     userName: string,
+    tel?:string,
     model: string,
     lastOnlineTime: string,
     lastAutoDriveTime: string,

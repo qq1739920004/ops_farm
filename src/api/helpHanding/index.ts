@@ -1,7 +1,7 @@
 import request from '@/utils/request'
-import { HelpHandlingObj, HelpHandlingResponseData,HelpHandlingUncountData,HelpHandlingParamData } from './type'
+import { HelpHandlingObj, HelpHandlingResponseData,HelpHandlingUncountData,HelpHandlingParamData,HelpHandlingAlarmData } from './type'
 
-// 分页查询求助处理列表s
+// 求助处理列表
 export function getHelpHandlingAPI(params: HelpHandlingObj) {
     return request<any, HelpHandlingResponseData>({
         url: "/help/list",
@@ -27,7 +27,13 @@ export function getHelpHandlingFinishAPI(carId:number,status:number) {
     })
 }
 
-
+// // 基本信息
+// export function getHelpHandlinCarAPI(carId:number) {
+//     return request<any,any>({
+//         url: `/car/new/detail?carId=${carId}`,
+//         method: 'get',       
+//     })
+// }
 // 参数更改
 export function getHelpHandlingParamChangeAPI(carId:number) {
     return request<any,any>({
@@ -39,7 +45,7 @@ export function getHelpHandlingParamChangeAPI(carId:number) {
 
 // 报警记录
 export function getHelpHandlingAlarmRecordAPI(carId:number) {
-    return request<any,any>({
+    return request<any,HelpHandlingAlarmData>({
         url: `/car/alarmRecord/list?carId=${carId}`,
         method: 'get',      
     })
