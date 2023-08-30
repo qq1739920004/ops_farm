@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-        <el-dialog  @open="getNewDetail" v-model="dialogVisible" title="详情" width="903px"
+        <el-dialog  @open="getNewDetail" v-model="dialogVisible" title="详情" 
             height="392px">
             <div class="tableData">
                 <div class="line line1">
@@ -38,7 +38,7 @@
                     <div>向日葵SN:</div>
                     <div class="data">{{ NewDetail.sunFlowerSn }}</div>
                     <div>软件版本:</div>
-                    <div class="data">{{ NewDetail.softwareVersion }}</div>
+                    <div class="data" style="margin-right: 20px;">{{ NewDetail.softwareVersion }}</div>
                 </div>
                 <div class="line line2 ">
                     <div class="tit">创建时间:</div>
@@ -152,11 +152,9 @@ const getNewDetail = async () => {
 
 <style lang="scss" scoped>
 .tableData {
-
     .line:nth-child(2n-1) {
         background: rgba(233, 242, 242, 1);
     }
-
     .line1 {
         width: 100%;
         height: 41px;
@@ -183,7 +181,7 @@ const getNewDetail = async () => {
             .circle {
                 width: 10px;
                 height: 10px;
-                background-color: rgba(76, 176, 79, 1);
+                background-color: var(--el-color-primary);
                 border-radius: 50%;
                 display: inline-block;
                 margin-right: 5px;

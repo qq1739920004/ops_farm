@@ -27,9 +27,9 @@
             </div>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button @click="dialogVisible = false" style="color:rgba(76, 176, 79, 1)" link>下载模版</el-button>
+                    <el-button @click="dialogVisible = false" style="color:var(--el-color-primary)" link>下载模版</el-button>
                     <el-button type="primary"
-                        style="background-color:rgba(76, 176, 79, 1);color:'#fff'; width: 100px;height: 38px;margin-left:50px"
+                        style="background-color:var(--el-color-primary);color:'#fff'; width: 100px;height: 38px;margin-left:50px"
                         @click="dialogVisible = false">
                         录入
                     </el-button>

@@ -8,13 +8,12 @@
                         <el-button icon="Search" @click="search" />
                     </template>
                 </el-input>
-                <el-select class="m_2" placeholder="请选择" v-model="pageInfo.companyId" @blur="changeBlur">
+                <el-select class="m_2" placeholder="请选择" v-model="pageInfo.companyId" @change="changeBlur">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
             </div>
             <div class="button_area">
                 <el-button type="primary" @click="gotoInput">录入经销商设备</el-button>
-                <el-button type="primary" @click="gotoCarModule">查看车型模版</el-button>
                 <el-button-group class="button_group2">
                     <el-button icon="Expand" :class="{ 'tab_active': tableShow }" @click="switchTabShow(true)" />
                     <el-button icon="menu" :class="{ 'tab_active': !tableShow }" @click="switchTabShow(false)" />
@@ -35,14 +34,12 @@
             <sn-card />
         </div>
         <InputDia ref="inputD"></InputDia>
-        <CarModuleDia ref="carModuleD"></CarModuleDia>
     </div>
 </template>
 
 <script setup lang='ts'>
 import InputDia from './components/inputDia.vue'
 import Pagination from '@/components/Pagination/index.vue'
-import CarModuleDia from './components/carModuleDia.vue'
 import { reactive, ref } from 'vue'
 import { carNewList_API } from '@/api/machineryList/index'
 import { newListObj, carNewListResponseData, pageInfo } from '@/api/machineryList/type'
@@ -65,7 +62,6 @@ const pageInfo = reactive<pageInfo>({
     cityCode: ''
 })
 const inputD = ref()
-const carModuleD = ref()
 // 车辆列表
 const carNewList = ref<newListObj[]>([])
 // 车辆ID 
@@ -85,9 +81,6 @@ const currentChange = (val: any) => {
 
 const gotoInput = () => {
     inputD.value.dialogVisible = true
-}
-const gotoCarModule = () => {
-    carModuleD.value.dialogVisible = true
 }
 const changeSort = (val: string) => {
     pageInfo.order = val
@@ -151,8 +144,8 @@ const switchTabShow = (val: boolean) => {
         }
 
         .tab_active {
-            color: #4CB04F;
-            border-color: #4CB04F;
+            color: var(--el-color-primary);
+            border-color: var(--el-color-primary);
         }
     }
 

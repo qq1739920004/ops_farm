@@ -8,7 +8,7 @@
         </div>
         <div class="menuArea">
             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-                active-text-color="rgba(76, 176, 79, 1)" active-background-color="rgba(76, 176, 79, 1)">
+                active-text-color="var(--el-color-primary)" active-background-color="var(--el-color-primary)">
                 <el-menu-item index="1">车辆参数</el-menu-item>
                 <el-menu-item index="2">校准参数</el-menu-item>
                 <el-menu-item index="3">基本参数</el-menu-item>
@@ -852,21 +852,21 @@ const advance1ParamRules = computed(() => {
     }
 
     ::v-deep(.ml-4 .el-radio__label:hover) {
-        color: rgba(76, 176, 79, 1);
+        color: var(--el-color-primary);
 
     }
 
     ::v-deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
-        color: rgba(76, 176, 79, 1);
+        color: var(--el-color-primary);
     }
 
     ::v-deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
-        background: rgba(76, 176, 79, 1);
-        border-color: rgba(76, 176, 79, 1);
+        background: var(--el-color-primary);
+        border-color: var(--el-color-primary);
     }
 
     ::v-deep(.ml-4 .el-radio__inner:hover) {
-        border-color: rgba(76, 176, 79, 1);
+        border-color: var(--el-color-primary);
     }
 
 

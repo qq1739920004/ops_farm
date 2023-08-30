@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { carNewListResponseData, pageInfo, carNewDetailResponseData, carDealerResponseData, carStatusObj, activationCodeObj } from '@/api/machineryList/type'
+import { carNewListResponseData, pageInfo, carNewDetailResponseData, carDealerResponseData, carStatusObj, activationCodeObj, PageInfoObj, singleCarTrackResponseData } from '@/api/machineryList/type'
 // 农机列表API接口// 分页查询
 export function carNewList_API(params: pageInfo) {
     return request<any, carNewListResponseData>({
@@ -46,9 +46,18 @@ export function logClose_API(sn: number) {
 }
 // 注册时长
 export function activationCodeAdd_API(params: activationCodeObj) {
-    return request<any,any> ({
+    return request<any, any>({
         url: '/activationCode/add',
         method: 'post',
+        params
+    })
+}
+
+// 获取历史轨迹
+export function getSingleCarTrick_API(params: PageInfoObj) {
+    return request<any, singleCarTrackResponseData>({
+        url: 'farmPoint/point/singleCarTrack',
+        method: 'get',
         params
     })
 }
