@@ -131,9 +131,19 @@ const changeBlur1 = () => {
 const changeBlur2 = () => {
     getPaddyWorkList()
 }
-const openExportDia = async () => {
-    const res = await getPaddyWorkExport_API(pageInfo)
-    console.log(res);
+const openExportDia = () => {
+    getPaddyWorkExport_API(pageInfo).then((res) => {
+        let name = '作业.xlsx';
+        const type = 'application/vnd.ms-excel;charset=utf-8'; //excel文件
+        let u = window.URL.createObjectURL(new Blob([res], { type: type }));
+        let a = document.createElement('a');
+        a.download = name;
+        a.href = u;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    })
 
 }
 //今天
@@ -274,7 +284,7 @@ const changeA = () => {
             border-radius: 4px;
             border: 1.5px solid var(--el-color-primary);
             background-color: #fff;
-            color:var(--el-color-primary);
+            color: var(--el-color-primary);
         }
 
 

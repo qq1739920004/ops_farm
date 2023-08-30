@@ -47,7 +47,7 @@ export function CarModuleInfoExport_API(data: PageObj) {
   return request<any, any>({
     url: '/carModuleInfo/export',
     method: 'post',
+    responseType: 'blob',
     data,
-    responseType: 'blob'
   })
 }

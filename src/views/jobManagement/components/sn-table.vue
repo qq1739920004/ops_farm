@@ -7,7 +7,7 @@
             </el-table-column>
             <el-table-column label="作业类型" align="center">
                 <template #="{ row }">
-                    <el-tag v-if="row.workType" type="success" round
+                    <el-tag  round
                         style="color:rgba(0, 125, 117, 1);width: 50px;height: 23px;background-color:rgba(168, 232, 227, 1)">播种</el-tag>
                 </template>
             </el-table-column>
@@ -25,13 +25,13 @@
                     </el-row>
                 </template>
             </el-table-column>
-            <el-table-column label="作业地点" prop="position">
+            <el-table-column label="作业地点" prop="position"  align="center">
             </el-table-column>
-            <el-table-column label="SN" prop="sn">
+            <el-table-column label="SN" prop="sn"  align="center">
             </el-table-column>
-            <el-table-column label="铭牌号" prop="npn">
+            <el-table-column label="铭牌号" prop="npn"  align="center">
             </el-table-column>
-            <el-table-column label="所属车辆" prop="carName">
+            <el-table-column label="所属车辆" prop="carName"  align="center">
             </el-table-column>
         </el-table>
         <slot></slot>
@@ -40,8 +40,6 @@
 <script setup lang="ts">
 
 const props = defineProps(['paddyWorkList'])
-console.log(props.paddyWorkList);
-
 </script>
 
 <style lang="scss" scoped></style>
