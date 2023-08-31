@@ -83,7 +83,7 @@ const editSubmit = async () => {
 }
 const editInfo = async () => {
     const res: editResponseData = await carModuleInfoUpdate_API(ApiData)
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '编辑成功' })
         emits('push', '')
     }
@@ -97,7 +97,7 @@ const cancel = () => {
 }
 const addInfo = async () => {
     const res: changeResponseData = await carModuleInfoSave_API(ApiData)
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '添加成功' })
         emits('push', '')
     }

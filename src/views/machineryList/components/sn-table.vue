@@ -113,8 +113,12 @@
             <template #="{ row }">
                 <el-button type="primary" link @click="gotoMachineDetail(row.id, row.terminalType)">详情</el-button>
                 <el-button type="primary" link @click="gotoMap(row.sn, row.npn)">历史轨迹</el-button>
-                <el-button type="primary" link
-                    @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.name)">远程调参</el-button>
+                <el-tooltip :disabled="row.onlineTcp === 0 || row.driveState === (1 || 2) ? false : true" class="box-item"
+                    effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
+                    <el-button :disabled="row.onlineTcp === 0 || row.driveState === (1 || 2) ? true : false" type="primary"
+                        link
+                        @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.name)">远程调参</el-button>
+                </el-tooltip>
                 <el-button type="primary" link>文件存储</el-button>
                 <el-button type="primary" link @click="gotoRegister(row.id, row.sn, row.deviceId)">注册</el-button>
             </template>
@@ -193,7 +197,7 @@ const changeCarStatus = async (val: any) => {
         carStatus.value.commandStatus = val.satelliteStatus
     }
     const res = await carStatus_API(carStatus.value)
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '修改成功' })
     }
     else {
@@ -208,7 +212,7 @@ const changeLogStatus = async (val: any, val2: any) => {
         console.log(val, val2);
         if (val2 == true) {
             const res = await logOpen_API(val)
-            if (res.code == 200) {
+            if (res.code == 0) {
                 ElMessage({ type: 'success', message: '修改成功' })
             }
             else {
@@ -216,7 +220,7 @@ const changeLogStatus = async (val: any, val2: any) => {
             }
         } else {
             const res = await logClose_API(val)
-            if (res.code == 200) {
+            if (res.code == 0) {
                 ElMessage({ type: 'success', message: '修改成功' })
             }
             else {

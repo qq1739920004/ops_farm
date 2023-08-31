@@ -95,7 +95,7 @@ const getDealerList = async () => {
 getDealerList()
 // 获取车辆列表
 const getCarList = async () => {
-    const res: carNewListResponseData = await carNewList_API(pageInfo)
+    const res: carNewListResponseData = await carNewList_API(JSON.stringify(pageInfo))
     carNewList.value = res.data.records
     total.value = res.data.total
 }
