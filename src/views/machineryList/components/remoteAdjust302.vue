@@ -537,7 +537,7 @@ const updateCarParams = async () => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(paramParamsData))
             paramCarParamUpdate_API(updateInfo.value).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
@@ -568,7 +568,7 @@ const updatePidParams = async () => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(PidParamsData))
             updatePidParm_API(updateInfo.value).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
@@ -600,7 +600,7 @@ const updatePidCurveParams = async () => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(pidCurveList))
             updatePidCurveParm_API(updateInfo.value).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
@@ -633,7 +633,7 @@ const updatePidSupLowParams = async () => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(pidSupLowList))
             updatepidSlsParam_API(updateInfo.value).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
@@ -666,7 +666,7 @@ const updateCalibParams = async () => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(CalibParamsData))
             updateCalibParam_API(updateInfo.value).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
@@ -741,7 +741,7 @@ const updateChafenData = async () => {
                 insideUsername: chaFenlist.value.insideUsername,
                 insidePassword: chaFenlist.value.insidePassword
             }).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
@@ -772,7 +772,7 @@ const updateChafenData2 = async () => {
         radioStatus: chaFenlist.value.radioStatus as number,
         radioPower: chaFenlist.value.radioPower as number,
     })
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '更新成功' })
     } else {
         ElMessage({ type: 'error', message: '更新失败' })
@@ -795,7 +795,7 @@ const getProductList = async () => {
 // 在线升级更新数据
 const updateProductList = async () => {
     const res: any = await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'upgradeWay': 2 })
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '修改成功' })
     }
     else {

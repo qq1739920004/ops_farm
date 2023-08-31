@@ -273,6 +273,7 @@ const getSingleCarTrick = async () => {
             return coorTransform([item2.posX as never, item2.posY as never], mapId.value) // 转换坐标
         })
         // 取中间点
+        ElMessage.success(`${route.query.sn}轨迹获取成功！`);
         let line = L.polyline(PointListTransed, { color: '#00ff00' }).addTo(map.value)
         saveMarker([{ markerObj: line, name: 'lines' }])
         map.value.fitBounds(PointListTransed)

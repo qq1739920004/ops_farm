@@ -418,7 +418,7 @@ const updateCarParams = async () => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(paramParamsData))
             paramCarParamUpdate_API(updateInfo.value).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
@@ -450,7 +450,7 @@ const updatebasicParams = async () => {
             updateInfo.value.paramJson = (JSON.stringify(basicParamsData))
 
             updateBasicParm_API(updateInfo.value).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
@@ -482,7 +482,7 @@ const updateCalibParams = async () => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(CalibParamsData))
             updateCalibParam_API(updateInfo.value).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
@@ -531,7 +531,7 @@ const updateAdvanced1Params = async () => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(advanced1ParamsData))
             advanced1ParamUpdate_API(updateInfo.value).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
@@ -597,7 +597,7 @@ const updateChafenData = async () => {
                 insideUsername: chaFenlist.value.insideUsername,
                 insidePassword: chaFenlist.value.insidePassword
             }).then((res) => {
-                if (res.code == 200) {
+                if (res.code == 0) {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 else {
