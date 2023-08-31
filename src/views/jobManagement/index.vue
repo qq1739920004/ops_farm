@@ -9,7 +9,7 @@
 
                     <el-option v-if="CarDealerList.length" v-for="item in CarDealerList" :label="item.nameNpn"
                         :value="item.id" :key="item.id"></el-option>
-                    <el-option v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
+                    <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
                 </el-select>
             </div>
             <div class="time">
