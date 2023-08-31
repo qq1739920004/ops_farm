@@ -2,9 +2,9 @@
     <div class="box">
         <div class="title">
             <span>|</span>&nbsp
-            <span>▸</span>
+            <span class="arrows-shadow">▸</span>
             状态通知栏
-            <span>◂</span>
+            <span class="arrows-shadow">◂</span>
         </div>
 
         <div class="state">
