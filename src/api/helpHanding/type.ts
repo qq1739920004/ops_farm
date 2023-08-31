@@ -96,3 +96,13 @@ export interface AlarmObj {
 export interface HelpHandlingAlarmData extends ResponseData {
     data: AlarmObj
 }
+// 响应-处理人列表
+export interface HandlerUserVO {
+    name?: string;
+    tel?: string;
+    handlerId:string
+}
+
+export interface HelpHandlerData extends ResponseData{
+    data:HandlerUserVO[]
+}

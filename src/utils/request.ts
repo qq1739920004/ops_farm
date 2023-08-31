@@ -22,7 +22,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     const { code, msg } = response.data;
-    if (code === 200  || code ==='ok') {
+    if (code === 200  || code ==='ok'|| code ===0) {
       return response.data;
     }
     // 响应数据为二进制流处理(Excel导出)

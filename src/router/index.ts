@@ -26,6 +26,7 @@ export const constantRoutes = [ // 静态路由数据
     children: [
       {
         path: '',
+        name:'machineryList',
         component: () => import("@/views/machineryList/index.vue"),
         meta: {
           title: '农机列表',
