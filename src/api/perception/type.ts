@@ -26,9 +26,9 @@ export interface ResponseData {
         onlineNum: number
       }
     ],
-    carArea: {
-      key: number
-    }
+    carAreas: [
+      {key: number}
+  ]
   
   }
 

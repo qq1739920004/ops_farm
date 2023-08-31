@@ -219,12 +219,12 @@ const getListData = async () => {
         : '';
     status.cityCode ? (code.cityCode = status.cityCode) : '';
     console.log(code);
-    const res: carNewListResponseData = await carNewList_API({
+    const res: carNewListResponseData = await carNewList_API(JSON.stringify({
         currentPage: currentPage.value,
         pageSize: pageSize.value,
         order: order.value,
         ...code
-    })
+    }))
     total.value = res.data.total
     Object.assign(formData, res.data.records)
 

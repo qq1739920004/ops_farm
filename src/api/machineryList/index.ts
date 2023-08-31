@@ -1,11 +1,11 @@
 import request from '@/utils/request'
-import { carNewListResponseData, pageInfo, carNewDetailResponseData, carDealerResponseData, carStatusObj, activationCodeObj, PageInfoObj, singleCarTrackResponseData } from '@/api/machineryList/type'
+import { carNewListResponseData, carNewDetailResponseData, carDealerResponseData, carStatusObj, activationCodeObj, PageInfoObj, singleCarTrackResponseData } from '@/api/machineryList/type'
 // 农机列表API接口// 分页查询
-export function carNewList_API(params: pageInfo) {
+export function carNewList_API(data: string) {
     return request<any, carNewListResponseData>({
         url: `/car/new/list`,
         method: 'post',
-        params
+        data
     })
 }
 // 车辆详情/car/new/detail

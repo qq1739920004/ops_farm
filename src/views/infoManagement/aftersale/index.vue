@@ -270,7 +270,7 @@ const getTopInfo = async () => {
 getTopInfo()
 const changeSnBtn = async (val: string) => {
     const res: any = await carModuleInfoUpdate_API({ 'sn': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '编辑成功' })
         getTopInfo
     }
@@ -280,7 +280,7 @@ const changeSnBtn = async (val: string) => {
 }
 const changeMotorSnBtn = async (val: string) => {
     const res: any = await carModuleInfoUpdate_API({ 'motorSn': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '编辑成功' })
         getTopInfo
     }
@@ -291,7 +291,7 @@ const changeMotorSnBtn = async (val: string) => {
 
 const changeCarImuSnBtn = async (val: string) => {
     const res: any = await carModuleInfoUpdate_API({ 'carImuSn': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '编辑成功' })
         getTopInfo
     }
@@ -301,7 +301,7 @@ const changeCarImuSnBtn = async (val: string) => {
 }
 const changeWheelImuSnBtn = async (val: string) => {
     const res: any = await carModuleInfoUpdate_API({ 'wheelImuSn': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '编辑成功' })
         getTopInfo
     }
@@ -312,7 +312,7 @@ const changeWheelImuSnBtn = async (val: string) => {
 
 const changeAntennaOneBtn = async (val: string) => {
     const res: any = await carModuleInfoUpdate_API({ 'antennaOne': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '编辑成功' })
         getTopInfo
     }
@@ -322,7 +322,7 @@ const changeAntennaOneBtn = async (val: string) => {
 }
 const changeAntennaTwoBtn = async (val: string) => {
     const res: any = await carModuleInfoUpdate_API({ 'antennaTwo': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '编辑成功' })
         getTopInfo
     }
@@ -332,7 +332,7 @@ const changeAntennaTwoBtn = async (val: string) => {
 }
 const changeHubSnBtn = async (val: string) => {
     const res: any = await carModuleInfoUpdate_API({ 'hubSn': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '编辑成功' })
         getTopInfo
     }
