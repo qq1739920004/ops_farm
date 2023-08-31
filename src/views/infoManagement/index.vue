@@ -85,7 +85,7 @@
                     <template #="{ row }">
                         <div class="edit-btn">
                             <div class="left">
-                                <el-button type="primary" link @click="edit(row)">编辑 </el-button>
+                                <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate">编辑 </el-button>
                                 <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
                                     @confirm="removeTradeMark(row.id)">
                                     <template #reference>
@@ -157,7 +157,7 @@
                     <template #="{ row }">
                         <div class="edit-btn">
                             <div class="left">
-                                <el-button type="primary" link @click="edit(row)">编辑 </el-button>
+                                <el-button type="primary" link @click="edit(row)"  :disabled="row.warrantyDate">编辑 </el-button>
                                 <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
                                     @confirm="removeTradeMark(row.id)">
                                     <template #reference>
@@ -266,7 +266,7 @@
                     <template #="{ row }">
                         <div class="edit-btn">
                             <div class="left">
-                                <el-button type="primary" link @click="edit(row)">编辑 </el-button>
+                                <el-button type="primary" link @click="edit(row)"  :disabled="row.warrantyDate">编辑 </el-button>
                                 <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
                                     @confirm="removeTradeMark(row.id)">
                                     <template #reference>
@@ -441,7 +441,7 @@ const changeBlur = () => {
 }
 const addInfo = async () => {
     const res: changeResponseData = await carModuleInfoSave_API(newRecords)
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '添加成功' })
     }
     else {
@@ -450,7 +450,7 @@ const addInfo = async () => {
 }
 const editInfo = async () => {
     const res: editResponseData = await carModuleInfoUpdate_API(newRecords)
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '编辑成功' })
     }
     else {
@@ -534,7 +534,7 @@ const openDialog = () => {
 }
 const removeTradeMark = async (id: any) => {
     const res: carMoudleInfoDeleteResponseData = await carModuleInfoOperationDelete_API(id)
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '删除成功' })
         pageInfo.key = ''
         getInfoMangementInfo()

@@ -1,10 +1,13 @@
 import request from '@/utils/request'
-import { HelpHandlingObj, HelpHandlingResponseData,HelpHandlingUncountData,HelpHandlingParamData,HelpHandlingAlarmData } from './type'
+import { HelpHandlingObj, HelpHandlingResponseData,HelpHandlingParamData,HelpHandlingAlarmData,
+    HelpHandlerData,
+    RecordsObj
+} from './type'
 
 // 求助处理列表
 export function getHelpHandlingAPI(params: HelpHandlingObj) {
     return request<any, HelpHandlingResponseData>({
-        url: "/help/list",
+        url: "/help/new/list",
         method: 'post',
         params
     })
@@ -17,23 +20,23 @@ export function getHelpHandlingUncountAPI() {
         method: 'get',
     })
 }
-
-
-// 完成处理
-export function getHelpHandlingFinishAPI(carId:number,status:number) {
-    return request<any,HelpHandlingUncountData>({
-        url: `help/update?carId=${carId}&${status}`,
+// 处理人列表
+export function getHelpHandlerAPI() {
+    return request<any,HelpHandlerData>({
+        url: `/help/handler/new/list`,
         method: 'get',
     })
 }
 
-// // 基本信息
-// export function getHelpHandlinCarAPI(carId:number) {
-//     return request<any,any>({
-//         url: `/car/new/detail?carId=${carId}`,
-//         method: 'get',       
-//     })
-// }
+// 完成处理
+export function getHelpHandlingFinishAPI(params:any) {
+    return request<any,any>({
+        url: `/help/update?${params}`,
+        method: 'get',
+    })
+}
+
+
 // 参数更改
 export function getHelpHandlingParamChangeAPI(carId:number) {
     return request<any,any>({
@@ -71,5 +74,20 @@ export function getHelpHandlinPIDParamAPI(carId:number) {
     return request<any,HelpHandlingParamData>({
         url: `param/pidParam/get?carId=${carId}`,
         method: 'get',      
+    })
+}
+
+// PID曲线参数更新
+export function getPidCurveParmAPI(carId:number) {
+    return request<any, HelpHandlingParamData>({
+        url: `/param/pidCurveParam/get?carId=${carId}`,
+        method: 'get',
+    })
+}
+// PID超低速参数
+export function getPidSlsParamAPI(carId:number) {
+    return request<any, HelpHandlingParamData>({
+        url: `/param/pidSlsParam/get?carId=${carId}`,
+        method: 'get',
     })
 }

@@ -49,7 +49,7 @@ const activationAddBtn = async () => {
         deviceId: props.deviceId,
         date: date.value
     })
-    if (res.code == 200) {
+    if (res.code == 0) {
         ElMessage({ type: 'success', message: '注册成功' })
     }
     else {

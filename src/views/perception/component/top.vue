@@ -98,7 +98,6 @@ defineProps({
   display: flex;
   width: 100%;
   height: 223px;
-
   flex-direction: column;
   flex-wrap: wrap;
 

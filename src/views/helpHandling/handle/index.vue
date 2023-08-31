@@ -7,13 +7,13 @@
             <span>详情</span>
         </div>
         <div class="middle">
-            <el-button type="success" plain>远程管理</el-button>
+            <el-button type="success" plain :disabled="baseInfo.onlineTcp===0?false:true" @click="remoteManage">远程管理</el-button>
             <el-button type="success" plain @click="handle">处理</el-button>
         </div>
         <div class="card1">
             <div class="card_title">基本信息
                 <span class="downIcon" @click="clickOpen">
-                    {{openContent}}
+                    {{ openContent }}
                     <el-icon v-if="isShow">
                         <ArrowUp />
                     </el-icon>
@@ -29,22 +29,23 @@
                     <span>{{ baseInfo.model }}</span>
                 </li>
                 <li>
-                    <span>软件版本</span>
+                    <span>软件版本：</span>
                     <span>{{ baseInfo.softwareVersion }}</span>
                 </li>
                 <li>
-                    <span>更新时间</span>
+                    <span>更新时间：</span>
                     <span>{{ baseInfo.updateTime }}</span>
                 </li>
                 <li>
                     <span>车辆厂家：</span>
                     <span>{{ baseInfo.factory }}</span>
                 </li>
+                <li>
+                    <span>SN:</span>
+                    <span>{{ baseInfo.sn }}</span>
+                </li>
                 <a href="" v-show="isShow">
-                    <li>
-                        <span>SN:</span>
-                        <span>{{ baseInfo.sn}}</span>
-                    </li>
+
                     <li>
                         <span>车辆名称：</span>
                         <span>{{ baseInfo.name }}</span>
@@ -55,32 +56,32 @@
                     </li>
                     <li>
                         <span>车主电话：</span>
-                        <span>{{baseInfo.tel}}</span>
+                        <span>{{ baseInfo.tel }}</span>
                     </li>
-                   
+
                     <li>
                         <span>车龄：</span>
-                        <span>{{ baseInfo.age}}</span>
+                        <span>{{ baseInfo.age }}</span>
                     </li>
                     <li>
                         <span>创建人：</span>
-                        <span>{{ baseInfo.creatorName}}</span>
+                        <span>{{ baseInfo.creatorName }}</span>
                     </li>
                     <li>
                         <span>创建人电话：</span>
-                        <span>{{ baseInfo.creatorTel}}</span>
+                        <span>{{ baseInfo.creatorTel }}</span>
                     </li>
                     <li>
                         <span>创建时间：</span>
-                        <span>{{ baseInfo.createTime}}</span>
+                        <span>{{ baseInfo.createTime }}</span>
                     </li>
                     <li>
                         <span>最近上线时间：</span>
-                        <span>{{ baseInfo.lastOnlineTime}}</span>
+                        <span>{{ baseInfo.lastOnlineTime }}</span>
                     </li>
                     <li>
                         <span>最近自动驾驶时间：</span>
-                        <span>{{ baseInfo.lastAutoDriveTime}}</span>
+                        <span>{{ baseInfo.lastAutoDriveTime }}</span>
                     </li>
                 </a>
             </ul>
@@ -117,7 +118,9 @@
                 <span>差分信息</span>
             </div>
             <div class="message">
-                ---
+                <div>    <span>工作模式：</span>
+            <span>罗网</span></div>
+        
             </div>
 
             <div class="secondTitle">
@@ -150,23 +153,100 @@
                     <span>{{ value }}</span>
                 </div>
             </div>
+
+            <div class="secondTitle">
+                <span>|</span>
+                <span>PID曲线参数</span>
+            </div>
+            <div class="message">
+                <div v-for="(value, name, index)  in PidCurveParam.value" :key="index">
+                    <span>{{ name + ':' }}</span>
+                    <span>{{ value }}</span>
+                </div>
+            </div>
+
+            <div class="secondTitle">
+                <span>|</span>
+                <span>PID超低速参数</span>
+            </div>
+            <div class="message">
+                <div v-for="(value, name, index)  in PidSlsParam.value" :key="index">
+                    <span>{{ name + ':' }}</span>
+                    <span>{{ value }}</span>
+                </div>
+            </div>
         </div>
+        <!-- 处理对话框 -->
+        <el-dialog v-model="dialogFormVisible" title="指派">
+            <el-form :model="helpList" :rules="rules"  ref="formRef">
+                <el-form-item label="备注：" label-width="140px"  prop="info"                >
+                    <el-input v-model="helpList.info" type="textarea" autocomplete="off" placeholder="请输入备注" />
+                </el-form-item>
+                <el-form-item label="继续指派：" label-width="140px" clearable>
+                    <el-select v-model="helpList.handlerName" placeholder="请选择" @change="changeHanlder">
+                        <el-option v-for="(item, index) in handlerList" :key="index" :label="item.name" :value="item">
+                            <span style="float: left;">{{ item.name }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px;">{{ item.tel }}</span>
+                        </el-option>
+                    </el-select>
+
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button ref="finish" @click="finishConfirm">完成处理</el-button>
+                    <el-button ref="assign" type="primary" @click="assignConfirm">
+                        指派
+                    </el-button>
+                </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted, ref, reactive, } from 'vue'
-import { getHelpHandlingCarParamAPI, getHelpHandlingCalibParamAPI, getHelpHandlingAlarmRecordAPI, getHelpHandlingFinishAPI, getHelpHandlinPIDParamAPI, getHelpHandlingParamChangeAPI } from '@/api/helpHanding/index'
+import {
+    getHelpHandlingCarParamAPI, getHelpHandlingCalibParamAPI, getHelpHandlingAlarmRecordAPI, getHelpHandlingFinishAPI, getHelpHandlinPIDParamAPI,
+    getHelpHandlingParamChangeAPI, getHelpHandlerAPI,getPidCurveParmAPI,getPidSlsParamAPI
+} from '@/api/helpHanding/index'
 import { carNewDetail_API } from '@/api/machineryList/index'
-import type { HelpHandlingParamData, HelpHandlingAlarmData, } from '@/api/helpHanding/type'
+import type { HelpHandlingParamData, HelpHandlingAlarmData, HelpHandlerData, HandlerUserVO, RecordsObj } from '@/api/helpHanding/type'
 import type { carNewDetailResponseData, carNewDetailObj } from '@/api/machineryList/type'
 
+const dialogFormVisible = ref(false)
 const $router = useRouter()
 let $route = useRoute()
-let carId = ref<string>('')
+let carId = ref<Number>(0)
 let isShow = ref<Boolean>(false)
-let openContent=ref<string>('展开')
+let openContent = ref<string>('展开')
+    let formRef = ref()
+const rules = {
+   info: [{ required: true, message: '请输入备注', trigger: 'blur' }] 
+}
+const helpList = ref<RecordsObj>({
+    "id": 0,
+    "tel": "",
+    "sn": "",
+    "carId": 0,
+    "status": 0,
+    "helpTime": "",
+    "handleTime": "",
+    "assignTime": "",
+    "consumeTime": 0,
+    "managerId": 0,
+    "handlerId": 0,
+    "managerName": "",
+    "handlerName": "",
+    "info": ""
+})
+
+const handlerList = ref<HandlerUserVO[]>([{
+    name: '',
+    tel: '',
+    handlerId: ''
+}])
 // 基本信息
 const baseInfo = ref<carNewDetailObj>({
     "id": 0,
@@ -184,7 +264,7 @@ const baseInfo = ref<carNewDetailObj>({
     "name": "",
     "companyName": "",
     "userName": "",
-    "tel":'',
+    "tel": '',
     "model": "",
     "lastOnlineTime": "",
     "lastAutoDriveTime": "",
@@ -203,7 +283,6 @@ const baseInfo = ref<carNewDetailObj>({
     "hub": "",
     "hubSn": ""
 })
-
 // 报警
 const alarmRecord = ref<any>([])
 // 参数更改响应数据
@@ -222,7 +301,10 @@ const calibParam = reactive<any>({
 // PID响应数据
 const PIDParam = reactive<any>({
 })
+// PID曲线参数
+const PidCurveParam =reactive<any>({})
 
+const PidSlsParam=reactive<any>({})
 // 返回求助处理页
 const back = () => {
     $router.push({
@@ -232,46 +314,63 @@ const back = () => {
 
 onMounted(
     () => {
-        carId.value = ($route.query.carId as string)
+        helpList.value = JSON.parse($route.query.helpList as string)
+        carId.value = helpList.value.carId
     }
 )
+
+// 指派人列表
+const getHandler = async () => {
+    const res: HelpHandlerData = await getHelpHandlerAPI()
+    handlerList.value = res.data
+}
 // 基本信息
 const getBaseInfo = async () => {
 
     const res: carNewDetailResponseData = await carNewDetail_API(Number(carId.value))
     baseInfo.value = res.data
     // console.log(baseInfo.value)
-
 }
 // 报警记录
 const getHelpHandlingAlarmRecord = async () => {
     try {
         const res: HelpHandlingAlarmData = await getHelpHandlingAlarmRecordAPI(Number(carId.value))
         alarmRecord.value = res.data.list
-        alarmRecord.value.forEach((ele: any) => {
-            if (ele.content == 0) {
-                ele.content = "集线器"
-            } else if (ele.content == 1) {
-                ele.content = "力矩电机"
-            }
-            else if (ele.content == 2) {
-                ele.content = "前轮速率陀螺"
-            }
-            else if (ele.content == 3) {
-                ele.content = "车身速率陀螺"
-            }
-            else if (ele.content == 4) {
-                ele.content = "多功能方向盘故障"
-            }
-            else if (ele.content == 5) {
-                ele.content = "多功能方向盘电量过低"
-            }
-            else if (ele.content == 6) {
-                ele.content = "差分龄期过大"
-            }
-            else {
-                ele.content = "横向偏差过大"
-            }
+        alarmRecord.value.forEach((item: any) => {
+            switch (item.grade) {
+                  case 1:
+                    item.grade = '一级';
+                    break;
+                  case 2:
+                    item.grade = '二级';
+                    break;
+                }
+            switch (item.content) {
+                  case 0:
+                    item.content = '集线器';
+                    break;
+                  case 1:
+                    item.content = '力矩电机';
+                    break;
+                  case 2:
+                    item.content = '前轮速率陀螺';
+                    break;
+                  case 3:
+                    item.content = '车身速率陀螺';
+                    break;
+                  case 4:
+                    item.content = '多功能方向盘故障';
+                    break;
+                  case 5:
+                    item.content = '多功能方向盘电量过低';
+                    break;
+                  case 6:
+                    item.content = '差分龄期过大';
+                    break;
+                  case 7:
+                    item.content = '横向偏差过大';
+                    break;
+                }
         });
     }
     catch (err) {
@@ -316,30 +415,74 @@ const getHelpHandlinPIDParam = async () => {
     const res: HelpHandlingParamData = await getHelpHandlinPIDParamAPI(Number(carId.value))
     PIDParam.value = JSON.parse(res.data.paramJson)
 }
+// 获取PID曲线参数
+const getPidCurveParam = async () => {
+    const res: HelpHandlingParamData = await getPidCurveParmAPI(Number(carId.value))
+    PidCurveParam.value = JSON.parse(res.data.paramJson)
+}
+// 获取PID超低速
+const getPidSlsParam= async () => {
+    const res: HelpHandlingParamData = await getPidSlsParamAPI(Number(carId.value))
+    PidSlsParam.value = JSON.parse(res.data.paramJson)
+}
+const getHelpHandlingFinish = async (data: any) => {
+    try {
+        const res = await getHelpHandlingFinishAPI(data)
+        if (res.code == 0) {
+            back()
+        } else {
+            alert('处理失败')
+        }
+    } catch (err: any) {
+        console.log('error')
+    }
+}
+getHandler()
 getBaseInfo()
 getHelpHandlingAlarmRecord()
 getHelpHandlingParamChange()
 getHelpHandlingCarParam()
 getHelpHandlingCalibParam()
 getHelpHandlinPIDParam()
+getPidCurveParam()
+getPidSlsParam()
 
-const clickOpen=()=> {
-      isShow.value = !isShow.value;
-      isShow.value ? (openContent.value = '收起') : (openContent.value = '展开');
-    }
+const remoteManage=()=>{
+    console.log(baseInfo.value.sn)
+    $router.push({
+         name:'machineryList'  ,
+         query: {sn: baseInfo.value.sn},
+      });
+}
 
-// 完成处理请求
-const getHelpHandlingFinish = async () => {
-    try {
-        await getHelpHandlingFinishAPI(Number(carId.value), 1)
-        console.log('chenggong')
-    } catch (err: any) {
-        console.log('error')
-    }
+
+const clickOpen = () => {
+    isShow.value = !isShow.value;
+    isShow.value ? (openContent.value = '收起') : (openContent.value = '展开');
+}
+
+const changeHanlder = (e: any) => {
+    helpList.value.handlerName = e.name
+    helpList.value.handlerId = e.handlerId
+}
+
+
+// 指派按钮
+const assignConfirm =async () => {
+   await formRef.value.validate()
+    helpList.value.status = 0
+    dialogFormVisible.value=false
+    getHelpHandlingFinish(helpList)
 }
 // 完成处理按钮
+const finishConfirm = () => {
+    helpList.value.status = 1
+    dialogFormVisible.value=false
+    getHelpHandlingFinish(helpList)
+}
+
 const handle = () => {
-    getHelpHandlingFinish()
+    dialogFormVisible.value = true
 }
 
 </script>
@@ -421,18 +564,36 @@ const handle = () => {
             font-size: 14px;
             cursor: pointer;
         }
-    }
 
+        .base_info {
+            font-size: 14px;
 
-    .base_info {
-        font-size: 14px;
+            li {
+                display: inline-block;
+                width: 20%;
+                padding: 5px;
+                position: relative;
 
-        li {
-            display: inline-block;
-            margin: 0 20px;
+                :first-child {
+                    position: relative;
+                    color: #8c8c8c;
+                    left: 5px;
+                    margin: 0 auto;                  
+                }
+
+                :last-child {                  
+                    position: relative;
+                    left: 5px;
+                    margin: 0 auto;
+                }
+
+            }
+
         }
-
     }
+
+
+
 
     .alarm {
 

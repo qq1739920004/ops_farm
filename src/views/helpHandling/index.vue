@@ -3,7 +3,9 @@
         <!-- 搜索 -->
         <div class="search_container app_card">
             <div>
-                <el-input placeholder=请输入SN、电话 v-model=helpHandling.key>
+                <el-input placeholder=请输入SN、电话 v-model="helpHandling.key"
+                @keyup.enter.native="search()"
+                >
                     <template #append>
                         <el-button icon=Search @click=search() />
                     </template>
@@ -67,7 +69,7 @@
 </template>
 
 <script setup lang='ts'>
-import { reactive, ref } from 'vue'
+import { reactive, ref,onMounted } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { getHelpHandlingAPI, getHelpHandlingUncountAPI } from '@/api/helpHanding/index'
 import type { RecordsObj, HelpHandlingObj, HelpHandlingResponseData, HelpHandlingUncountData } from '@/api/helpHanding/type'
@@ -85,7 +87,9 @@ const helpHandling = reactive<HelpHandlingObj>({
     handleTimeOrder: 0,
     assignTimeOrder: 0
 })
-
+onMounted(()=>{
+    getHelpHandling()
+})
 
 const changeTableSort = (column: any) => {
 
@@ -161,10 +165,9 @@ const search = () => {
 
 const $router = useRouter()
 const handleEdit = (row: RecordsObj) => {
-
     $router.push({
         name: 'handle',
-        query: { carId: row.carId }
+        query: { carId: row.carId, helpList: JSON.stringify(row)}
     });
 }
 
