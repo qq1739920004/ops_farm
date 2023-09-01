@@ -160,20 +160,6 @@ export const constantRoutes = [ // 静态路由数据
     // component: Layout,
 
   },
-  {
-    path: '/tableSearch',
-    component: Layout,
-    children: [
-      {
-        path: '',
-        component: () => import("@/views/tableSearch/index.vue"),
-        meta: {
-          title: 'tableSearch',
-          icon: 'Message'
-        },
-      },
-    ]
-  },
 
 
 ]
