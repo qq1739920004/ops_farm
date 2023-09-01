@@ -2,118 +2,272 @@
   <div class="box">
     <div class="title">
       <span>|</span>&nbsp
-      <span>▸</span>
+      <span class="arrows-shadow">▸</span>
       各车辆作业面积 亩
-      <span>◂</span>
+      <span class="arrows-shadow">◂</span>
     </div>
-    <div class="charts" ref="bar">
-
+    <div class="charts-box">
+      <div class="charts" ref="bar"></div>
     </div>
   </div>
 </template>
-    
-<script setup lang='ts'>
-import * as echarts from 'echarts'
-import { ref, toRaw, watch, onUnmounted, onMounted } from 'vue'
 
-const props = defineProps(['carArea'])
-const carname = toRaw(props.carArea)
-const listy = Object.values(carname)
-const listx = Object.keys(carname)
+<script setup lang="ts">
+import * as echarts from "echarts";
+import { ref, watch, onUnmounted, onMounted } from "vue";
+
+const props = defineProps(["carAreas"]);
+let chartIcon = `data:image/png;base64,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`;
+const listy = props.carAreas.map((item: any) => item.carArea);
+const listx = props.carAreas.map((item: any) => item.carName);
+// 获取图表节点
+let bar = ref();
+let leftPosition=ref(0)
+let titleWidth=ref(80)
+let mycharts: echarts.ECharts = {} as echarts.ECharts;
+type DataZoomMove = {
+  start: number;
+  end: number;
+};
+const dataZoomMove: DataZoomMove = {
+  start: 0,
+  end: 4,
+};
+
 const option = {
   xAxis: {
-    type: 'value',
-    show: false
+    type: "value",
+    axisLabel: {
+      align: "left",
+    },
+    show: false,
   },
   yAxis: {
-    type: 'category',
-    data: listx
+    axisLabel: {
+      interval: 0, //强制显示所有标签
+      formatter: function (value: any) {
+        // 动态计算 rank 标签的 left 位置，确保不与 title 冲突
+        // 如果 leftPosition 与 title 冲突，向右偏移
+        // if (leftPosition.value < titleWidth.value) {
+        //   leftPosition.value = titleWidth.value + 5; // 在 title 宽度的右侧再添加 5 像素的间距
+        // }
+        // console.log(value);
+        return "{rank" + "|" + "}{title|" + value + "}";
+      },
+      rich: {
+        rank: {
+          width: 5,
+          height: 5,
+          left:leftPosition.value,
+          backgroundColor: "white",
+          borderRadius: 20,
+        },
+        title: {
+          width:titleWidth.value,
+          fontSize:14
+        },
+      },
+    },
+    type: "category",
+    data: listx,
+    inverse: true,
+    axisLine: {
+      show: false,
+    },
+    axisTick: {
+      show: false,
+    },
+    splitLine: {
+      show: false,
+      lineStyle: {
+        color: "#13387a",
+      },
+    },
   },
   grid: {
-    left: 35,
-    top: 10,
-    right: 15,
-    bottom: 10
+    containLabel: true,
+    bottom: "5%",
+    top: "5%",
+    left: "10%",
+    right: "20%",
   },
+  dataZoom: [
+    {
+      show: true, // 为true 滚动条出现
+      realtime: true,
+      type: "inside", // 内部数据区域缩放和选择
+      disabled: true, // 禁用数据区域缩放和选择功能
+      startValue: dataZoomMove.start,
+      endValue: dataZoomMove.end,
+      bottom: "5%",
+      top: "5%",
+      yAxisIndex: [0, 1], //这个字段的作用是指定哪个轴可以进行缩放操作，这里的0表示x轴，1表示y轴
+      zlevel: 1000000,
+    },
+    {
+      //没有下面这块的话，只能拖动滚动条，鼠标滚轮在区域内不能控制外部滚动条
+      type: "inside",
+      yAxisIndex: 0,
+      zoomOnMouseWheel: false, //滚轮是否触发缩放
+      moveOnMouseMove: false, //鼠标移动时触发
+      moveOnMouseWheel: true, //鼠标滚轮触发移动
+    },
+  ],
   series: [
     {
       data: listy,
-      type: 'bar',
+      type: "bar",
       barWidth: 10,
       showBackground: true,
+      barGap: "10%", // 调整柱状图之间的间距
       label: {
-        show: true, position: 'right',
-        color: 'white',
+        show: true, //是否显示标签
+        position: "right", //标签位置
+        color: "#3aed81", //标签颜色
+        formatter: function (params: any) {
+          //标签内容
+          if (params.value > 0) {
+            //大于0显示标签
+            //取小数点2位
+            return `{z|}{a|} ${params.value.toFixed(2)}`;
+          } else {
+            return `   0`;
+          }
+        },
+        distance: -15,
+
+        rich: {
+          a: {
+            widht: 30,
+            height: 30,
+            backgroundColor: {
+              image: chartIcon,
+            },
+          },
+        },
       },
       itemStyle: {
-        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
-          offset: 0,
-          color: 'rgba(0, 255, 179, 0.58)'
-        }, {
-          offset: 1,
-          color: 'rgba(94, 255, 0, 0.9)'
-        }]),
+        //设置柱子边距
+        borderRadius : [0, 20, 20, 0],
+        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+          {
+            offset: 0,
+            color: "rgba(0, 255, 179, 0.58)",
+          },
+          {
+            offset: 1,
+            color: "rgba(94, 255, 0, 0.9)",
+          },
+        ]),
       },
+
       backgroundStyle: {
-        color: 'rgba(51, 187, 196, 0.32)'
-      }
-    }
-  ]
+        color: "none",
+      },
+    },
+  ],
 };
-// 获取图表节点
-let bar = ref();
-var mycharts: any;
 
 const initEcharts = () => {
-  mycharts = echarts.init(bar.value)
-  mycharts.setOption(option)
-}
+  mycharts = echarts.init(bar.value);
+  mycharts.setOption(option);
+};
+//设置为定时器类型
+let dataZoomMoveTimer: NodeJS.Timeout | undefined;
+const startMoveDataZoom = (
+  myChart: echarts.ECharts,
+  dataZoomMove: DataZoomMove
+) => {
+  dataZoomMoveTimer = setInterval(() => {
+    dataZoomMove.start += 1;
+    dataZoomMove.end += 1;
+    if (dataZoomMove.end > listx.length - 1) {
+      dataZoomMove.start = 0;
+      dataZoomMove.end = 4;
+    }
+    myChart.setOption({
+      dataZoom: [
+        {
+          type: "inside", // 内部数据区域缩放和选择
+          startValue: dataZoomMove.start,
+          endValue: dataZoomMove.end,
+        },
+      ],
+    });
+  }, 3000);
+};
 
 onMounted(() => {
-  initEcharts()
-})
-
+  initEcharts();
+  startMoveDataZoom(mycharts, dataZoomMove);
+  let chartDom = mycharts.getDom();
+  chartDom.addEventListener("mouseout", () => {
+    if (dataZoomMoveTimer) return;
+    let dataZoomMove_get = (mycharts.getOption() as any).dataZoom[0];
+    dataZoomMove.start = dataZoomMove_get.startValue;
+    dataZoomMove.end = dataZoomMove_get.endValue;
+    startMoveDataZoom(mycharts, dataZoomMove);
+  });
+  // 移入
+  // myChart.on
+  chartDom.addEventListener("mouseover", () => {
+    clearInterval(dataZoomMoveTimer);
+    dataZoomMoveTimer = undefined;
+  });
+});
 
 watch(props, (newValue) => {
-  option.yAxis.data = Object.keys(newValue.carArea)
-  option.series[0].data = Object.values(newValue.carArea)
-  mycharts.setOption(option)
-})
+  option.yAxis.data = newValue.carAreas.map((item: any) => item.carName);
+  option.series[0].data = newValue.carAreas.map((item: any) => item.carArea);
+  mycharts.setOption(option);
+});
 
 onUnmounted(() => {
   mycharts.dispose;
 });
-
 </script>
 
 <style lang="scss" scoped>
 .box {
   background: url(../image/border_green.png) no-repeat;
   background-size: 100% 100%;
-  margin: 10px 10px 10px 15px;
-
+  margin: 0.625rem 0.625rem 0.625rem 0.9375rem;
   .title {
-    height: 40px;
-    line-height: 27px;
+    height: 2.5rem;
+    line-height: 1.6875rem;
 
-    background: linear-gradient(to right, rgba(31, 61, 43, 1), rgba(48, 117, 76, 0));
-    border: 0.8px solid;
-    border-image: linear-gradient(to right, rgb(63, 255, 140, 0.8), rgba(48, 117, 76, 0)) 1;
+    background: linear-gradient(
+      to right,
+      rgba(31, 61, 43, 1),
+      rgba(48, 117, 76, 0)
+    );
+    border: 0.05rem solid;
+    border-image: linear-gradient(
+        to right,
+        rgb(63, 255, 140, 0.8),
+        rgba(48, 117, 76, 0)
+      )
+      1;
     border-left-style: none;
     border-right-style: none;
 
     span {
-      font-size: 20px;
+      font-size: 1.25rem;
     }
 
     span:first-child {
-      font-size: 30px;
+      font-size: 1.875rem;
       font-weight: 900;
     }
   }
 
-  .charts {
-    height: calc(100% - 40px);
+  .charts-box {
+    width: 100%;
+    height: calc(100% - 2.5rem);
+    .charts {
+      width: 100%;
+      height: 100%;
+    }
     // background-color: rgb(233, 208, 212, 0.2);
   }
 }

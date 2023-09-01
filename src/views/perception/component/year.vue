@@ -2,9 +2,9 @@
     <div class="box">
         <div class="title">
             <span>|</span>&nbsp
-            <span>▸</span>
+            <span class="arrows-shadow">▸</span>
             当年统计数
-            <span>◂</span>
+            <span class="arrows-shadow">◂</span>
         </div>
 
         <div class="charts" id="myChart">
@@ -79,7 +79,6 @@
      
         >div {
             background-color:  rgba(196, 204, 158, 0.8);
-           
             width: 50%;
             background:url(../image/year_bg.png) no-repeat;           
             display: flex;  

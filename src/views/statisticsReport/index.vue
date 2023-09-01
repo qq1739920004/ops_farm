@@ -50,29 +50,18 @@ import Chartfour from './components/chartfour.vue'
 import Chartfive from './components/chartfive.vue'
 import Chartsix from './components/chartsix.vue'
 import Chartseven from './components/chartseven.vue'
-import {onUnmounted, ref, watch,onMounted} from 'vue'
-import {getStatisticsReportfarmMachineAPI} from '@/api/statisticsReport/index'
+import { ref, onMounted} from 'vue'
+import {getStatisticsReportfarmMachineAPI,getStatisticsWxAPI} from '@/api/statisticsReport/index'
 import type {FarmMachineObj} from '@/api/statisticsReport/type'
 const farmMachineData=ref<FarmMachineObj>()
 
 
-const curTime = ref<number>(Date.now())
-const setCurTime = () => {
-  curTime.value = Date.now()
-}
-const timer=setInterval(()=>{
-    setCurTime()
-},1000)
+
 
 
 onMounted(()=>{
-    
     getStatisticsReportfarmMachine()
-})
-
-watch(curTime,()=>{
-    getStatisticsReportfarmMachine()
-
+    getStatisticsWx()
 })
 
 
@@ -89,16 +78,16 @@ const getStatisticsReportfarmMachine=async()=>{
    }    
 }
 
-// // 功能统计，参数同步统计
-// const getStatisticsWx=async()=>{
-//     const res=await getStatisticsWxAPI()
-//     console.log(res)
- 
-// }
+// 功能统计，参数同步统计
+const getStatisticsWx=async()=>{
+    try{
+      await getStatisticsWxAPI()
+    // console.log(res.data)
+   }catch(err){
+    console.log(err)
+   }  
+}
 
-onUnmounted(()=>{
-    clearInterval(timer)
-})
 
 </script>
 

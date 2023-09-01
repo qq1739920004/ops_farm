@@ -42,15 +42,17 @@
 </template>
 
 <script setup lang='ts'>
+import { useRoute } from 'vue-router'
 import InputDia from './components/inputDia.vue'
 import Pagination from '@/components/Pagination/index.vue'
-import { reactive, ref } from 'vue'
+import { reactive, ref,onMounted } from 'vue'
 import { carNewList_API } from '@/api/machineryList/index'
 import { newListObj, carNewListResponseData, pageInfo } from '@/api/machineryList/type'
 import snTable from './components/sn-table.vue'
 import snCard from './components/sn-card.vue'
 import { carDealer_API } from '@/api/machineryList/index'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
+let $route = useRoute()
 // 控制table显示与否
 const tableShow = ref<boolean>(true)
 const total = ref<number>(10)
@@ -113,6 +115,16 @@ const getCarList = async () => {
 const switchTabShow = (val: boolean) => {
     tableShow.value = val
 }
+
+onMounted(()=>{
+    getRouterParam()
+})
+const getRouterParam=()=>{
+    pageInfo.key= <string>$route.query.sn
+    search()
+}
+
+
 </script>
 
 <style lang="scss" scoped>

@@ -15,13 +15,13 @@ export function getStatisticsReportonlinePositionAPI() {
       method: 'get',
     })
   }
-// // 功能统计，参数同步统计
-//   export function getStatisticsWxAPI() {
-//     return request<any, any>({
-//         url: "/stat/wxAndParam",
-//       method: 'get',
-//     })
-//   }
+// 功能统计，参数同步统计
+  export function getStatisticsWxAPI() {
+    return request<any, any>({
+        url: "/stat/wxAndParam",
+      method: 'get',
+    })
+  }
 // 远程校准次数、设置数据链次数、注册次数，小程序合并接口
   export function getStatisticsRemoteAPI() {
     return request<any, any>({

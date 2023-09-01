@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from '@/App.vue'
 
 import '@/styles/index.scss'
+import '@/views/perception/perception.scss'
 // 本地SVG图标
 import 'virtual:svg-icons-register';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'

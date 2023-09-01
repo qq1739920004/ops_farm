@@ -12,7 +12,7 @@
         <div>
           <img src="../../perception/image/top_number1.png" alt="" />
           <div class="word">
-            <p>{{ monitorData.todayArea }}</p>
+            <p>{{ monitorData.onlineDevice }}</p>
             <p>当前在线数 </p>
           </div>
         </div>
@@ -102,12 +102,12 @@ defineProps({
   flex-wrap: wrap;
 
   .top_left {
-    width: 50%;
     flex: 1;
     height: 223px;
 
     .top_tittle {
       height: 83px;
+      margin-bottom: 15px;
       padding: 10px 0 0 40px;
 
       img {
@@ -123,16 +123,16 @@ defineProps({
 
     .top_num {
       height: 140px;
+      margin-left:23px ;
       // background-color: rgb(210, 149, 159, 0.2);
       display: flex;
-
+      justify-content:start;
       >div {
-        width: 250px;
         height: 140px;
-        position: relative;
+        display: flex;
+        padding: 0 15px;
 
         img {
-          position: absolute;
           max-width: 100%;
           height: 100px;
           top: 20%;
@@ -140,10 +140,7 @@ defineProps({
         }
 
         .word {
-          position: absolute;
-          top: 20%;
-          right: 10%;
-
+          margin-left: 19px;
           :first-child {
             margin: 0px;
             font-size: 50px;
@@ -161,7 +158,6 @@ defineProps({
   }
 
   .top_time {
-    width: 50%;
     height: 223px;
     display: flex;
     flex: 1;
