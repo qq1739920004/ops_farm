@@ -2,7 +2,10 @@
   <div class="map_conatiner">
     <div id="map"></div>
     <div class="map_utils">
-      <el-select v-model="mapTitleOptionsValue" @change="hangleSelectChange">
+      <el-select
+        v-model="mapTitleOptionsValue"
+        @change="mapTitleOptionsValueChange"
+      >
         <el-option
           v-for="item in mapTitleOptions"
           :key="item.id"
@@ -21,21 +24,22 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.chinatmsproviders";
 import "leaflet.markercluster";
-import "leaflet.markercluster/dist/MarkerCluster.css"
-import "leaflet.markercluster/dist/MarkerCluster.Default.css"
-
-
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
 // import { monitorGet_API } from "@/api/monitoring";
 
 let map: any = null;
+let markerArr: any = [];
+
 // 地图瓦片图选项
 let mapTitleOptions = [
-  { id: 0, lable: "高德地图" },
-  { id: 1, lable: "卫星地图" },
-  { id: 2, lable: "google地图" },
-  { id: 3, lable: "天地图" },
+  { id: 0, lable: "高德地图", mapName: "GaoDe", mapType: "Normal" },
+  { id: 1, lable: "卫星地图", mapName: "GaoDe", mapType: "Satellite" },
+  { id: 2, lable: "google地图", mapName: "Google", mapType: "Normal" },
+  { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
 ];
+
 let mapTitleOptionsValue = ref(mapTitleOptions[1].id);
 
 onMounted(() => {
@@ -52,7 +56,7 @@ function initMap() {
     zoomControl: false, //是否启用地图缩放控件
     attributionControl: false, //是否启用地图属性控件
   });
-  hangleSelectChange(); // 获取瓦片图
+  mapTitleOptionsValueChange();
 
   let data = [
     { lng: 29.06097, lat: 111.93969 },
@@ -64,52 +68,29 @@ function initMap() {
     data.push({ lng: 59.06097, lat: 111.93969 });
   }
 
-
-
-  let markerArr: any = [];
-  let markerGroup = L.markerClusterGroup();
   data.forEach((item) => {
     const marker = L.marker([item.lng, item.lat]);
-    marker.bindPopup("<b>Hello world!</b><br>I am a popup.")
+    marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
     markerArr.push(marker);
   });
 
-  
-
-
-  // console.log(markerGroup,'---80')
   // let markerGroup = L.layerGroup(markerArr);
   // markerGroup.addTo(map);
-  // markerGroup.clearLayers();
 
-  // ----------------------
-
-  // let markerGroup = L.layerGroup().addTo(map);
-  // data.forEach(item => {
-  //   let marker = L.marker([item.lng,item.lat]);
-  //   markerGroup.addLayer(marker);
-
-  // })
-
-  // let markerGroup = L.markerClusterGroup()
-  // data.forEach(item => {
-  //   let marker = L.marker([item.lng,item.lat]);
-  //   markerGroup.addLayer(marker)
-  // })
-
-  markerGroup.addLayers(markerArr)
-  markerGroup.addTo(map)
- 
-  // markerGroup.removeLayer(markerArr[0])
-
-  // map.addLayer(markerGroup);
-
+  // let markerClusterGroup = L.markerClusterGroup();
+  // markerClusterGroup.addLayers(markerArr);
+  // markerClusterGroup.addTo(map);
 }
 
-// 更改底地图
-const hangleSelectChange = () => {
-  handleMapChange(mapTitleOptionsValue.value);
-};
+// 图商发生变化
+function mapTitleOptionsValueChange() {
+  const mapTitleOption = mapTitleOptions.find(
+    (item) => item.id == mapTitleOptionsValue.value
+  );
+  changeTileLayer(mapTitleOption?.mapName, mapTitleOption?.mapType);
+}
+
+// 设置图商
 function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
   if (!map) {
     console.warn("未初始化底图实例");
@@ -126,22 +107,6 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
   }
   for (let key in mapUrl) {
     L.tileLayer(mapUrl[key], options).addTo(map);
-  }
-}
-function handleMapChange(mayType: number) {
-  switch (mayType) {
-    case 0:
-      changeTileLayer("GaoDe", "Normal"); // 高德地图
-      break;
-    case 1:
-      changeTileLayer("GaoDe", "Satellite"); //卫星地图
-      break;
-    case 2:
-      changeTileLayer("Google", "Normal"); // google地图
-      break;
-    case 3:
-      changeTileLayer("TianDiTu", "Normal"); // 天地图
-      break;
   }
 }
 </script>
