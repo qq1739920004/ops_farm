@@ -2,8 +2,8 @@
 <template>
     <div>
         <el-dialog v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'" width="544px" height="580px">
-            <el-form style="width: 100%" ref="formRef" :model="newRecords" :rules="rules">
-                <el-form-item label="设备类型" label-width="140px" prop="terminalType">
+            <el-form label-width="140px" style="width: 90%" ref="formRef" :model="newRecords" :rules="rules">
+                <el-form-item label="设备类型" prop="terminalType">
                     <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
                         style="width:100%" prop="terminalType">
                         <el-option value="AG360" label="G360" />
@@ -11,22 +11,22 @@
                         <el-option value="AG501" label="G501" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="铭牌SN" label-width="140px" prop="npn">
+                <el-form-item label="铭牌SN" prop="npn">
                     <el-input v-model="newRecords.npn"></el-input>
                 </el-form-item>
-                <el-form-item label="质保日期" label-width="140px" prop="warrantyDate">
+                <el-form-item label="质保日期" prop="warrantyDate">
                     <el-input v-model="newRecords.warrantyDate"></el-input>
                 </el-form-item>
-                <el-form-item label="平板SN" label-width="140px" prop="sn">
+                <el-form-item label="平板SN" prop="sn">
                     <el-input v-model="newRecords.sn"></el-input>
                 </el-form-item>
-                <el-form-item label="电机SN" label-width="140px" prop="motorSn">
+                <el-form-item label="电机SN" prop="motorSn">
                     <el-input v-model="newRecords.motorSn"></el-input>
                 </el-form-item>
-                <el-form-item label="天线1_SN" label-width="140px" prop="antennaOne">
+                <el-form-item label="天线1_SN" prop="antennaOne">
                     <el-input v-model="newRecords.antennaOne"></el-input>
                 </el-form-item>
-                <el-form-item label="天线2_SN" label-width="140px" prop="antennaTwo">
+                <el-form-item label="天线2_SN" prop="antennaTwo">
                     <el-input v-model="newRecords.antennaTwo"></el-input>
                 </el-form-item>
             </el-form>
