@@ -38,9 +38,9 @@
                 <div>创建人电话:</div>
                 <div class="data">{{ NewDetail.creatorTel }}</div>
                 <div>向日葵SN:</div>
-                <div class="data">{{ NewDetail.sunFlowerSn }}</div>
-                <div>软件版本:</div>
-                <div class="data" style="margin-right: 20px;">{{ NewDetail.softwareVersion }}</div>
+                <div>{{ NewDetail.sunFlowerSn }}</div>
+                <div >软件版本:</div>
+                <div class="data" style="margin-right: 40px;">{{ NewDetail.softwareVersion }}</div>
             </div>
             <div class="line line2 ">
                 <div class="tit">创建时间:</div>
@@ -172,6 +172,7 @@ const getNewDetail = async () => {
         }
 
         .data {
+            margin-right: 40px;
             text-align: left;
             display: block;
             width: 16.6%;
@@ -179,7 +180,7 @@ const getNewDetail = async () => {
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            color: rgba(0, 0, 0, 1);
+            
 
             .circle {
                 width: 10px;
@@ -223,7 +224,7 @@ const getNewDetail = async () => {
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            color: rgba(0, 0, 0, 1);
+            
 
         }
 
@@ -236,7 +237,7 @@ const getNewDetail = async () => {
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 20.27px;
-                color: rgba(0, 0, 0, 1);
+                
                 text-align: left;
                 vertical-align: top
             }
@@ -257,6 +258,7 @@ const getNewDetail = async () => {
         }
 
         .half {
+            
             text-align: left;
             display: block;
             width: 50%;
@@ -264,7 +266,7 @@ const getNewDetail = async () => {
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            color: rgba(0, 0, 0, 1);
+            
         }
 
         .data {
@@ -275,7 +277,7 @@ const getNewDetail = async () => {
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            color: rgba(0, 0, 0, 1);
+            
 
         }
     }

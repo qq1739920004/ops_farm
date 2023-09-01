@@ -1,7 +1,7 @@
 import request from '@/utils/request'
-import { carNewListResponseData, carNewDetailResponseData, carDealerResponseData, carStatusObj, activationCodeObj, PageInfoObj, singleCarTrackResponseData } from '@/api/machineryList/type'
+import { carNewListResponseData, carNewDetailResponseData, carDealerResponseData, carStatusObj, activationCodeObj, PageInfoObj, singleCarTrackResponseData, pageInfo } from '@/api/machineryList/type'
 // 农机列表API接口// 分页查询
-export function carNewList_API(data: string) {
+export function carNewList_API(data: pageInfo) {
     return request<any, carNewListResponseData>({
         url: `/car/new/list`,
         method: 'post',

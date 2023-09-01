@@ -21,8 +21,11 @@
                     :clearable="false" prefix-icon="Clock" :disabled-date="disabledDate" @change="changeA()" />
             </div>
             <div class="btn_area">
-                <el-button type="primary" icon="Search" v-if="!loading" @click="getSingleCarTrick">查询</el-button>
-                <el-button type="primary" loading v-else>查询</el-button>
+                <!-- <el-button type="primary" icon="Search" v-if="!loading" @click="getSingleCarTrick">查询</el-button>
+                <el-button type="primary" loading v-else>查询</el-button> -->
+                <el-button type="primary" icon="Search" @click="getSingleCarTrick" :loading="loading" :disabled="loading">
+                    查询
+                </el-button>
             </div>
         </div>
         <div class="head_top">
@@ -137,6 +140,7 @@ const markerCollect = reactive<any>({
 const initMap = () => {
     map.value = L.map('child6_map',
         {
+            attributionControl: false,
             closePopupOnClick: false,
             zoomControl: false,
         }
@@ -277,7 +281,7 @@ const removeMarker = () => {
     .map_selector {
         position: absolute;
         bottom: 10px;
-        right: 120px;
+        left: 10px;
         z-index: 999;
         width: 99px;
         height: 32px;
@@ -289,8 +293,8 @@ const removeMarker = () => {
     .demo-date-picker {
         position: absolute;
         z-index: 999;
-        top: 80px;
-        left: 47px;
+        top: 50px;
+        left: 10px;
         width: 302px;
         height: 164px;
         opacity: 1;
@@ -298,6 +302,8 @@ const removeMarker = () => {
         background: rgba(255, 255, 255, 1);
 
         .top_sn {
+            padding: 10px 0;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -343,8 +349,8 @@ const removeMarker = () => {
         .left {
             z-index: 999;
             position: absolute;
-            left: 47px;
-            top: 33px;
+            left: 10px;
+            top: 10px;
         }
     }
 }

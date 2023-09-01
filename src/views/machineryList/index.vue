@@ -17,7 +17,7 @@
                 </el-input>
             </div>
             <div class="button_area">
-                <el-button type="primary" @click="gotoInput">录入经销商设备</el-button>
+                <el-button style="margin-right: 20px;" type="primary" @click="gotoInput">录入经销商设备</el-button>
                 <el-button-group class="button_group2">
                     <el-button icon="Expand" :class="{ 'tab_active': tableShow }" @click="switchTabShow(true)" />
                     <el-button icon="menu" :class="{ 'tab_active': !tableShow }" @click="switchTabShow(false)" />
@@ -45,7 +45,7 @@
 import { useRoute } from 'vue-router'
 import InputDia from './components/inputDia.vue'
 import Pagination from '@/components/Pagination/index.vue'
-import { reactive, ref,onMounted } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { carNewList_API } from '@/api/machineryList/index'
 import { newListObj, carNewListResponseData, pageInfo } from '@/api/machineryList/type'
 import snTable from './components/sn-table.vue'
@@ -61,7 +61,7 @@ const dealerList = ref<carDealerObj[]>([])
 const pageInfo = reactive<pageInfo>({
     key: '',
     currentPage: 1,
-    pageSize: 3,
+    pageSize: 10,
     companyId: '',
     order: '1',
     provinceCode: '',
@@ -105,7 +105,7 @@ const getDealerList = async () => {
         getCarList()
     }
 }
-getDealerList()
+
 // 获取车辆列表
 const getCarList = async () => {
     const res: carNewListResponseData = await carNewList_API(JSON.stringify(pageInfo))
@@ -116,12 +116,12 @@ const switchTabShow = (val: boolean) => {
     tableShow.value = val
 }
 
-onMounted(()=>{
-    getRouterParam()
+onMounted(() => {
+    getRouterParam()
+    getDealerList()
 })
-const getRouterParam=()=>{
-    pageInfo.key= <string>$route.query.sn
-    search()
+const getRouterParam = () => {
+    pageInfo.key = <string>$route.query.sn
 }
 
 
@@ -140,8 +140,6 @@ const getRouterParam=()=>{
             height: 32px;
             opacity: 1;
             border-radius: 4px;
-            background: rgba(255, 255, 255, 1);
-            border: 1px rgba(220, 223, 230, 1);
             margin-right: 40px;
         }
 
@@ -150,14 +148,13 @@ const getRouterParam=()=>{
             height: 32px;
             opacity: 1;
             border-radius: 4px;
-            background: rgba(255, 255, 255, 1);
-            border: 1px rgba(220, 223, 230, 1);
+
         }
 
     }
 
     .button_group2 {
-        margin-left: 20PX;
+        margin-left: 20pX;
 
         .el-button {
             height: 32px;

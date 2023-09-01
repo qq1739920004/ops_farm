@@ -47,7 +47,7 @@ defineExpose({
     font-weight: 400;
     letter-spacing: 0px;
     line-height: 23.17px;
-    color: rgba(0, 0, 0, 1);
+    
     margin-bottom: 18px;
     margin-left: 12px;
 
@@ -76,7 +76,7 @@ defineExpose({
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            color: rgba(0, 0, 0, 1);
+            
 
         }
     }

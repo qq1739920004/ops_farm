@@ -64,7 +64,7 @@ defineExpose({ //
         font-weight: 400;
         letter-spacing: 0px;
         line-height: 23.17px;
-        color: rgba(0, 0, 0, 1);
+        
 
     }
 }
