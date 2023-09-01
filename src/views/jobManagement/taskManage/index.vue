@@ -114,6 +114,7 @@ import "leaflet.pm";
 import "leaflet.pm/dist/leaflet.pm.css";
 import { ElMessage } from 'element-plus'
 import gcoord from 'gcoord'
+import { mapTitleLayers } from "./mapTitleLayers";
 import a from '@/assets/jobManage/a.png'
 import b from '@/assets/jobManage/b.png'
 // import pointInChina from '@/utils/pointInChina'
@@ -146,74 +147,8 @@ const map = ref<any>(null)
 const originPoint = ref<any>([31.172800343248, 121.406021546488])
 const originZoom = ref<any>(5)
 const tileLayer = reactive<any>([])
-const tileUrl = reactive<any>({
-    TianDiTu: {
-        Normal: {
-            Map: "http://t{s}.tianditu.com/DataServer?T=vec_w&X={x}&Y={y}&L={z}&tk={key}",
-            Annotion: "http://t{s}.tianditu.com/DataServer?T=cva_w&X={x}&Y={y}&L={z}&tk={key}"
-        },
-        Satellite: {
-            Map: "http://t{s}.tianditu.com/DataServer?T=img_w&X={x}&Y={y}&L={z}&tk={key}",
-            Annotion: "http://t{s}.tianditu.com/DataServer?T=cia_w&X={x}&Y={y}&L={z}&tk={key}"
-        },
-        Terrain: {
-            Map: "http://t{s}.tianditu.com/DataServer?T=ter_w&X={x}&Y={y}&L={z}&tk={key}",
-            Annotion: "http://t{s}.tianditu.com/DataServer?T=cta_w&X={x}&Y={y}&L={z}&tk={key}"
-        },
-        Subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
-        key: "174705aebfe31b79b3587279e211cb9a"
-    },
-
-    GaoDe: {
-        Normal: {
-            Map: 'http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}'
-        },
-        Satellite: {
-            Map: 'http://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
-            Annotion: 'http://webst0{s}.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}'
-        },
-        Subdomains: ["1", "2", "3", "4"]
-    },
-
-    Google: {
-        Normal: {
-            // Map: "http://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}"
-            // Map: "https://mt2.google.cn/vt/lyrs=m@167000000&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}&s=Galil"
-            Map: 'https://mt1.google.com/vt/lyrs=r&gl=cn&x={x}&y={y}&z={z}'
-        },
-        Satellite: {
-            // Map: "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}"
-            // Map: "https://mt2.google.cn/maps/vt?lyrs=s%40781&hl=zh-CN&gl=CN&x={x}&y={y}&z={z}",
-            // Map: "https://mt1.google.com/vt/lyrs=s&gl=cn&x={x}&y={y}&z={z}",
-            // Map: "https://mt1-cdn.mapsvc.com/maps/vt?lyrs=s&gl=cn&x={x}&y={y}&z={z}",
-            Map: "http://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
-            Annotion: 'http://webst0{s}.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}'
-        },
-        // Subdomains: []
-        Subdomains: ["1", "2", "3", "4"]
-    },
-
-    Geoq: {
-        Normal: {
-            Map: "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}",
-            PurplishBlue: "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
-            Gray: "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetGray/MapServer/tile/{z}/{y}/{x}",
-            Warm: "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetWarm/MapServer/tile/{z}/{y}/{x}",
-        },
-        Theme: {
-            Hydro: "http://thematic.geoq.cn/arcgis/rest/services/ThematicMaps/WorldHydroMap/MapServer/tile/{z}/{y}/{x}"
-        },
-        Subdomains: []
-    },
-
-    OSM: {
-        Normal: {
-            Map: "http://{s}.tile.osm.org/{z}/{x}/{y}.png",
-        },
-        Subdomains: ['a', 'b', 'c']
-    }
-
-})
+const tileUrl = reactive<any>({})
+Object.assign(tileUrl, mapTitleLayers)
 const pickupMode = ref<boolean>(false)
 const pickedPoints = ref<any[]>([])
 const calculationObj = ref<any[]>([])
@@ -230,10 +165,14 @@ const mapOptions = reactive([
     // {
     //     mapName: '谷歌地图',
     //     mapId: 2
-    // }
+    // },
+    {
+        mapName: '天地图',
+        mapId: 3
+    }
 ])
 const markerCollect = reactive<any>({})
-const initMap = (id = 0) => {
+const initMap = () => {
     map.value = L.map('child6_map',
         {
             closePopupOnClick: false,
@@ -449,8 +388,6 @@ const coorTransform = (point = [], mapType = 1) => {
 // 地图绘制方法
 const addPathAB = (item: any) => {
     try {
-        console.log(item);
-
         let pointA = coorTransform(
             [item.lineptax as never, item.lineptay as never],
             mapId.value
@@ -687,7 +624,7 @@ watch(() => paddyWorkList.value,
     .map_selector {
         position: absolute;
         bottom: 10px;
-        right: 135px;
+        left: 10px;
         z-index: 999;
         width: 99px;
         height: 32px;
