@@ -8,9 +8,13 @@
                         <el-button icon="Search" @click="search" />
                     </template>
                 </el-input>
-                <el-select class="m_2" placeholder="请选择" v-model="pageInfo.companyId" @change="changeBlur">
+                <el-select v-if="dealerList.length > 1" class="m_2" placeholder="公司/经销商" v-model="pageInfo.companyId"
+                    @change="changeBlur">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
+                <el-input v-if="dealerList.length == 1" class="m_2" v-model="dealerList[0].name" @change="changeBlur"
+                    disabled>
+                </el-input>
             </div>
             <div class="button_area">
                 <el-button type="primary" @click="gotoInput">录入经销商设备</el-button>
@@ -24,7 +28,7 @@
             <sn-table :carNewList="carNewList" @changeSort="changeSort">
                 <div>
                     <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
-                        @pageChange="currentChange">
+                        @pageChange="currentChange" :disabled="dealerList.length == 0 ? true : false">
                     </Pagination>
                 </div>
             </sn-table>
@@ -90,7 +94,14 @@ const changeSort = (val: string) => {
 // 获取公司列表
 const getDealerList = async () => {
     const res: carDealerResponseData = await carDealer_API()
-    dealerList.value = res.data
+    if (res.data == null) {
+    } else {
+        dealerList.value = res.data
+        if (dealerList.value.length == 1) {
+            pageInfo.companyId = dealerList.value[0].id
+        }
+        getCarList()
+    }
 }
 getDealerList()
 // 获取车辆列表
@@ -99,7 +110,6 @@ const getCarList = async () => {
     carNewList.value = res.data.records
     total.value = res.data.total
 }
-getCarList()
 const switchTabShow = (val: boolean) => {
     tableShow.value = val
 }

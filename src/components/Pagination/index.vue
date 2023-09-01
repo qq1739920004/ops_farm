@@ -1,22 +1,14 @@
 <template>
   <div class="Pagination_component">
-    <el-pagination
-      class="pagination"
-      background
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage"
-      :page-size="pageSize"
-      :page-sizes="[10, 30, 50, 100]"
-      :layout="'sizes,total, prev, pager, next'"
-      :total="total"
-    >
+    <el-pagination class="pagination" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      :current-page="currentPage" :page-size="pageSize" :page-sizes="[10, 30, 50, 100]"
+      :layout="'sizes,total, prev, pager, next'" :total="total" :disabled="disabled">
     </el-pagination>
   </div>
 </template>
 
 <script setup lang="ts">
-import {} from "vue";
+import { } from "vue";
 const props = defineProps({
   total: {
     type: Number,
@@ -30,6 +22,10 @@ const props = defineProps({
     type: Number,
     default: 10,
   },
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 });
 const emit = defineEmits(["pageChange"]);
 

@@ -19,12 +19,12 @@
                 <div class="demo-date-picker">
                     <div class="block">
                         <el-date-picker style="width: 144px;" class=".date_picker1" v-model="value1" type="date"
-                            placeholder="Pick a day" size="default" :disabled-date="disabledDate" @change="changeA()" />
+                            placeholder="请选择日期" size="default" :disabled-date="disabledDate" @change="changeA()" />
                     </div>
                     <div class="gang">--</div>
                     <div class="block">
                         <el-date-picker style="width: 144px;" class=".date_picker2" v-model="value2" type="date"
-                            placeholder="Pick a day" :disabled-date="disabledDate" size="default" @change="changeA()" />
+                            placeholder="请选择日期" :disabled-date="disabledDate" size="default" @change="changeA()" />
                     </div>
                 </div>
             </div>
