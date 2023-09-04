@@ -19,12 +19,12 @@
                 <div class="demo-date-picker">
                     <div class="block">
                         <el-date-picker style="width: 144px;" class=".date_picker1" v-model="value1" type="date"
-                            placeholder="Pick a day" size="default" :disabled-date="disabledDate" @change="changeA()" />
+                            placeholder="请选择日期" size="default" :disabled-date="disabledDate" @change="changeA()" />
                     </div>
                     <div class="gang">--</div>
                     <div class="block">
                         <el-date-picker style="width: 144px;" class=".date_picker2" v-model="value2" type="date"
-                            placeholder="Pick a day" :disabled-date="disabledDate" size="default" @change="changeA()" />
+                            placeholder="请选择日期" :disabled-date="disabledDate" size="default" @change="changeA()" />
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@ const pageInfo = reactive<PageObj>({
     name: '',
     companyId: 3,
     currentPage: 1,
-    pageSize: 3,
+    pageSize: 10,
     st: '',
     et: ''
 })
@@ -203,24 +203,19 @@ const changeA = () => {
     .input_area {
         display: flex;
         width: 25%;
-        justify-content: space-between;
 
         .input-with-select {
             width: 179px;
             height: 32px;
             opacity: 1;
             border-radius: 4px;
-            background: rgba(255, 255, 255, 1);
-            border: 1px rgba(220, 223, 230, 1);
+            margin-right: 20px;
         }
 
         .m-2 {
             width: 179px;
             height: 32px;
             opacity: 1;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 1);
-            border: 1px rgba(220, 223, 230, 1);
         }
 
     }
@@ -246,7 +241,6 @@ const changeA = () => {
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 20.27px;
-                color: rgba(0, 0, 0, 1);
             }
         }
 
@@ -255,18 +249,17 @@ const changeA = () => {
             line-height: 5px;
             width: 28px;
             height: 20px;
-            color: rgba(51, 51, 51, 1);
             font-size: 14px;
             vertical-align: middle;
             font-family: SourceHanSansSC-regular;
 
             &:hover {
                 cursor: pointer;
-                color: rgba(76, 176, 79, 1);
+                color: var(--el-color-primary);
             }
 
             &.active {
-                color: rgba(76, 176, 79, 1);
+                color: var(--el-color-primary);
             }
         }
 

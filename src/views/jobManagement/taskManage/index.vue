@@ -56,7 +56,8 @@
                     icon="back" @click="router.go(-1)">返回</el-button>
             </div>
             <div class="right">
-                <el-select style="width: 270px;" v-model="pageInfo.companyId" placeholder="请选择" @change="changeBlur1">
+                <el-select style="width: 270px; margin-right: 10px;" v-model="pageInfo.companyId" placeholder="请选择"
+                    @change="changeBlur1">
                     <template #prefix>
                         <span class="select_title">单位：</span>
                     </template>
@@ -72,10 +73,20 @@
                 </el-select>
                 <div :class="isShow ? 'infiniteMenu' : 'infiniteMenu2'">
                     <div class="el_icon" v-show="isShow" @click="changeisShow(false)">
-                        +
+                        <svg t="1693558978472" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" p-id="14849" width="16" height="16">
+                            <path
+                                d="M85.312 85.312v853.376h853.376V85.312H85.312zM0 0h1024v1024H0V0z m554.624 213.312v256h256v85.376h-256v256H469.312v-256h-256V469.376h256v-256h85.312z"
+                                fill="#262626" p-id="14850"></path>
+                        </svg>
                     </div>
                     <div class="el_icon" v-show="!isShow" @click="changeisShow(true)">
-                        -
+                        <svg t="1693559006371" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" p-id="15898" width="16" height="16">
+                            <path
+                                d="M85.312 85.312v853.376h853.376V85.312H85.312zM0 0h1024v1024H0V0z m213.312 469.376h597.376v85.312H213.312V469.376z"
+                                fill="#262626" p-id="15899"></path>
+                        </svg>
                     </div>
                     <div class="empty_list" v-if='!paddyWorkList.length'>暂无数据</div>
                     <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
@@ -91,7 +102,7 @@
                                 </el-checkbox>
                             </el-checkbox-group>
                         </li>
-                        <span v-if="pageInfo.pageSize >= total">作业已全部加载</span>
+                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;">作业已全部加载</span>
                     </ul>
                 </div>
             </div>
@@ -114,6 +125,7 @@ import "leaflet.pm";
 import "leaflet.pm/dist/leaflet.pm.css";
 import { ElMessage } from 'element-plus'
 import gcoord from 'gcoord'
+import { mapTitleLayers } from "./mapTitleLayers";
 import a from '@/assets/jobManage/a.png'
 import b from '@/assets/jobManage/b.png'
 // import pointInChina from '@/utils/pointInChina'
@@ -146,74 +158,8 @@ const map = ref<any>(null)
 const originPoint = ref<any>([31.172800343248, 121.406021546488])
 const originZoom = ref<any>(5)
 const tileLayer = reactive<any>([])
-const tileUrl = reactive<any>({
-    TianDiTu: {
-        Normal: {
-            Map: "http://t{s}.tianditu.com/DataServer?T=vec_w&X={x}&Y={y}&L={z}&tk={key}",
-            Annotion: "http://t{s}.tianditu.com/DataServer?T=cva_w&X={x}&Y={y}&L={z}&tk={key}"
-        },
-        Satellite: {
-            Map: "http://t{s}.tianditu.com/DataServer?T=img_w&X={x}&Y={y}&L={z}&tk={key}",
-            Annotion: "http://t{s}.tianditu.com/DataServer?T=cia_w&X={x}&Y={y}&L={z}&tk={key}"
-        },
-        Terrain: {
-            Map: "http://t{s}.tianditu.com/DataServer?T=ter_w&X={x}&Y={y}&L={z}&tk={key}",
-            Annotion: "http://t{s}.tianditu.com/DataServer?T=cta_w&X={x}&Y={y}&L={z}&tk={key}"
-        },
-        Subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
-        key: "174705aebfe31b79b3587279e211cb9a"
-    },
-
-    GaoDe: {
-        Normal: {
-            Map: 'http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}'
-        },
-        Satellite: {
-            Map: 'http://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}',
-            Annotion: 'http://webst0{s}.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}'
-        },
-        Subdomains: ["1", "2", "3", "4"]
-    },
-
-    Google: {
-        Normal: {
-            // Map: "http://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}"
-            // Map: "https://mt2.google.cn/vt/lyrs=m@167000000&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}&s=Galil"
-            Map: 'https://mt1.google.com/vt/lyrs=r&gl=cn&x={x}&y={y}&z={z}'
-        },
-        Satellite: {
-            // Map: "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}"
-            // Map: "https://mt2.google.cn/maps/vt?lyrs=s%40781&hl=zh-CN&gl=CN&x={x}&y={y}&z={z}",
-            // Map: "https://mt1.google.com/vt/lyrs=s&gl=cn&x={x}&y={y}&z={z}",
-            // Map: "https://mt1-cdn.mapsvc.com/maps/vt?lyrs=s&gl=cn&x={x}&y={y}&z={z}",
-            Map: "http://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
-            Annotion: 'http://webst0{s}.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}'
-        },
-        // Subdomains: []
-        Subdomains: ["1", "2", "3", "4"]
-    },
-
-    Geoq: {
-        Normal: {
-            Map: "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}",
-            PurplishBlue: "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
-            Gray: "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetGray/MapServer/tile/{z}/{y}/{x}",
-            Warm: "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetWarm/MapServer/tile/{z}/{y}/{x}",
-        },
-        Theme: {
-            Hydro: "http://thematic.geoq.cn/arcgis/rest/services/ThematicMaps/WorldHydroMap/MapServer/tile/{z}/{y}/{x}"
-        },
-        Subdomains: []
-    },
-
-    OSM: {
-        Normal: {
-            Map: "http://{s}.tile.osm.org/{z}/{x}/{y}.png",
-        },
-        Subdomains: ['a', 'b', 'c']
-    }
-
-})
+const tileUrl = reactive<any>({})
+Object.assign(tileUrl, mapTitleLayers)
 const pickupMode = ref<boolean>(false)
 const pickedPoints = ref<any[]>([])
 const calculationObj = ref<any[]>([])
@@ -230,12 +176,17 @@ const mapOptions = reactive([
     // {
     //     mapName: '谷歌地图',
     //     mapId: 2
-    // }
+    // },
+    {
+        mapName: '天地图',
+        mapId: 3
+    }
 ])
 const markerCollect = reactive<any>({})
-const initMap = (id = 0) => {
+const initMap = () => {
     map.value = L.map('child6_map',
         {
+            attributionControl: false,
             closePopupOnClick: false,
             zoomControl: false,
         }
@@ -449,8 +400,6 @@ const coorTransform = (point = [], mapType = 1) => {
 // 地图绘制方法
 const addPathAB = (item: any) => {
     try {
-        console.log(item);
-
         let pointA = coorTransform(
             [item.lineptax as never, item.lineptay as never],
             mapId.value
@@ -721,7 +670,6 @@ watch(() => paddyWorkList.value,
     }
 
     .head_top {
-
         display: flex;
         justify-content: space-between;
         padding: 0px 10px;
@@ -729,22 +677,26 @@ watch(() => paddyWorkList.value,
         .left {
             z-index: 999;
             position: absolute;
-            left: 47px;
-            top: 33px;
+            left: 10px;
+            top: 10px;
         }
 
         .right {
+            ::v-deep(.el-input__wrapper) {
+                border: none
+            }
+
             z-index: 999;
             position: absolute;
-            right: 47px;
-            top: 33px;
+            right: 10px;
+            top: 10px;
 
             .select_title {
                 font-size: 16px;
                 font-weight: 500;
                 letter-spacing: 0px;
                 line-height: 26.06px;
-                color: rgba(0, 0, 0, 1);
+                
             }
 
             .select_title2 {
@@ -757,16 +709,14 @@ watch(() => paddyWorkList.value,
             }
 
             .el_icon {
-                border-radius: 2px;
                 margin-left: auto;
                 margin-right: 10px;
                 margin-bottom: 6px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                width: 14px;
-                height: 14px;
-                border: 1px solid black;
+                width: 16px;
+                height: 16px;
             }
 
             .empty_list {
@@ -956,7 +906,7 @@ watch(() => paddyWorkList.value,
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            color: rgba(0, 0, 0, 1);
+            
             height: 37px;
         }
 
@@ -1007,7 +957,7 @@ watch(() => paddyWorkList.value,
                     margin-right: 5px;
                     font-size: 16px;
                     font-weight: 600;
-                    color: rgba(0, 0, 0, 1);
+                    
                 }
 
                 .leftArea::before {
@@ -1085,7 +1035,7 @@ watch(() => paddyWorkList.value,
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 23.17px;
-                color: rgba(0, 0, 0, 1);
+                
                 text-align: left;
                 vertical-align: top;
             }
@@ -1102,7 +1052,7 @@ watch(() => paddyWorkList.value,
                 white-space: nowrap;
                 font-size: 16px;
                 line-height: 18px;
-                color: rgba(0, 0, 0, 1);
+                
                 margin-right: 5px;
             }
 
@@ -1123,7 +1073,7 @@ watch(() => paddyWorkList.value,
                 margin-left: 5px;
                 font-size: 16px;
                 line-height: 18px;
-                color: rgba(0, 0, 0, 1);
+                
                 text-align: left;
                 vertical-align: top;
             }
@@ -1162,5 +1112,4 @@ watch(() => paddyWorkList.value,
     .el-checkbox__input.is-indeterminate .el-checkbox__inner) {
     border-color: rgba(67, 207, 124, 1) !important;
     background-color: rgba(67, 207, 124, 1) !important;
-}
-</style>
+}</style>

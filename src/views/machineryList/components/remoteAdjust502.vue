@@ -1,22 +1,21 @@
 <!--  -->
 <template>
-    <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" v-model="dialogVisible" title="远程管理" width="1112px"
-        height="496px" center>
+    <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" v-model="dialogVisible" title="远程管理" width="1012px"
+        height="516px" center>
         <div class="top">
             <span style="margin-right: 20px;">车辆名称：{{ props.name || '/' }}</span>
             <span>车辆类型：{{ props.terminalType }}</span>
         </div>
-        <div class="menuArea">
-            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-                active-text-color="var(--el-color-primary)" active-background-color="var(--el-color-primary)">
-                <el-menu-item index="1">车辆参数</el-menu-item>
-                <el-menu-item index="2">校准参数</el-menu-item>
-                <el-menu-item index="3">基本参数</el-menu-item>
-                <el-menu-item index="4">高级参数1</el-menu-item>
-                <el-menu-item index="5" @click="gotoChafen">差分设置</el-menu-item>
-                <el-menu-item index="6">在线升级</el-menu-item>
-                <el-menu-item index="7">日志回传</el-menu-item>
-            </el-menu>
+        <div class="menuArea" >
+            <el-tabs stretch v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+                <el-tab-pane label="车辆参数" name="1"></el-tab-pane>
+                <el-tab-pane label="校准参数" name="2"></el-tab-pane>
+                <el-tab-pane label="基本参数" name="3"></el-tab-pane>
+                <el-tab-pane label="高级参数1" name="4"></el-tab-pane>
+                <el-tab-pane label="差分设置" name="5" @click="gotoChafen"></el-tab-pane>
+                <el-tab-pane label="在线升级" name="6"></el-tab-pane>
+                <el-tab-pane label="日志回传" name="7"></el-tab-pane>
+            </el-tabs>
 
         </div>
         <div class="mainContent">
@@ -34,7 +33,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button style="margin-right: 100px;" type="danger">取消</el-button>
+                    <el-button style="margin-right: 100px;" type="danger" @click="cancel_dialog">取消</el-button>
                     <el-button type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
@@ -185,11 +184,17 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
-import { paramDescribeObj, paramDescribeResponseData, carParamsDataObj, paramsParamObj, paramCarParamResponseData, paramcalibParamData, paramAdvanced1ParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, updateCarResponseData, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
+import { paramDescribeObj, paramDescribeResponseData, carParamsDataObj, paramsParamObj, paramCarParamResponseData, paramcalibParamData, paramAdvanced1ParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
 import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, getSourceNode_path, updateCar_API, updateBasicParm_API, updateCalibParam_API, GetcarProductpackage_API, basicParam_API, getAdvanced1Param_API, advanced1ParamUpdate_API } from '@/api/machineryList/remoteAdjust/index'
 import { carNewList_API } from '@/api/machineryList/index'
 import { pageInfo } from '@/api/machineryList/type'
+import type { TabsPaneContext } from 'element-plus'
 
+const activeName = ref('1')
+
+const handleClick = (tab: TabsPaneContext) => {
+    activeIndex.value = tab.props.name as never
+}
 const carFormRef = ref()
 const calibFormRef = ref()
 const pidFormRef = ref()
@@ -197,7 +202,7 @@ const moudleRef = ref()
 const formLabelAlignRef = ref()
 const advanceFormRef = ref()
 const dialogVisible = ref<boolean>(false)
-const activeIndex = ref<string>('1')
+const activeIndex = ref('1')
 const labelPosition = ref('right')
 const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn', 'name'])
 const carParamsData = ref<carParamsDataObj[] | null>([])
@@ -210,7 +215,7 @@ const productList = ref<GetcarProductpackageObj[]>([])
 const pageInfo = reactive<pageInfo>({
     key: '',
     currentPage: 1,
-    pageSize: 3,
+    pageSize: 10,
     companyId: '',
     order: '1'
 })
@@ -375,6 +380,10 @@ const getParamParams = async () => {
     const res: paramCarParamResponseData = await paramCarParam_API(props.carId)
     res.data ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
 }
+const cancel_dialog = () => {
+    dialogVisible.value = false
+}
+
 const openRemoteAdjust = () => {
     // 强制更改index为1
     activeIndex.value = '1'
@@ -547,10 +556,7 @@ const updateAdvanced1Params = async () => {
         })
 
 }
-// index切换
-const handleSelect = (key: string) => {
-    activeIndex.value = key
-}
+
 // 情况差分数据
 const getChafenList = async () => {
     const res: any = await carNewList_API(pageInfo)
@@ -786,33 +792,17 @@ const advance1ParamRules = computed(() => {
         font-weight: 400;
         letter-spacing: 0px;
         line-height: 20.27px;
-        color: rgba(0, 0, 0, 1);
     }
 }
 
 .menuArea {
-    .el-menu-demo {
-        display: flex;
-        justify-content: space-around;
+    .demo-tabs {
+        height: 30px;
     }
-
-    .el-menu-item {
-        margin: 10px 12px 0 12px;
+    ::v-deep(.el-tabs__item) {
         font-size: 16px;
         font-weight: 400;
-        letter-spacing: 0px;
         line-height: 23.17px;
-        color: rgba(70, 75, 84, 1);
-
-
-    }
-
-    .el-menu-item:focus,
-    .el-menu-item:hover {
-        outline: 0;
-        background-color: #0263a3;
-        color: rgba(70, 75, 84, 1);
-        background-color: #fff;
     }
 }
 
@@ -823,27 +813,13 @@ const advance1ParamRules = computed(() => {
     overflow-y: scroll;
     position: relative;
 
-    .mktitle {
-        position: absolute;
-        top: 0px;
-        left: 417px;
-        width: 96px;
-        height: 24px;
-        opacity: 1;
-        /** 文本1 */
-        font-size: 16px;
-        font-weight: 400;
-        letter-spacing: 0px;
-        line-height: 23.17px;
-        color: rgba(0, 0, 0, 1);
-    }
 
     ::v-deep(.item .el-form-item__label) {
         font-size: 16px;
         font-weight: 400;
         letter-spacing: 0px;
         line-height: 23.17px;
-        color: rgba(0, 0, 0, 1);
+
         display: block;
         height: 32px;
         line-height: 16px;

@@ -2,7 +2,7 @@
 <template>
     <el-table @sort-change="changesort" :data="props.carNewList" stripe>
         <el-table-column type="index" label="序号" width="60" align="center" />
-        <el-table-column label="铭牌SN" align="center">
+        <el-table-column label="铭牌SN" align="center" width="180">
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <el-icon>
@@ -97,30 +97,32 @@
                             :active-value="1"
                             :inactive-value="0" -->
                 <el-switch v-model="row.satelliteStatus" :before-change="beforeSwitchChange" @change="changeCarStatus(row)"
-                    :active-value="1" :inactive-value="0" class="ml-2" inline-prompt active-text="开" inactive-text="关"
-                    style="width: 48px;height: 20px" />
+                    :active-value="1" :inactive-value="0" class="ml-2" inline-prompt active-text="开" inactive-text="关" />
             </template>
         </el-table-column>
         <el-table-column label="数据存储" align="center">
             <template #="{ row }">
                 <el-switch :before-change="beforeSwitchChange" @change="changeLogStatus(row.sn, row.isTransfer)"
-                    v-model="row.isTransfer" class="ml-2" inline-prompt active-text="开" inactive-text="关"
-                    style="width: 48px;height: 20px" />
+                    v-model="row.isTransfer" class="ml-2" inline-prompt active-text="开" inactive-text="关" />
             </template>
         </el-table-column>
         <!-- 说明  离线和自动驾驶状态不可编辑 -->
-        <el-table-column label="操作" align="center" width="340">
+        <el-table-column label="操作" align="center" width="290">
             <template #="{ row }">
-                <el-button type="primary" link @click="gotoMachineDetail(row.id, row.terminalType)">详情</el-button>
-                <el-button type="primary" link @click="gotoMap(row.sn, row.npn)">历史轨迹</el-button>
-                <el-tooltip :disabled="row.onlineTcp === 0 || row.driveState === (1 || 2) ? false : true" class="box-item"
+                <el-button style="margin-right: -10px;" type="primary" link
+                    @click="gotoMachineDetail(row.id, row.terminalType)">详情</el-button>
+                <el-button style="margin-right: -10px;" type="primary" link
+                    @click="gotoMap(row.sn, row.npn)">历史轨迹</el-button>
+                <el-tooltip style="margin-right: -10px;"
+                    :disabled="row.onlineTcp === 0 || row.driveState === (1 || 2) ? false : true" class="box-item"
                     effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
-                    <el-button :disabled="row.onlineTcp === 0 || row.driveState === (1 || 2) ? true : false" type="primary"
-                        link
+                    <el-button style="margin-right: -10px;"
+                        :disabled="row.onlineTcp === 0 || row.driveState === (1 || 2) ? true : false" type="primary" link
                         @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.name)">远程调参</el-button>
                 </el-tooltip>
-                <el-button type="primary" link>文件存储</el-button>
-                <el-button type="primary" link @click="gotoRegister(row.id, row.sn, row.deviceId)">注册</el-button>
+                <el-button style="margin-right: -10px;" type="primary" link>文件存储</el-button>
+                <el-button style="margin-right: -10px;" type="primary" link
+                    @click="gotoRegister(row.id, row.sn, row.deviceId)">注册</el-button>
             </template>
         </el-table-column>
     </el-table>

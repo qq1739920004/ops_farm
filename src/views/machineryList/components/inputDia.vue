@@ -4,26 +4,28 @@
         <el-dialog @open="getInputList" style="border-radius: 8px;" v-model="dialogVisible" title="录入经销商设备" width="30%"
             center>
             <div class="content">
-                <div class="up">
-                    <span>经销商：</span>
-                    <el-select v-model="selectValue" class="m-2" placeholder="请选择经销商">
-                        <el-option v-for="item in carDealerList" :label="item.name" :value="item.name" :key="item.id"></el-option> 
-                    </el-select>
-                </div>
-                <div class="down">
-                    <div>文件：</div>
-                    <el-input class="inputel" placeholder="请输入文件名">
-                        <template #append>
-                            <el-upload style="height:30px;width: 10px; margin-right: 3px;" ref="upload" class="upload-demo"
-                                action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :limit="1"
-                                :auto-upload="false">
-                                <template #trigger>
-                                    <el-button link>浏览</el-button>
-                                </template>
-                            </el-upload>
-                        </template>
-                    </el-input>
-                </div>
+                <el-form style="width: 100%" ref="formRef" label-width="140px">
+                    <el-form-item label="经销商：" >
+                        <el-select v-model="selectValue" class="m-2" placeholder="请选择经销商">
+                            <el-option v-for="item in carDealerList" :label="item.name" :value="item.name"
+                                :key="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="文件：" prop="date" >
+                        <el-input class="inputel" placeholder="请输入文件名">
+                            <template #append>
+                                <el-upload style="height:30px;width: 10px; margin-right: 3px;" ref="upload"
+                                    class="upload-demo"
+                                    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :limit="1"
+                                    :auto-upload="false">
+                                    <template #trigger>
+                                        <el-button link>浏览</el-button>
+                                    </template>
+                                </el-upload>
+                            </template>
+                        </el-input>
+                    </el-form-item>
+                </el-form>
             </div>
             <template #footer>
                 <span class="dialog-footer">
@@ -62,34 +64,23 @@ const getInputList = async () => {
     font-weight: 400;
     letter-spacing: 0px;
     line-height: 23.17px;
-    color: rgba(0, 0, 0, 1);
+    
 
-    .up {
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        margin-bottom: 20px;
-
-        .m-2 {
-            margin-left: 10px;
-            width: 270px;
-        }
+    ::v-deep(.el-form-item__label) {
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        
     }
 
-    .down {
-        align-items: center;
-        justify-content: center;
-        display: flex;
+    .m-2 {
+        margin-left: 10px;
+        width: 270px;
+    }
 
-        div {
-            margin-left: 16px;
-        }
-
-        .inputel {
-            margin-left: 10px;
-            width: 270px;
-        }
-
+    .inputel {
+        margin-left: 10px;
+        width: 270px;
     }
 
 }
@@ -98,5 +89,6 @@ const getInputList = async () => {
 .dialog-footer {
     display: flex;
     justify-content: center;
+    margin-top: -20px;
 }
 </style>

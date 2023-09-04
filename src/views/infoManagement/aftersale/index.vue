@@ -7,41 +7,64 @@
                     <div class="lefttitle">基本信息</div>
                     <div class="leftcontent">
                         <el-row :gutter="16">
-                            <el-col :span="11" :offset="2">
-                                客户名称:{{ topvalue.username }}
+                            <el-col :span="10" :offset="2">
+                                <el-descriptions title="">
+                                    <el-descriptions-item label="客户名称:">{{ topvalue.username }}</el-descriptions-item>
+                                </el-descriptions>
                             </el-col>
                             <el-col :span="11">
-                                手机号码:{{ topvalue.tel }}
+                                <el-descriptions title="">
+                                    <el-descriptions-item label="客户手机号码名称:">{{ topvalue.tel }}</el-descriptions-item>
+                                </el-descriptions>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="24" :offset="3">
-                                经销商：{{ topvalue.companyName }}
+                                <el-descriptions title="">
+                                    <el-descriptions-item label="经销商：">{{ topvalue.companyName }}</el-descriptions-item>
+                                </el-descriptions>
                             </el-col>
                         </el-row>
                         <el-row :gutter="16">
-                            <el-col :span="10" :offset="3">
-                                创建人:{{ topvalue.creatorName }}
-                            </el-col>
-                            <el-col :span="9">
-                                注册码:{{ topvalue.code }}
-                            </el-col>
-                        </el-row>
-                        <el-row :gutter="16">
-                            <el-col :span="11" :offset="2">
-                                罗网期限:{{ topvalue.netDate?.split(' ')[0] }}
+                            <el-col :span="9" :offset="3">
+                                <el-descriptions title="">
+                                    <el-descriptions-item label="创建人:">{{ topvalue.creatorName }}</el-descriptions-item>
+                                </el-descriptions>
                             </el-col>
                             <el-col :span="11">
-                                质保期限:{{ topvalue.warrantyDate?.split(' ')[0] }}
+                                <el-descriptions title="">
+                                    <el-descriptions-item label="注册码:">{{ topvalue.code }}</el-descriptions-item>
+                                </el-descriptions>
                             </el-col>
                         </el-row>
                         <el-row :gutter="16">
-                            <el-col :span="11" :offset="2">
-                                软件期限{{ topvalue.expirationTime?.split(' ')[0] }}
+                            <el-col :span="10" :offset="2">
+                                <el-descriptions title="">
+                                    <el-descriptions-item label="罗网期限:">{{ topvalue.netDate?.split(' ')[0]
+                                    }}</el-descriptions-item>
+                                </el-descriptions>
                             </el-col>
                             <el-col :span="11">
-                                星基期限:{{ topvalue.satelliteDate?.split(' ')[0] }}
+                                <el-descriptions title="">
+                                    <el-descriptions-item label="质保期限:">{{ topvalue.warrantyDate?.split(' ')[0]
+                                    }}</el-descriptions-item>
+                                </el-descriptions>
                             </el-col>
+                        </el-row>
+                        <el-row :gutter="16">
+                            <el-col :span="10" :offset="2">
+                                <el-descriptions title="">
+                                    <el-descriptions-item label="软件期限:">{{ topvalue.expirationTime?.split(' ')[0]
+                                    }}</el-descriptions-item>
+                                </el-descriptions>
+                            </el-col>
+                            <el-col :span="11">
+                                <el-descriptions title="">
+                                    <el-descriptions-item label="星基期限:">{{ topvalue.satelliteDate?.split(' ')[0]
+                                    }}</el-descriptions-item>
+                                </el-descriptions>
+                            </el-col>
+
                         </el-row>
                     </div>
                 </div>
@@ -49,7 +72,7 @@
                     <div class="righttitle">部件</div>
                     <div class="rightcontent">
                         <el-row :gutter="2">
-                            <el-col :span="3" :offset="2">
+                            <el-col :span="4" :offset="2">
                                 铭牌SN:
                             </el-col>
                             <el-col :span='8'>
@@ -57,7 +80,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16">
-                            <el-col :span="3" :offset="2">
+                            <el-col :span="4" :offset="2">
                                 平板SN:
                             </el-col>
                             <el-col :span='8'>
@@ -72,7 +95,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16">
-                            <el-col :span="3" :offset="2">
+                            <el-col :span="4" :offset="2">
                                 电机SN:
                             </el-col>
                             <el-col :span='8'>
@@ -86,7 +109,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence != '1'">
-                            <el-col :span="3" :offset="2">
+                            <el-col :span="4" :offset="2">
                                 车身SN
                             </el-col>
                             <el-col :span='8'>
@@ -100,7 +123,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence != '1'">
-                            <el-col :span="3" :offset="2">
+                            <el-col :span="4" :offset="2">
                                 前轮SN
                             </el-col>
                             <el-col :span='8'>
@@ -114,7 +137,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence != '1'">
-                            <el-col :span="3" :offset="2">
+                            <el-col :span="4" :offset="2">
                                 天线_1SN
                             </el-col>
                             <el-col :span='8'>
@@ -128,7 +151,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence == '2'">
-                            <el-col :span="3" :offset="2">
+                            <el-col :span="4" :offset="2">
                                 天线_2SN
                             </el-col>
                             <el-col :span='8'>
@@ -142,8 +165,8 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence == '1'">
-                            <el-col :span="3" :offset="2">
-                                HUB_SN
+                            <el-col :span="4" :offset="2">
+                                HUB_SN:
                             </el-col>
                             <el-col :span='8'>
                                 <el-input v-model="topvalue.hubSn" class="input-with-select">
@@ -156,8 +179,8 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence == '1'">
-                            <el-col :span="3" :offset="2">
-                                一体机SN
+                            <el-col :span="4" :offset="2">
+                                一体机SN:
                             </el-col>
                             <el-col :span='8'>
                                 <el-input v-model="topvalue.sn" class="input-with-select">
@@ -174,7 +197,7 @@
             </div>
             <div class="bottomarea">
                 <div class="bottomtitle">
-                    <div>变更信息</div>
+                    <span>变更信息</span>
                     <el-button type="primary" @click="getInfo">
                         加载信息
                     </el-button>
@@ -346,7 +369,6 @@ const changeHubSnBtn = async (val: string) => {
 <style lang="scss" scoped>
 .app_container {
     .middle-area {
-        height: 24.25rem;
         border-bottom: 1px solid rgba(235, 238, 245, 1);
         display: flex;
 
@@ -361,7 +383,7 @@ const changeHubSnBtn = async (val: string) => {
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 26.06px;
-                color: rgba(0, 0, 0, 1);
+
                 text-align: left;
                 vertical-align: top;
             }
@@ -372,7 +394,7 @@ const changeHubSnBtn = async (val: string) => {
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 23.17px;
-                color: rgba(0, 0, 0, 1);
+
 
                 .el-row {
                     margin-bottom: 20px;
@@ -392,27 +414,21 @@ const changeHubSnBtn = async (val: string) => {
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 26.06px;
-                color: rgba(0, 0, 0, 1);
+
                 text-align: left;
                 vertical-align: top;
             }
 
             .rightcontent {
                 margin-left: -10px;
-                font-size: 16px;
-                font-weight: 400;
-                letter-spacing: 0px;
-                line-height: 23.17px;
-                color: rgba(0, 0, 0, 1);
+
 
                 .el-row {
-                    margin-bottom: 10px;
+                    margin-bottom: 16px;
                     align-items: center;
-                    font-size: 16px;
                     font-weight: 400;
                     letter-spacing: 0px;
-                    line-height: 23.17px;
-                    color: rgba(0, 0, 0, 1);
+
                     text-align: left;
                     vertical-align: top;
 
@@ -436,11 +452,14 @@ const changeHubSnBtn = async (val: string) => {
         height: 468px;
 
         .bottomtitle {
-            width: 15%;
-            display: flex;
+            padding-top: 20px;
+            margin-bottom: 20px;
+          margin-left: 20px;
+
             height: 50px;
-            align-items: center;
-            justify-content: space-around;
+            span {
+                margin-right: 34px;
+            }
         }
 
         .el-button {
@@ -451,7 +470,7 @@ const changeHubSnBtn = async (val: string) => {
         }
 
         .main {
-            margin-left: 120px;
+            margin-left: 117px;
             padding: 20px 8px 0px 8px;
             width: 755px;
             height: 376px;
@@ -475,5 +494,4 @@ const changeHubSnBtn = async (val: string) => {
             /* Firefox */
         }
     }
-}
-</style>
+}</style>

@@ -1,8 +1,9 @@
 <!--  -->
+
 <template>
-    <div>
+    <div class="content">
         <el-dialog style="border-radius: 8px;" v-model="dialogVisible" title="注册设备" width="630px">
-            <div class="content">
+            <!-- <div class="content">
                 <div class="up">
                     <span>注册设备SN号：{{ props.sn }}</span>
 
@@ -15,7 +16,19 @@
                         <el-radio :label="65535">永久</el-radio>
                     </el-radio-group>
                 </div>
-            </div>
+            </div> -->
+            <el-form style="width: 100%" label-width="160px">
+                <el-form-item label="注册设备SN号:" label-width="198px">
+                    <span class="span_title"> {{ props.sn }}</span>
+                </el-form-item>
+                <el-form-item label="注册时长:">
+                    <el-radio-group v-model="date" class="ml-4">
+                        <el-radio :label="-1">立即过期</el-radio>
+                        <el-radio :label="365">一年</el-radio>
+                        <el-radio :label="65535">永久</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+            </el-form>
             <template #footer>
                 <span class="dialog-footer">
                     <el-button type="danger" @click="dialogVisible = false">
@@ -60,19 +73,25 @@ const activationAddBtn = async () => {
 
 <style lang="scss" scoped>
 .content {
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    line-height: 23.17px;
-    color: rgba(0, 0, 0, 1);
+
+    ::v-deep(.el-form-item__label) {
+        font-size: 16px;
+        font-weight: 400;
+        
+    }
+
+    .span_title {
+        font-size: 16px;
+        font-weight: 400;
+        
+    }
 
     .ml-4 {
-        display: flex;
-        flex-wrap: wrap;
 
         .el-radio {
-
-            width: 25%;
+            font-size: 16px;
+            font-weight: 400;
+            
         }
     }
 
@@ -94,25 +113,8 @@ const activationAddBtn = async () => {
         border-color: var(--el-color-primary);
     }
 
-    .up {
-        margin-left: 16px;
-        margin-bottom: 20px;
-
-    }
-
-    .down {
 
 
-        div {
-            margin-left: 16px;
-        }
-
-        .inputel {
-            margin-left: 10px;
-            width: 270px;
-        }
-
-    }
 
 }
 

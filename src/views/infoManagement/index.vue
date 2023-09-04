@@ -48,7 +48,8 @@
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
                             <el-tag
                                 style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
-                                class="mx-1" effect="dark">已到期</el-tag></div>
+                                class="mx-1" effect="dark">已到期</el-tag>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="一体机SN" align="center">
@@ -84,19 +85,11 @@
                 <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <div class="left">
-                                <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate">编辑 </el-button>
-                                <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
-                                    @confirm="removeTradeMark(row.id)">
-                                    <template #reference>
-                                        <el-button type="danger" link>删除</el-button>
-                                    </template>
-                                </el-popconfirm>
-                            </div>
-                            <div class="right">
-                                <el-button type="primary" link @click="gotoAfterSale(row)">售后</el-button>
-                                <el-button type="primary" link>处理</el-button>
-                            </div>
+                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate">编辑
+                            </el-button>
+                            <el-button @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
+                            <el-button class="aftersale_btn" type="primary" link
+                                @click="gotoAfterSale(row)">售后处理</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -121,7 +114,8 @@
                                 style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
                                 class="mx-1" type="danger" effect="dark">未激活</el-tag>
                         </div>
-                        <div  v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
+                        <div
+                            v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
                             <el-tag
                                 style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
                                 class="mx-1" effect="dark">已到期</el-tag>
@@ -156,19 +150,11 @@
                 <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <div class="left">
-                                <el-button type="primary" link @click="edit(row)"  :disabled="row.warrantyDate">编辑 </el-button>
-                                <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
-                                    @confirm="removeTradeMark(row.id)">
-                                    <template #reference>
-                                        <el-button type="danger" link>删除</el-button>
-                                    </template>
-                                </el-popconfirm>
-                            </div>
-                            <div class="right">
-                                <el-button type="primary" link @click="gotoAfterSale(row)">售后</el-button>
-                                <el-button type="primary" link>处理</el-button>
-                            </div>
+                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate">编辑
+                            </el-button>
+                            <el-button @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
+                            <el-button class="aftersale_btn" type="primary" link
+                                @click="gotoAfterSale(row)">售后处理</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -265,19 +251,11 @@
                 <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <div class="left">
-                                <el-button type="primary" link @click="edit(row)"  :disabled="row.warrantyDate">编辑 </el-button>
-                                <el-popconfirm :title="`您确定要删除${row.sn}?`" width="250px" icon="Delete"
-                                    @confirm="removeTradeMark(row.id)">
-                                    <template #reference>
-                                        <el-button type="danger" link>删除</el-button>
-                                    </template>
-                                </el-popconfirm>
-                            </div>
-                            <div class="right">
-                                <el-button type="primary" link @click="gotoAfterSale(row)">售后</el-button>
-                                <el-button type="primary" link>处理</el-button>
-                            </div>
+                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate">编辑
+                            </el-button>
+                            <el-button @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
+                            <el-button type="primary" link @click="gotoAfterSale(row)"
+                                class="aftersale_btn">售后处理</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -289,8 +267,8 @@
         <div class="dialog">
             <el-dialog style="border-radius: 8px;" v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'"
                 width="544px" height="580px">
-                <el-form style="width: 100%" ref="formRef" :model="newRecords" :rules="rules">
-                    <el-form-item label="设备类型" label-width="140px" prop="terminalType">
+                <el-form label-width="140px" style="width: 90%" ref="formRef" :model="newRecords" :rules="rules">
+                    <el-form-item label="设备类型" prop="terminalType">
                         <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
                             style="width:100%" prop="terminalType">
                             <el-option value="AG360" label="G360" />
@@ -298,28 +276,28 @@
                             <el-option value="AG501" label="G501" />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="铭牌SN" label-width="140px" prop="npn">
+                    <el-form-item label="铭牌SN" prop="npn">
                         <el-input v-model="newRecords.npn"></el-input>
                     </el-form-item>
-                    <el-form-item label="质保日期" label-width="140px" prop="warrantyDate">
+                    <el-form-item label="质保日期" prop="warrantyDate">
                         <el-input v-model="newRecords.warrantyDate"></el-input>
                     </el-form-item>
-                    <el-form-item label="一体机SN" label-width="140px" prop="sn">
+                    <el-form-item label="一体机SN" prop="sn">
                         <el-input v-model="newRecords.sn"></el-input>
                     </el-form-item>
-                    <el-form-item label="HUB_SN" label-width="140px" prop="hubSn">
+                    <el-form-item label="HUB_SN" prop="hubSn">
                         <el-input v-model="newRecords.hubSn"></el-input>
                     </el-form-item>
-                    <el-form-item label="电机SN" label-width="140px" prop="motorSn">
+                    <el-form-item label="电机SN" prop="motorSn">
                         <el-input v-model="newRecords.motorSn"></el-input>
                     </el-form-item>
-                    <el-form-item label="多功能方向盘SN" label-width="140px" prop="steeringWheelSn">
+                    <el-form-item label="多功能方向盘SN" prop="steeringWheelSn">
                         <el-input v-model="newRecords.steeringWheelSn"></el-input>
                     </el-form-item>
-                    <el-form-item label="车身IMU_SN" label-width="140px" prop="carImuSn">
+                    <el-form-item label="车身IMU_SN" prop="carImuSn">
                         <el-input v-model="newRecords.carImuSn"></el-input>
                     </el-form-item>
-                    <el-form-item label="前轮IMU_SN" label-width="140px" prop="wheelImuSn">
+                    <el-form-item label="前轮IMU_SN" prop="wheelImuSn">
                         <el-input v-model="newRecords.wheelImuSn"></el-input>
                     </el-form-item>
                 </el-form>
@@ -348,7 +326,7 @@ import G501Dia from './components/G501Dia.vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { reactive, ref, nextTick, watch } from 'vue'
 import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API, carModuleInfoOperationDelete_API, CarModuleInfoExport_API } from '@/api/infoManagement/index'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj, changeResponseData, editResponseData, carMoudleInfoDeleteResponseData, } from "@/api/infoManagement/type"
 import { useRouter } from 'vue-router'
 import SvgIcon from '@/components/SvgIcon/index.vue'
@@ -356,7 +334,7 @@ const pageInfo = reactive<PageObj>({
     key: '',
     terminalType: 'AG360',
     currentPage: 1,
-    pageSize: 3
+    pageSize: 10
 })
 const $router = useRouter()
 const scence = ref<string>('1')
@@ -532,16 +510,31 @@ const openDialog = () => {
     })
 
 }
-const removeTradeMark = async (id: any) => {
-    const res: carMoudleInfoDeleteResponseData = await carModuleInfoOperationDelete_API(id)
-    if (res.code == 0) {
-        ElMessage({ type: 'success', message: '删除成功' })
-        pageInfo.key = ''
-        getInfoMangementInfo()
-    }
-    else {
-        ElMessage({ type: 'error', message: '删除失败' })
-    }
+const removeTradeMark = (id: any) => {
+    ElMessageBox.confirm(
+        '此操作将永久删除，是否继续?',
+        'Warning',
+        {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    ).then(async () => {
+        const res: carMoudleInfoDeleteResponseData = await carModuleInfoOperationDelete_API(id)
+        if (res.code == 0) {
+            ElMessage({ type: 'success', message: '删除成功' })
+            pageInfo.key = ''
+            getInfoMangementInfo()
+        }
+        else {
+            ElMessage({ type: 'error', message: '删除失败' })
+        }
+    }).catch(() => {
+        ElMessage({
+            message: '取消删除',
+        })
+    })
+
 }
 const submit = async () => {
     await formRef.value.validate()
@@ -604,7 +597,7 @@ const openExportDia = () => {
             font-weight: 400;
             letter-spacing: 0px;
             line-height: 20.27px;
-            color: rgba(0, 0, 0, 1);
+            
             text-align: left;
             vertical-align: top;
 
@@ -625,12 +618,16 @@ const openExportDia = () => {
 
 .edit-btn {
     display: flex;
-    align-items: center;
 
-    .right {
-        display: flex;
-        flex-direction: column;
-        align-items: end;
+    .aftersale_btn {
+        width: 40px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        height: auto;
+        overflow: hidden;
+
+
     }
 }
 
@@ -645,7 +642,7 @@ const openExportDia = () => {
         font-weight: 400;
         letter-spacing: 0px;
         line-height: 23.17px;
-        color: rgba(0, 0, 0, 1);
+        
         text-align: left;
         vertical-align: top;
     }

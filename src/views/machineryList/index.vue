@@ -8,12 +8,16 @@
                         <el-button icon="Search" @click="search" />
                     </template>
                 </el-input>
-                <el-select class="m_2" placeholder="请选择" v-model="pageInfo.companyId" @change="changeBlur">
+                <el-select v-if="dealerList.length > 1" class="m_2" placeholder="公司/经销商" v-model="pageInfo.companyId"
+                    @change="changeBlur">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
+                <el-input v-if="dealerList.length == 1" class="m_2" v-model="dealerList[0].name" @change="changeBlur"
+                    disabled>
+                </el-input>
             </div>
             <div class="button_area">
-                <el-button type="primary" @click="gotoInput">录入经销商设备</el-button>
+                <el-button style="margin-right: 20px;" type="primary" @click="gotoInput">录入经销商设备</el-button>
                 <el-button-group class="button_group2">
                     <el-button icon="Expand" :class="{ 'tab_active': tableShow }" @click="switchTabShow(true)" />
                     <el-button icon="menu" :class="{ 'tab_active': !tableShow }" @click="switchTabShow(false)" />
@@ -24,7 +28,7 @@
             <sn-table :carNewList="carNewList" @changeSort="changeSort">
                 <div>
                     <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
-                        @pageChange="currentChange">
+                        @pageChange="currentChange" :disabled="dealerList.length == 0 ? true : false">
                     </Pagination>
                 </div>
             </sn-table>
@@ -41,7 +45,7 @@
 import { useRoute } from 'vue-router'
 import InputDia from './components/inputDia.vue'
 import Pagination from '@/components/Pagination/index.vue'
-import { reactive, ref,onMounted } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { carNewList_API } from '@/api/machineryList/index'
 import { newListObj, carNewListResponseData, pageInfo } from '@/api/machineryList/type'
 import snTable from './components/sn-table.vue'
@@ -57,7 +61,7 @@ const dealerList = ref<carDealerObj[]>([])
 const pageInfo = reactive<pageInfo>({
     key: '',
     currentPage: 1,
-    pageSize: 3,
+    pageSize: 10,
     companyId: '',
     order: '1',
     provinceCode: '',
@@ -92,26 +96,32 @@ const changeSort = (val: string) => {
 // 获取公司列表
 const getDealerList = async () => {
     const res: carDealerResponseData = await carDealer_API()
-    dealerList.value = res.data
+    if (res.data == null) {
+    } else {
+        dealerList.value = res.data
+        if (dealerList.value.length == 1) {
+            pageInfo.companyId = dealerList.value[0].id
+        }
+        getCarList()
+    }
 }
-getDealerList()
+
 // 获取车辆列表
 const getCarList = async () => {
     const res: carNewListResponseData = await carNewList_API(JSON.stringify(pageInfo))
     carNewList.value = res.data.records
     total.value = res.data.total
 }
-getCarList()
 const switchTabShow = (val: boolean) => {
     tableShow.value = val
 }
 
-onMounted(()=>{
-    getRouterParam()
+onMounted(() => {
+    getRouterParam()
+    getDealerList()
 })
-const getRouterParam=()=>{
-    pageInfo.key= <string>$route.query.sn
-    search()
+const getRouterParam = () => {
+    pageInfo.key = <string>$route.query.sn
 }
 
 
@@ -130,8 +140,6 @@ const getRouterParam=()=>{
             height: 32px;
             opacity: 1;
             border-radius: 4px;
-            background: rgba(255, 255, 255, 1);
-            border: 1px rgba(220, 223, 230, 1);
             margin-right: 40px;
         }
 
@@ -140,14 +148,13 @@ const getRouterParam=()=>{
             height: 32px;
             opacity: 1;
             border-radius: 4px;
-            background: rgba(255, 255, 255, 1);
-            border: 1px rgba(220, 223, 230, 1);
+
         }
 
     }
 
     .button_group2 {
-        margin-left: 20PX;
+        margin-left: 20pX;
 
         .el-button {
             height: 32px;

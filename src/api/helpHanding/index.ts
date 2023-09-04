@@ -1,15 +1,14 @@
 import request from '@/utils/request'
 import { HelpHandlingObj, HelpHandlingResponseData,HelpHandlingParamData,HelpHandlingAlarmData,
-    HelpHandlerData,
-    RecordsObj
+    HelpHandlerData,RecordsObj,FinishData
 } from './type'
 
 // 求助处理列表
-export function getHelpHandlingAPI(params: HelpHandlingObj) {
+export function getHelpHandlingAPI(data: HelpHandlingObj) {
     return request<any, HelpHandlingResponseData>({
         url: "/help/new/list",
         method: 'post',
-        params
+        data
     })
 }
 
@@ -29,10 +28,10 @@ export function getHelpHandlerAPI() {
 }
 
 // 完成处理
-export function getHelpHandlingFinishAPI(params:any) {
-    return request<any,any>({
-        url: `/help/update?${params}`,
-        method: 'get',
+export function getHelpHandlingFinishAPI(params:RecordsObj) {
+    return request<any,FinishData>({
+        url: `/help/update?id=${params.id}&carId=${params.carId}&status=${params.status}&handlerId=${params.handlerId}&info=${params.info}`,
+        method: 'get'
     })
 }
 
@@ -49,7 +48,7 @@ export function getHelpHandlingParamChangeAPI(carId:number) {
 // 报警记录
 export function getHelpHandlingAlarmRecordAPI(carId:number) {
     return request<any,HelpHandlingAlarmData>({
-        url: `/car/alarmRecord/list?carId=${carId}`,
+        url: `/car/alarmRecord/list?carId=${carId}&pageSize=1&currentPage=10`,
         method: 'get',      
     })
 }
