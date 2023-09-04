@@ -27,10 +27,15 @@ import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
-// import { monitorGet_API } from "@/api/monitoring";
+import { onlineFarmMachinePosition_API } from "@/api/monitoring";
 
-let map: any = null;
-let markerArr: any = [];
+
+let map: any = null; // map实例对象
+let markerArr: any = []; // marker坐标点数字
+let deviceList: any = [] // 设备列表
+let renderMode = "polymer"; // 原生dom渲染， 或者 polymer 聚合引擎；
+let markerGroup = L.layerGroup();
+let markerClusterGroup = L.markerClusterGroup();
 
 // 地图瓦片图选项
 let mapTitleOptions = [
@@ -44,7 +49,36 @@ let mapTitleOptionsValue = ref(mapTitleOptions[1].id);
 
 onMounted(() => {
   initMap();
+  getData();
 });
+
+// 初始化数据渲染地图
+async function getData() {
+
+  let res = await onlineFarmMachinePosition_API({})
+  deviceList = res.data.onlineFarmMachines 
+
+  createMarker();
+}
+
+// 创建地图marker点
+function createMarker() {
+  deviceList.forEach((item: any) => {
+    const marker = L.marker([item.posX, item.posY]);
+    marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
+    markerArr.push(marker);
+  });
+  if (renderMode == "dom") {
+    markerGroup = L.layerGroup(markerArr);
+    markerGroup.addTo(map);
+  }
+  if (renderMode == "polymer") {
+    markerClusterGroup.addLayers(markerArr);
+    markerClusterGroup.addTo(map);
+    // let marker = L.marker([59.06097, 111.93969]);
+    // marker.addTo(markerClusterGroup);
+  }
+}
 
 // 初始化加载地图
 function initMap() {
@@ -57,29 +91,6 @@ function initMap() {
     attributionControl: false, //是否启用地图属性控件
   });
   mapTitleOptionsValueChange();
-
-  let data = [
-    { lng: 29.06097, lat: 111.93969 },
-    { lng: 29.06097, lat: 11.93969 },
-    { lng: 59.06097, lat: 111.93969 },
-  ];
-
-  for (var i = 0; i <= 100; i++) {
-    data.push({ lng: 59.06097, lat: 111.93969 });
-  }
-
-  data.forEach((item) => {
-    const marker = L.marker([item.lng, item.lat]);
-    marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
-    markerArr.push(marker);
-  });
-
-  // let markerGroup = L.layerGroup(markerArr);
-  // markerGroup.addTo(map);
-
-  // let markerClusterGroup = L.markerClusterGroup();
-  // markerClusterGroup.addLayers(markerArr);
-  // markerClusterGroup.addTo(map);
 }
 
 // 图商发生变化
