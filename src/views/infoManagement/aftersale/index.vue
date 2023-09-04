@@ -72,7 +72,7 @@
                     <div class="righttitle">部件</div>
                     <div class="rightcontent">
                         <el-row :gutter="2">
-                            <el-col :span="4" :offset="2">
+                            <el-col :span="4" :offset="1">
                                 铭牌SN:
                             </el-col>
                             <el-col :span='8'>
@@ -80,7 +80,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16">
-                            <el-col :span="4" :offset="2">
+                            <el-col :span="4" :offset="1">
                                 平板SN:
                             </el-col>
                             <el-col :span='8'>
@@ -95,7 +95,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16">
-                            <el-col :span="4" :offset="2">
+                            <el-col :span="4" :offset="1">
                                 电机SN:
                             </el-col>
                             <el-col :span='8'>
@@ -109,7 +109,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence != '1'">
-                            <el-col :span="4" :offset="2">
+                            <el-col :span="4" :offset="1">
                                 车身SN
                             </el-col>
                             <el-col :span='8'>
@@ -123,7 +123,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence != '1'">
-                            <el-col :span="4" :offset="2">
+                            <el-col :span="4" :offset="1">
                                 前轮SN
                             </el-col>
                             <el-col :span='8'>
@@ -137,7 +137,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence != '1'">
-                            <el-col :span="4" :offset="2">
+                            <el-col :span="4" :offset="1">
                                 天线_1SN
                             </el-col>
                             <el-col :span='8'>
@@ -151,7 +151,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence == '2'">
-                            <el-col :span="4" :offset="2">
+                            <el-col :span="4" :offset="1">
                                 天线_2SN
                             </el-col>
                             <el-col :span='8'>
@@ -165,7 +165,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence == '1'">
-                            <el-col :span="4" :offset="2">
+                            <el-col :span="4" :offset="1">
                                 HUB_SN:
                             </el-col>
                             <el-col :span='8'>
@@ -179,7 +179,7 @@
                             </el-col>
                         </el-row>
                         <el-row :gutter="16" v-if="scence == '1'">
-                            <el-col :span="4" :offset="2">
+                            <el-col :span="4" :offset="1">
                                 一体机SN:
                             </el-col>
                             <el-col :span='8'>
@@ -414,24 +414,14 @@ const changeHubSnBtn = async (val: string) => {
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 26.06px;
-
-                text-align: left;
-                vertical-align: top;
             }
 
             .rightcontent {
-                margin-left: -10px;
-
-
                 .el-row {
                     margin-bottom: 16px;
                     align-items: center;
                     font-weight: 400;
                     letter-spacing: 0px;
-
-                    text-align: left;
-                    vertical-align: top;
-
                     .el-input {
                         width: 280px;
                         height: 32px;

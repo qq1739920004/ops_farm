@@ -248,7 +248,6 @@ const changeSort = (val: string) => {
     display: flex;
     flex-wrap: wrap;
     position: relative;
-
     .car_item_online {
         background-color: #e7ffe6 !important;
     }

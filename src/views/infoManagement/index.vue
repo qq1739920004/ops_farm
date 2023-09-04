@@ -85,7 +85,7 @@
                 <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate">编辑
+                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
                             </el-button>
                             <el-button @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
                             <el-button class="aftersale_btn" type="primary" link
@@ -150,7 +150,7 @@
                 <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate">编辑
+                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
                             </el-button>
                             <el-button @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
                             <el-button class="aftersale_btn" type="primary" link
@@ -173,7 +173,7 @@
                         <el-popover placement="right" :width="200" trigger="hover" style="">
                             <template #reference>
                                 <el-button type="primary"
-                                    style="width: 52px;height: 26px;opacity: 1;border:1px rgba(222, 255, 235, 1) solid;font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 20.27px;text-align: left;vertical-align: top;">查看</el-button>
+                                    style="width: 52px;height: 26px;font-size: 14px;font-weight: 400;letter-spacing: 0px;text-align: left;vertical-align: top;">查看</el-button>
                             </template>
                             <el-row :gutter="16"
                                 style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(202, 204, 207, 1);">
@@ -185,7 +185,7 @@
                                 </el-col>
                             </el-row>
                             <el-row :gutter="16"
-                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
                                 <el-col :span="7" :offset="2">
                                     罗网
                                 </el-col>
@@ -194,7 +194,7 @@
                                 </el-col>
                             </el-row>
                             <el-row :gutter="16"
-                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
                                 <el-col :span="7" :offset="2">
                                     软件
                                 </el-col>
@@ -203,7 +203,7 @@
                                 </el-col>
                             </el-row>
                             <el-row :gutter="16"
-                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
                                 <el-col :span="7" :offset="2">
                                     星基
                                 </el-col>
@@ -212,7 +212,7 @@
                                 </el-col>
                             </el-row>
                             <el-row :gutter="16"
-                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
                                 <el-col :span="7" :offset="2">
                                     质保
                                 </el-col>
@@ -251,7 +251,7 @@
                 <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate">编辑
+                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
                             </el-button>
                             <el-button @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
                             <el-button type="primary" link @click="gotoAfterSale(row)"
@@ -459,7 +459,7 @@ const edit = (row: any) => {
     newRecords.terminalType = row.terminalType
     newRecords.motorSn = row.motorSn
     nextTick(() => {
-        formRef.value.clearValidate()
+        formRef?.value.clearValidate()
         G501D.value.formRef?.clearValidate()
         G502D.value.formRef?.clearValidate()
     })
@@ -573,7 +573,6 @@ const openExportDia = () => {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
-    flex-wrap: wrap;
 
     .input_area {
         display: flex;
@@ -581,7 +580,6 @@ const openExportDia = () => {
 
         .input-with-select {
             margin-right: 30px;
-            margin-left: 10px;
             width: 240px;
             height: 32px;
             opacity: 1;
@@ -597,7 +595,7 @@ const openExportDia = () => {
             font-weight: 400;
             letter-spacing: 0px;
             line-height: 20.27px;
-            
+
             text-align: left;
             vertical-align: top;
 
@@ -618,6 +616,7 @@ const openExportDia = () => {
 
 .edit-btn {
     display: flex;
+    justify-content: space-around;
 
     .aftersale_btn {
         width: 40px;
@@ -626,8 +625,6 @@ const openExportDia = () => {
         white-space: normal;
         height: auto;
         overflow: hidden;
-
-
     }
 }
 
@@ -642,7 +639,6 @@ const openExportDia = () => {
         font-weight: 400;
         letter-spacing: 0px;
         line-height: 23.17px;
-        
         text-align: left;
         vertical-align: top;
     }

@@ -287,7 +287,6 @@ const removeMarker = () => {
         height: 32px;
         opacity: 1;
         border-radius: 4px;
-        background: rgba(255, 255, 255, 1);
     }
 
     .demo-date-picker {
@@ -298,22 +297,19 @@ const removeMarker = () => {
         width: 302px;
         height: 164px;
         opacity: 1;
-        border-radius: 4px;
+        border-radius: 5px;
         background: rgba(255, 255, 255, 1);
 
         .top_sn {
-            padding: 10px 0;
-            border-radius: 4px;
+            border-radius: 4px 4px 0 0;
+            padding: 13px 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 302px;
             height: 26px;
             opacity: 1;
             background: var(--el-color-primary);
             font-size: 14px;
-            letter-spacing: 0px;
-            line-height: 17.38px;
             color: rgba(255, 255, 255, 1);
             margin-bottom: 12px;
         }
@@ -327,13 +323,13 @@ const removeMarker = () => {
                 height: 30px;
                 opacity: 1;
                 border-radius: 4px;
-                background: rgba(255, 255, 255, 1);
             }
 
             span {
                 margin-left: 21px;
                 font-size: 12px;
                 line-height: 17.38px;
+                color: black;
             }
 
         }
