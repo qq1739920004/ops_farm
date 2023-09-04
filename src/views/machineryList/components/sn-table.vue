@@ -31,7 +31,7 @@
                 <el-popover placement="right" :width="200" trigger="hover" style="">
                     <template #reference>
                         <el-button type="primary"
-                            style="width: 52px;height: 26px;opacity: 1;border:1px rgba(222, 255, 235, 1) solid;font-size: 14px;font-weight: 400;letter-spacing: 0px;line-height: 20.27px;text-align: left;vertical-align: top;">查看</el-button>
+                            style="width: 52px;height: 26px;opacity: 1;font-size: 14px;text-align: left;vertical-align: top;">查看</el-button>
                     </template>
                     <el-row :gutter="16"
                         style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(202, 204, 207, 1);">
@@ -43,7 +43,7 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="16"
-                        style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                        style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
                         <el-col :span="7" :offset="2">
                             罗网
                         </el-col>
@@ -52,7 +52,7 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="16"
-                        style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                        style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
                         <el-col :span="7" :offset="2">
                             软件
                         </el-col>
@@ -61,7 +61,7 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="16"
-                        style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                        style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
                         <el-col :span="7" :offset="2">
                             星基
                         </el-col>
@@ -70,7 +70,7 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="16"
-                        style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(128, 128, 128, 1);">
+                        style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
                         <el-col :span="7" :offset="2">
                             质保
                         </el-col>
@@ -200,10 +200,11 @@ const changeCarStatus = async (val: any) => {
     }
     const res = await carStatus_API(carStatus.value)
     if (res.code == 0) {
-        ElMessage({ type: 'success', message: '修改成功' })
+        ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
+
     }
     else {
-        ElMessage({ type: 'error', message: '修改失败' })
+        ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
     }
     carStatus.value.ids = []
 
@@ -215,18 +216,20 @@ const changeLogStatus = async (val: any, val2: any) => {
         if (val2 == true) {
             const res = await logOpen_API(val)
             if (res.code == 0) {
-                ElMessage({ type: 'success', message: '修改成功' })
+                ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
+
             }
             else {
-                ElMessage({ type: 'error', message: '修改失败' })
+                ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
             }
         } else {
             const res = await logClose_API(val)
             if (res.code == 0) {
-                ElMessage({ type: 'success', message: '修改成功' })
+                ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
+
             }
             else {
-                ElMessage({ type: 'error', message: '修改失败' })
+                ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
             }
         }
 

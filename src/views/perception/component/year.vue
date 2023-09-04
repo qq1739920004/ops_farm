@@ -76,15 +76,14 @@
     .charts {
         height: calc(100% - 80px);
         display: flex;
-     
         >div {
             background-color:  rgba(196, 204, 158, 0.8);
-            width: 50%;
-            background:url(../image/year_bg.png) no-repeat;           
+            flex:1;
+            background:url(../image/year_bg.png) no-repeat 0;
+            background-size:cover;      
             display: flex;  
             justify-content: center;  
             align-items: center; 
-           padding-right: 30px;       
             font-size: 30px;
         }
     }
@@ -96,7 +95,6 @@
         width: 50%;
         text-align: center;
         font-size: 20px;
-        padding-right: 30px;
     }
 }
 }

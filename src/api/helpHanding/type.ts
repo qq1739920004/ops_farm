@@ -69,27 +69,16 @@ export interface HelpHandlingParamChangeData extends ResponseData {
 }
 // 响应-报警记录
 export interface AlarmObj {
-    cityCode: string;
-    codePower: boolean;
-    currentPage: number;
-    diffIdPower: boolean;
-    et: string;
-    field: number;
-    fieldName?: string;
-    list: [{
+    records?: [{
         carId?: number;
         content?: number;
         grade?: number;
         time?: string;
-    }];
-    name: string;
-    oemSn: string;
-    order: number;
-    orderName: string;
-    pageSize: number;
-    provinceCode: string;
-    st: string;
-    total: number;
+    }
+    ];
+
+    total?: number;
+
 }
 
 
@@ -100,9 +89,14 @@ export interface HelpHandlingAlarmData extends ResponseData {
 export interface HandlerUserVO {
     name?: string;
     tel?: string;
-    handlerId:string
+    handlerId: string
 }
 
-export interface HelpHandlerData extends ResponseData{
-    data:HandlerUserVO[]
+export interface HelpHandlerData extends ResponseData {
+    data: HandlerUserVO[]
+}
+
+// 响应-完成处理
+export interface FinishData extends ResponseData{
+    data?: { [key: string]: any };
 }

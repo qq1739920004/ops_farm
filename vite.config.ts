@@ -8,6 +8,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 const pathSrc = path.resolve(dirname, "src");
+const requestUrl = `https://api.map.baidu.com/weather/v1/?district_id=222405&data_type=all&ak=YBrHBm564dIAwazUD1lXLGRNFr0AhZCF`;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -68,6 +69,13 @@ export default defineConfig({
         rewrite: (path) =>
           path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
 
+      },
+      '/api-baidu-weather': {
+        target: requestUrl, 
+        changeOrigin: true,
+        rewrite:(path)=>
+          path.replace(new RegExp("^/api-baidu-weather"), ""), // 替换 /dev-api 为 target 接口地址
+        
       },
     },
   },

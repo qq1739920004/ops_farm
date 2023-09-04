@@ -15,7 +15,8 @@
                 <span>状态：</span>
                 <el-select v-model=helpHandling.status placeholder="请选择" @change="chooseStatus">
                     <el-option value=0 label="待处理" />
-                    <el-option value=1 label="已处理" />
+                    <el-option value=1 label="已指派" />
+                    <el-option value=2 label="已处理" />
                 </el-select>
             </div>
             <div class="tag">
@@ -34,10 +35,16 @@
                 <el-table-column label=序号 type=index align="center" width="60px"/>
                 <el-table-column label=SN prop=sn align="center"/>
                 <el-table-column label=状态 prop=status align="center">
-                    <template #default=scope>
-                        <el-tag>
-                            {{ scope.row["state"] == 1 ? "已处理" : "待处理" }}
-                        </el-tag>
+                    <template #='{row}'>
+                        <div v-if="row.status==0">
+                            <el-tag style="color:rgba(255, 112, 112, 1);background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)">待处理</el-tag>
+                        </div>
+                        <div v-if="row.status==1">
+                            <el-tag>已指派</el-tag>
+                        </div>
+                        <div v-if="row.status==2">
+                            <el-tag>已处理</el-tag>
+                        </div>                       
                     </template>
                 </el-table-column>
 
@@ -52,8 +59,10 @@
                 <el-table-column label=指派时间 prop=assignTime align="center"/>
                 <el-table-column label=备注 prop=info />
                 <el-table-column label=操作 prop=status align="center">
-                    <template #default="scope">
-                        <el-button size="small" text type="success" @click="handleEdit(scope.row)">处理</el-button>
+                    <template  #="{row}">
+                        <el-button size="small" text type="success" @click="handleEdit(row)"
+                        :disabled="row.status==2"
+                        >处理</el-button>
 
                     </template>
                 </el-table-column>
@@ -97,22 +106,22 @@ const changeTableSort = (column: any) => {
         if (column.order === 'ascending') {
             helpHandling.helpTimeOrder = 2
             getHelpHandling()
-            console.log('helpTime升序')
+            // console.log('helpTime升序')
         } else if (column.order === 'descending') {
             helpHandling.helpTimeOrder = 1
             getHelpHandling()
-            console.log('helpTime降序')
+            // console.log('helpTime降序')
         }
 
     } else if (column.prop === 'handleTime') {
         if (column.order === 'ascending') {
             helpHandling.handleTimeOrder = 2
             getHelpHandling()
-            console.log('handletime升序')
+            // console.log('handletime升序')
         } else if (column.order === 'descending') {
             helpHandling.handleTimeOrder = 1
             getHelpHandling()
-            console.log('handletime降序')
+            // console.log('handletime降序')
         }
 
     } else {
@@ -124,8 +133,8 @@ const getHelpHandling = async () => {
     const res: HelpHandlingResponseData = await getHelpHandlingAPI(helpHandling)
     helpList.value = res.data.records
     total.value = res.data.total
-
     for (var item in helpList.value) {
+       
         const s = tsToStr(helpList.value[item].consumeTime)
         helpList.value[item].consumeTime = s
     }
@@ -164,10 +173,10 @@ const search = () => {
 }
 
 const $router = useRouter()
-const handleEdit = (row: RecordsObj) => {
+const handleEdit = (row: RecordsObj) => {  
     $router.push({
         name: 'handle',
-        query: { carId: row.carId, helpList: JSON.stringify(row)}
+        query: { helpList: JSON.stringify(row)}
     });
 }
 

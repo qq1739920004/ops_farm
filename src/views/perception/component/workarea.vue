@@ -22,8 +22,6 @@ const listy = props.carAreas.map((item: any) => item.carArea);
 const listx = props.carAreas.map((item: any) => item.carName);
 // 获取图表节点
 let bar = ref();
-let leftPosition=ref(0)
-let titleWidth=ref(80)
 let mycharts: echarts.ECharts = {} as echarts.ECharts;
 type DataZoomMove = {
   start: number;
@@ -31,64 +29,46 @@ type DataZoomMove = {
 };
 const dataZoomMove: DataZoomMove = {
   start: 0,
-  end: 4,
+  end: 5,
 };
 
 const option = {
   xAxis: {
     type: "value",
-    axisLabel: {
-      align: "left",
-    },
     show: false,
   },
   yAxis: {
     axisLabel: {
-      interval: 0, //强制显示所有标签
-      formatter: function (value: any) {
-        // 动态计算 rank 标签的 left 位置，确保不与 title 冲突
-        // 如果 leftPosition 与 title 冲突，向右偏移
-        // if (leftPosition.value < titleWidth.value) {
-        //   leftPosition.value = titleWidth.value + 5; // 在 title 宽度的右侧再添加 5 像素的间距
-        // }
-        // console.log(value);
-        return "{rank" + "|" + "}{title|" + value + "}";
+      show: true,
+      margin: 2,
+      textStyle: {
+        fontSize: 14,
+        //文字颜色
+        color: "#cccfce",
       },
-      rich: {
-        rank: {
-          width: 5,
-          height: 5,
-          left:leftPosition.value,
-          backgroundColor: "white",
-          borderRadius: 20,
-        },
-        title: {
-          width:titleWidth.value,
-          fontSize:14
-        },
-      },
+      // 调整左侧文字的3个属性，缺一不可
+      verticalAlign: "bottom", //文字垂直对齐方式，默认自动
+      align: "left", //文字水平对齐方式，默认自动
+      //调整文字上右下左
+      padding: [15, 0, 15, 0],
     },
     type: "category",
     data: listx,
     inverse: true,
-    axisLine: {
+    splitLine: {
       show: false,
     },
     axisTick: {
       show: false,
     },
-    splitLine: {
+    axisLine: {
       show: false,
-      lineStyle: {
-        color: "#13387a",
-      },
     },
   },
   grid: {
-    containLabel: true,
-    bottom: "5%",
-    top: "5%",
-    left: "10%",
+    left: "5%",
+    top: '5%',
+    bottom: '2%',
     right: "20%",
   },
   dataZoom: [
@@ -99,10 +79,7 @@ const option = {
       disabled: true, // 禁用数据区域缩放和选择功能
       startValue: dataZoomMove.start,
       endValue: dataZoomMove.end,
-      bottom: "5%",
-      top: "5%",
       yAxisIndex: [0, 1], //这个字段的作用是指定哪个轴可以进行缩放操作，这里的0表示x轴，1表示y轴
-      zlevel: 1000000,
     },
     {
       //没有下面这块的话，只能拖动滚动条，鼠标滚轮在区域内不能控制外部滚动条
@@ -115,11 +92,11 @@ const option = {
   ],
   series: [
     {
+      barGap: "0%", // 柱子之间的间隔，这里没有间隔
       data: listy,
       type: "bar",
-      barWidth: 10,
+      barWidth: 12,
       showBackground: true,
-      barGap: "10%", // 调整柱状图之间的间距
       label: {
         show: true, //是否显示标签
         position: "right", //标签位置
@@ -129,26 +106,25 @@ const option = {
           if (params.value > 0) {
             //大于0显示标签
             //取小数点2位
-            return `{z|}{a|} ${params.value.toFixed(2)}`;
+            return `{a|} ${params.value.toFixed(2)}`;
           } else {
             return `   0`;
           }
         },
-        distance: -15,
-
+        distance: -20,
         rich: {
           a: {
-            widht: 30,
-            height: 30,
+            widht: 40,
+            height:40,
             backgroundColor: {
               image: chartIcon,
             },
-          },
+          }
         },
       },
       itemStyle: {
         //设置柱子边距
-        borderRadius : [0, 20, 20, 0],
+        borderRadius: [2, 20, 20, 2],
         color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
           {
             offset: 0,
@@ -160,7 +136,6 @@ const option = {
           },
         ]),
       },
-
       backgroundStyle: {
         color: "none",
       },
@@ -262,12 +237,14 @@ onUnmounted(() => {
   }
 
   .charts-box {
+    position: relative;
     width: 100%;
     height: calc(100% - 2.5rem);
     .charts {
       width: 100%;
       height: 100%;
     }
+
     // background-color: rgb(233, 208, 212, 0.2);
   }
 }

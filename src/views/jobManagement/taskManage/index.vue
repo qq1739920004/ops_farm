@@ -8,9 +8,7 @@
                 <el-option v-for="(item, index) in mapOptions" :key="index" :label="item.mapName" :value="item.mapId" />
             </el-select>
         </div>
-        <el-button
-            style="background: rgba(255, 255, 255, 1);color:rgba(76, 176, 79, 1);border-color:  rgba(255, 255, 255, 1);"
-            @click="clearDistance" class="map_button"> <el-icon>
+        <el-button style="color:rgba(76, 176, 79, 1);" @click="clearDistance" class="map_button"> <el-icon>
                 <Delete />
             </el-icon>清除</el-button>
         <el-button class="map_button2" @click="calculateDistance">
@@ -51,9 +49,7 @@
         </el-button>
         <div class="head_top">
             <div class="left">
-                <el-button
-                    style="background: rgba(255, 255, 255, 1);color:rgba(76, 176, 79, 1);border-color:  rgba(255, 255, 255, 1);"
-                    icon="back" @click="router.go(-1)">返回</el-button>
+                <el-button style="color:rgba(76, 176, 79, 1)" icon="back" @click="router.go(-1)">返回</el-button>
             </div>
             <div class="right">
                 <el-select style="width: 270px; margin-right: 10px;" v-model="pageInfo.companyId" placeholder="请选择"
@@ -128,8 +124,6 @@ import gcoord from 'gcoord'
 import { mapTitleLayers } from "./mapTitleLayers";
 import a from '@/assets/jobManage/a.png'
 import b from '@/assets/jobManage/b.png'
-// import pointInChina from '@/utils/pointInChina'
-// import L from 'leaflet'
 // 提交的车辆数组
 const ids = ref<any>([])
 const isShow = ref<boolean>(true)
@@ -573,11 +567,12 @@ const changeBlur2 = () => {
     paddyWorkList.value = []
     getPaddyWorkList()
 }
-const BtnClick = () => {
-    clearAllMarkers()
-    Object.assign(markerCollect, {})
-    ids.value = []
-}
+// 删除全部按钮
+// const BtnClick = () => {
+//     clearAllMarkers()
+//     Object.assign(markerCollect, {})
+//     ids.value = []
+// }
 const load = () => {
     pageInfo.pageSize < total.value ? pageInfo.pageSize += 2 : ''
 }
@@ -642,7 +637,6 @@ watch(() => paddyWorkList.value,
         height: 32px;
         opacity: 1;
         border-radius: 4px;
-        background: rgba(255, 255, 255, 1);
     }
 
     .map_button {
@@ -696,7 +690,7 @@ watch(() => paddyWorkList.value,
                 font-weight: 500;
                 letter-spacing: 0px;
                 line-height: 26.06px;
-                
+
             }
 
             .select_title2 {
@@ -779,6 +773,7 @@ watch(() => paddyWorkList.value,
                     background: rgba(199, 242, 216, 1);
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+                    color: #fff;
                 }
 
                 .infinite-list .infinite-list-item2 {
@@ -792,6 +787,7 @@ watch(() => paddyWorkList.value,
                     background: #fff;
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+                    color: black;
                 }
 
                 .infinite-list .infinite-list-item+.list-item {
@@ -906,7 +902,7 @@ watch(() => paddyWorkList.value,
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            
+
             height: 37px;
         }
 
@@ -957,7 +953,7 @@ watch(() => paddyWorkList.value,
                     margin-right: 5px;
                     font-size: 16px;
                     font-weight: 600;
-                    
+
                 }
 
                 .leftArea::before {
@@ -1035,7 +1031,7 @@ watch(() => paddyWorkList.value,
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 23.17px;
-                
+
                 text-align: left;
                 vertical-align: top;
             }
@@ -1052,7 +1048,7 @@ watch(() => paddyWorkList.value,
                 white-space: nowrap;
                 font-size: 16px;
                 line-height: 18px;
-                
+
                 margin-right: 5px;
             }
 
@@ -1073,7 +1069,7 @@ watch(() => paddyWorkList.value,
                 margin-left: 5px;
                 font-size: 16px;
                 line-height: 18px;
-                
+
                 text-align: left;
                 vertical-align: top;
             }
@@ -1112,4 +1108,5 @@ watch(() => paddyWorkList.value,
     .el-checkbox__input.is-indeterminate .el-checkbox__inner) {
     border-color: rgba(67, 207, 124, 1) !important;
     background-color: rgba(67, 207, 124, 1) !important;
-}</style>
+}
+</style>
