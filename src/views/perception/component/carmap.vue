@@ -10,40 +10,54 @@
 import * as echarts from 'echarts'
 import china from '../china.json'
 import axios from "axios";
-import { ref, watch, onUnmounted, onMounted } from 'vue'
-const props = defineProps({
-    provinceCars: {
-        type: Object
-    }
+import { ref,  onUnmounted, onMounted } from 'vue'
+import type { MonitorObj } from '@/api/perception/type'
+let imageUrl = 'https://lmg.jj20.com/up/allimg/1112/031119144257/1Z311144257-6-1200.jpg'
+interface Props {
+    provinceCars: MonitorObj['provinceCars']
+}
+const props = withDefaults(defineProps<Props>(), {
+    provinceCars:()=>[
+      {
+        name: '',
+        totalNum: 0,
+        onlineNum: 0,
+        code: ''
+      }
+    ]
 })
-let dataList = [{
-    name: '',
-    cityName: '',
-    totalNum: 3,
-    onlineNum: 3,
-    code: ''
-}]
+let dataList = props.provinceCars
 let cityCode = ref('')
 let bar = ref();
-let option = {
-    series: [
+cityCode.value = dataList[0].code + '00'
+let option:any = {
+     // 定义地图
+     series: [
         {
             type: "map",
             map: 'china', // 引入地图数据
+            // 使用地图的itemStyle来实现影像图层
+            itemStyle: {
+                color: {
+                    image: imageUrl, // 使用影像图作为填充
+                    repeat: 'no-repeat',  // 不重复
+                    aspectRatio: 'center' // 居中对齐
+                },
+                borderColor: 'rgba(0, 0, 0, 0.2)'
+            },
         },
     ],
 };
-var mycharts: any;
+let mycharts:echarts.ECharts
 
 const initEcharts = () => {
     mycharts = echarts.init(bar.value)
     echarts.registerMap('china', <any>china);
-    mycharts.setOption(option)
-
+      console.log(option);
+      mycharts.setOption(option, true);
 }
 onMounted(() => {
-
-    initEcharts()
+    getProvicne(cityCode.value)
 })
 onUnmounted(() => {
     mycharts.dispose;
@@ -52,33 +66,32 @@ onUnmounted(() => {
 const getProvicne = (provinceAlphabet: any) => {
     let path = `https://geo.datav.aliyun.com/areas_v3/bound/${provinceAlphabet}_full.json`;
      axios.get(path).then((res) => {
-        console.log(res)
         echarts.registerMap('mapname', res.data);
         changeOptions("mapname");
-        mycharts.setOption(option, true);
+        initEcharts()
     });
 
 
 }
-
 const changeOptions = (mapname: any) => {
-    option = {
-        series: [
+  option = {
+    series: [
             {
                 type: "map",
-                map: mapname, // 引入地图数据
+                map: mapname,
+                itemStyle: {
+                    color: {
+                        image: imageUrl,
+                        repeat: 'no-repeat',
+                        aspectRatio: 'center'
+                    },
+                    borderColor: 'rgba(0, 0, 0, 0.2)'
+                },
             },
         ],
-    };
+    }
 }
-watch(props, (newValue) => {
 
-    dataList = JSON.parse(JSON.stringify(newValue.provinceCars))
-    cityCode.value = dataList[0].code + '00'
-    getProvicne(cityCode.value)
-
-
-})
 
 </script>
 <style lang="scss" scoped>

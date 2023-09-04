@@ -23,7 +23,8 @@ export interface ResponseData {
       {
         name: string,
         totalNum: number,
-        onlineNum: number
+        onlineNum: number,
+        code: string
       }
     ],
     carAreas: [
@@ -36,6 +37,26 @@ export interface ResponseData {
 export interface monitorResponseData extends ResponseData {
   data:MonitorObj
   }
+export interface StateObj{
+  currentPage:number,
+  pageSize:number,
+}
+export interface StateResponseData extends ResponseData {
+    data: {
+      total: number,
+      records: {
+        carName: string,
+        code: string,
+        name: string,
+      onlineTime: string,
+        offlineTime: string,
+        sn: string,
+        carId: number
+    }[]
+        
+      
+    }
+}
       
 
  

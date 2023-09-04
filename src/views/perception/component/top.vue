@@ -10,28 +10,34 @@
       </div>
       <div class="top_num">
         <div>
-          <img src="../../perception/image/top_number1.png" alt="" />
+          <img  src="../../perception/image/top_number1.png" alt="" />
           <div class="word">
             <p>{{ monitorData.onlineDevice }}</p>
             <p>当前在线数 </p>
           </div>
         </div>
         <div>
-          <img src="../../perception/image/top_number2.png" alt="" />
+          <img  src="../../perception/image/top_number2.png" alt="" />
           <div class="word">
             <p>{{ monitorData.addNowYearDevice }}</p>
             <p>当年新增农机</p>
           </div>
         </div>
         <div>
-          <img src="../../perception/image/top_number3.png" alt="" />
+          <div class="rotate-dance">
+            <img  src="../../perception/image/top_number3.png" alt="" />
+            <img class="rotate-content" src="../../perception/image/car.png" alt="">
+          </div>
           <div class="word">
             <p>{{ monitorData.totalDevice }}</p>
             <p>农机总数</p>
           </div>
         </div>
         <div>
-          <img src="../../perception/image/top_number4.png" alt="" />
+          <div class="rotate-dance2">
+            <img  src="../../perception/image/top_number3.png" alt="" />
+            <img class="rotate-content" src="../../perception/image/consumer.png" alt="">
+          </div>
           <div class="word">
             <p>{{ monitorData.activeDevice }}</p>
             <p>已售农机数</p>
@@ -40,25 +46,14 @@
       </div>
     </div>
 
-    <div class="top_time">
-      <div class="temp">
-        <span>16℃</span>
-        <span>多云</span>
-        <img class="top_time_pic" src="../../perception/image/cloud.png" alt="" />
-      </div>
-      <div class="time">
-        <span>周六</span>
-        <span>14:54:45</span>
-        <span>2022.10.08</span>
-      </div>
-    </div>
+      <district-info></district-info>
   </div>
 </template>
 <script setup lang='ts'>
+import districtInfo from '@/views/perception/component/districtInfo.vue';
 defineProps({
   monitorData: {
     type: Object,
-
     default: {
       onlineDevice: 0,
       addNowYearDevice: 0,
@@ -181,6 +176,61 @@ defineProps({
       :nth-child(2) {
         font-size: 34.87px;
       }
+    }
+  }
+  .rotate{
+     position:absolute;
+      top: 0px;
+      left: -2px;
+      width: 100%;
+      height: 100%;
+      border-top: 2px solid #40b971;
+      box-shadow: 0px -10px 4px rgba(255, 255, 255, 0.039);
+      border-radius: 50%;
+      content: "";
+      display: block;
+   }
+  .rotate-dance{
+    .rotate-content{
+      width: 28px;
+      height: 26px!important;
+      position: absolute;
+      left: 36px!important;
+      top: 38px!important;
+    }
+   position: relative;
+   width: 100px;
+   height: 100px;
+    &::after{
+      @extend .rotate;
+      animation: rotate-danc 3s linear infinite;
+    }
+    &::before{
+      @extend .rotate;
+      //反着运行动画
+      animation: rotate-danc 3s linear infinite reverse;
+    }
+  }
+  .rotate-dance2{
+    @extend .rotate-dance;
+    .rotate-content{
+      width: 26px;
+      height: 24px !important;
+
+    }
+    &::after{
+      border-top: 2px solid #b1c144;
+    }
+    &::before{
+      border-top: 2px solid #b1c144;
+  }
+}
+  @keyframes rotate-danc {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 }

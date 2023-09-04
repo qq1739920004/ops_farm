@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="middle">
-                    <Carmap :provinceCars="provinceCars"></Carmap>
+                    <Carmap v-if="carAreas.length" :provinceCars="provinceCars"></Carmap>
                 </div>
                 <div class="right">
                     <Online class="online" v-if="typeCounts.length"  :typeCounts="typeCounts"></Online>
@@ -45,7 +45,7 @@ const totalArea=ref<number>()
 // 各类型农机在线数
 const typeCounts=ref<Array<object>>([])
 // 各省车辆状态
-const provinceCars=ref<object>({})
+const provinceCars=ref<MonitorObj['provinceCars']>()
 
 const getMonitor = async () => {
     const res = await getMonitorAPI()
