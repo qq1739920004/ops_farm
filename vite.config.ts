@@ -8,6 +8,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 const pathSrc = path.resolve(dirname, "src");
+const requestUrl = `https://api.map.baidu.com/weather/v1/?district_id=222405&data_type=all&ak=YBrHBm564dIAwazUD1lXLGRNFr0AhZCF`;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -57,18 +58,24 @@ export default defineConfig({
       },
       '/dev-api': {
         // target: 'http://140.207.166.210:9030/gateway/farm',
-        target: "http://127.0.0.1:4523/m1/2885822-0-default",
-        // target: 'http://140.207.166.210:9030/farm',
+        // target: "http://127.0.0.1:4523/m1/2885822-0-default",
         // 测试服地址
         // target: "http://127.0.0.1:4523/m1/2885822-0-default",
         // Mock地址
-        // target: 'http://140.207.166.210:9030/farm',
+        target: 'http://140.207.166.210:9030/farm',
         // 位置点测试无网关
         // target:'http://140.207.166.210:9030/farmPoint',
         changeOrigin: true,
         rewrite: (path) =>
           path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
 
+      },
+      '/api-baidu-weather': {
+        target: requestUrl, 
+        changeOrigin: true,
+        rewrite:(path)=>
+          path.replace(new RegExp("^/api-baidu-weather"), ""), // 替换 /dev-api 为 target 接口地址
+        
       },
     },
   },
