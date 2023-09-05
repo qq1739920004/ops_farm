@@ -191,22 +191,20 @@ const beforeSwitchChange = () => {
     switchStatus.value = true;
     return switchStatus.value;
 }
-console.log(props.carNewList);
 const changeCarStatus = async (val: any) => {
-    if (switchStatus) {
+    if (switchStatus.value == true) {
         carStatus.value.ids.push(val.id)
         carStatus.value.commandType = 11
         carStatus.value.commandStatus = val.satelliteStatus
+        const res = await carStatus_API(carStatus.value)
+        if (res.code == 0) {
+            ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
+        }
+        else {
+            ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
+        }
+        carStatus.value.ids = []
     }
-    const res = await carStatus_API(carStatus.value)
-    if (res.code == 0) {
-        ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
-
-    }
-    else {
-        ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
-    }
-    carStatus.value.ids = []
 
 }
 // 更改日志上传状态
