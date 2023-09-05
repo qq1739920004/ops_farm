@@ -282,8 +282,13 @@ Object.assign(saleObj, JSON.parse($route.query.row as string))
 const tableData = reactive<LogObj[]>([])
 const getInfo = async () => {
     const res: carModuleInfoOperationLogResponseData = await carModuleInfoOperationLog_API(saleObj.id as number)
-    console.log(res);
-    Object.assign(tableData, res.data)
+
+    if (res.data.length > 0) {
+        Object.assign(tableData, res.data)
+        ElMessage({ type: 'success', message: '获取成功' })
+    } else {
+        ElMessage({ message: '暂无变更记录' })
+    }
 
 }
 const getTopInfo = async () => {
@@ -422,6 +427,7 @@ const changeHubSnBtn = async (val: string) => {
                     align-items: center;
                     font-weight: 400;
                     letter-spacing: 0px;
+
                     .el-input {
                         width: 280px;
                         height: 32px;
@@ -444,9 +450,10 @@ const changeHubSnBtn = async (val: string) => {
         .bottomtitle {
             padding-top: 20px;
             margin-bottom: 20px;
-          margin-left: 20px;
+            margin-left: 20px;
 
             height: 50px;
+
             span {
                 margin-right: 34px;
             }
@@ -484,4 +491,5 @@ const changeHubSnBtn = async (val: string) => {
             /* Firefox */
         }
     }
-}</style>
+}
+</style>

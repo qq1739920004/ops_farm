@@ -57,8 +57,8 @@ export default defineConfig({
         // target: "http://127.0.0.1:4523/m1/2885822-0-default",
         // target: 'http://140.207.166.210:9030/farm',
         // 测试服地址
-        target: "http://127.0.0.1:4523/m1/2885822-0-default",
-        // target: 'http://140.207.166.210:9030/farm',
+        // target: "http://127.0.0.1:4523/m1/2885822-0-default",
+        target: 'http://140.207.166.210:9030/farm',
         // 位置点测试无网关
         // target:'http://140.207.166.210:9030/farmPoint',
         changeOrigin: true,
