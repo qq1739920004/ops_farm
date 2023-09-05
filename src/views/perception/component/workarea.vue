@@ -149,6 +149,7 @@ const initEcharts = () => {
 };
 //设置为定时器类型
 
+//@ts-ignore
 let dataZoomMoveTimer: NodeJS.Timeout | undefined;
 const startMoveDataZoom = (
   myChart: echarts.ECharts,

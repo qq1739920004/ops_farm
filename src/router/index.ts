@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '@/layout/index.vue';
 
 export const constantRoutes = [ // 静态路由数据
@@ -26,7 +26,7 @@ export const constantRoutes = [ // 静态路由数据
     children: [
       {
         path: '',
-        name:'machineryList',
+        name: 'machineryList',
         component: () => import("@/views/machineryList/index.vue"),
         meta: {
           title: '农机列表',
@@ -166,7 +166,7 @@ export const constantRoutes = [ // 静态路由数据
 export const asyncRoutes = []; // 动态路由数据
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: constantRoutes,
   scrollBehavior: () => ({ left: 0, top: 0 })
 })
