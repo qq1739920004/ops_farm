@@ -24,7 +24,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="carParamsData" :span="12" v-for="(value, key, index) in carParamsData" :key="index">
-                        <el-form-item class="item" :label="carParamsData[key].name" :prop="key">
+                        <el-form-item class="item" :label="value.name" :prop="key">
                             <el-input style=" width: 280px;height: 32px;" v-model="paramParamsData[key as never]" />
                         </el-form-item>
                     </el-col>
@@ -34,7 +34,7 @@
                 </el-row>
                 <div class="buttonarea">
                     <el-button style="margin-right: 100px;" type="danger" @click="cancel_dialog">取消</el-button>
-                    <el-button type="primary" @click="updateCarParams">确定</el-button>
+                    <el-button :disabled="!carParamsData" type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="calibFormRef" v-show="activeIndex == '2'" :rules="CalibParamRules" :inline="true"
@@ -42,7 +42,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="CalibTitleData" :span="12" v-for="(value, key, index) in CalibTitleData" :key="index">
-                        <el-form-item class="item" :label="CalibTitleData[key].name" :prop="key">
+                        <el-form-item class="item" :label="value.name" :prop="key">
                             <el-input style=" width: 280px;height: 32px;" v-model="CalibParamsData[key as never]" />
                         </el-form-item>
                     </el-col>
@@ -51,7 +51,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updateCalibParams">确定</el-button>
+                    <el-button :disabled="!CalibTitleData" type="primary" @click="updateCalibParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="pidFormRef" v-show="activeIndex == '3'" :rules="pibParamRules" :inline="true"
@@ -59,7 +59,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="PidTitleData" :span="12" v-for="(value, key, index) in PidTitleData" :key="index">
-                        <el-form-item class="item" :label="(PidTitleData[key].name)" :prop="key">
+                        <el-form-item class="item" :label="(value.name)" :prop="key">
                             <el-input style=" width: 280px;height: 32px;" v-model="PidParamsData[key]" />
                         </el-form-item>
                     </el-col>
@@ -68,7 +68,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updatePidParams">确定</el-button>
+                    <el-button :disabled="!PidTitleData" type="primary" @click="updatePidParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="pidCurveRef" v-show="activeIndex == '9'" :rules="pidCurveRules" :inline="true"
@@ -77,7 +77,7 @@
                 <el-row>
                     <el-col v-if="PidCurveTitleData" :span="12" v-for="(value, key, index) in PidCurveTitleData"
                         :key="index">
-                        <el-form-item class="item" :label="(PidCurveTitleData[key].name)" :prop="key">
+                        <el-form-item class="item" :label="(value.name)" :prop="key">
                             <el-input style=" width: 280px;height: 32px;" v-model="pidCurveList[key]" />
                         </el-form-item>
                     </el-col>
@@ -86,7 +86,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updatePidCurveParams">确定</el-button>
+                    <el-button :disabled="!PidCurveTitleData" type="primary" @click="updatePidCurveParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="supLowFormRef" v-show="activeIndex == '10'" :rules="pidSupLowRules" :inline="true"
@@ -95,7 +95,7 @@
                 <el-row>
                     <el-col v-if="PidSupLowTitleData" :span="12" v-for="(value, key, index) in PidSupLowTitleData"
                         :key="index">
-                        <el-form-item class="item" :label="(PidSupLowTitleData[key].name)" :prop="key">
+                        <el-form-item class="item" :label="(value.name)" :prop="key">
                             <el-input style=" width: 280px;height: 32px;" v-model="pidSupLowList[key]" />
                         </el-form-item>
                     </el-col>
@@ -104,7 +104,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updatePidSupLowParams">确定</el-button>
+                    <el-button :disabled="!PidSupLowTitleData" type="primary" @click="updatePidSupLowParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="moudleRef" v-show="activeIndex == '5'" :rules="rules" :inline="true"
@@ -290,7 +290,7 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
-import { paramDescribeObj, paramDescribeResponseData, carParamsDataObj, paramsParamObj, paramCarParamResponseData, paramcalibParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, updateCarResponseData, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
+import { paramDescribeObj, paramDescribeResponseData, paramsParamObj, paramCarParamResponseData, paramcalibParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, updateCarResponseData, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
 import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, pidParamParam_API, getSourceNode_path, updateCar_API, updatePidParm_API, updateCalibParam_API, GetcarProductpackage_API, packageUpgradeCar_API, pidCurveParam_API, updatePidCurveParm_API, pidSlsParam_API, updatepidSlsParam_API } from '@/api/machineryList/remoteAdjust/index'
 import { carNewList_API } from '@/api/machineryList/index'
 import { pageInfo } from '@/api/machineryList/type'
@@ -312,11 +312,11 @@ const dialogVisible = ref<boolean>(false)
 const activeIndex = ref<string>('1')
 const labelPosition = ref('right')
 const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn', 'name'])
-const carParamsData = ref<carParamsDataObj[] | null>([])
-const CalibTitleData = ref<carParamsDataObj[] | null>([])
-const PidTitleData = ref<{}[] | null>([])
-const PidCurveTitleData = ref<{}[] | null>([])
-const PidSupLowTitleData = ref<{}[] | null>([])
+const carParamsData = ref<any | null>([])
+const CalibTitleData = ref<any | null>([])
+const PidTitleData = ref<any | null>([])
+const PidCurveTitleData = ref<any | null>([])
+const PidSupLowTitleData = ref<any | null>([])
 const productList = ref<GetcarProductpackageObj[]>([])
 const custom = ref<number>(0)
 const pageInfo = reactive<pageInfo>({
@@ -698,7 +698,7 @@ const getPid = async () => {
 }
 // 情况差分数据
 const getChafenList = async () => {
-    const res: any = await carNewList_API(pageInfo)
+    const res: any = await carNewList_API(JSON.stringify(pageInfo))
     chaFenlist.value = res.data.records[0]
     custom.value = chaFenlist.value.radioChannel as number / 10000 || 0
 }
@@ -825,7 +825,7 @@ const rules = {
 }
 const parseVerification = (objItem: { type: string, name: string, range: string }) => {
 
-    let temRule = [];
+    let temRule = [] as any;
     if (objItem.type === "String") {
         let rule1 = {
             min: 1,
@@ -841,7 +841,7 @@ const parseVerification = (objItem: { type: string, name: string, range: string 
                 return Number(element);
             });
             // let rule2 = { min: min, max: max, message: `长度在 ${min} 到 ${max} 位`, trigger: 'blur' };
-            let checkInt = (rule: any, value: any, callback: Any) => {
+            let checkInt = (_rule: any, value: any, callback: any) => {
                 // 判断数字
                 let checkNumber = (input: any) => {
                     let testRe = /^[1-9]\d*|0$/;
@@ -859,7 +859,7 @@ const parseVerification = (objItem: { type: string, name: string, range: string 
                 callback();
             };
             let rule2 = { validator: checkInt, trigger: "blur" };
-            temRule.push(rule2);
+            temRule.push.apply(temRule, rule2);
         }
         if (Array.isArray(objItem.range)) {
             //
@@ -869,7 +869,7 @@ const parseVerification = (objItem: { type: string, name: string, range: string 
         if (objItem.range === "") {
             // let rule3 = { min: 1, max: 8, message: '长度在 1 到 8 位', trigger: 'blur' };
             // temRule.push(rule3);
-            let checkDouble = (rule: any, value: any, callback: any) => {
+            let checkDouble = (_rule: any, value: any, callback: any) => {
                 // 判断数字
                 let checkNumber = (input: any) => {
                     let testRe = /^[-]?[0-9]+.?[0-9]*/;
@@ -887,7 +887,7 @@ const parseVerification = (objItem: { type: string, name: string, range: string 
             temRule.push(rule3);
         }
         if (objItem.range !== "") {
-            let checkDouble = (rule: any, value: any, callback: any) => {
+            let checkDouble = (_rule: any, value: any, callback: any) => {
                 // 判断数字
                 let checkNumber = (input: any) => {
                     let testRe = /^[-]?[0-9]+.?[0-9]*/;
@@ -914,9 +914,9 @@ const parseVerification = (objItem: { type: string, name: string, range: string 
     return temRule;
 }
 const carParamRules = computed(() => {
-    let rules = {};
+    let rules = {} as any;
     for (let key in carParamsData.value) {
-        let temRule = [];
+        let temRule = [] as any;
         let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
         temRule.push(rule1);
         let rule2 = parseVerification(carParamsData.value[key]);
@@ -926,9 +926,9 @@ const carParamRules = computed(() => {
     return rules;
 })
 const CalibParamRules = computed(() => {
-    let rules = {};
+    let rules = {} as any;
     for (let key in CalibTitleData.value) {
-        let temRule = [];
+        let temRule = [] as any;
         let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
         temRule.push(rule1);
         let rule2 = parseVerification(CalibTitleData.value[key]);
@@ -938,9 +938,9 @@ const CalibParamRules = computed(() => {
     return rules;
 })
 const pibParamRules = computed(() => {
-    let rules = {};
+    let rules = {} as any;
     for (let key in PidTitleData.value) {
-        let temRule = [];
+        let temRule = [] as any;
         let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
         temRule.push(rule1);
         let rule2 = parseVerification(PidTitleData.value[key]);
@@ -950,9 +950,9 @@ const pibParamRules = computed(() => {
     return rules;
 })
 const pidCurveRules = computed(() => {
-    let rules = {};
+    let rules = {} as any;
     for (let key in PidCurveTitleData.value) {
-        let temRule = [];
+        let temRule = [] as any;
         let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
         temRule.push(rule1);
         let rule2 = parseVerification(PidCurveTitleData.value[key]);
@@ -962,9 +962,9 @@ const pidCurveRules = computed(() => {
     return rules;
 })
 const pidSupLowRules = computed(() => {
-    let rules = {};
+    let rules = {} as any;
     for (let key in PidSupLowTitleData.value) {
-        let temRule = [];
+        let temRule = [] as any;
         let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
         temRule.push(rule1);
         let rule2 = parseVerification(PidSupLowTitleData.value[key]);

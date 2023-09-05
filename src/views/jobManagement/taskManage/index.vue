@@ -55,7 +55,8 @@
                                 </el-checkbox>
                             </el-checkbox-group>
                         </li>
-                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: black;">—— 作业已全部加载 ——</span>
+                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: black;">—— 作业已全部加载
+                            ——</span>
                     </ul>
                 </div>
             </div>
@@ -82,7 +83,6 @@ import { mapTitleLayers } from "./mapTitleLayers";
 import a from '@/assets/jobManage/a.png'
 import b from '@/assets/jobManage/b.png'
 import SvgIcon from "@/components/SvgIcon/index.vue";
-import './mapHelper'
 // 提交的车辆数组
 const ids = ref<any>([])
 const isShow = ref<boolean>(true)
@@ -157,7 +157,7 @@ const initMap = () => {
                 ); //算距离
                 let polyline = L.polyline(pickedPoints.value, { color: "red" })
                     .addTo(map.value)
-                    .bindPopup(`相距:${distance.toFixed(3)}米`)
+                    .bindPopup(`相距:${distance.toFixed(3)}米`, { closeButton: false })
                     .openPopup(); //划线
                 calculationObj.value.push(polyline);
                 map.value.fitBounds(pickedPoints.value); //适应视野
@@ -320,7 +320,7 @@ const loadWorkData = async (workId: any) => {
             <div class="popupArea2"> <span class="left">农具：</span> <span class="right">${machine[workId].toolName}</span></div>
             <div class="popupBottom"> <div class="leftt">${machine[workId].createtime}</div> <span class="left"></span><span class="left"></span><span class="left"></span></div>
             <div class="popupBottom"><span class="right"></span><span class="right"></span><span class="right"></span> <span class="rightt">${machine[workId].updatetime}</span></div>
-            </div>`).addTo(map.value).openPopup()
+            </div>`, { closeButton: false }).addTo(map.value).openPopup()
             saveMarker(workId, [{ markerObj: line, name: 'lines', markerObj2: marker, name2: 'picture' }])
         }
     })
@@ -780,6 +780,7 @@ watch(() => paddyWorkList.value,
                 width: 194px;
                 border-radius: 4px;
                 background-color: #fff;
+
                 .li_title {
                     overflow: hidden;
                     margin-left: 10px;

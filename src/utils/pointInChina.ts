@@ -14,7 +14,7 @@ function pointInChina(position = [31.172800343248, 121.406021546488]) {
         return false;
     }
 
-    function isDotInPolygon(point, polygonPoints) {
+    function isDotInPolygon(point: any, polygonPoints: any) {
         var flag = false,
             p1,
             p2;
@@ -30,7 +30,7 @@ function pointInChina(position = [31.172800343248, 121.406021546488]) {
         return flag;
     }
 
-    function isInPolygon(checkPoint, polygonPoints) {
+    function isInPolygon(checkPoint: any, polygonPoints: any) {
         var counter = 0;
         var i;
         var xinters;

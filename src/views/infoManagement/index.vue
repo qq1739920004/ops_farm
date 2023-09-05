@@ -82,7 +82,7 @@
                         {{ row.wheelImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center">
+                <el-table-column label="操作" align="center" width="180">
                     <template #="{ row }">
                         <div class="edit-btn">
                             <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
@@ -375,7 +375,7 @@ const handleSelectionChange = (val: any) => {
     multipleSelection.value = val
 
 }
-const validatorwarrantyDate = (rule: any, value: any, callBack: any) => {
+const validatorwarrantyDate = (_rule: any, value: any, callBack: any) => {
     let zz = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/
     if (zz.test(value)) {
         callBack();
