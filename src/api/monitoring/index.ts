@@ -10,3 +10,11 @@ export function onlineFarmMachinePosition_API(data: onlineFarmMachinePosition_ty
         data
     })
 }
+
+export function farmMachineDataStatistics_API() {
+    return request({
+        url: "/device/new/farmMachineDataStatistics",
+        method: 'get',
+    })
+}
+

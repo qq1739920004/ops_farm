@@ -13,11 +13,13 @@
           :value="item.id"
         />
       </el-select>
+      <!-- <SvgIcon icon="AG360"/> -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import AG360Icon from "@/assets/icons/AG360.svg";
 import { ref, onMounted } from "vue";
 import { mapTitleLayers } from "./mapTitleLayers";
 import L from "leaflet";
@@ -26,13 +28,16 @@ import "leaflet.chinatmsproviders";
 import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import { onlineFarmMachinePosition_API } from "@/api/monitoring";
-
+import {
+  onlineFarmMachinePosition_API,
+  farmMachineDataStatistics_API,
+} from "@/api/monitoring";
 let map: any = null; // map实例对象
 let markerArr: any = []; // marker坐标点数字
-let deviceList: any = [] // 设备列表
-let renderMode = "polymer"; // 原生dom渲染， 或者 polymer 聚合引擎；
+let deviceList: any = []; // 设备列表
+let renderMode = "dom"; // 原生dom渲染， 或者 polymer 聚合引擎；
 let markerGroup = L.layerGroup();
+//@ts-ignore
 let markerClusterGroup = L.markerClusterGroup();
 // 地图瓦片图选项
 let mapTitleOptions = [
@@ -43,25 +48,37 @@ let mapTitleOptions = [
 ];
 let mapTitleOptionsValue = ref(mapTitleOptions[1].id);
 
-
 onMounted(() => {
   initMap();
+  getFaromDataStatistics();
   getOnlineFarmPosition();
 });
 
-
+// 获取统计数据
+async function getFaromDataStatistics() {
+  let res = await farmMachineDataStatistics_API()
+  console.log(res)
+  // dataStatistics = res
+}
 
 // 初始化获取设备数据
 async function getOnlineFarmPosition() {
-  let res = await onlineFarmMachinePosition_API({})
-  deviceList = res.data.onlineFarmMachines 
+  let res = await onlineFarmMachinePosition_API({});
+  deviceList = res.data.onlineFarmMachines;
+  console.log(deviceList, "---58");
   createMarker();
 }
 
 // 创建地图marker点
 function createMarker() {
   deviceList.forEach((item: any) => {
-    const marker = L.marker([item.posX, item.posY]);
+    const icon = L.icon({
+      iconUrl: AG360Icon, // SVG图标的路径
+      iconSize: [23, 27], // 图标的大小 [宽度, 高度]
+      iconAnchor: [14, 28], // 图标的锚点位置 [水平, 垂直]
+      popupAnchor: [0, -28], // 弹出窗口的锚点位置 [水平, 垂直]
+    });
+    const marker = L.marker([item.posX, item.posY], { icon: icon });
     marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
     markerArr.push(marker);
   });
