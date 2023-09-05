@@ -27,15 +27,14 @@ import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
+let markerClusterGroup = L.markerClusterGroup();
 import { onlineFarmMachinePosition_API } from "@/api/monitoring";
-
-
 let map: any = null; // map实例对象
 let markerArr: any = []; // marker坐标点数字
 let deviceList: any = [] // 设备列表
 let renderMode = "polymer"; // 原生dom渲染， 或者 polymer 聚合引擎；
 let markerGroup = L.layerGroup();
-let markerClusterGroup = L.markerClusterGroup();
+
 
 // 地图瓦片图选项
 let mapTitleOptions = [

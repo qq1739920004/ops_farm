@@ -1,15 +1,11 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from "path-browserify";
+import path from "path";
 import { fileURLToPath } from 'url'
 import AutoImport from 'unplugin-auto-import/vite'
 // import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
-const pathSrc = path.resolve(dirname, "src");
 const requestUrl = `https://api.map.baidu.com/weather/v1/?district_id=222405&data_type=all&ak=YBrHBm564dIAwazUD1lXLGRNFr0AhZCF`;
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(),
@@ -27,7 +23,7 @@ export default defineConfig({
   // }),
   createSvgIconsPlugin({
     // 指定需要缓存的图标文件夹
-    iconDirs: [path.resolve(pathSrc, "assets/icons")],
+    iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],
     // 指定symbolId格式
     symbolId: "icon-[dir]-[name]",
   }),
@@ -36,7 +32,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": pathSrc
+      "@": path.resolve(process.cwd(), 'src')
     },
   },
   server: {
@@ -61,8 +57,8 @@ export default defineConfig({
         // target: "http://127.0.0.1:4523/m1/2885822-0-default",
         // target: 'http://140.207.166.210:9030/farm',
         // 测试服地址
-        // target: "http://127.0.0.1:4523/m1/2885822-0-default",
-        target: 'http://140.207.166.210:9030/farm',
+        target: "http://127.0.0.1:4523/m1/2885822-0-default",
+        // target: 'http://140.207.166.210:9030/farm',
         // 位置点测试无网关
         // target:'http://140.207.166.210:9030/farmPoint',
         changeOrigin: true,
@@ -71,11 +67,11 @@ export default defineConfig({
 
       },
       '/api-baidu-weather': {
-        target: requestUrl, 
+        target: requestUrl,
         changeOrigin: true,
-        rewrite:(path)=>
+        rewrite: (path) =>
           path.replace(new RegExp("^/api-baidu-weather"), ""), // 替换 /dev-api 为 target 接口地址
-        
+
       },
     },
   },
