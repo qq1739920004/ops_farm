@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from "path";
-import { fileURLToPath } from 'url'
+
 import AutoImport from 'unplugin-auto-import/vite'
 // import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+// import Components from 'unplugin-vue-components/vite'
 const requestUrl = `https://api.map.baidu.com/weather/v1/?district_id=222405&data_type=all&ak=YBrHBm564dIAwazUD1lXLGRNFr0AhZCF`;
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,6 +21,9 @@ export default defineConfig({
   // ElementPlusResolver()
   // ],
 
+  // }),
+  // Components({
+  //   dirs: ['src/components'], // 按需加载的文件夹
   // }),
   createSvgIconsPlugin({
     // 指定需要缓存的图标文件夹

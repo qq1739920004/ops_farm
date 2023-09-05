@@ -6,25 +6,26 @@ import { ref } from 'vue'
 
 const useAppStore = defineStore("app", () => {
     const isDark = useDark();
-    const defaultThemeSettings = { // 主题默认配置
-        layout: 'vertical', // layout
-        themeColor: '#67ae5b' // 主题颜色
-    }
-
+    const layout = useStorage('layout', 'vertical') 
+    const themeColor = useStorage('themeColor', '#67ae5b')
     const device = ref('desktop') // 屏幕类型
-    const themeSettings = useStorage('themeSettings', defaultThemeSettings) as Record<string, any>
 
     setPrimaryColor()
+
+    // 修改layout 
+    function updateLayout(arg: string) {
+        layout.value = arg
+    }
+
+    // 修改主题颜色
+    function updateThemeColor(arg: string) {
+        themeColor.value = arg
+        setPrimaryColor()
+    }
 
     // 修改屏幕类型
     function updateDevice(arg: string) {
         device.value = arg
-    }
-    // 修改主题配置
-    function updateThemeSettings(key: string, val: any) {
-        themeSettings.value[key] = val
-        setPrimaryColor()
-
     }
     //修改暗黑模式
     function updateIsDark() {
@@ -32,10 +33,9 @@ const useAppStore = defineStore("app", () => {
         setPrimaryColor()
     }
 
-
     // 设置主题颜色
     function setPrimaryColor() {
-        const val = themeSettings.value.themeColor
+        const val = themeColor.value
         document.documentElement.style.setProperty("--el-color-primary", val);
         document.documentElement.style.setProperty(
             "--el-color-primary-dark-2",
@@ -47,14 +47,15 @@ const useAppStore = defineStore("app", () => {
         }
     }
 
-
     return {
         isDark,
         device,
-        themeSettings,
+        layout,
+        themeColor,
+        updateIsDark,
         updateDevice,
-        updateThemeSettings,
-        updateIsDark
+        updateLayout,
+        updateThemeColor
     }
 
 })

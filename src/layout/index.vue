@@ -2,7 +2,7 @@
   <!-- 宽屏 -->
   <div v-if="appStore.device == 'desktop'" class="app-layout-desktop">
     <!-- 竖屏 -->
-    <el-container v-if="appStore.themeSettings.layout == 'vertical'">
+    <el-container v-if="appStore.layout == 'vertical'">
       <SlideBar :collapse="collapse" />
       <el-container>
         <el-header height="50px">
