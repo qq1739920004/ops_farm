@@ -6,7 +6,7 @@ import { HelpHandlingObj, HelpHandlingResponseData,HelpHandlingParamData,HelpHan
 // 求助处理列表
 export function getHelpHandlingAPI(data: HelpHandlingObj) {
     return request<any, HelpHandlingResponseData>({
-        url: "/help/new/list",
+        url: "farm/help/new/list",
         method: 'post',
         data
     })
@@ -15,14 +15,14 @@ export function getHelpHandlingAPI(data: HelpHandlingObj) {
 // 未处理个数
 export function getHelpHandlingUncountAPI() {
     return request({
-        url: "/help/new/count",
+        url: "farm/help/new/count",
         method: 'get',
     })
 }
 // 处理人列表
 export function getHelpHandlerAPI() {
     return request<any,HelpHandlerData>({
-        url: `/help/handler/new/list`,
+        url: `farm/help/handler/new/list`,
         method: 'get',
     })
 }
@@ -30,7 +30,7 @@ export function getHelpHandlerAPI() {
 // 完成处理
 export function getHelpHandlingFinishAPI(params:RecordsObj) {
     return request<any,FinishData>({
-        url: `/help/update?id=${params.id}&carId=${params.carId}&status=${params.status}&handlerId=${params.handlerId}&info=${params.info}`,
+        url: `farm/help/update?id=${params.id}&carId=${params.carId}&status=${params.status}&handlerId=${params.handlerId}&info=${params.info}`,
         method: 'get'
     })
 }
@@ -39,7 +39,7 @@ export function getHelpHandlingFinishAPI(params:RecordsObj) {
 // 参数更改
 export function getHelpHandlingParamChangeAPI(carId:number) {
     return request<any,any>({
-        url: `/param/paramChangeRecord/get?carId=${carId}`,
+        url: `farm/param/paramChangeRecord/get?carId=${carId}`,
         method: 'get',       
     })
 }
@@ -48,7 +48,7 @@ export function getHelpHandlingParamChangeAPI(carId:number) {
 // 报警记录
 export function getHelpHandlingAlarmRecordAPI(carId:number) {
     return request<any,HelpHandlingAlarmData>({
-        url: `/car/alarmRecord/list?carId=${carId}&pageSize=1&currentPage=10`,
+        url: `farm/car/alarmRecord/list?carId=${carId}&pageSize=1&currentPage=10`,
         method: 'get',      
     })
 }
@@ -57,21 +57,21 @@ export function getHelpHandlingAlarmRecordAPI(carId:number) {
 // 车辆参数
 export function getHelpHandlingCarParamAPI(carId:number) {
     return request<any,HelpHandlingParamData>({
-        url: `/param/carParam/get?carId=${carId}`,
+        url: `farm/param/carParam/get?carId=${carId}`,
         method: 'get',       
     })
 }
 // 校准参数
 export function getHelpHandlingCalibParamAPI(carId:number) {
     return request<any,HelpHandlingParamData>({
-        url: `param/calibParam/get?carId=${carId}`,
+        url: `farm/param/calibParam/get?carId=${carId}`,
         method: 'get',      
     })
 }
 // PID参数
 export function getHelpHandlinPIDParamAPI(carId:number) {
     return request<any,HelpHandlingParamData>({
-        url: `param/pidParam/get?carId=${carId}`,
+        url: `farm/param/pidParam/get?carId=${carId}`,
         method: 'get',      
     })
 }
@@ -79,14 +79,14 @@ export function getHelpHandlinPIDParamAPI(carId:number) {
 // PID曲线参数更新
 export function getPidCurveParmAPI(carId:number) {
     return request<any, HelpHandlingParamData>({
-        url: `/param/pidCurveParam/get?carId=${carId}`,
+        url: `farm/param/pidCurveParam/get?carId=${carId}`,
         method: 'get',
     })
 }
 // PID超低速参数
 export function getPidSlsParamAPI(carId:number) {
     return request<any, HelpHandlingParamData>({
-        url: `/param/pidSlsParam/get?carId=${carId}`,
+        url: `farm/param/pidSlsParam/get?carId=${carId}`,
         method: 'get',
     })
 }

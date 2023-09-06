@@ -4,7 +4,7 @@ import { groupListDataObj, groupListResponseData } from './type'
 
 export function getPaddyWorkGroupList_API(params: groupListDataObj) {
     return request<any, groupListResponseData>({
-        url: '/paddyWork/group/list',
+        url: '/farm/paddyWork/group/list',
         method: 'get',
         params
     })

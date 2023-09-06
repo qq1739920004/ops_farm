@@ -3,7 +3,7 @@ import { carNewListResponseData, carNewDetailResponseData, carDealerResponseData
 // 农机列表API接口// 分页查询
 export function carNewList_API(data: string) {
     return request<any, carNewListResponseData>({
-        url: `/car/new/list`,
+        url: `/farm/car/new/list`,
         method: 'post',
         data
     })
@@ -11,7 +11,7 @@ export function carNewList_API(data: string) {
 // 车辆详情/car/new/detail
 export function carNewDetail_API(carId: Number) {
     return request<any, carNewDetailResponseData>({
-        url: `/car/new/detail?carId=${carId}`,
+        url: `/farm/car/new/detail?carId=${carId}`,
         method: 'get',
     })
 }
@@ -19,14 +19,14 @@ export function carNewDetail_API(carId: Number) {
 // 经销商列表
 export function carDealer_API() {
     return request<any, carDealerResponseData>({
-        url: `/car/dealer`,
+        url: `/farm/car/dealer`,
         method: 'get',
     })
 }
 // 控制星基开关？
 export function carStatus_API(data: carStatusObj) {
     return request<any, any>({
-        url: `/car/status`,
+        url: `/farm/car/status`,
         method: 'post',
         data
     })
@@ -34,20 +34,20 @@ export function carStatus_API(data: carStatusObj) {
 // 控制日志上传开关？
 export function logOpen_API(sn: number) {
     return request<any, any>({
-        url: `/log/open?sn=${sn}`,
+        url: `/farm/log/open?sn=${sn}`,
         method: 'post',
     })
 }
 export function logClose_API(sn: number) {
     return request<any, any>({
-        url: `/log/close?sn=${sn}`,
+        url: `/farm/log/close?sn=${sn}`,
         method: 'post',
     })
 }
 // 注册时长
 export function activationCodeAdd_API(params: activationCodeObj) {
     return request<any, any>({
-        url: '/activationCode/add',
+        url: '/farm/activationCode/add',
         method: 'post',
         params
     })

@@ -5,7 +5,7 @@ import { onlineFarmMachinePosition_type } from './type'
 
 export function onlineFarmMachinePosition_API(data: onlineFarmMachinePosition_type) {
     return request({
-        url: "/device/onlineFarmMachinePosition",
+        url: "/farm/device/onlineFarmMachinePosition",
         method: 'get',
         data
     })
@@ -13,7 +13,7 @@ export function onlineFarmMachinePosition_API(data: onlineFarmMachinePosition_ty
 
 export function farmMachineDataStatistics_API() {
     return request({
-        url: "/device/new/farmMachineDataStatistics",
+        url: "/farm/device/new/farmMachineDataStatistics",
         method: 'get',
     })
 }
