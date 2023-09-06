@@ -827,6 +827,7 @@ watch(() => paddyWorkList.value,
                     background: rgba(199, 242, 216, 1);
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+                    color: #fff;
                 }
 
                 .infinite-list .infinite-list-item2 {
