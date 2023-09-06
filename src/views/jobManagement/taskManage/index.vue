@@ -499,7 +499,7 @@ const getDealerCarList = async () => {
     Object.assign(CarDealerList, res.data)
 }
 getDealerCarList()
-const getPaddyWorkList = async () => {
+const getPaddyWorkList = async (flag: Boolean) => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
     paddyWorkList.value = res.data.records
     let tem = res.data.records
@@ -508,13 +508,15 @@ const getPaddyWorkList = async () => {
         element.checked = false
     })
     if (paddyWorkList.value.length) {
-        ids.value.push(paddyWorkList.value[0].id as never)
-        paddyWorkList.value[0].checked = true
         total.value = res.data.total
+        if (flag == true) {
+            ids.value.push(paddyWorkList.value[0].id as never)
+            paddyWorkList.value[0].checked = true
+        }
     }
 
 }
-getPaddyWorkList()
+getPaddyWorkList(true)
 const changeBlur1 = () => {
     getDealerCarList()
     clearAllMarkers()
@@ -534,7 +536,7 @@ const changeBlur2 = () => {
     pageInfo.pageSize = 7
     ids.value = []
     paddyWorkList.value = []
-    getPaddyWorkList()
+    getPaddyWorkList(true)
 }
 // 删除全部按钮
 // const BtnClick = () => {
@@ -547,7 +549,7 @@ const load = () => {
 }
 watch(() => pageInfo.pageSize,
     () => {
-        getPaddyWorkList()
+        getPaddyWorkList(false)
     }
 )
 watch(() => ids.value,
@@ -583,6 +585,8 @@ watch(() => paddyWorkList.value,
                 }
             })
         }
+
+
     }, { deep: true })
 </script>
 
