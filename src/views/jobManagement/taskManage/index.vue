@@ -82,6 +82,7 @@ import gcoord from 'gcoord'
 import { mapTitleLayers } from "./mapTitleLayers";
 import a from '@/assets/jobManage/a.png'
 import b from '@/assets/jobManage/b.png'
+import c from '@/assets/jobManage/c.png'
 import SvgIcon from "@/components/SvgIcon/index.vue";
 // 提交的车辆数组
 const ids = ref<any>([])
@@ -149,7 +150,12 @@ const initMap = () => {
         if (pickupMode.value) {
             let point = event.latlng;
             pickedPoints.value.push(point);
-            let marker = L.marker(point).addTo(map.value);
+            let icon = L.icon({
+                iconUrl: c,
+                iconAnchor: [23, 46],
+            })
+
+            let marker = L.marker(point, { icon: icon }).addTo(map.value);
             calculationObj.value.push(marker);
             if (pickedPoints.value.length === 2) {
                 let distance = pickedPoints.value[0].distanceTo(
@@ -493,7 +499,7 @@ const getDealerCarList = async () => {
     Object.assign(CarDealerList, res.data)
 }
 getDealerCarList()
-const getPaddyWorkList = async () => {
+const getPaddyWorkList = async (flag: Boolean) => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
     paddyWorkList.value = res.data.records
     let tem = res.data.records
@@ -502,13 +508,15 @@ const getPaddyWorkList = async () => {
         element.checked = false
     })
     if (paddyWorkList.value.length) {
-        ids.value.push(paddyWorkList.value[0].id as never)
-        paddyWorkList.value[0].checked = true
         total.value = res.data.total
+        if (flag == true) {
+            ids.value.push(paddyWorkList.value[0].id as never)
+            paddyWorkList.value[0].checked = true
+        }
     }
 
 }
-getPaddyWorkList()
+getPaddyWorkList(true)
 const changeBlur1 = () => {
     getDealerCarList()
     clearAllMarkers()
@@ -528,7 +536,7 @@ const changeBlur2 = () => {
     pageInfo.pageSize = 7
     ids.value = []
     paddyWorkList.value = []
-    getPaddyWorkList()
+    getPaddyWorkList(true)
 }
 // 删除全部按钮
 // const BtnClick = () => {
@@ -541,7 +549,7 @@ const load = () => {
 }
 watch(() => pageInfo.pageSize,
     () => {
-        getPaddyWorkList()
+        getPaddyWorkList(false)
     }
 )
 watch(() => ids.value,
@@ -577,6 +585,8 @@ watch(() => paddyWorkList.value,
                 }
             })
         }
+
+
     }, { deep: true })
 </script>
 
