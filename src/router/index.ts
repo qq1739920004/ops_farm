@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter,createWebHashHistory } from 'vue-router'
 import Layout from '@/layout/index.vue';
 
 export const constantRoutes = [ // 静态路由数据
@@ -164,7 +164,7 @@ export const constantRoutes = [ // 静态路由数据
 
 ]
 export const asyncRoutes = []; // 动态路由数据
-
+console.log(import.meta.env.BASE_URL,'---167')
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: constantRoutes,
