@@ -48,7 +48,7 @@
                 <div class="tit">更新时间: </div>
                 <div class="data">{{ NewDetail.updateTime?.split(' ')[0] }}</div>
             </div>
-            <div v-if="props.terminalType == 'AG360'">
+            <div v-if="props.terminalType != 'AG302'">
                 <div class="line line2 ">
                     <div class="tit">板卡固件号:</div>
                     <div class="data">{{ NewDetail.board }}</div>

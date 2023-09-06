@@ -56,7 +56,7 @@ export function activationCodeAdd_API(params: activationCodeObj) {
 // 获取历史轨迹
 export function getSingleCarTrick_API(params: PageInfoObj) {
     return request<any, singleCarTrackResponseData>({
-        url: 'farmPoint/point/singleCarTrack',
+        url: '/farmPoint/point/singleCarTrack',
         method: 'get',
         params
     })
