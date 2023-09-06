@@ -23,8 +23,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["leaflet"],
-    "typeRoots": ["./node_modules/@types"], // 解决leaflet类型爆红问题
   },
   "include": [
     "src/**/*.ts",

@@ -56,8 +56,8 @@ onMounted(() => {
 
 // 获取统计数据
 async function getFaromDataStatistics() {
-  let res = await farmMachineDataStatistics_API()
-  console.log(res)
+  let res = await farmMachineDataStatistics_API();
+  console.log(res);
   // dataStatistics = res
 }
 
