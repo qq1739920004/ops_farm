@@ -82,6 +82,7 @@ import gcoord from 'gcoord'
 import { mapTitleLayers } from "./mapTitleLayers";
 import a from '@/assets/jobManage/a.png'
 import b from '@/assets/jobManage/b.png'
+import c from '@/assets/jobManage/c.png'
 import SvgIcon from "@/components/SvgIcon/index.vue";
 // 提交的车辆数组
 const ids = ref<any>([])
@@ -149,7 +150,12 @@ const initMap = () => {
         if (pickupMode.value) {
             let point = event.latlng;
             pickedPoints.value.push(point);
-            let marker = L.marker(point).addTo(map.value);
+            let icon = L.icon({
+                iconUrl: c,
+                iconAnchor: [23, 46],
+            })
+
+            let marker = L.marker(point, { icon: icon }).addTo(map.value);
             calculationObj.value.push(marker);
             if (pickedPoints.value.length === 2) {
                 let distance = pickedPoints.value[0].distanceTo(
