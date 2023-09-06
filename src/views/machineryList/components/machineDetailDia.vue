@@ -156,6 +156,7 @@ const getNewDetail = async () => {
 .tableData {
     .line:nth-child(2n-1) {
         background: rgba(233, 242, 242, 1);
+        color: #606266;
     }
 
     .line1 {
