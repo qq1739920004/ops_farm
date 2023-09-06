@@ -444,7 +444,7 @@ const updateCarParams = async () => {
 }
 // 更新基本参数
 const updatebasicParams = async () => {
-    await carFormRef.value.validate()
+    await pidFormRef.value.validate()
     ElMessageBox.confirm(
         '此操作将覆盖当前车辆所有参数，是否继续？',
         'Warning',
