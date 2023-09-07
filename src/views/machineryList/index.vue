@@ -140,7 +140,7 @@ const getRouterParam = () => {
             height: 32px;
             opacity: 1;
             border-radius: 4px;
-            margin-right: 40px;
+            margin-right: 20px;
         }
 
         .m_2 {

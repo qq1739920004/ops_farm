@@ -2,16 +2,8 @@
   <div class="map_conatiner">
     <div id="map"></div>
     <div class="map_utils">
-      <el-select
-        v-model="mapTitleOptionsValue"
-        @change="mapTitleOptionsValueChange"
-      >
-        <el-option
-          v-for="item in mapTitleOptions"
-          :key="item.id"
-          :label="item.lable"
-          :value="item.id"
-        />
+      <el-select v-model="mapTitleOptionsValue" @change="mapTitleOptionsValueChange">
+        <el-option v-for="item in mapTitleOptions" :key="item.id" :label="item.lable" :value="item.id" />
       </el-select>
     </div>
   </div>
@@ -124,6 +116,7 @@ onMounted(() => {
 async function getFaromDataStatistics() {
   const { data } = await farmMachineDataStatistics_API();
   dataStatistics = data;
+
 }
 
 // 初始化获取设备数据
@@ -215,15 +208,18 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
 .map_conatiner {
   height: 100%;
   position: relative;
+
   #map {
     height: 100%;
   }
+
   .map_utils {
     position: absolute;
     z-index: 999;
     bottom: 10px;
     left: 10px;
     display: flex;
+
     .el-select {
       width: 120px;
     }

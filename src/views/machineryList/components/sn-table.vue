@@ -196,11 +196,11 @@ const changeCarStatus = async (val: any) => {
         carStatus.value.ids.push(val.id)
         carStatus.value.commandType = 11
         carStatus.value.commandStatus = val.satelliteStatus
-        const res = await carStatus_API(carStatus.value)
-        if (res.code == 0) {
+        try {
+            await carStatus_API(carStatus.value)
             ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
         }
-        else {
+        catch {
             ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
         }
         carStatus.value.ids = []
@@ -212,21 +212,20 @@ const changeLogStatus = async (val: any, val2: any) => {
     if (switchStatus) {
         console.log(val, val2);
         if (val2 == true) {
-            const res = await logOpen_API(val)
-            if (res.code == 0) {
+            try {
+                await logOpen_API(val)
                 ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
-
             }
-            else {
+            catch {
                 ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
             }
         } else {
-            const res = await logClose_API(val)
-            if (res.code == 0) {
+            try {
+                await logClose_API(val)
                 ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
 
             }
-            else {
+            catch {
                 ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
             }
         }

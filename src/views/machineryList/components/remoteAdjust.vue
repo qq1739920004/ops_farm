@@ -446,11 +446,11 @@ const updateCarParams = async () => {
         .then(() => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(paramParamsData))
-            paramCarParamUpdate_API(updateInfo.value).then((res) => {
-                if (res.code == 0) {
+            paramCarParamUpdate_API(updateInfo.value).then(() => {
+                try {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
-                else {
+                catch {
                     ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
@@ -477,11 +477,11 @@ const updatePidParams = async () => {
         .then(() => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(PidParamsData))
-            updatePidParm_API(updateInfo.value).then((res) => {
-                if (res.code == 0) {
+            updatePidParm_API(updateInfo.value).then(() => {
+                try {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
-                else {
+                catch {
                     ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
@@ -509,11 +509,11 @@ const updateCalibParams = async () => {
         .then(() => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(CalibParamsData))
-            updateCalibParam_API(updateInfo.value).then((res) => {
-                if (res.code == 0) {
+            updateCalibParam_API(updateInfo.value).then(() => {
+                try {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
-                else {
+                catch {
                     ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
@@ -588,11 +588,11 @@ const updateChafenData = async () => {
                 insideSourceNode: chaFenlist.value.insideSourceNode,
                 insideUsername: chaFenlist.value.insideUsername,
                 insidePassword: chaFenlist.value.insidePassword
-            }).then((res) => {
-                if (res.code == 0) {
+            }).then(() => {
+                try {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
-                else {
+                catch {
                     ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
@@ -618,11 +618,11 @@ const getProductList = async () => {
 }
 // 在线升级更新数据
 const updateProductList = async () => {
-    const res: any = await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'updateModel': formLabelAlign.radio1, 'upgradeWay': 2 })
-    if (res.code == 0) {
+    try {
+        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'updateModel': formLabelAlign.radio1, 'upgradeWay': 2 })
         ElMessage({ type: 'success', message: '修改成功' })
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '修改失败' })
     }
 }

@@ -14,7 +14,7 @@
                             </el-col>
                             <el-col :span="11">
                                 <el-descriptions title="">
-                                    <el-descriptions-item label="客户手机号码名称:">{{ topvalue.tel }}</el-descriptions-item>
+                                    <el-descriptions-item label="手机号码:">{{ topvalue.tel }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
                         </el-row>
@@ -71,15 +71,15 @@
                 <div class="right">
                     <div class="righttitle">部件</div>
                     <div class="rightcontent">
-                        <el-form :model="topvalue" ref="formRef">
-                            <el-form-item label="铭牌SN:" label-width="110px" prop="npn">
-                                {{ topvalue.npn || '/' }}
+                        <el-form :model="topvalue" ref="formRef" :rules="rules" hide-required-asterisk>
+                            <el-form-item label="铭牌SN:" label-width="110px">
+                                <span style="color: var(--el-input-text-color,var(--el-text-color-regular))"> {{
+                                    topvalue.npn || '/' }}</span>
                             </el-form-item>
                             <el-form-item label="平板SN:" label-width="110px" prop="sn">
                                 <el-input v-model="topvalue.sn">
                                     <template #append>
-                                        <el-button @click="changeSnBtn(topvalue.sn)"
-                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
+                                        <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">更换</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
@@ -87,7 +87,7 @@
                                 <el-input v-model="topvalue.motorSn">
                                     <template #append>
                                         <el-button @click="changeMotorSnBtn(topvalue.motorSn)"
-                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
+                                            class="change_btn">更换</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
@@ -95,7 +95,7 @@
                                 <el-input v-model="topvalue.carImuSn">
                                     <template #append>
                                         <el-button @click="changeCarImuSnBtn(topvalue.carImuSn)"
-                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
+                                            class="change_btn">更换</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
@@ -103,7 +103,7 @@
                                 <el-input v-model="topvalue.wheelImuSn">
                                     <template #append>
                                         <el-button @click="changeWheelImuSnBtn(topvalue.wheelImuSn)"
-                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
+                                            class="change_btn">更换</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
@@ -111,7 +111,7 @@
                                 <el-input v-model="topvalue.antennaOne">
                                     <template #append>
                                         <el-button @click="changeAntennaOneBtn(topvalue.antennaOne)"
-                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
+                                            class="change_btn">更换</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
@@ -119,23 +119,21 @@
                                 <el-input v-model="topvalue.antennaTwo">
                                     <template #append>
                                         <el-button @click="changeAntennaTwoBtn(topvalue.antennaTwo)"
-                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
+                                            class="change_btn">更换</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
                             <el-form-item v-if="scence == '1'" label="HUB_SN:" label-width="110px" prop="hubSn">
                                 <el-input v-model="topvalue.hubSn">
                                     <template #append>
-                                        <el-button @click="changeHubSnBtn(topvalue.hubSn)"
-                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
+                                        <el-button @click="changeHubSnBtn(topvalue.hubSn)" class="change_btn">更换</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
                             <el-form-item v-if="scence == '1'" label="一体机SN:" label-width="110px" prop="sn">
                                 <el-input v-model="topvalue.sn">
                                     <template #append>
-                                        <el-button @click="changeSnBtn(topvalue.sn)"
-                                            style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
+                                        <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">更换</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
@@ -173,6 +171,7 @@ import { ElMessage } from 'element-plus'
 const scence = ref<string>('')
 let $route = useRoute()
 scence.value = JSON.parse($route.query.scence as string)
+const formRef = ref()
 const saleObj = reactive<RecordsObj>({
     carImuSn: '',
     hubSn: '',
@@ -226,11 +225,19 @@ const topvalue = reactive<MoudleInfoGetLeftObj>({
     creatorId: 0,
     code: ''
 })
+const rules = {
+    sn: [{ required: true, message: '请输入平板SN', trigger: 'blur' }],
+    motorSn: [{ required: true, message: '请输入电机SN', trigger: 'blur' }],
+    carImuSn: [{ required: true, message: '请输入车身SN', trigger: 'blur' }],
+    wheelImuSn: [{ required: true, message: '请输入前轮SN', trigger: 'blur' }],
+    antennaOne: [{ required: true, message: '请输入天线_1SN', trigger: 'blur' }],
+    antennaTwo: [{ required: true, message: '请输入天线_2SN', trigger: 'blur' }],
+    hubSn: [{ required: true, message: '请输入HUB_SN', trigger: 'blur' }],
+}
 Object.assign(saleObj, JSON.parse($route.query.row as string))
 const tableData = reactive<LogObj[]>([])
 const getInfo = async () => {
     const res: carModuleInfoOperationLogResponseData = await carModuleInfoOperationLog_API(saleObj.id as number)
-
     if (res.data.length > 0) {
         Object.assign(tableData, res.data)
         ElMessage({ type: 'success', message: '获取成功' })
@@ -245,74 +252,81 @@ const getTopInfo = async () => {
 }
 getTopInfo()
 const changeSnBtn = async (val: string) => {
-    const res: any = await carModuleInfoUpdate_API({ 'sn': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 0) {
+    await formRef.value.validateField('sn')
+    try {
+        await carModuleInfoUpdate_API({ 'sn': val, 'type': '', 'id': topvalue.id })
         ElMessage({ type: 'success', message: '编辑成功' })
-        getTopInfo
+        getTopInfo()
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 const changeMotorSnBtn = async (val: string) => {
-    const res: any = await carModuleInfoUpdate_API({ 'motorSn': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 0) {
+    await formRef.value.validateField('motorSn')
+    try {
+        await carModuleInfoUpdate_API({ 'motorSn': val, 'type': '', 'id': topvalue.id })
         ElMessage({ type: 'success', message: '编辑成功' })
-        getTopInfo
+        getTopInfo()
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 
 const changeCarImuSnBtn = async (val: string) => {
-    const res: any = await carModuleInfoUpdate_API({ 'carImuSn': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 0) {
+    await formRef.value.validateField('carImuSn')
+    try {
+        await carModuleInfoUpdate_API({ 'carImuSn': val, 'type': '', 'id': topvalue.id })
         ElMessage({ type: 'success', message: '编辑成功' })
-        getTopInfo
+        getTopInfo()
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 const changeWheelImuSnBtn = async (val: string) => {
-    const res: any = await carModuleInfoUpdate_API({ 'wheelImuSn': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 0) {
+    await formRef.value.validateField('wheelImuSn')
+    try {
+        await carModuleInfoUpdate_API({ 'wheelImuSn': val, 'type': '', 'id': topvalue.id })
         ElMessage({ type: 'success', message: '编辑成功' })
-        getTopInfo
+        getTopInfo()
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 
 const changeAntennaOneBtn = async (val: string) => {
-    const res: any = await carModuleInfoUpdate_API({ 'antennaOne': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 0) {
+    await formRef.value.validateField('antennaOne')
+    try {
+        await carModuleInfoUpdate_API({ 'antennaOne': val, 'type': '', 'id': topvalue.id })
         ElMessage({ type: 'success', message: '编辑成功' })
-        getTopInfo
+        getTopInfo()
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 const changeAntennaTwoBtn = async (val: string) => {
-    const res: any = await carModuleInfoUpdate_API({ 'antennaTwo': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 0) {
+    await formRef.value.validateField('antennaTwo')
+    try {
+        await carModuleInfoUpdate_API({ 'antennaTwo': val, 'type': '', 'id': topvalue.id })
         ElMessage({ type: 'success', message: '编辑成功' })
-        getTopInfo
+        getTopInfo()
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 const changeHubSnBtn = async (val: string) => {
-    const res: any = await carModuleInfoUpdate_API({ 'hubSn': val, 'type': '', 'id': topvalue.id })
-    if (res.code == 0) {
+    await formRef.value.validateField('hubSn')
+    try {
+        await carModuleInfoUpdate_API({ 'hubSn': val, 'type': '', 'id': topvalue.id })
         ElMessage({ type: 'success', message: '编辑成功' })
         getTopInfo
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
@@ -321,6 +335,7 @@ const changeHubSnBtn = async (val: string) => {
 
 <style lang="scss" scoped>
 .app_container {
+
     .middle-area {
         border-bottom: 1px solid rgba(235, 238, 245, 1);
         display: flex;
@@ -344,12 +359,13 @@ const changeHubSnBtn = async (val: string) => {
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 23.17px;
-
+                margin-bottom: 20px;
 
                 .el-row {
-                    margin-bottom: 20px;
-
+                    margin-bottom: 15px;
                 }
+
+
             }
         }
 
@@ -359,7 +375,7 @@ const changeHubSnBtn = async (val: string) => {
             width: 50%;
 
             .righttitle {
-                margin-bottom: 20px;
+                margin-bottom: 10px;
                 font-size: 18px;
                 font-weight: 400;
                 letter-spacing: 0px;
@@ -367,6 +383,18 @@ const changeHubSnBtn = async (val: string) => {
             }
 
             .rightcontent {
+                margin-bottom: 20px;
+
+                .change_btn {
+                    width: 74px;
+                    height: 32px;
+                    background: var(--el-color-primary);
+                    color: #fff
+                }
+
+                ::v-deep(.el-form-item) {
+                    margin-bottom: 14px;
+                }
 
                 ::v-deep(.el-form-item__label) {
                     display: inline-flex;
@@ -379,7 +407,7 @@ const changeHubSnBtn = async (val: string) => {
                     box-sizing: border-box;
                     font-weight: 400;
                     font-size: 14px;
-                    color: #303133;
+                    color: var(--el-text-color-primary);
                 }
 
                 .el-input {

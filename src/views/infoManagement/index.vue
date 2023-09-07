@@ -11,7 +11,7 @@
                 <div class="kind">
                     设备类型：
                 </div>
-                <el-select v-model="pageInfo.terminalType" class="m-2" placeholder="请选择" @change="changeBlur">
+                <el-select v-model="pageInfo.terminalType" class="m-2" placeholder="请选择设备类型" @change="changeBlur">
                     <el-option value="AG360" label="G360" />
                     <el-option value="AG502" label="G502" />
                     <el-option value="AG501" label="G501" />
@@ -327,7 +327,7 @@ import Pagination from '@/components/Pagination/index.vue'
 import { reactive, ref, nextTick, watch } from 'vue'
 import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API, carModuleInfoOperationDelete_API, CarModuleInfoExport_API } from '@/api/infoManagement/index'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj, changeResponseData, editResponseData, carMoudleInfoDeleteResponseData, } from "@/api/infoManagement/type"
+import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj } from "@/api/infoManagement/type"
 import { useRouter } from 'vue-router'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 const pageInfo = reactive<PageObj>({
@@ -418,22 +418,21 @@ const changeBlur = () => {
 
 }
 const addInfo = async () => {
-    const res: changeResponseData = await carModuleInfoSave_API(newRecords)
-    if (res.code == 0) {
+    try {
+        await carModuleInfoSave_API(newRecords)
         ElMessage({ type: 'success', message: '添加成功' })
-    }
-    else {
+    } catch {
         ElMessage({ type: 'error', message: '添加失败' })
     }
 }
 const editInfo = async () => {
-    const res: editResponseData = await carModuleInfoUpdate_API(newRecords)
-    if (res.code == 0) {
-        ElMessage({ type: 'success', message: '编辑成功' })
+    try {
+        await carModuleInfoUpdate_API(newRecords)
+        ElMessage({ type: 'success', message: '添加成功' })
+    } catch {
+        ElMessage({ type: 'error', message: '添加失败' })
     }
-    else {
-        ElMessage({ type: 'error', message: '编辑失败' })
-    }
+
 }
 const edit = (row: any) => {
     if (scence.value == '1') {
@@ -520,13 +519,13 @@ const removeTradeMark = (id: any) => {
             type: 'warning',
         }
     ).then(async () => {
-        const res: carMoudleInfoDeleteResponseData = await carModuleInfoOperationDelete_API(id)
-        if (res.code == 0) {
+        try {
+            await carModuleInfoOperationDelete_API(id)
             ElMessage({ type: 'success', message: '删除成功' })
             pageInfo.key = ''
             getInfoMangementInfo()
         }
-        else {
+        catch {
             ElMessage({ type: 'error', message: '删除失败' })
         }
     }).catch(() => {
@@ -579,7 +578,7 @@ const openExportDia = () => {
         align-items: center;
 
         .input-with-select {
-            margin-right: 30px;
+            margin-right: 20px;
             width: 240px;
             height: 32px;
             opacity: 1;
@@ -595,10 +594,6 @@ const openExportDia = () => {
             font-weight: 400;
             letter-spacing: 0px;
             line-height: 20.27px;
-
-            text-align: left;
-            vertical-align: top;
-
         }
 
         .m-2 {
