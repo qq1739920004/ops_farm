@@ -532,8 +532,8 @@ const handle = () => {
             padding-left: 10px;
             height: 40px;
             line-height: 40px;
-            background-color: rgb(236, 236, 236);
-            color: black;
+            background-color: var(--el-fill-color-lighter);
+            border-radius: 4px 4px 0 0;
         }
 
         .secondTitle {
@@ -543,6 +543,7 @@ const handle = () => {
             margin-left: 10px;
 
             span:first-child {
+                font-size: 12px;
                 padding-right: 2px;
                 vertical-align: text-bottom;
                 color: var(--el-color-primary);

@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-    <el-table :data="props.paddyWorkList">
+    <el-table :data="props.paddyWorkList" stripe>
         <el-table-column type="index" label="序号" width="80" align="center" />
         <el-table-column label="作业名称" prop="name" align="center">
         </el-table-column>

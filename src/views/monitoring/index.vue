@@ -117,6 +117,8 @@ async function getFaromDataStatistics() {
   const { data } = await farmMachineDataStatistics_API();
   dataStatistics = data;
 
+
+
 }
 
 // 初始化获取设备数据
