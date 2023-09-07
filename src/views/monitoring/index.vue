@@ -13,13 +13,23 @@
           :value="item.id"
         />
       </el-select>
-      <!-- <SvgIcon icon="AG360"/> -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import AG360Icon from "@/assets/icons/AG360.svg";
+import AG302 from "@/assets/icons/AG302.svg";
+import AG302_warn from "@/assets/icons/AG302_warn.svg";
+import AG360 from "@/assets/icons/AG360.svg";
+import AG360_warn from "@/assets/icons/AG360_warn.svg";
+import AG501 from "@/assets/icons/AG501.svg";
+import AG501_warn from "@/assets/icons/AG501_warn.svg";
+import AG501Pro from "@/assets/icons/AG501Pro.svg";
+import AG501Pro_warn from "@/assets/icons/AG501Pro_warn.svg";
+import AG502 from "@/assets/icons/AG502.svg";
+import AG502_warn from "@/assets/icons/AG502_warn.svg";
+import AGunknown from "@/assets/icons/AGunknown.svg";
+import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
 import { ref, onMounted } from "vue";
 import { mapTitleLayers } from "./mapTitleLayers";
 import L from "leaflet";
@@ -47,6 +57,62 @@ let mapTitleOptions = [
   { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
 ];
 let mapTitleOptionsValue = ref(mapTitleOptions[1].id);
+let dataStatistics: any = []; // 数据统计数据
+
+const iconOption: any = {
+  typeLabel: "terminalType",
+  statusLabel: "driveState",
+  iconList: [
+    {
+      typeValue: "",
+      icon: {
+        0: AGunknown_warn,
+        1: AGunknown,
+        2: AGunknown,
+      },
+    },
+    {
+      typeValue: ["AG302", "AG302Pro"],
+      icon: {
+        0: AG302_warn,
+        1: AG302,
+        2: AG302,
+      },
+    },
+    {
+      typeValue: ["AG360", "AG360Pro"],
+      icon: {
+        0: AG360_warn,
+        1: AG360,
+        2: AG360,
+      },
+    },
+    {
+      typeValue: ["AG501"],
+      icon: {
+        0: AG501_warn,
+        1: AG501,
+        2: AG501,
+      },
+    },
+    {
+      typeValue: ["AG501Pro"],
+      icon: {
+        0: AG501Pro_warn,
+        1: AG501Pro,
+        2: AG501Pro,
+      },
+    },
+    {
+      typeValue: ["AG502"],
+      icon: {
+        0: AG502_warn,
+        1: AG502,
+        2: AG502,
+      },
+    },
+  ],
+};
 
 onMounted(() => {
   initMap();
@@ -56,30 +122,39 @@ onMounted(() => {
 
 // 获取统计数据
 async function getFaromDataStatistics() {
-  let res = await farmMachineDataStatistics_API();
-  console.log(res);
-  // dataStatistics = res
+  const { data } = await farmMachineDataStatistics_API();
+  dataStatistics = data;
 }
 
 // 初始化获取设备数据
 async function getOnlineFarmPosition() {
-  let res = await onlineFarmMachinePosition_API({});
-  deviceList = res.data.onlineFarmMachines;
-  console.log(deviceList, "---58");
+  const { data } = await onlineFarmMachinePosition_API({});
+  deviceList = data.onlineFarmMachines;
   createMarker();
 }
 
 // 创建地图marker点
 function createMarker() {
+  const { typeLabel, statusLabel, iconList } = iconOption;
+  let defaultIcon = iconList.find((item: any) => !item.typeValue);
+  if (!defaultIcon) defaultIcon = iconList[0];
   deviceList.forEach((item: any) => {
+    const typeValue = item[typeLabel];
+    iconList.forEach((v: any) => {
+      if (!v.typeValue.includes(typeValue)) return;
+      item.icon = v.icon[item[statusLabel]];
+    });
+    if (!item.icon) {
+      item.icon = defaultIcon.icon[item[statusLabel]];
+    }
     const icon = L.icon({
-      iconUrl: AG360Icon, // SVG图标的路径
-      iconSize: [23, 27], // 图标的大小 [宽度, 高度]
+      iconUrl: item.icon, // SVG图标的路径
+      iconSize: [25, 28], // 图标的大小 [宽度, 高度]
       iconAnchor: [14, 28], // 图标的锚点位置 [水平, 垂直]
-      popupAnchor: [0, -28], // 弹出窗口的锚点位置 [水平, 垂直]
+      popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
     });
     const marker = L.marker([item.posX, item.posY], { icon: icon });
-    marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
+    marker.bindPopup(`<b>Hello world!</b><br>${item.terminalType}`);
     markerArr.push(marker);
   });
   if (renderMode == "dom") {
@@ -100,7 +175,7 @@ function initMap() {
     minZoom: 1, //最小缩放值
     maxZoom: 18, //最大缩放值
     center: L.latLng(31.086444, 121.734942), //注意和其他地图经纬度格式区别
-    zoom: 5, //初始缩放值
+    zoom: 4, //初始缩放值
     zoomControl: false, //是否启用地图缩放控件
     attributionControl: false, //是否启用地图属性控件
   });
