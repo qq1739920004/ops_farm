@@ -19,7 +19,7 @@
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-col :span="24" :offset="3">
+                            <el-col :span="11" :offset="3">
                                 <el-descriptions title="">
                                     <el-descriptions-item label="经销商：">{{ topvalue.companyName }}</el-descriptions-item>
                                 </el-descriptions>
@@ -71,127 +71,75 @@
                 <div class="right">
                     <div class="righttitle">部件</div>
                     <div class="rightcontent">
-                        <el-row :gutter="2">
-                            <el-col :span="4" :offset="1">
-                                铭牌SN:
-                            </el-col>
-                            <el-col :span='8'>
+                        <el-form :model="topvalue" ref="formRef">
+                            <el-form-item label="铭牌SN:" label-width="110px" prop="npn">
                                 {{ topvalue.npn || '/' }}
-                            </el-col>
-                        </el-row>
-                        <el-row :gutter="16">
-                            <el-col :span="4" :offset="1">
-                                平板SN:
-                            </el-col>
-                            <el-col :span='8'>
-
-                                <el-input v-model="topvalue.sn" class="input-with-select">
+                            </el-form-item>
+                            <el-form-item label="平板SN:" label-width="110px" prop="sn">
+                                <el-input v-model="topvalue.sn">
                                     <template #append>
                                         <el-button @click="changeSnBtn(topvalue.sn)"
                                             style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
-
-                            </el-col>
-                        </el-row>
-                        <el-row :gutter="16">
-                            <el-col :span="4" :offset="1">
-                                电机SN:
-                            </el-col>
-                            <el-col :span='8'>
-                                <el-input v-model="topvalue.motorSn" class="input-with-select">
+                            </el-form-item>
+                            <el-form-item label="电机SN:" label-width="110px" prop="motorSn">
+                                <el-input v-model="topvalue.motorSn">
                                     <template #append>
                                         <el-button @click="changeMotorSnBtn(topvalue.motorSn)"
                                             style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
-
-                            </el-col>
-                        </el-row>
-                        <el-row :gutter="16" v-if="scence != '1'">
-                            <el-col :span="4" :offset="1">
-                                车身SN
-                            </el-col>
-                            <el-col :span='8'>
-                                <el-input v-model="topvalue.carImuSn" class="input-with-select">
+                            </el-form-item>
+                            <el-form-item v-if="scence != '1'" label="车身SN:" label-width="110px" prop="carImuSn">
+                                <el-input v-model="topvalue.carImuSn">
                                     <template #append>
                                         <el-button @click="changeCarImuSnBtn(topvalue.carImuSn)"
                                             style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
-
-                            </el-col>
-                        </el-row>
-                        <el-row :gutter="16" v-if="scence != '1'">
-                            <el-col :span="4" :offset="1">
-                                前轮SN
-                            </el-col>
-                            <el-col :span='8'>
-                                <el-input v-model="topvalue.wheelImuSn" class="input-with-select">
+                            </el-form-item>
+                            <el-form-item v-if="scence != '1'" label="前轮SN:" label-width="110px" prop="wheelImuSn">
+                                <el-input v-model="topvalue.wheelImuSn">
                                     <template #append>
                                         <el-button @click="changeWheelImuSnBtn(topvalue.wheelImuSn)"
                                             style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
-
-                            </el-col>
-                        </el-row>
-                        <el-row :gutter="16" v-if="scence != '1'">
-                            <el-col :span="4" :offset="1">
-                                天线_1SN
-                            </el-col>
-                            <el-col :span='8'>
-                                <el-input v-model="topvalue.antennaOne" class="input-with-select">
+                            </el-form-item>
+                            <el-form-item v-if="scence != '1'" label="天线_1SN:" label-width="110px" prop="antennaOne">
+                                <el-input v-model="topvalue.antennaOne">
                                     <template #append>
                                         <el-button @click="changeAntennaOneBtn(topvalue.antennaOne)"
                                             style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
-
-                            </el-col>
-                        </el-row>
-                        <el-row :gutter="16" v-if="scence == '2'">
-                            <el-col :span="4" :offset="1">
-                                天线_2SN
-                            </el-col>
-                            <el-col :span='8'>
-                                <el-input v-model="topvalue.antennaTwo" class="input-with-select">
+                            </el-form-item>
+                            <el-form-item v-if="scence == '2'" label="天线_2SN:" label-width="110px" prop="antennaTwo">
+                                <el-input v-model="topvalue.antennaTwo">
                                     <template #append>
                                         <el-button @click="changeAntennaTwoBtn(topvalue.antennaTwo)"
                                             style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
-
-                            </el-col>
-                        </el-row>
-                        <el-row :gutter="16" v-if="scence == '1'">
-                            <el-col :span="4" :offset="1">
-                                HUB_SN:
-                            </el-col>
-                            <el-col :span='8'>
-                                <el-input v-model="topvalue.hubSn" class="input-with-select">
+                            </el-form-item>
+                            <el-form-item v-if="scence == '1'" label="HUB_SN:" label-width="110px" prop="hubSn">
+                                <el-input v-model="topvalue.hubSn">
                                     <template #append>
                                         <el-button @click="changeHubSnBtn(topvalue.hubSn)"
                                             style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
-
-                            </el-col>
-                        </el-row>
-                        <el-row :gutter="16" v-if="scence == '1'">
-                            <el-col :span="4" :offset="1">
-                                一体机SN:
-                            </el-col>
-                            <el-col :span='8'>
-                                <el-input v-model="topvalue.sn" class="input-with-select">
+                            </el-form-item>
+                            <el-form-item v-if="scence == '1'" label="一体机SN:" label-width="110px" prop="sn">
+                                <el-input v-model="topvalue.sn">
                                     <template #append>
                                         <el-button @click="changeSnBtn(topvalue.sn)"
                                             style=" width: 74px;height: 32px;background: var(--el-color-primary); color:#fff">更换</el-button>
                                     </template>
                                 </el-input>
-
-                            </el-col>
-                        </el-row>
+                            </el-form-item>
+                        </el-form>
                     </div>
                 </div>
             </div>
@@ -388,9 +336,6 @@ const changeHubSnBtn = async (val: string) => {
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 26.06px;
-
-                text-align: left;
-                vertical-align: top;
             }
 
             .leftcontent {
@@ -422,21 +367,30 @@ const changeHubSnBtn = async (val: string) => {
             }
 
             .rightcontent {
-                .el-row {
-                    margin-bottom: 16px;
-                    align-items: center;
+
+                ::v-deep(.el-form-item__label) {
+                    display: inline-flex;
+                    justify-content: flex-end;
+                    align-items: flex-start;
+                    flex: 0 0 auto;
+                    height: 32px;
+                    line-height: 32px;
+                    padding: 0 12px 0 0;
+                    box-sizing: border-box;
                     font-weight: 400;
-                    letter-spacing: 0px;
-
-                    .el-input {
-                        width: 280px;
-                        height: 32px;
-                        opacity: 1;
-                        border-radius: 2px;
-                        border: 1px rgba(220, 223, 230, 1);
-                    }
-
+                    font-size: 14px;
+                    color: #303133;
                 }
+
+                .el-input {
+                    width: 280px;
+                    height: 32px;
+                    opacity: 1;
+                    border-radius: 2px;
+                    border: 1px rgba(220, 223, 230, 1);
+                }
+
+
             }
 
         }
@@ -448,10 +402,12 @@ const changeHubSnBtn = async (val: string) => {
         height: 468px;
 
         .bottomtitle {
-            padding-top: 20px;
+            font-size: 18px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            line-height: 26.06px;
+            padding: 20px 0 0 60px;
             margin-bottom: 20px;
-            margin-left: 20px;
-
             height: 50px;
 
             span {
@@ -467,7 +423,7 @@ const changeHubSnBtn = async (val: string) => {
         }
 
         .main {
-            margin-left: 117px;
+            margin-left: 167px;
             padding: 20px 8px 0px 8px;
             width: 755px;
             height: 376px;

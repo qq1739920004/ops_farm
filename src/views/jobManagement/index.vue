@@ -232,7 +232,6 @@ const changeA = () => {
                 align-items: center;
                 justify-content: center;
                 margin: 0px 10px;
-                width: 10px;
                 height: 32px;
                 opacity: 1;
                 line-height: 21px;
