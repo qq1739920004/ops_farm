@@ -30,6 +30,12 @@ import AG502 from "@/assets/icons/AG502.svg";
 import AG502_warn from "@/assets/icons/AG502_warn.svg";
 import AGunknown from "@/assets/icons/AGunknown.svg";
 import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
+import wifi_0 from "@/assets/monitoring/wifi_0.png";
+import wifi_1 from "@/assets/monitoring/wifi_1.png";
+import wifi_2 from "@/assets/monitoring/wifi_2.png";
+import wifi_3 from "@/assets/monitoring/wifi_3.png";
+import wifi_4 from "@/assets/monitoring/wifi_4.png";
+import gcoord from "gcoord";
 import { ref, onMounted } from "vue";
 import { mapTitleLayers } from "./mapTitleLayers";
 import L from "leaflet";
@@ -124,6 +130,7 @@ onMounted(() => {
 async function getFaromDataStatistics() {
   const { data } = await farmMachineDataStatistics_API();
   dataStatistics = data;
+  console.log(dataStatistics);
 }
 
 // 初始化获取设备数据
@@ -135,26 +142,16 @@ async function getOnlineFarmPosition() {
 
 // 创建地图marker点
 function createMarker() {
-  const { typeLabel, statusLabel, iconList } = iconOption;
-  let defaultIcon = iconList.find((item: any) => !item.typeValue);
-  if (!defaultIcon) defaultIcon = iconList[0];
   deviceList.forEach((item: any) => {
-    const typeValue = item[typeLabel];
-    iconList.forEach((v: any) => {
-      if (!v.typeValue.includes(typeValue)) return;
-      item.icon = v.icon[item[statusLabel]];
-    });
-    if (!item.icon) {
-      item.icon = defaultIcon.icon[item[statusLabel]];
-    }
-    const icon = L.icon({
-      iconUrl: item.icon, // SVG图标的路径
-      iconSize: [25, 28], // 图标的大小 [宽度, 高度]
-      iconAnchor: [14, 28], // 图标的锚点位置 [水平, 垂直]
-      popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
-    });
-    const marker = L.marker([item.posX, item.posY], { icon: icon });
-    marker.bindPopup(`<b>Hello world!</b><br>${item.terminalType}`);
+    const [posY, posX] = gcoord.transform(
+      [item.posY, item.posX],
+      gcoord.WGS84,
+      gcoord.GCJ02
+    );
+    const icon = createIcon(item);
+    const popup = createPopup(item);
+    const marker = L.marker([posX, posY], { icon });
+    marker.bindPopup(popup);
     markerArr.push(marker);
   });
   if (renderMode == "dom") {
@@ -167,6 +164,188 @@ function createMarker() {
     // let marker = L.marker([59.06097, 111.93969]);
     // marker.addTo(markerClusterGroup);
   }
+}
+
+// 创建popup
+function createPopup(item: any) {
+  const driveState: any = {
+    0: "未开始",
+    1: "入线",
+    2: "在线", //自动驾驶
+  };
+  const onlineStatus: any = {
+    0: "status_1",
+    1: "status_2",
+    2: "status_3",
+  };
+  const workingStatus: any = {
+    优: "status_3",
+    中: "status_2",
+    差: "status_0",
+    null: "status_1",
+  };
+  const snTypeReflect: any = {
+    0: "无效解",
+    1: "单点解",
+    2: "差分解",
+    3: "浮动解",
+    4: "固定解",
+  };
+  const diffSource: any = {
+    0: "电台",
+    1: "网络",
+    3: "罗网",
+  };
+  const netSignalImg: any = {
+    0: wifi_0,
+    1: wifi_1,
+    2: wifi_2,
+    3: wifi_3,
+    4: wifi_4,
+  };
+  const netSignal: any = {
+    0: "弱",
+    1: "较弱",
+    2: "一般",
+    3: "较强",
+    4: "强",
+  };
+  console.log(onlineStatus[item.driveState]);
+  const cardUsage =
+    item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
+  const popup = `<div class="map_popup">
+        <ul class="popup_container">
+          <li>
+            <div class="l">
+              <div class="label">车辆名称:</div>
+              <div class="value">${item.carName}</div>
+            </div>
+            <div class="r">
+              <div class="label">SN:</div>
+              <div class="value">${item.sn}</div>
+            </div>
+          </li>
+          <li>
+            <div class="l">
+              <div class="label">车主姓名:</div>
+              <div class="value">${item.carOwnerName}</div>
+            </div>
+            <div class="r">
+              <div class="label">公司名称:</div>
+              <div class="value">${item.companyName}</div>
+            </div>
+          </li>
+          <li>
+            <div class="l">
+              <div class="label">工作状态:</div>
+              <div class="value"> 
+                <span class='status ${workingStatus[item.judgeLevel]}'></span>
+                <span>${item.judgeLevel || "无"}</span>
+              </div>
+            </div>
+            <div class="r">
+              <div class="label">驾驶状态:</div>
+              <div class="value">
+                <span class='status ${onlineStatus[item.driveState]}'></span>
+                <span>${driveState[item.driveState]}</span>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="l">
+              <div class="label">解状态:</div>
+              <div class="value">
+                <span class='status ${
+                  item.solStat == 4 ? "status_3" : "status_0"
+                }'></span>
+                <span>${snTypeReflect[item.solStat] || "未知解"}</span>
+              </div>
+            </div>
+            <div class="r">
+              <div class="label">差分链:</div>
+              <div class="value">${diffSource[item.diffSource] || "/"} (${
+    item.diffAge
+  }s)</div>
+            </div>
+          </li>
+          <li>
+            <div class="l">
+              <div class="label">卫星数量:</div>
+              <div class="value">${item.satNum}</div>
+            </div>
+            <div class="r">
+              <div class="label">基站距离:</div>
+              <div class="value">${(item.baseDist / 1000).toFixed(3)} Km</div>
+            </div>
+          </li>
+          <li>
+            <div class="l">
+              <div class="label">4G信号:</div>
+              <div class="value">
+                <img src=${netSignalImg[item.netSignal]}>
+                <span>${netSignal[item.netSignal] || "/"}</span>
+              </div>
+            </div>
+            <div class="r">
+              <div class="label">终端类型:</div>
+              <div class="value">${item.terminalType}</div>
+            </div>
+          </li>
+          <li>
+            <div class="l">
+              <div class="label">经度:</div>
+              <div class="value">${dmsTrans(item.posX)}</div>
+            </div>
+            <div class="r">
+              <div class="label">卡状态:</div>
+              <div class="value">${cardUsage}</div>
+            </div>
+          </li>
+          <li>
+            <div class="l">
+              <div class="label">纬度:</div>
+              <div class="value">${dmsTrans(item.posY)}</div>
+            </div>
+            <div class="r">
+              <div class="label"></div>
+              <div class="value"></div>
+            </div>
+          </li>
+        </ul>
+        <ul class="btns_container">
+          <li>
+            <div class="btn">远程管理</div>
+            <div class="btn">历史轨迹</div>
+          </li>
+          <li>
+            <div class="btn">实时驾驶趋势图</div>
+            <div class="btn">历史驾驶趋势图</div>
+          </li>
+        </ul>
+      </div>`;
+
+  return popup;
+}
+
+// 创建icon图标
+function createIcon(item: any) {
+  const { typeLabel, statusLabel, iconList } = iconOption;
+  let defaultIcon = iconList.find((item: any) => !item.typeValue);
+  if (!defaultIcon) defaultIcon = iconList[0];
+  const typeValue = item[typeLabel];
+  iconList.forEach((v: any) => {
+    if (!v.typeValue.includes(typeValue)) return;
+    item.icon = v.icon[item[statusLabel]];
+  });
+  if (!item.icon) {
+    item.icon = defaultIcon.icon[item[statusLabel]];
+  }
+  return L.icon({
+    iconUrl: item.icon, // SVG图标的路径
+    iconSize: [25, 28], // 图标的大小 [宽度, 高度]
+    iconAnchor: [14, 28], // 图标的锚点位置 [水平, 垂直]
+    popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
+  });
 }
 
 // 初始化加载地图
@@ -209,6 +388,25 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
     L.tileLayer(mapUrl[key], options).addTo(map);
   }
 }
+
+// 处理经纬度
+function dmsTrans(decimal: any) {
+  try {
+    if (!decimal) {
+      return 0;
+    }
+    let int = parseInt(decimal);
+    let float = decimal - int;
+    let decimal2: any = float * 60;
+    let int2 = parseInt(decimal2);
+    let float2 = decimal2 - int2;
+    let decimal3 = float2 * 60;
+    return `${int}°${int2}'${decimal3.toFixed(3)}''`;
+  } catch (err) {
+    console.log(err);
+    return decimal;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -226,6 +424,94 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
     display: flex;
     .el-select {
       width: 120px;
+    }
+  }
+}
+// map popup
+
+:deep(.leaflet-popup) {
+  .leaflet-popup-content-wrapper {
+    background-color: var(--el-bg-color);
+    color: var(--color-scheme);
+  }
+  .leaflet-popup-content {
+    width: auto !important;
+  }
+  .leaflet-popup-tip {
+    background-color: var(--el-bg-color);
+  }
+  .map_popup {
+    width: 360px;
+    .popup_container {
+      font-size: 14px;
+      li {
+        display: flex;
+        line-height: 22px;
+        &:nth-child(2) {
+          margin-bottom: 12px;
+        }
+
+        .l {
+          display: flex;
+          width: 50%;
+        }
+        .r {
+          display: flex;
+          width: 50%;
+        }
+        .label {
+          width: 66px;
+          flex-shrink: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .value {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          img {
+            width: 12px;
+            height: 12px;
+            margin-right: 2px;
+          }
+        }
+        .status {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          margin-right: 2px;
+        }
+        .status_0 {
+          background-color: #ea3729;
+        }
+        .status_1 {
+          background-color: #666666;
+        }
+        .status_3 {
+          background-color: #5dbe3c;
+        }
+        .status_2 {
+          background-color: #76fafd;
+        }
+      }
+    }
+    .btns_container {
+      padding-top: 12px;
+      li {
+        display: flex;
+        justify-content: space-around;
+        line-height: 22px;
+        .btn {
+          color: var(--el-color-primary);
+          font-size: 14px;
+          cursor: pointer;
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+      }
     }
   }
 }
