@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    :mode="appStore.themeSettings.layout"
+    :mode="appStore.layout"
     :default-active="activeMenu"
     :collapse="collapse"
     background-color="#192035"

@@ -115,12 +115,12 @@ const themeColors = ref<string[]>([
 ]);
 
 // 修改主题颜色
-function changeThemeColor(arg1: string) {
-  appStore.updateThemeSettings("themeColor", arg1);
+function changeThemeColor(arg: string) {
+  appStore.updateThemeColor(arg);
 }
 
 function changeNavgation(arg: string) {
-  appStore.updateThemeSettings("layout", arg);
+  appStore.updateLayout(arg);
 }
 function changeIsDark() {
   appStore.updateIsDark();

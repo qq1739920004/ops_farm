@@ -4,40 +4,40 @@ import request from '@/utils/request'
 import { carMoudleInfoGetLeftResponseData, carModuleInfoResponseData, PageObj, newRecordsObj, editResponseData, changeResponseData, carModuleInfoOperationLogResponseData, carMoudleInfoDeleteResponseData } from './type'
 export function carModuleInfo_API(data: PageObj) {
   return request<any, carModuleInfoResponseData>({
-    url: "/carModuleInfo/page",
+    url: "/farm/carModuleInfo/page",
     method: 'post',
     data
   })
 }
 export function carModuleInfoSave_API(data: newRecordsObj) {
   return request<any, changeResponseData>({
-    url: "/carModuleInfo/save",
+    url: "/farm/carModuleInfo/save",
     method: 'post',
     data
   })
 }
 export function carModuleInfoUpdate_API(data: newRecordsObj) {
   return request<any, editResponseData>({
-    url: `/carModuleInfo/update`,
+    url: `/farm/carModuleInfo/update`,
     method: 'put',
     data
   })
 }
 export function carModuleInfoGet_API(id: Number) {
   return request<any, carMoudleInfoGetLeftResponseData>({
-    url: `/carModuleInfo/get?id=${id}`,
+    url: `/farm/carModuleInfo/get?id=${id}`,
     method: 'get',
   })
 }
 export function carModuleInfoOperationLog_API(id: number) {
   return request<any, carModuleInfoOperationLogResponseData>({
-    url: `/carModuleInfo/operationLog/${id}`,
+    url: `/farm/carModuleInfo/operationLog/${id}`,
     method: 'get',
   })
 }
 export function carModuleInfoOperationDelete_API(data: any) {
   return request<any, carMoudleInfoDeleteResponseData>({
-    url: `/carModuleInfo/delete?id=${data}`,
+    url: `/farm/carModuleInfo/delete?id=${data}`,
     method: 'delete',
 
   })
@@ -45,7 +45,7 @@ export function carModuleInfoOperationDelete_API(data: any) {
 // 文件导出
 export function CarModuleInfoExport_API(data: PageObj) {
   return request<any, any>({
-    url: '/carModuleInfo/export',
+    url: '/farm/carModuleInfo/export',
     method: 'post',
     responseType: 'blob',
     data,

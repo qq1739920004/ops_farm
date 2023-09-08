@@ -1,5 +1,3 @@
-import { newListObj } from "../type"
-
 export interface ResponseData {
     message?: string,
     code?: number,
@@ -26,11 +24,11 @@ export interface carParamsDataRangObj {
     value: number
 }
 // 参数数组转换
-export interface carParamsDataObj {
-    name: string,
-    range: string | carParamsDataRangObj[],
-    type: string
-}
+// export interface carParamsDataObj {
+//     name: string,
+//     range: string | carParamsDataRangObj[],
+//     type: string
+// }
 // 车辆参数
 export interface paramsParamObj {
     Vehicle1: string,

@@ -8,52 +8,15 @@
                 <el-option v-for="(item, index) in mapOptions" :key="index" :label="item.mapName" :value="item.mapId" />
             </el-select>
         </div>
-        <el-button
-            style="background: rgba(255, 255, 255, 1);color:rgba(76, 176, 79, 1);border-color:  rgba(255, 255, 255, 1);"
-            @click="clearDistance" class="map_button"> <el-icon>
+        <el-button style="color:rgba(76, 176, 79, 1);" @click="clearDistance" class="map_button"> <el-icon>
                 <Delete />
             </el-icon>清除</el-button>
         <el-button class="map_button2" @click="calculateDistance">
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16"
-                viewBox="0 0 16 16" fill="none">
-                <g opacity="1" transform="translate(0 0)  rotate(0)">
-                    <mask id="bg-mask-0" fill="white">
-                        <use transform="translate(0 0)  rotate(NaN)" xlink:href="#path_0"></use>
-                    </mask>
-                    <g mask="url(#bg-mask-0)">
-                        <path id="路径 1" style="fill:#43CF7C; opacity:1;"
-                            d="M11.8049,1.80478l-1.25,1.25l-1.25,1.25l-2.5,2.5l-2.5,2.5l-1.25,1.25002l-1.25,1.25l-0.4714,-0.4714l0.4714,-0.4714l3.33,3.33l-0.4714,0.4714l-0.47141,-0.4714l10.00001,-10.00003l0.4714,0.4714l-0.4714,0.47141l-3.33,-3.33l0.4714,-0.47141zM10.8621,0.86197c0.2603,-0.26035 0.6825,-0.26035 0.9428,0l3.33,3.33c0.2603,0.26035 0.2603,0.68246 0,0.94281l-10,10.00002c-0.26035,0.2603 -0.68246,0.2603 -0.94281,0l-3.33,-3.33c-0.26035,-0.2604 -0.26035,-0.6825 0,-0.9428l1.25,-1.25003l1.25,-1.25l2.5,-2.5l2.5,-2.5l1.25,-1.25z">
-                        </path>
-                        <path id="路径 2" style="fill:#43CF7C; opacity:1;"
-                            d="M10.5549,3.05478l-7.5,7.50002c-0.03095,0.03093 -0.06463,0.05857 -0.10102,0.0829c-0.0364,0.02433 -0.07482,0.04487 -0.11526,0.0616c-0.04044,0.01673 -0.08213,0.02937 -0.12506,0.0379c-0.04293,0.00853 -0.08629,0.0128 -0.13006,0.0128c-0.04378,0 -0.08713,-0.00427 -0.13006,-0.0128c-0.04293,-0.00853 -0.08462,-0.02117 -0.12507,-0.0379c-0.04044,-0.01673 -0.07886,-0.03727 -0.11525,-0.0616c-0.0364,-0.02433 -0.07008,-0.05197 -0.10103,-0.0829c-0.03095,-0.031 -0.05859,-0.06467 -0.08291,-0.101c-0.02432,-0.0364 -0.04485,-0.07483 -0.0616,-0.1153c-0.01675,-0.04047 -0.0294,-0.08217 -0.03794,-0.1251c-0.00854,-0.04293 -0.01281,-0.08627 -0.01281,-0.13c0,-0.0438 0.00427,-0.08716 0.01281,-0.13009c0.00854,-0.04293 0.02119,-0.08462 0.03794,-0.12506c0.01675,-0.04044 0.03728,-0.07886 0.0616,-0.11526c0.02432,-0.03639 0.05196,-0.07007 0.08291,-0.10102l7.5,-7.5c0.03095,-0.03095 0.06463,-0.05859 0.10103,-0.08291c0.03639,-0.02432 0.07481,-0.04486 0.11525,-0.06161c0.04045,-0.01675 0.08213,-0.02939 0.12506,-0.03793c0.04291,-0.00854 0.08627,-0.01281 0.13007,-0.01281c0.0438,0 0.08717,0.00427 0.1301,0.01281c0.04293,0.00854 0.0846,0.02118 0.125,0.03793c0.04047,0.01675 0.0789,0.03729 0.1153,0.06161c0.0364,0.02432 0.07007,0.05196 0.101,0.08291c0.03093,0.03095 0.05857,0.06463 0.0829,0.10102c0.02433,0.0364 0.04487,0.07482 0.0616,0.11526c0.01673,0.04044 0.0294,0.08213 0.038,0.12506c0.00853,0.04293 0.0128,0.08629 0.0128,0.13006c0,0.04377 -0.00427,0.08713 -0.0128,0.13006c-0.0086,0.04293 -0.02127,0.08462 -0.038,0.12507c-0.01673,0.04044 -0.03727,0.07886 -0.0616,0.11525c-0.02433,0.0364 -0.05197,0.07008 -0.0829,0.10103z">
-                        </path>
-                        <path id="路径 3" style="fill:#43CF7C; opacity:1;"
-                            d="M3.47138,9.1952l1.3335,1.3334c0.03095,0.03093 0.05859,0.0646 0.08291,0.101c0.02432,0.0364 0.04486,0.0748 0.06161,0.1152c0.01675,0.04047 0.0294,0.08217 0.03795,0.1251c0.00854,0.04293 0.01281,0.0863 0.01281,0.1301c0,0.04373 -0.00427,0.08707 -0.0128,0.13c-0.00854,0.04293 -0.02118,0.08463 -0.03793,0.1251c-0.01675,0.04047 -0.03729,0.0789 -0.0616,0.1153c-0.02432,0.0364 -0.05196,0.07007 -0.08291,0.101c-0.03095,0.03093 -0.06463,0.05857 -0.10102,0.0829c-0.03639,0.02433 -0.07481,0.04487 -0.11525,0.0616c-0.04045,0.01673 -0.08213,0.02937 -0.12506,0.0379c-0.04293,0.0086 -0.08629,0.0129 -0.13006,0.0129c-0.04377,0 -0.08713,-0.00427 -0.13006,-0.0128c-0.04293,-0.00853 -0.08462,-0.0212 -0.12507,-0.038c-0.04044,-0.01673 -0.07886,-0.03727 -0.11526,-0.0616c-0.0364,-0.02427 -0.07008,-0.0519 -0.10103,-0.0829l-1.33349,-1.3333c-0.03095,-0.031 -0.05859,-0.0647 -0.08292,-0.1011c-0.02432,-0.03637 -0.04486,-0.07478 -0.06161,-0.11522c-0.01675,-0.04045 -0.0294,-0.08214 -0.03794,-0.12507c-0.00854,-0.04293 -0.01281,-0.08628 -0.01282,-0.13005c0,-0.04378 0.00427,-0.08714 0.01281,-0.13007c0.00853,-0.04293 0.02118,-0.08462 0.03793,-0.12506c0.01675,-0.04044 0.03728,-0.07886 0.0616,-0.11526c0.02432,-0.0364 0.05195,-0.07008 0.0829,-0.10103c0.03095,-0.03095 0.06463,-0.05859 0.10102,-0.08291c0.0364,-0.02432 0.07482,-0.04486 0.11526,-0.06161c0.04044,-0.01675 0.08213,-0.0294 0.12506,-0.03795c0.04293,-0.00854 0.08629,-0.01281 0.13006,-0.01281c0.04377,0 0.08713,0.00427 0.13006,0.0128c0.04293,0.00854 0.08462,0.02118 0.12506,0.03793c0.04045,0.01675 0.07887,0.03729 0.11526,0.0616c0.0364,0.02432 0.07008,0.05196 0.10103,0.08291z">
-                        </path>
-                        <path id="路径 4" style="fill:#43CF7C; opacity:1;"
-                            d="M5.13791,7.5286l2,1.99999c0.03095,0.03095 0.05859,0.06463 0.08291,0.10103c0.02432,0.03639 0.04485,0.07481 0.0616,0.11526c0.01675,0.04044 0.0294,0.08213 0.03794,0.12506c0.00854,0.04293 0.01281,0.08629 0.01281,0.13006c0,0.0438 -0.00427,0.08717 -0.01281,0.1301c-0.00854,0.04293 -0.02119,0.0846 -0.03794,0.125c-0.01675,0.04047 -0.03728,0.0789 -0.0616,0.1153c-0.02432,0.0364 -0.05196,0.07007 -0.08291,0.101c-0.03095,0.03093 -0.06463,0.05857 -0.10103,0.0829c-0.03639,0.02433 -0.07481,0.04487 -0.11525,0.0616c-0.04045,0.01673 -0.08214,0.0294 -0.12507,0.038c-0.04293,0.00853 -0.08629,0.0128 -0.13006,0.0128c-0.04377,0 -0.08713,-0.00427 -0.13006,-0.0128c-0.04293,-0.0086 -0.08462,-0.02127 -0.12506,-0.038c-0.04044,-0.01673 -0.07886,-0.03727 -0.11526,-0.0616c-0.03639,-0.02433 -0.07007,-0.05197 -0.10102,-0.0829l-2,-2c-0.03095,-0.03095 -0.05859,-0.06463 -0.08291,-0.10102c-0.02432,-0.0364 -0.04486,-0.07482 -0.06161,-0.11526c-0.01675,-0.04044 -0.02939,-0.08213 -0.03793,-0.12506c-0.00854,-0.04293 -0.01281,-0.08629 -0.01281,-0.13006c0,-0.04377 0.00427,-0.08713 0.01281,-0.13006c0.00854,-0.04293 0.02118,-0.08462 0.03793,-0.12506c0.01675,-0.04045 0.03729,-0.07887 0.06161,-0.11526c0.02432,-0.0364 0.05196,-0.07007 0.08291,-0.10102c0.03095,-0.03095 0.06463,-0.05859 0.10102,-0.08291c0.0364,-0.02432 0.07482,-0.04486 0.11526,-0.06161c0.04044,-0.01675 0.08213,-0.0294 0.12506,-0.03794c0.04293,-0.00854 0.08629,-0.01281 0.13006,-0.01281c0.04377,0 0.08713,0.00427 0.13006,0.01281c0.04293,0.00854 0.08462,0.02119 0.12507,0.03794c0.04044,0.01675 0.07886,0.03729 0.11525,0.06161c0.0364,0.02432 0.07008,0.05196 0.10103,0.08291z">
-                        </path>
-                        <path id="路径 5" style="fill:#43CF7C; opacity:1;"
-                            d="M6.80494,5.86201l1.33301,1.33325c0.03095,0.03096 0.05859,0.06464 0.0829,0.10104c0.02431,0.03639 0.04485,0.07481 0.0616,0.11526c0.01675,0.04044 0.02939,0.08213 0.03792,0.12506c0.00854,0.04294 0.01281,0.0863 0.0128,0.13007c-0.00001,0.04377 -0.00428,0.08713 -0.01282,0.13006c-0.00855,0.04293 -0.0212,0.08461 -0.03795,0.12505c-0.01675,0.04044 -0.03729,0.07886 -0.06162,0.11526c-0.02432,0.03639 -0.05196,0.07006 -0.08291,0.10101c-0.03096,0.03095 -0.06464,0.05859 -0.10104,0.0829c-0.0364,0.02432 -0.07482,0.04485 -0.11526,0.0616c-0.04045,0.01675 -0.08214,0.02939 -0.12507,0.03792c-0.04293,0.00854 -0.08629,0.01281 -0.13006,0.0128c-0.04377,0 -0.08713,-0.00427 -0.13006,-0.01282c-0.04293,-0.00855 -0.08462,-0.0212 -0.12506,-0.03795c-0.04044,-0.01675 -0.07886,-0.03729 -0.11525,-0.06161c-0.03639,-0.02433 -0.07006,-0.05197 -0.10101,-0.08292l-1.33301,-1.33325c-0.03095,-0.03096 -0.05859,-0.06464 -0.0829,-0.10104c-0.02432,-0.0364 -0.04485,-0.07482 -0.0616,-0.11526c-0.01675,-0.04045 -0.02939,-0.08214 -0.03792,-0.12507c-0.00854,-0.04293 -0.01281,-0.08629 -0.0128,-0.13006c0.00001,-0.04377 0.00428,-0.08713 0.01282,-0.13006c0.00855,-0.04293 0.0212,-0.08462 0.03795,-0.12506c0.01675,-0.04044 0.03729,-0.07886 0.06162,-0.11525c0.02432,-0.03639 0.05196,-0.07006 0.08291,-0.10101c0.03096,-0.03095 0.06464,-0.05859 0.10104,-0.0829c0.0364,-0.02432 0.07482,-0.04485 0.11526,-0.0616c0.04044,-0.01675 0.08213,-0.02939 0.12507,-0.03793c0.04293,-0.00853 0.08629,-0.0128 0.13006,-0.01279c0.04377,0 0.08713,0.00427 0.13006,0.01282c0.04293,0.00854 0.08461,0.02119 0.12505,0.03795c0.04044,0.01675 0.07886,0.03729 0.11526,0.06161c0.03639,0.02433 0.07006,0.05197 0.10101,0.08292z">
-                        </path>
-                        <path id="路径 6" style="fill:#43CF7C; opacity:1;"
-                            d="M8.4714,4.19522l2,2c0.03093,0.03095 0.05857,0.06463 0.0829,0.10103c0.02433,0.03639 0.04487,0.07481 0.0616,0.11525c0.01673,0.04045 0.0294,0.08213 0.038,0.12506c0.00853,0.04293 0.0128,0.08629 0.0128,0.13007c0,0.04377 -0.00427,0.08713 -0.0128,0.13006c-0.0086,0.04293 -0.02127,0.08461 -0.038,0.12506c-0.01673,0.04044 -0.03727,0.07886 -0.0616,0.11526c-0.02433,0.03639 -0.05197,0.07007 -0.0829,0.10102c-0.03093,0.03095 -0.0646,0.05859 -0.101,0.08291c-0.0364,0.02432 -0.07483,0.04485 -0.1153,0.0616c-0.0404,0.01675 -0.08207,0.0294 -0.125,0.03794c-0.04293,0.00854 -0.0863,0.01281 -0.1301,0.01281c-0.04377,0 -0.08713,-0.00427 -0.13006,-0.01281c-0.04293,-0.00854 -0.08462,-0.02119 -0.12506,-0.03794c-0.04045,-0.01675 -0.07887,-0.03728 -0.11526,-0.0616c-0.0364,-0.02432 -0.07008,-0.05196 -0.10103,-0.08291l-1.99999,-2c-0.03095,-0.03095 -0.05859,-0.06463 -0.08291,-0.10102c-0.02432,-0.0364 -0.04486,-0.07482 -0.06161,-0.11526c-0.01675,-0.04045 -0.0294,-0.08213 -0.03794,-0.12506c-0.00854,-0.04293 -0.01281,-0.08629 -0.01281,-0.13006c0,-0.04378 0.00427,-0.08714 0.01281,-0.13007c0.00854,-0.04293 0.02119,-0.08461 0.03794,-0.12506c0.01675,-0.04044 0.03729,-0.07886 0.06161,-0.11525c0.02432,-0.0364 0.05196,-0.07008 0.08291,-0.10103c0.03095,-0.03095 0.06462,-0.05859 0.10102,-0.08291c0.03639,-0.02432 0.07481,-0.04485 0.11526,-0.0616c0.04044,-0.01675 0.08213,-0.0294 0.12506,-0.03794c0.04293,-0.00854 0.08629,-0.01281 0.13006,-0.01281c0.04377,0 0.08713,0.00427 0.13006,0.01281c0.04293,0.00854 0.08462,0.02119 0.12506,0.03794c0.04044,0.01675 0.07886,0.03728 0.11526,0.0616c0.03639,0.02432 0.07007,0.05196 0.10102,0.08291z">
-                        </path>
-                        <path id="路径 7" style="fill:#43CF7C; opacity:1;"
-                            d="M10.1379,2.52857l1.3335,1.33338c0.03093,0.03095 0.05857,0.06462 0.0829,0.10102c0.02433,0.03639 0.04487,0.07481 0.0616,0.11525c0.01673,0.04044 0.02937,0.08213 0.0379,0.12506c0.0086,0.04293 0.0129,0.08629 0.0129,0.13006c0,0.04377 -0.00427,0.08713 -0.0128,0.13006c-0.00853,0.04293 -0.0212,0.08462 -0.038,0.12507c-0.01673,0.04044 -0.03727,0.07886 -0.0616,0.11526c-0.02427,0.0364 -0.0519,0.07008 -0.0829,0.10103c-0.03093,0.03095 -0.0646,0.05859 -0.101,0.08291c-0.0364,0.02432 -0.07483,0.04486 -0.1153,0.06161c-0.0404,0.01675 -0.08207,0.0294 -0.125,0.03794c-0.04293,0.00855 -0.0863,0.01282 -0.1301,0.01282c-0.04373,0 -0.08707,-0.00427 -0.13,-0.0128c-0.04293,-0.00854 -0.08463,-0.02118 -0.1251,-0.03793c-0.04047,-0.01675 -0.0789,-0.03729 -0.1153,-0.06161c-0.0364,-0.02431 -0.07007,-0.05195 -0.101,-0.0829l-1.33348,-1.33337c-0.03095,-0.03095 -0.05859,-0.06463 -0.08291,-0.10102c-0.02433,-0.0364 -0.04487,-0.07482 -0.06162,-0.11526c-0.01675,-0.04044 -0.0294,-0.08213 -0.03794,-0.12506c-0.00854,-0.04293 -0.01281,-0.08629 -0.01281,-0.13006c-0.00001,-0.04377 0.00426,-0.08713 0.0128,-0.13006c0.00854,-0.04293 0.02118,-0.08462 0.03793,-0.12506c0.01675,-0.04045 0.03729,-0.07887 0.0616,-0.11526c0.02432,-0.0364 0.05196,-0.07008 0.08291,-0.10103c0.03095,-0.03095 0.06462,-0.05859 0.10102,-0.08292c0.03639,-0.02432 0.07481,-0.04486 0.11525,-0.06161c0.04045,-0.01675 0.08213,-0.0294 0.12506,-0.03794c0.04293,-0.00854 0.08629,-0.01281 0.13006,-0.01282c0.04377,0 0.08713,0.00427 0.13006,0.01281c0.04293,0.00853 0.08462,0.02118 0.12507,0.03793c0.04044,0.01675 0.07887,0.03728 0.1153,0.0616c0.0364,0.02432 0.07007,0.05195 0.101,0.0829z">
-                        </path>
-                    </g>
-                </g>
-                <defs>
-                    <rect id="path_0" x="0" y="0" width="16" height="16" />
-                </defs>
-            </svg>
+            <SvgIcon icon="ruler" size="16" />
         </el-button>
         <div class="head_top">
             <div class="left">
-                <el-button
-                    style="background: rgba(255, 255, 255, 1);color:rgba(76, 176, 79, 1);border-color:  rgba(255, 255, 255, 1);"
-                    icon="back" @click="router.go(-1)">返回</el-button>
+                <el-button style="color:rgba(76, 176, 79, 1)" icon="back" @click="router.go(-1)">返回</el-button>
             </div>
             <div class="right">
                 <el-select style="width: 270px; margin-right: 10px;" v-model="pageInfo.companyId" placeholder="请选择"
@@ -73,22 +36,12 @@
                 </el-select>
                 <div :class="isShow ? 'infiniteMenu' : 'infiniteMenu2'">
                     <div class="el_icon" v-show="isShow" @click="changeisShow(false)">
-                        <svg t="1693558978472" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                            xmlns="http://www.w3.org/2000/svg" p-id="14849" width="16" height="16">
-                            <path
-                                d="M85.312 85.312v853.376h853.376V85.312H85.312zM0 0h1024v1024H0V0z m554.624 213.312v256h256v85.376h-256v256H469.312v-256h-256V469.376h256v-256h85.312z"
-                                fill="#262626" p-id="14850"></path>
-                        </svg>
+                        <SvgIcon icon="plus-square" size="16" />
                     </div>
                     <div class="el_icon" v-show="!isShow" @click="changeisShow(true)">
-                        <svg t="1693559006371" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                            xmlns="http://www.w3.org/2000/svg" p-id="15898" width="16" height="16">
-                            <path
-                                d="M85.312 85.312v853.376h853.376V85.312H85.312zM0 0h1024v1024H0V0z m213.312 469.376h597.376v85.312H213.312V469.376z"
-                                fill="#262626" p-id="15899"></path>
-                        </svg>
+                        <SvgIcon icon="minus-square" size="16" />
                     </div>
-                    <div class="empty_list" v-if='!paddyWorkList.length'>暂无数据</div>
+                    <div :class="isShow ? 'empty_list' : 'empty_list2'" v-if='!paddyWorkList.length'>—— 暂无数据 ——</div>
                     <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
                         <li v-for="(item, index) in paddyWorkList" :key="index"
                             :class="item.checked ? 'infinite-list-item' : 'infinite-list-item2'">
@@ -102,7 +55,8 @@
                                 </el-checkbox>
                             </el-checkbox-group>
                         </li>
-                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;">作业已全部加载</span>
+                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: black;">—— 作业已全部加载
+                            ——</span>
                     </ul>
                 </div>
             </div>
@@ -128,8 +82,8 @@ import gcoord from 'gcoord'
 import { mapTitleLayers } from "./mapTitleLayers";
 import a from '@/assets/jobManage/a.png'
 import b from '@/assets/jobManage/b.png'
-// import pointInChina from '@/utils/pointInChina'
-// import L from 'leaflet'
+import c from '@/assets/jobManage/c.png'
+import SvgIcon from "@/components/SvgIcon/index.vue";
 // 提交的车辆数组
 const ids = ref<any>([])
 const isShow = ref<boolean>(true)
@@ -196,7 +150,12 @@ const initMap = () => {
         if (pickupMode.value) {
             let point = event.latlng;
             pickedPoints.value.push(point);
-            let marker = L.marker(point).addTo(map.value);
+            let icon = L.icon({
+                iconUrl: c,
+                iconAnchor: [23, 46],
+            })
+
+            let marker = L.marker(point, { icon: icon }).addTo(map.value);
             calculationObj.value.push(marker);
             if (pickedPoints.value.length === 2) {
                 let distance = pickedPoints.value[0].distanceTo(
@@ -204,7 +163,7 @@ const initMap = () => {
                 ); //算距离
                 let polyline = L.polyline(pickedPoints.value, { color: "red" })
                     .addTo(map.value)
-                    .bindPopup(`相距:${distance.toFixed(3)}米`)
+                    .bindPopup(`相距:${distance.toFixed(3)}米`, { closeButton: false })
                     .openPopup(); //划线
                 calculationObj.value.push(polyline);
                 map.value.fitBounds(pickedPoints.value); //适应视野
@@ -263,6 +222,7 @@ const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
         console.log(error)
     }
 }
+
 // 测距
 const calculateDistance = () => {
     const mapId = document.getElementById("child6_map")
@@ -366,7 +326,7 @@ const loadWorkData = async (workId: any) => {
             <div class="popupArea2"> <span class="left">农具：</span> <span class="right">${machine[workId].toolName}</span></div>
             <div class="popupBottom"> <div class="leftt">${machine[workId].createtime}</div> <span class="left"></span><span class="left"></span><span class="left"></span></div>
             <div class="popupBottom"><span class="right"></span><span class="right"></span><span class="right"></span> <span class="rightt">${machine[workId].updatetime}</span></div>
-            </div>`, { closeButton: false }).addTo(map.value).openPopup
+            </div>`, { closeButton: false }).addTo(map.value).openPopup()
             saveMarker(workId, [{ markerObj: line, name: 'lines', markerObj2: marker, name2: 'picture' }])
         }
     })
@@ -468,6 +428,9 @@ const removeMarker = (workId: any) => {
             a.forEach((item: any) => {
                 if (item.markerObj) {
                     map.value.removeLayer(item.markerObj)
+                    // map.value.removeLayer(item.markerObj2)
+                }
+                if (item.markerObj2) {
                     map.value.removeLayer(item.markerObj2)
                 }
             })
@@ -536,7 +499,7 @@ const getDealerCarList = async () => {
     Object.assign(CarDealerList, res.data)
 }
 getDealerCarList()
-const getPaddyWorkList = async () => {
+const getPaddyWorkList = async (flag: Boolean) => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
     paddyWorkList.value = res.data.records
     let tem = res.data.records
@@ -545,13 +508,15 @@ const getPaddyWorkList = async () => {
         element.checked = false
     })
     if (paddyWorkList.value.length) {
-        ids.value.push(paddyWorkList.value[0].id as never)
-        paddyWorkList.value[0].checked = true
         total.value = res.data.total
+        if (flag == true) {
+            ids.value.push(paddyWorkList.value[0].id as never)
+            paddyWorkList.value[0].checked = true
+        }
     }
 
 }
-getPaddyWorkList()
+getPaddyWorkList(true)
 const changeBlur1 = () => {
     getDealerCarList()
     clearAllMarkers()
@@ -571,19 +536,20 @@ const changeBlur2 = () => {
     pageInfo.pageSize = 7
     ids.value = []
     paddyWorkList.value = []
-    getPaddyWorkList()
+    getPaddyWorkList(true)
 }
-const BtnClick = () => {
-    clearAllMarkers()
-    Object.assign(markerCollect, {})
-    ids.value = []
-}
+// 删除全部按钮
+// const BtnClick = () => {
+//     clearAllMarkers()
+//     Object.assign(markerCollect, {})
+//     ids.value = []
+// }
 const load = () => {
     pageInfo.pageSize < total.value ? pageInfo.pageSize += 2 : ''
 }
 watch(() => pageInfo.pageSize,
     () => {
-        getPaddyWorkList()
+        getPaddyWorkList(false)
     }
 )
 watch(() => ids.value,
@@ -619,6 +585,8 @@ watch(() => paddyWorkList.value,
                 }
             })
         }
+
+
     }, { deep: true })
 </script>
 
@@ -642,7 +610,6 @@ watch(() => paddyWorkList.value,
         height: 32px;
         opacity: 1;
         border-radius: 4px;
-        background: rgba(255, 255, 255, 1);
     }
 
     .map_button {
@@ -696,7 +663,7 @@ watch(() => paddyWorkList.value,
                 font-weight: 500;
                 letter-spacing: 0px;
                 line-height: 26.06px;
-                
+
             }
 
             .select_title2 {
@@ -720,10 +687,25 @@ watch(() => paddyWorkList.value,
             }
 
             .empty_list {
+                transition: 0.5s all;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 font-size: 10px;
+                height: 20px;
+                color: black;
+                padding-bottom: 5px;
+            }
+
+            .empty_list2 {
+                transition: 0.5s all;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 10px;
+                height: 0px;
+                color: black;
+                overflow: hidden;
             }
 
             .infiniteMenu {
@@ -779,6 +761,7 @@ watch(() => paddyWorkList.value,
                     background: rgba(199, 242, 216, 1);
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+                    color: #fff;
                 }
 
                 .infinite-list .infinite-list-item2 {
@@ -792,6 +775,7 @@ watch(() => paddyWorkList.value,
                     background: #fff;
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+                    color: black;
                 }
 
                 .infinite-list .infinite-list-item+.list-item {
@@ -853,6 +837,7 @@ watch(() => paddyWorkList.value,
                     background: rgba(199, 242, 216, 1);
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+                    color: #fff;
                 }
 
                 .infinite-list .infinite-list-item2 {
@@ -866,6 +851,7 @@ watch(() => paddyWorkList.value,
                     background: #fff;
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+                    color: black;
                 }
 
                 .infinite-list .infinite-list-item+.list-item {
@@ -906,7 +892,7 @@ watch(() => paddyWorkList.value,
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            
+
             height: 37px;
         }
 
@@ -957,7 +943,7 @@ watch(() => paddyWorkList.value,
                     margin-right: 5px;
                     font-size: 16px;
                     font-weight: 600;
-                    
+
                 }
 
                 .leftArea::before {
@@ -1035,7 +1021,7 @@ watch(() => paddyWorkList.value,
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 23.17px;
-                
+
                 text-align: left;
                 vertical-align: top;
             }
@@ -1052,7 +1038,7 @@ watch(() => paddyWorkList.value,
                 white-space: nowrap;
                 font-size: 16px;
                 line-height: 18px;
-                
+
                 margin-right: 5px;
             }
 
@@ -1073,7 +1059,7 @@ watch(() => paddyWorkList.value,
                 margin-left: 5px;
                 font-size: 16px;
                 line-height: 18px;
-                
+
                 text-align: left;
                 vertical-align: top;
             }
@@ -1112,4 +1098,5 @@ watch(() => paddyWorkList.value,
     .el-checkbox__input.is-indeterminate .el-checkbox__inner) {
     border-color: rgba(67, 207, 124, 1) !important;
     background-color: rgba(67, 207, 124, 1) !important;
-}</style>
+}
+</style>

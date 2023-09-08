@@ -50,7 +50,6 @@
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { carModuleInfoSave_API, carModuleInfoUpdate_API } from '@/api/infoManagement/index'
-import { changeResponseData, editResponseData } from "@/api/infoManagement/type"
 const formRef = ref()
 const props = defineProps({
     newRecords: {
@@ -82,12 +81,12 @@ const editSubmit = async () => {
     dialogVisible.value = false
 }
 const editInfo = async () => {
-    const res: editResponseData = await carModuleInfoUpdate_API(ApiData)
-    if (res.code == 0) {
+    try {
+        await carModuleInfoUpdate_API(ApiData)
         ElMessage({ type: 'success', message: '编辑成功' })
         emits('push', '')
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
@@ -96,12 +95,12 @@ const cancel = () => {
     formRef.value.resetFields()
 }
 const addInfo = async () => {
-    const res: changeResponseData = await carModuleInfoSave_API(ApiData)
-    if (res.code == 0) {
+    try {
+        await carModuleInfoSave_API(ApiData)
         ElMessage({ type: 'success', message: '添加成功' })
         emits('push', '')
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '添加失败' })
     }
 }
@@ -111,7 +110,7 @@ const submit = async () => {
     dialogVisible.value = false
     addInfo()
 }
-const validatorwarrantyDate = (rule: any, value: any, callBack: any) => {
+const validatorwarrantyDate = (_rule: any, value: any, callBack: any) => {
     let zz = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/
     if (zz.test(value)) {
         callBack();

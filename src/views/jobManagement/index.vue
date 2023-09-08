@@ -30,7 +30,7 @@
             </div>
             <div class="button_area">
                 <el-button type="primary" @click="openExportDia">导出</el-button>
-                <el-button type="primary" @click="router.push({ path: '/jobManagement/taskManage' })" icon="MapLocation"
+                <el-button  @click="router.push({ path: '/jobManagement/taskManage' })" icon="MapLocation"
                     class="btn2"></el-button>
             </div>
         </div>
@@ -232,7 +232,6 @@ const changeA = () => {
                 align-items: center;
                 justify-content: center;
                 margin: 0px 10px;
-                width: 10px;
                 height: 32px;
                 opacity: 1;
                 line-height: 21px;
@@ -275,10 +274,8 @@ const changeA = () => {
         .btn2 {
             width: 32px;
             height: 32px;
-            opacity: 1;
             border-radius: 4px;
             border: 1.5px solid var(--el-color-primary);
-            background-color: #fff;
             color: var(--el-color-primary);
         }
 

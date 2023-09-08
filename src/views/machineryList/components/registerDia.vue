@@ -56,16 +56,16 @@ defineExpose({
 const date = ref(365)
 const activationAddBtn = async () => {
     dialogVisible.value = false
-    const res = await activationCodeAdd_API({
-        carId: props.carId,
-        oemSn: props.sn,
-        deviceId: props.deviceId,
-        date: date.value
-    })
-    if (res.code == 0) {
+    try {
+        await activationCodeAdd_API({
+            carId: props.carId,
+            oemSn: props.sn,
+            deviceId: props.deviceId,
+            date: date.value
+        })
         ElMessage({ type: 'success', message: '注册成功' })
     }
-    else {
+    catch {
         ElMessage({ type: 'error', message: '注册失败' })
     }
 }
@@ -77,13 +77,13 @@ const activationAddBtn = async () => {
     ::v-deep(.el-form-item__label) {
         font-size: 16px;
         font-weight: 400;
-        
+
     }
 
     .span_title {
         font-size: 16px;
         font-weight: 400;
-        
+
     }
 
     .ml-4 {
@@ -91,7 +91,7 @@ const activationAddBtn = async () => {
         .el-radio {
             font-size: 16px;
             font-weight: 400;
-            
+
         }
     }
 

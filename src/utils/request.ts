@@ -21,8 +21,8 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    const { code, msg } = response.data;
-    if (code === 0  || code ==='ok') {
+    const { code, message } = response.data;
+    if (code === 0 || code == 200 || code === 'ok') {
       return response.data;
     }
     // 响应数据为二进制流处理(Excel导出)
@@ -31,7 +31,7 @@ service.interceptors.response.use(
     }
 
     // ElMessage.error(msg || '系统出错');
-    return Promise.reject(new Error(msg || 'Error'));
+    return Promise.reject(new Error(message || 'Error'));
   },
   (error: any) => {
     const { status } = error.response;
@@ -41,6 +41,14 @@ service.interceptors.response.use(
     return Promise.reject(error.message);
   }
 );
+
+declare module "axios" {
+  interface AxiosResponse<T = any> {
+    code: number;
+    message: string;
+  }
+  export function create(config?: AxiosRequestConfig): AxiosInstance;
+}
 
 // 导出 axios 实例
 export default service;

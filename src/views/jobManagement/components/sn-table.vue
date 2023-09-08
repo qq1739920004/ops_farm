@@ -1,13 +1,13 @@
 <!--  -->
 <template>
-    <el-table :data="props.paddyWorkList">
+    <el-table :data="props.paddyWorkList" stripe>
         <el-table-column type="index" label="序号" width="80" align="center" />
         <el-table-column label="作业名称" prop="name" align="center">
         </el-table-column>
         <el-table-column label="作业类型" align="center">
             <template #="{ row }">
                 <el-tag round
-                    style="color:rgba(0, 125, 117, 1);width: 50px;height: 23px;background-color:rgba(168, 232, 227, 1)">
+                    style="color:rgba(0, 125, 117, 1);width: 50px;height: 23px;background-color:rgba(168, 232, 227, 1);border: none;">
                     {{ workTypeReflect[row.worktype] || '/' }} </el-tag>
             </template>
         </el-table-column>

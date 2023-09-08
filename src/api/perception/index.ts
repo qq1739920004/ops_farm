@@ -4,7 +4,7 @@ import {monitorResponseData,StateObj,StateResponseData} from './type'
 // 未处理个数
 export function getMonitorAPI() {
     return request<any, monitorResponseData>({
-        url: "/monitor/get",
+        url: "/farm/monitor/get",
         method: 'get',
     })
 }

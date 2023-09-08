@@ -244,6 +244,7 @@ const changeSort = (val: string) => {
 <style lang="scss" scoped>
 .province_card,
 .city_card {
+    color: black;
     padding: 10px;
     display: flex;
     flex-wrap: wrap;
@@ -318,6 +319,7 @@ const changeSort = (val: string) => {
             // }
             .bold {
                 font-size: 26px;
+
             }
 
             .online_car {

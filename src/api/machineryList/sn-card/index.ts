@@ -3,14 +3,14 @@ import request from '@/utils/request'
 import { ProvinceDataNewListResponseData, CityDataNewListResponseData } from './type'
 export function getProvinceDataNewList_API() {
     return request<any, ProvinceDataNewListResponseData>({
-        url: "/car/provinceData/new/list",
+        url: "/farm/car/provinceData/new/list",
         method: 'get',
     })
 }
 // 地级市数据API
 export function getCityDataNewList_API(provinceCode: string) {
     return request<any, CityDataNewListResponseData>({
-        url: `/car/cityData/new/list?provinceCode=${provinceCode}`,
+        url: `/farm/car/cityData/new/list?provinceCode=${provinceCode}`,
         method: 'get',
     })
 }
