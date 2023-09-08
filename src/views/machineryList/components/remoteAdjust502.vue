@@ -426,11 +426,11 @@ const updateCarParams = async () => {
         .then(() => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(paramParamsData))
-            paramCarParamUpdate_API(updateInfo.value).then((res) => {
-                if (res.code == 0) {
+            paramCarParamUpdate_API(updateInfo.value).then(() => {
+                try {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
-                else {
+                catch {
                     ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
@@ -458,11 +458,11 @@ const updatebasicParams = async () => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(basicParamsData))
 
-            updateBasicParm_API(updateInfo.value).then((res) => {
-                if (res.code == 0) {
+            updateBasicParm_API(updateInfo.value).then(() => {
+                try {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
-                else {
+                catch {
                     ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
@@ -490,11 +490,11 @@ const updateCalibParams = async () => {
         .then(() => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(CalibParamsData))
-            updateCalibParam_API(updateInfo.value).then((res) => {
-                if (res.code == 0) {
+            updateCalibParam_API(updateInfo.value).then(() => {
+                try {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
-                else {
+                catch {
                     ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
@@ -539,11 +539,11 @@ const updateAdvanced1Params = async () => {
         .then(() => {
             updateInfo.value.carId = props.carId
             updateInfo.value.paramJson = (JSON.stringify(advanced1ParamsData))
-            advanced1ParamUpdate_API(updateInfo.value).then((res) => {
-                if (res.code == 0) {
+            advanced1ParamUpdate_API(updateInfo.value).then(() => {
+                try {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
-                else {
+                catch {
                     ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
@@ -602,11 +602,11 @@ const updateChafenData = async () => {
                 insideSourceNode: chaFenlist.value.insideSourceNode,
                 insideUsername: chaFenlist.value.insideUsername,
                 insidePassword: chaFenlist.value.insidePassword
-            }).then((res) => {
-                if (res.code == 0) {
+            }).then(() => {
+                try {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
-                else {
+                catch {
                     ElMessage({ type: 'error', message: '修改失败' })
                 }
             })

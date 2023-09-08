@@ -1,209 +1,213 @@
 <template>
-    <div class="app_container">
-        <div class="title">
-            <el-icon>
-                <Back @click="back" />
-            </el-icon>
-            <span>详情</span>
-        </div>
-        <div class="middle">
-            <el-button type="success" plain :disabled="baseInfo.onlineTcp === 0 ? false : true"
-                @click="remoteManage">远程管理</el-button>
-            <el-button type="success" plain @click="handle">处理</el-button>
-        </div>
-        <div class="card1">
-            <div class="card_title">基本信息
-                <span class="downIcon" @click="clickOpen">
-                    {{ openContent }}
-                    <el-icon v-if="isShow">
-                        <ArrowUp />
+    <div class="app_container ">
+        <div class="app_card">
+            <div class="title table_container">
+                <div class="title_area">
+                    <el-icon>
+                        <Back @click="back" />
                     </el-icon>
-                    <el-icon v-else>
-                        <ArrowDown />
-                    </el-icon>
-                </span>
+                    <span>详情</span>
+                </div>
+                <div class="btn_area">
+                    <el-button type="primary" plain :disabled="baseInfo.onlineTcp === 0 ? false : true"
+                        @click="remoteManage">远程管理</el-button>
+                    <el-button type="primary" plain @click="handle">处理</el-button>
+                </div>
             </div>
+            <div class="card1">
+                <div class="card_title">基本信息
+                    <span class="downIcon" @click="clickOpen">
+                        {{ openContent }}
+                        <el-icon v-if="isShow">
+                            <ArrowUp />
+                        </el-icon>
+                        <el-icon v-else>
+                            <ArrowDown />
+                        </el-icon>
+                    </span>
+                </div>
 
-            <ul class="base_info">
-                <li>
-                    <span>类型：</span>
-                    <span>{{ baseInfo.model }}</span>
-                </li>
-                <li>
-                    <span>软件版本：</span>
-                    <span>{{ baseInfo.softwareVersion }}</span>
-                </li>
-                <li>
-                    <span>更新时间：</span>
-                    <span>{{ baseInfo.updateTime }}</span>
-                </li>
-                <li>
-                    <span>车辆厂家：</span>
-                    <span>{{ baseInfo.factory }}</span>
-                </li>
-                <li>
-                    <span>SN:</span>
-                    <span>{{ baseInfo.sn }}</span>
-                </li>
-                <a href="" v-show="isShow">
-
+                <ul class="base_info">
                     <li>
-                        <span>车辆名称：</span>
-                        <span>{{ baseInfo.name }}</span>
+                        <span>类型：</span>
+                        <span>{{ baseInfo.model }}</span>
                     </li>
                     <li>
-                        <span>车主姓名：</span>
+                        <span>软件版本：</span>
+                        <span>{{ baseInfo.softwareVersion }}</span>
+                    </li>
+                    <li>
+                        <span>更新时间：</span>
+                        <span>{{ baseInfo.updateTime }}</span>
+                    </li>
+                    <li>
+                        <span>车辆厂家：</span>
                         <span>{{ baseInfo.factory }}</span>
                     </li>
                     <li>
-                        <span>车主电话：</span>
-                        <span>{{ baseInfo.tel }}</span>
+                        <span>SN:</span>
+                        <span>{{ baseInfo.sn }}</span>
                     </li>
+                    <a href="" v-show="isShow">
 
-                    <li>
-                        <span>车龄：</span>
-                        <span>{{ baseInfo.age }}</span>
-                    </li>
-                    <li>
-                        <span>创建人：</span>
-                        <span>{{ baseInfo.creatorName }}</span>
-                    </li>
-                    <li>
-                        <span>创建人电话：</span>
-                        <span>{{ baseInfo.creatorTel }}</span>
-                    </li>
-                    <li>
-                        <span>创建时间：</span>
-                        <span>{{ baseInfo.createTime }}</span>
-                    </li>
-                    <li>
-                        <span>最近上线时间：</span>
-                        <span>{{ baseInfo.lastOnlineTime }}</span>
-                    </li>
-                    <li>
-                        <span>最近自动驾驶时间：</span>
-                        <span>{{ baseInfo.lastAutoDriveTime }}</span>
-                    </li>
-                </a>
-            </ul>
+                        <li>
+                            <span>车辆名称：</span>
+                            <span>{{ baseInfo.name }}</span>
+                        </li>
+                        <li>
+                            <span>车主姓名：</span>
+                            <span>{{ baseInfo.factory }}</span>
+                        </li>
+                        <li>
+                            <span>车主电话：</span>
+                            <span>{{ baseInfo.tel }}</span>
+                        </li>
+
+                        <li>
+                            <span>车龄：</span>
+                            <span>{{ baseInfo.age }}</span>
+                        </li>
+                        <li>
+                            <span>创建人：</span>
+                            <span>{{ baseInfo.creatorName }}</span>
+                        </li>
+                        <li>
+                            <span>创建人电话：</span>
+                            <span>{{ baseInfo.creatorTel }}</span>
+                        </li>
+                        <li>
+                            <span>创建时间：</span>
+                            <span>{{ baseInfo.createTime }}</span>
+                        </li>
+                        <li>
+                            <span>最近上线时间：</span>
+                            <span>{{ baseInfo.lastOnlineTime }}</span>
+                        </li>
+                        <li>
+                            <span>最近自动驾驶时间：</span>
+                            <span>{{ baseInfo.lastAutoDriveTime }}</span>
+                        </li>
+                    </a>
+                </ul>
 
 
+            </div>
+            <div class="card2">
+                <div class="card_title">报警信息</div>
+                <div class="alarm" v-for="(item, index)  in alarmRecord" :key="index">
+                    <span>等级：{{ item.grade }}</span>
+                    <span>时间：{{ item.time }}</span>
+                    <span>内容：{{ item.content }}</span>
+                </div>
+
+            </div>
+            <div class="card3">
+                <div class="card_title">参数变更记录</div>
+                <div class="sub_title">
+                    <span>变更时间</span>
+                    <span>参数名称</span>
+                </div>
+                <div class="change" v-for="(value, key, index) in paramChange" :key="index">
+                    <span class="change_time">时间：{{ tsToStr(key) }}</span>
+                    <div>{{ value[0].name }}:（
+                        <span style="color: red;">{{ value[0].newParam }}</span>→
+                        <span style="color: red;">{{ value[0].oldParam }}</span>
+                        ）
+                    </div>
+                </div>
+            </div>
+            <div class="card4">
+                <div class="card_title">参数信息</div>
+                <div class="secondTitle">
+                    <span>|</span>
+                    <span>差分信息</span>
+                </div>
+                <div class="message">
+                    <div> <span>工作模式：</span>
+                        <span>罗网</span>
+                    </div>
+
+                </div>
+
+                <div class="secondTitle">
+                    <span>|</span>
+                    <span>车辆参数</span>
+                </div>
+                <div class="message">
+                    <div v-for="(value, name, index)  in carParam.value" :key="index">
+                        <span>{{ name + ':' }}</span>
+                        <span>{{ value }}</span>
+                    </div>
+                </div>
+                <div class="secondTitle">
+                    <span>|</span>
+                    <span>校准参数</span>
+                </div>
+                <div class="message">
+                    <div v-for="(value, name, index)  in calibParam.value" :key="index">
+                        <span>{{ name + ':' }}</span>
+                        <span>{{ value }}</span>
+                    </div>
+                </div>
+                <div class="secondTitle">
+                    <span>|</span>
+                    <span>PID参数</span>
+                </div>
+                <div class="message">
+                    <div v-for="(value, name, index)  in PIDParam.value" :key="index">
+                        <span>{{ name + ':' }}</span>
+                        <span>{{ value }}</span>
+                    </div>
+                </div>
+
+                <div class="secondTitle">
+                    <span>|</span>
+                    <span>PID曲线参数</span>
+                </div>
+                <div class="message">
+                    <div v-for="(value, name, index)  in PidCurveParam.value" :key="index">
+                        <span>{{ name + ':' }}</span>
+                        <span>{{ value }}</span>
+                    </div>
+                </div>
+
+                <div class="secondTitle">
+                    <span>|</span>
+                    <span>PID超低速参数</span>
+                </div>
+                <div class="message">
+                    <div v-for="(value, name, index)  in PidSlsParam.value" :key="index">
+                        <span>{{ name + ':' }}</span>
+                        <span>{{ value }}</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 处理对话框 -->
+            <el-dialog v-model="dialogFormVisible" title="指派">
+                <el-form :model="helpList" :rules="rules" ref="formRef">
+                    <el-form-item label="备注：" label-width="140px" prop="info">
+                        <el-input v-model="helpList.info" type="textarea" autocomplete="off" placeholder="请输入备注" />
+                    </el-form-item>
+                    <el-form-item label="继续指派：" label-width="140px" clearable>
+                        <el-select v-model="helpList.handlerName" placeholder="请选择" @change="changeHanlder">
+                            <el-option v-for="(item, index) in handlerList" :key="index" :label="item.name" :value="item">
+                                <span style="float: left;">{{ item.name }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px;">{{ item.tel }}</span>
+                            </el-option>
+                        </el-select>
+
+                    </el-form-item>
+                </el-form>
+                <template #footer>
+                    <span class="dialog-footer">
+                        <el-button ref="finish" @click="finishConfirm">完成处理</el-button>
+                        <el-button ref="assign" type="primary" @click="assignConfirm">
+                            指派
+                        </el-button>
+                    </span>
+                </template>
+            </el-dialog>
         </div>
-        <div class="card2">
-            <div class="card_title">报警信息</div>
-            <div class="alarm" v-for="(item, index)  in alarmRecord" :key="index">
-                <span>等级：{{ item.grade }}</span>
-                <span>时间：{{ item.time }}</span>
-                <span>内容：{{ item.content }}</span>
-            </div>
-            
-        </div>
-        <div class="card3">
-            <div class="card_title">参数变更记录</div>
-            <div class="sub_title">
-                <span>变更时间</span>
-                <span>参数名称</span>
-            </div>
-            <div class="change" v-for="(value, key, index) in paramChange" :key="index">
-                <span class="change_time">时间：{{ tsToStr(key) }}</span>
-                <div>{{ value[0].name }}:（
-                    <span style="color: red;">{{ value[0].newParam }}</span>→
-                    <span style="color: red;">{{ value[0].oldParam }}</span>
-                    ）
-                </div>
-            </div>
-        </div>
-        <div class="card4">
-            <div class="card_title">参数信息</div>
-            <div class="secondTitle">
-                <span>|</span>
-                <span>差分信息</span>
-            </div>
-            <div class="message">
-                <div> <span>工作模式：</span>
-                    <span>罗网</span>
-                </div>
-
-            </div>
-
-            <div class="secondTitle">
-                <span>|</span>
-                <span>车辆参数</span>
-            </div>
-            <div class="message">
-                <div v-for="(value, name, index)  in carParam.value" :key="index">
-                    <span>{{ name + ':' }}</span>
-                    <span>{{ value }}</span>
-                </div>
-            </div>
-            <div class="secondTitle">
-                <span>|</span>
-                <span>校准参数</span>
-            </div>
-            <div class="message">
-                <div v-for="(value, name, index)  in calibParam.value" :key="index">
-                    <span>{{ name + ':' }}</span>
-                    <span>{{ value }}</span>
-                </div>
-            </div>
-            <div class="secondTitle">
-                <span>|</span>
-                <span>PID参数</span>
-            </div>
-            <div class="message">
-                <div v-for="(value, name, index)  in PIDParam.value" :key="index">
-                    <span>{{ name + ':' }}</span>
-                    <span>{{ value }}</span>
-                </div>
-            </div>
-
-            <div class="secondTitle">
-                <span>|</span>
-                <span>PID曲线参数</span>
-            </div>
-            <div class="message">
-                <div v-for="(value, name, index)  in PidCurveParam.value" :key="index">
-                    <span>{{ name + ':' }}</span>
-                    <span>{{ value }}</span>
-                </div>
-            </div>
-
-            <div class="secondTitle">
-                <span>|</span>
-                <span>PID超低速参数</span>
-            </div>
-            <div class="message">
-                <div v-for="(value, name, index)  in PidSlsParam.value" :key="index">
-                    <span>{{ name + ':' }}</span>
-                    <span>{{ value }}</span>
-                </div>
-            </div>
-        </div>
-        <!-- 处理对话框 -->
-        <el-dialog v-model="dialogFormVisible" title="指派">
-            <el-form :model="helpList" :rules="rules" ref="formRef">
-                <el-form-item label="备注：" label-width="140px" prop="info">
-                    <el-input v-model="helpList.info" type="textarea" autocomplete="off" placeholder="请输入备注" />
-                </el-form-item>
-                <el-form-item label="继续指派：" label-width="140px" clearable>
-                    <el-select v-model="helpList.handlerName" placeholder="请选择" @change="changeHanlder">
-                        <el-option v-for="(item, index) in handlerList" :key="index" :label="item.name" :value="item">
-                            <span style="float: left;">{{ item.name }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px;">{{ item.tel }}</span>
-                        </el-option>
-                    </el-select>
-
-                </el-form-item>
-            </el-form>
-            <template #footer>
-                <span class="dialog-footer">
-                    <el-button ref="finish" @click="finishConfirm">完成处理</el-button>
-                    <el-button ref="assign" type="primary" @click="assignConfirm">
-                        指派
-                    </el-button>
-                </span>
-            </template>
-        </el-dialog>
     </div>
 </template>
 
@@ -338,47 +342,47 @@ const getBaseInfo = async () => {
 const getHelpHandlingAlarmRecord = async () => {
     try {
         const res: HelpHandlingAlarmData = await getHelpHandlingAlarmRecordAPI(Number(carId.value))
-     if(res.data.total){
-        alarmRecord.value = res.data.records
-        alarmRecord.value.forEach((item: any) => {
-            switch (item.grade) {
-                case 1:
-                    item.grade = '一级';
-                    break;
-                case 2:
-                    item.grade = '二级';
-                    break;
-            }
-            switch (item.content) {
-                case 0:
-                    item.content = '集线器';
-                    break;
-                case 1:
-                    item.content = '力矩电机';
-                    break;
-                case 2:
-                    item.content = '前轮速率陀螺';
-                    break;
-                case 3:
-                    item.content = '车身速率陀螺';
-                    break;
-                case 4:
-                    item.content = '多功能方向盘故障';
-                    break;
-                case 5:
-                    item.content = '多功能方向盘电量过低';
-                    break;
-                case 6:
-                    item.content = '差分龄期过大';
-                    break;
-                case 7:
-                    item.content = '横向偏差过大';
-                    break;
-            }
-        });
-     }
-        
-      
+        if (res.data.total) {
+            alarmRecord.value = res.data.records
+            alarmRecord.value.forEach((item: any) => {
+                switch (item.grade) {
+                    case 1:
+                        item.grade = '一级';
+                        break;
+                    case 2:
+                        item.grade = '二级';
+                        break;
+                }
+                switch (item.content) {
+                    case 0:
+                        item.content = '集线器';
+                        break;
+                    case 1:
+                        item.content = '力矩电机';
+                        break;
+                    case 2:
+                        item.content = '前轮速率陀螺';
+                        break;
+                    case 3:
+                        item.content = '车身速率陀螺';
+                        break;
+                    case 4:
+                        item.content = '多功能方向盘故障';
+                        break;
+                    case 5:
+                        item.content = '多功能方向盘电量过低';
+                        break;
+                    case 6:
+                        item.content = '差分龄期过大';
+                        break;
+                    case 7:
+                        item.content = '横向偏差过大';
+                        break;
+                }
+            });
+        }
+
+
     }
     catch (err) {
         console.log(err)
@@ -455,7 +459,6 @@ getPidCurveParam()
 getPidSlsParam()
 
 const remoteManage = () => {
-    console.log(baseInfo.value.sn)
     $router.push({
         name: 'machineryList',
         query: { sn: baseInfo.value.sn },
@@ -498,18 +501,22 @@ const handle = () => {
 
 <style lang="scss" scoped>
 .app_container {
+
     .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         height: 50px;
         line-height: 50px;
 
         span {
             margin-left: 20px
         }
-    }
 
-    .middle {
-        width: 100%;
-        text-align: right;
+        .title_area {
+            display: flex;
+            align-items: center;
+        }
     }
 
     .card1,
@@ -517,28 +524,29 @@ const handle = () => {
     .card3,
     .card4 {
         width: 100%;
-        border: 1px solid rgba(53, 45, 45, 0.144);
+        border: 1px solid rgb(236, 236, 236);
         margin-top: 10px;
-        background-color: white;
+        border-radius: 4px;
 
         .card_title {
             padding-left: 10px;
             height: 40px;
             line-height: 40px;
-            background-color: rgb(236, 236, 236);
+            background-color: var(--el-fill-color-lighter);
+            border-radius: 4px 4px 0 0;
         }
 
         .secondTitle {
             text-align: left;
             font-size: 14px;
-            color: black;
             margin-top: 10px;
             margin-left: 10px;
 
             span:first-child {
+                font-size: 12px;
                 padding-right: 2px;
                 vertical-align: text-bottom;
-                color: #4cb04f;
+                color: var(--el-color-primary);
                 font-weight: 900;
             }
         }
@@ -566,12 +574,17 @@ const handle = () => {
 
     }
 
+    .card4 {
+        margin-bottom: 20px;
+    }
+
     .card1 {
         .downIcon {
             float: right;
-            color: #4cb04f;
+            color: var(--el-color-primary);
             font-size: 14px;
             cursor: pointer;
+            margin-right: 10px;
         }
 
         .base_info {

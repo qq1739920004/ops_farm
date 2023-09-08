@@ -3,9 +3,7 @@
         <!-- 搜索 -->
         <div class="search_container app_card">
             <div>
-                <el-input placeholder=请输入SN、电话 v-model="helpHandling.key"
-                @keyup.enter.native="search()"
-                >
+                <el-input placeholder=请输入SN、电话 v-model="helpHandling.key" @keyup.enter.native="search()">
                     <template #append>
                         <el-button icon=Search @click=search() />
                     </template>
@@ -32,37 +30,37 @@
         <!-- 表格 -->
         <div class="table_container app_card">
             <el-table type=index @sort-change="changeTableSort" :data=helpList stripe>
-                <el-table-column label=序号 type=index align="center" width="60px"/>
-                <el-table-column label=SN prop=sn align="center"/>
+                <el-table-column label=序号 type=index align="center" width="60px" />
+                <el-table-column label=SN prop=sn align="center" />
                 <el-table-column label=状态 prop=status align="center">
-                    <template #='{row}'>
-                        <div v-if="row.status==0">
-                            <el-tag style="color:rgba(255, 112, 112, 1);background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)">待处理</el-tag>
+                    <template #='{ row }'>
+                        <div v-if="row.status == 0">
+                            <el-tag
+                                style="color:rgba(255, 112, 112, 1);background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)">待处理</el-tag>
                         </div>
-                        <div v-if="row.status==1">
+                        <div v-if="row.status == 1">
                             <el-tag>已指派</el-tag>
                         </div>
-                        <div v-if="row.status==2">
+                        <div v-if="row.status == 2">
                             <el-tag>已处理</el-tag>
-                        </div>                       
+                        </div>
                     </template>
                 </el-table-column>
 
-                <el-table-column label=求助时间 prop=helpTime :sortable="'custom'"  align="center">
+                <el-table-column label=求助时间 prop=helpTime :sortable="'custom'" align="center">
                 </el-table-column>
 
 
-                <el-table-column label=处理时间 prop=handleTime sortable align="center"/>
-                <el-table-column label=历时 prop=consumeTime align="center"/>
-                <el-table-column label=处理人 prop=handlerName align="center"/>
-                <el-table-column label=管理员 prop=managerName align="center"/>
-                <el-table-column label=指派时间 prop=assignTime align="center"/>
+                <el-table-column label=处理时间 prop=handleTime sortable align="center" />
+                <el-table-column label=历时 prop=consumeTime align="center" />
+                <el-table-column label=处理人 prop=handlerName align="center" />
+                <el-table-column label=管理员 prop=managerName align="center" />
+                <el-table-column label=指派时间 prop=assignTime align="center" />
                 <el-table-column label=备注 prop=info />
                 <el-table-column label=操作 prop=status align="center">
-                    <template  #="{row}">
+                    <template #="{ row }">
                         <el-button size="small" text type="success" @click="handleEdit(row)"
-                        :disabled="row.status==2"
-                        >处理</el-button>
+                            :disabled="row.status == 2">处理</el-button>
 
                     </template>
                 </el-table-column>
@@ -78,7 +76,7 @@
 </template>
 
 <script setup lang='ts'>
-import { reactive, ref,onMounted } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { getHelpHandlingAPI, getHelpHandlingUncountAPI } from '@/api/helpHanding/index'
 import type { RecordsObj, HelpHandlingObj, HelpHandlingResponseData, HelpHandlingUncountData } from '@/api/helpHanding/type'
@@ -96,7 +94,7 @@ const helpHandling = reactive<HelpHandlingObj>({
     handleTimeOrder: 0,
     assignTimeOrder: 0
 })
-onMounted(()=>{
+onMounted(() => {
     getHelpHandling()
 })
 
@@ -134,7 +132,7 @@ const getHelpHandling = async () => {
     helpList.value = res.data.records
     total.value = res.data.total
     for (var item in helpList.value) {
-       
+
         const s = tsToStr(helpList.value[item].consumeTime)
         helpList.value[item].consumeTime = s
     }
@@ -173,10 +171,10 @@ const search = () => {
 }
 
 const $router = useRouter()
-const handleEdit = (row: RecordsObj) => {  
+const handleEdit = (row: RecordsObj) => {
     $router.push({
         name: 'handle',
-        query: { helpList: JSON.stringify(row)}
+        query: { helpList: JSON.stringify(row) }
     });
 }
 
@@ -192,19 +190,25 @@ const chooseStatus = () => {
     justify-content: flex-start;
     margin-bottom: 10px;
     flex-wrap: wrap;
-    
 
-    .state{
-        margin-left: 10px;       
+    .state {
+        margin-left: 20px;
+
+        span {
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            line-height: 20.27px;
+        }
     }
-    .tag{
+
+    .tag {
         margin-left: auto;
     }
+
     .el_tag_uncount {
         margin-right: 0px;
         vertical-align: middle;
-        height: 35px;
-        
 
         .el-icon {
             display: inline-block;

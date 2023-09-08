@@ -2,16 +2,8 @@
   <div class="map_conatiner">
     <div id="map"></div>
     <div class="map_utils">
-      <el-select
-        v-model="mapTitleOptionsValue"
-        @change="mapTitleOptionsValueChange"
-      >
-        <el-option
-          v-for="item in mapTitleOptions"
-          :key="item.id"
-          :label="item.lable"
-          :value="item.id"
-        />
+      <el-select v-model="mapTitleOptionsValue" @change="mapTitleOptionsValueChange">
+        <el-option v-for="item in mapTitleOptions" :key="item.id" :label="item.lable" :value="item.id" />
       </el-select>
     </div>
   </div>
@@ -413,15 +405,18 @@ function dmsTrans(decimal: any) {
 .map_conatiner {
   height: 100%;
   position: relative;
+
   #map {
     height: 100%;
   }
+
   .map_utils {
     position: absolute;
     z-index: 999;
     bottom: 10px;
     left: 10px;
     display: flex;
+
     .el-select {
       width: 120px;
     }
