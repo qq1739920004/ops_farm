@@ -70,13 +70,24 @@ export default defineConfig({
           path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
 
       },
-      '/api-baidu-weather': {
-        target: requestUrl, 
+      // 自定义地图服务代理
+      '/_AMapService/v4/map/styles': {
+        target: 'https://webapi.amap.com/v4/map/styles',
         changeOrigin: true,
-        rewrite:(path)=>
-          path.replace(new RegExp("^/api-baidu-weather"), ""), // 替换 /dev-api 为 target 接口地址
-        
+        rewrite: (path) => `${path.replace(/^\/_AMapService\/v4\/map\/styles/, '/v4/map/styles')}?jscode=4afa0752dbb5994756df1ed6d3c9bf9c`
       },
+      // 海外地图服务代理
+      '/_AMapService/v3/vectormap': {
+        target: 'https://fmap01.amap.com/v3/vectormap',
+        changeOrigin: true,
+        rewrite: (path) => `${path.replace(/^\/_AMapService\/v3\/vectormap/, '/v3/vectormap')}?jscode=4afa0752dbb5994756df1ed6d3c9bf9c`
+      },
+      // Web服务API代理
+        '/_AMapService': {
+          target: 'https://restapi.amap.com',  // 实际的服务端地址
+          changeOrigin: true,  // 改变请求源
+          rewrite: (path) => `${path.replace(/^\/_AMapService\//, '/')}?jscode=4afa0752dbb5994756df1ed6d3c9bf9c`  // 重写请求路径
+        }
     },
   },
 })

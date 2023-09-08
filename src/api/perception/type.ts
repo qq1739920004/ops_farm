@@ -21,10 +21,11 @@ export interface ResponseData {
     ],
     provinceCars: [
       {
-        name: string,
+        cityName: string,
         totalNum: number,
         onlineNum: number,
-        code: string
+        code: string,
+        name: string,
       }
     ],
     carAreas: [

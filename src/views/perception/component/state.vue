@@ -85,8 +85,8 @@ onMounted(() => {
   getState({
     currentPage:1,
     pageSize:5
-  }).then(res=>{
-    console.log(res.data.records[0])
+  }).then(()=>{
+    // console.log(res.data.records[0])
   })
   setInterval(() => {
   dataArr.value.unshift({
@@ -117,7 +117,7 @@ onMounted(() => {
   position: absolute;
 }
 .box {
-  background: url(../image/border_green.png) no-repeat;
+  background: url(@/assets/perceptionImage/border_green.png) no-repeat;
   background-size: 100% 100%;
   margin: 0px 10px 10px 15px;
 
@@ -210,11 +210,11 @@ onMounted(() => {
         }
       }
       .state_bar_login{
-        background: url(../image/rectangle_green.png) no-repeat;
+        background: url(@/assets/perceptionImage/rectangle_green.png) no-repeat;
 
       }
       .state_bar_out{
-        background: url(../image/rectangle_red.png) no-repeat;
+        background: url(@/assets/perceptionImage/rectangle_red.png) no-repeat;
 
       }
     }

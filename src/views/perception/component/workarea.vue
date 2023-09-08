@@ -148,7 +148,7 @@ const initEcharts = () => {
   mycharts.setOption(option);
 };
 //设置为定时器类型
-let dataZoomMoveTimer: NodeJS.Timeout | undefined;
+let dataZoomMoveTimer:any
 const startMoveDataZoom = (
   myChart: echarts.ECharts,
   dataZoomMove: DataZoomMove
@@ -204,7 +204,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .box {
-  background: url(../image/border_green.png) no-repeat;
+  background: url(@/assets/perceptionImage/border_green.png) no-repeat;
   background-size: 100% 100%;
   margin: 0.625rem 0.625rem 0.625rem 0.9375rem;
   .title {

@@ -10,10 +10,54 @@ export function getMonitorAPI() {
 }
 export function getState(params:StateObj) {
     return request<StateObj, StateResponseData>({
-        url: "/monitor/monitor/carLog",
+        url: "/monitor/carLog",
         method: 'get',
         params
     })
+}
+export async function getWeather(){
+  return new Promise((resolve,reject)=>{
+  // try {
+  //   const response = await fetch('https://ipinfo.io/json');
+  //   const data = await response.json();
+  //   let loc = data.loc
+  //  return await getWeatherData(loc)
+  // } catch (error) {
+  //   console.error("获取经纬度出错，获取天气失败", error);
+  //   return null; // 优雅地处理错误
+  // }
+  // 使用HTML5 Geolocation API获取用户的经纬度
+if ("geolocation" in navigator) {  // 检查浏览器是否支持Geolocation API
+  navigator.geolocation.getCurrentPosition(async function(position) {
+    // 获取成功时执行的函数
+    var latitude = position.coords.latitude;   // 获取纬度
+    var longitude = position.coords.longitude; // 获取经度
+    console.log("纬度: " + latitude + ", 经度: " + longitude);
+    let res= await getWeatherData(longitude+','+latitude)
+    resolve(res)
+  }, function(error) {
+    // 获取失败时执行的函数
+    let err="获取位置信息失败: " + error.message
+    console.error(err);
+    reject(err)
+  });
+} else {
+  let err="浏览器不支持Geolocation API"
+  console.error(err);
+  reject(err)
+
+}
+})
+}
+function getWeatherData(location: string) {
+  return request<any, any>({
+    url:"/monitor/weather",
+    method:'get',
+    params:{
+      dataType:0,
+      addrCode:location
+    }
+  })
 }
 export function getStateWs(resList: any) {
   //获取cookie

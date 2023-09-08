@@ -3,21 +3,21 @@
     <div class="top_left">
       <div class="top_tittle">
         <router-link to='/monitoring'>
-          <img src="../../perception/image/top_title_logo.png" key="" alt="" />
-          <img src="../../perception/image/top_title_word.png" alt="" />
+          <img src="~@/assets/perceptionImage/top_title_logo.png" key="" alt="" />
+          <img src="~@/assets/perceptionImage/top_title_word.png" alt="" />
         </router-link>
 
       </div>
       <div class="top_num">
         <div>
-          <img  src="../../perception/image/top_number1.png" alt="" />
+          <img  src="~@/assets/perceptionImage/top_number1.png" alt="" />
           <div class="word">
             <p>{{ monitorData.onlineDevice }}</p>
             <p>当前在线数 </p>
           </div>
         </div>
         <div>
-          <img  src="../../perception/image/top_number2.png" alt="" />
+          <img  src="~@/assets/perceptionImage/top_number2.png" alt="" />
           <div class="word">
             <p>{{ monitorData.addNowYearDevice }}</p>
             <p>当年新增农机</p>
@@ -25,8 +25,8 @@
         </div>
         <div>
           <div class="rotate-dance">
-            <img  src="../../perception/image/top_number3.png" alt="" />
-            <img class="rotate-content" src="../../perception/image/car.png" alt="">
+            <img  src="~@/assets/perceptionImage/top_number3.png" alt="" />
+            <img class="rotate-content" src="~@/assets/perceptionImage/car.png" alt="">
           </div>
           <div class="word">
             <p>{{ monitorData.totalDevice }}</p>
@@ -35,8 +35,8 @@
         </div>
         <div>
           <div class="rotate-dance2">
-            <img  src="../../perception/image/top_number3.png" alt="" />
-            <img class="rotate-content" src="../../perception/image/consumer.png" alt="">
+            <img  src="~@/assets/perceptionImage/top_number3.png" alt="" />
+            <img class="rotate-content" src="~@/assets/perceptionImage/consumer.png" alt="">
           </div>
           <div class="word">
             <p>{{ monitorData.activeDevice }}</p>
