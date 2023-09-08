@@ -200,7 +200,7 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .box {
-    background: url(../image/border_green.png) no-repeat;
+    background: url(@/assets/perceptionImage/border_green.png) no-repeat;
     background-size: 100% 100%;
     margin: 0px 10px 10px 15px;
 
