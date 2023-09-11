@@ -12,9 +12,12 @@ import 'element-plus/theme-chalk/dark/css-vars.css';
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+
 import router from '@/router'
 import { createPinia } from 'pinia'
 import i18n from '@/lang'
+
+// import '@/utils/permission.js'
 
 const pinia = createPinia()
 const app = createApp(App)
