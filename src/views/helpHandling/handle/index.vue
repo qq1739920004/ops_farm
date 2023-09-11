@@ -460,7 +460,7 @@ getPidSlsParam()
 
 const remoteManage = () => {
     $router.push({
-        name: 'machineryList',
+        path: '/machineryList',
         query: { sn: baseInfo.value.sn },
     });
 }

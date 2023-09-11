@@ -392,11 +392,11 @@ const changeHubSnBtn = async (val: string) => {
                     color: #fff
                 }
 
-                ::v-deep(.el-form-item) {
+                :deep(.el-form-item) {
                     margin-bottom: 14px;
                 }
 
-                ::v-deep(.el-form-item__label) {
+                :deep(.el-form-item__label) {
                     display: inline-flex;
                     justify-content: flex-end;
                     align-items: flex-start;

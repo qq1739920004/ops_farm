@@ -318,7 +318,7 @@ const removeMarker = () => {
             height: 42px;
             width: 100%;
 
-            ::v-deep(.date_picker) {
+            :deep(.date_picker) {
                 width: 187px;
                 height: 30px;
                 opacity: 1;

@@ -66,7 +66,7 @@ const getInputList = async () => {
     line-height: 23.17px;
     
 
-    ::v-deep(.el-form-item__label) {
+    :deep(.el-form-item__label) {
         font-size: 16px;
         font-weight: 400;
         letter-spacing: 0px;
