@@ -6,7 +6,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 // import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 // import Components from 'unplugin-vue-components/vite'
-const requestUrl = `https://api.map.baidu.com/weather/v1/?district_id=222405&data_type=all&ak=YBrHBm564dIAwazUD1lXLGRNFr0AhZCF`;
+const baiduUrl = `https://api.map.baidu.com`;
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "./",
@@ -57,19 +57,25 @@ export default defineConfig({
       '/_AMapService/v4/map/styles': {
         target: 'https://webapi.amap.com/v4/map/styles',
         changeOrigin: true,
-        rewrite: (path) => `${path.replace(/^\/_AMapService\/v4\/map\/styles/, '/v4/map/styles')}?jscode=4afa0752dbb5994756df1ed6d3c9bf9c`
+        rewrite: (path) => `${path.replace(/^\/_AMapService\/v4\/map\/styles/, '/v4/map/styles')}?jscode=3cb63ed59c6e453ae7acb031f0968686`
       },
       // 海外地图服务代理
       '/_AMapService/v3/vectormap': {
         target: 'https://fmap01.amap.com/v3/vectormap',
         changeOrigin: true,
-        rewrite: (path) => `${path.replace(/^\/_AMapService\/v3\/vectormap/, '/v3/vectormap')}?jscode=4afa0752dbb5994756df1ed6d3c9bf9c`
+        rewrite: (path) => `${path.replace(/^\/_AMapService\/v3\/vectormap/, '/v3/vectormap')}?jscode=3cb63ed59c6e453ae7acb031f0968686`
       },
       // Web服务API代理
         '/_AMapService': {
           target: 'https://restapi.amap.com',  // 实际的服务端地址
           changeOrigin: true,  // 改变请求源
-          rewrite: (path) => `${path.replace(/^\/_AMapService\//, '/')}?jscode=4afa0752dbb5994756df1ed6d3c9bf9c`  // 重写请求路径
+          rewrite: (path) => `${path.replace(/^\/_AMapService\//, '/')}?jscode=3cb63ed59c6e453ae7acb031f0968686`  // 重写请求路径
+        },
+        //百度地图
+        '/api-baidu': {
+          target: baiduUrl,
+          changeOrigin: true,
+          rewrite: (path) => `${path.replace(/^\/api-baidu/, '')}`
         }
     },
   },
