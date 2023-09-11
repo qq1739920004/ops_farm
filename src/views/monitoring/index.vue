@@ -2,10 +2,23 @@
   <div class="map_conatiner">
     <div id="map"></div>
     <div class="map_utils">
-      <el-select v-model="mapTitleOptionsValue" @change="mapTitleOptionsValueChange">
-        <el-option v-for="item in mapTitleOptions" :key="item.id" :label="item.lable" :value="item.id" />
+      <el-select
+        v-model="mapTitleOptionsValue"
+        @change="mapTitleOptionsValueChange"
+      >
+        <el-option
+          v-for="item in mapTitleOptions"
+          :key="item.id"
+          :label="item.lable"
+          :value="item.id"
+        />
       </el-select>
     </div>
+    <!-- 实时趋势驾驶图diaLog -->
+    <realTimeChart
+      :visible="realTimeChartVisible"
+      @handleClose="realTimeChartHandleClose"
+    />
   </div>
 </template>
 
@@ -29,7 +42,9 @@ import wifi_3 from "@/assets/monitoring/wifi_3.png";
 import wifi_4 from "@/assets/monitoring/wifi_4.png";
 import gcoord from "gcoord";
 import { ref, onMounted } from "vue";
-import { mapTitleLayers } from "./mapTitleLayers";
+import { useRouter } from "vue-router";
+import { mapTitleLayers } from "./utils/mapTitleLayers";
+import realTimeChart from "./components/realTimeChart.vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.chinatmsproviders";
@@ -40,6 +55,7 @@ import {
   onlineFarmMachinePosition_API,
   farmMachineDataStatistics_API,
 } from "@/api/monitoring";
+const router = useRouter();
 let map: any = null; // map实例对象
 let markerArr: any = []; // marker坐标点数字
 let deviceList: any = []; // 设备列表
@@ -56,7 +72,6 @@ let mapTitleOptions = [
 ];
 let mapTitleOptionsValue = ref(mapTitleOptions[1].id);
 let dataStatistics: any = []; // 数据统计数据
-
 const iconOption: any = {
   typeLabel: "terminalType",
   statusLabel: "driveState",
@@ -111,6 +126,18 @@ const iconOption: any = {
     },
   ],
 };
+const realTimeChartVisible = ref(false);
+
+// @ts-ignore
+window.goMachineryList_markerPopup = goMachineryList_markerPopup;
+// @ts-ignore
+window.goTaskMachine_markerPopup = goTaskMachine_markerPopup;
+// @ts-ignore
+window.gohistoryChart_markerPopup = gohistoryChart_markerPopup;
+// @ts-ignore
+window.openRealTimeChart_markerPopup = openRealTimeChart_markerPopup;
+// @ts-ignore
+window.openRemote_markerPopup = openRemote_markerPopup
 
 onMounted(() => {
   initMap();
@@ -130,6 +157,9 @@ async function getOnlineFarmPosition() {
   const { data } = await onlineFarmMachinePosition_API({});
   deviceList = data.onlineFarmMachines;
   createMarker();
+}
+function realTimeChartHandleClose() {
+  realTimeChartVisible.value = false;
 }
 
 // 创建地图marker点
@@ -202,7 +232,7 @@ function createPopup(item: any) {
     3: "较强",
     4: "强",
   };
-  console.log(onlineStatus[item.driveState]);
+
   const cardUsage =
     item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
   const popup = `<div class="map_popup">
@@ -214,7 +244,9 @@ function createPopup(item: any) {
             </div>
             <div class="r">
               <div class="label">SN:</div>
-              <div class="value">${item.sn}</div>
+              <div class="value"  style="cursor: pointer;text-decoration: underline;" onclick='goMachineryList_markerPopup(${JSON.stringify(
+                item
+              )})'>${item.sn}</div>
             </div>
           </li>
           <li>
@@ -306,12 +338,20 @@ function createPopup(item: any) {
         </ul>
         <ul class="btns_container">
           <li>
-            <div class="btn">远程管理</div>
-            <div class="btn">历史轨迹</div>
+            <div class="btn" onclick='openRemote_markerPopup(${JSON.stringify(
+              item
+            )})'>远程管理</div>
+            <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
+              item
+            )})'>历史轨迹</div>
           </li>
           <li>
-            <div class="btn">实时驾驶趋势图</div>
-            <div class="btn">历史驾驶趋势图</div>
+            <div class="btn" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
+              item
+            )})'>实时驾驶趋势图</div>
+            <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
+              item
+            )})'>历史驾驶趋势图</div>
           </li>
         </ul>
       </div>`;
@@ -398,6 +438,29 @@ function dmsTrans(decimal: any) {
     console.log(err);
     return decimal;
   }
+}
+
+// marker弹窗-前往农机列表
+function goMachineryList_markerPopup(arg: any) {
+  router.push({ path: "/machineryList", query: { sn: arg.sn } });
+}
+// marker弹窗-前往历史轨迹
+function goTaskMachine_markerPopup(arg: any) {
+  router.push({ path: "/monitoring/taskMachine", query: { sn: arg.sn } });
+}
+// marker-弹窗-前往历史趋势图
+function gohistoryChart_markerPopup(arg: any) {
+  router.push({ path: "/monitoring/historyChart", query: { sn: arg.sn } });
+}
+// marker-弹窗-实时趋势图
+function openRealTimeChart_markerPopup(arg: any) {
+  //
+  console.log(arg)
+  realTimeChartVisible.value = true
+}
+// marker-弹窗-远程管理
+function openRemote_markerPopup(arg: any) {
+  console.log(arg,'--打开远程管理')
 }
 </script>
 
@@ -511,3 +574,4 @@ function dmsTrans(decimal: any) {
   }
 }
 </style>
+./utils/mapTitleLayers

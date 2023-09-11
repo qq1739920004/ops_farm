@@ -31,7 +31,6 @@
 
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button type="danger" @click="cancel">取消</el-button>
                     <el-button type="primary" v-if="!newRecords.id" @click="submit">
                         确定
                     </el-button>
@@ -87,10 +86,7 @@ const editInfo = async () => {
         ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
-const cancel = () => {
-    dialogVisible.value = false
-    formRef.value.resetFields()
-}
+
 const addInfo = async () => {
     try {
         await carModuleInfoSave_API(ApiData)

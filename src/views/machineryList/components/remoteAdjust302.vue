@@ -33,7 +33,6 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button style="margin-right: 100px;" type="danger" @click="cancel_dialog">取消</el-button>
                     <el-button :disabled="!carParamsData" type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
@@ -981,9 +980,6 @@ const pidSupLowRules = computed(() => {
     }
     return rules;
 })
-const cancel_dialog = () => {
-    dialogVisible.value = false
-}
 </script>
 <style lang="scss" scoped>
 .top {
@@ -1005,7 +1001,7 @@ const cancel_dialog = () => {
         height: 30px;
     }
 
-    ::v-deep(.el-tabs__item) {
+    :deep(.el-tabs__item) {
         font-size: 16px;
         font-weight: 400;
         line-height: 23.17px;
@@ -1034,7 +1030,7 @@ const cancel_dialog = () => {
 
     }
 
-    ::v-deep(.item .el-form-item__label) {
+    :deep(.item .el-form-item__label) {
         font-size: 16px;
         font-weight: 400;
         letter-spacing: 0px;
@@ -1047,21 +1043,21 @@ const cancel_dialog = () => {
         align-items: center;
     }
 
-    ::v-deep(.ml-4 .el-radio__label:hover) {
+    :deep(.ml-4 .el-radio__label:hover) {
         color: var(--el-color-primary);
 
     }
 
-    ::v-deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
+    :deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
         color: var(--el-color-primary);
     }
 
-    ::v-deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
+    :deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
         background: var(--el-color-primary);
         border-color: var(--el-color-primary);
     }
 
-    ::v-deep(.ml-4 .el-radio__inner:hover) {
+    :deep(.ml-4 .el-radio__inner:hover) {
         border-color: var(--el-color-primary);
     }
 

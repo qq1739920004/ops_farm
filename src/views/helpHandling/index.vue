@@ -173,7 +173,7 @@ const search = () => {
 const $router = useRouter()
 const handleEdit = (row: RecordsObj) => {
     $router.push({
-        name: 'handle',
+        path: 'helpHandling/handle',
         query: { helpList: JSON.stringify(row) }
     });
 }

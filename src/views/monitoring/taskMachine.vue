@@ -48,7 +48,7 @@ import "leaflet.pm/dist/leaflet.pm.css";
 import { ElMessage } from 'element-plus'
 import gcoord from 'gcoord'
 import { useRoute } from "vue-router";
-import { mapTitleLayers } from "./mapTitleLayers";
+import { mapTitleLayers } from "./utils/mapTitleLayers";
 const route = useRoute();
 
 // 提交的车辆数组
@@ -318,7 +318,7 @@ const removeMarker = () => {
             height: 42px;
             width: 100%;
 
-            :deep(.date_picker) {
+            ::v-deep(.date_picker) {
                 width: 187px;
                 height: 30px;
                 opacity: 1;
@@ -350,4 +350,4 @@ const removeMarker = () => {
         }
     }
 }
-</style>
+</style>./utils/mapTitleLayers

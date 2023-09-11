@@ -304,7 +304,6 @@
 
                 <template #footer>
                     <span class="dialog-footer">
-                        <el-button type="danger" @click="cancel">取消</el-button>
                         <el-button type="primary" v-if="!newRecords.id" @click="submit">
                             确定
                         </el-button>
@@ -540,14 +539,11 @@ const submit = async () => {
     dialogVisible.value = false
     addInfo()
 }
-const cancel = () => {
-    dialogVisible.value = false
-    formRef.value.resetFields()
-}
+
 const gotoAfterSale = (row: any) => {
     console.log(row);
     $router.push({
-        name: 'aftersale', query: { row: JSON.stringify(row), scence: JSON.stringify(scence.value) }
+        path: 'infoManagement/aftersale', query: { row: JSON.stringify(row), scence: JSON.stringify(scence.value) }
     })
 }
 const openExportDia = () => {

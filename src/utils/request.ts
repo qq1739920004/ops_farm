@@ -1,4 +1,5 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import { ElMessage } from "element-plus";
 
 // 创建 axios 实例
 const service = axios.create({
@@ -35,8 +36,16 @@ service.interceptors.response.use(
   },
   (error: any) => {
     const { status } = error.response;
-    if (status == 401) { // 未登录
+    if (status == 403) {
+      ElMessage.error('暂无权限');
 
+    } else if (status == 401) {
+      // 前往登录页面
+      process.env.NODE_ENV !== "development"
+        ? (location.href = `${location.origin}/#/login?clientUrl=${location.href}`)
+        : "";
+    } else {
+      ElMessage.error('请求错误,稍后重试');
     }
     return Promise.reject(error.message);
   }

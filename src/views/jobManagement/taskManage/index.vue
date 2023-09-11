@@ -649,7 +649,7 @@ watch(() => paddyWorkList.value,
         }
 
         .right {
-            ::v-deep(.el-input__wrapper) {
+            :deep(.el-input__wrapper) {
                 border: none
             }
 
@@ -862,7 +862,7 @@ watch(() => paddyWorkList.value,
     }
 }
 
-::v-deep(.leaflet-popup-content-wrapper) {
+:deep(.leaflet-popup-content-wrapper) {
 
     .popup_outsiders {
         opacity: 1;
@@ -1080,7 +1080,7 @@ watch(() => paddyWorkList.value,
 
 }
 
-::v-deep(.leaflet-marker-icon) {
+:deep(.leaflet-marker-icon) {
     .map-circle-name {
         width: 80px;
         height: 80px;
@@ -1094,7 +1094,7 @@ watch(() => paddyWorkList.value,
     }
 }
 
-::v-deep(.el-checkbox__input.is-checked .el-checkbox__inner,
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner,
     .el-checkbox__input.is-indeterminate .el-checkbox__inner) {
     border-color: rgba(67, 207, 124, 1) !important;
     background-color: rgba(67, 207, 124, 1) !important;

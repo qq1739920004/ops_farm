@@ -16,8 +16,30 @@ export const constantRoutes = [ // 静态路由数据
         meta: {
           title: '态势监控',
           icon: 'Notification',
+        }
+      },
+      {
+        path: 'taskMachine',
+        component: () => import("@/views/monitoring/taskMachine.vue"),
+        meta: {
+          title: '历史轨迹',
+          activeMenu: '/monitoring',
+          hidden: true,
+          breadcrumb: [{ title: '态势监控' }]
         },
-      }
+
+      },
+      {
+        path: 'historyChart',
+        component: () => import("@/views/monitoring/historyChart.vue"),
+        meta: {
+          title: '历史趋势图',
+          activeMenu: '/monitoring',
+          hidden: true,
+          breadcrumb: [{ title: '态势监控' }]
+        },
+
+      },
     ]
   },
   {

@@ -31,7 +31,6 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button style="margin-right: 100px;" type="danger" @click="cancel_dialog">取消</el-button>
                     <el-button type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
@@ -403,9 +402,6 @@ const getCarParams = async (val: string) => {
 const getParamParams = async () => {
     const res: paramCarParamResponseData = await paramCarParam_API(props.carId)
     res.data ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
-}
-const cancel_dialog = () => {
-    dialogVisible.value = false
 }
 const openRemoteAdjust = () => {
     // 强制更改index为1
@@ -806,7 +802,7 @@ const formartDate = (val: Date) => {
         height: 30px;
     }
 
-    ::v-deep(.el-tabs__item) {
+    :deep(.el-tabs__item) {
         font-size: 16px;
         font-weight: 400;
         line-height: 23.17px;
@@ -834,7 +830,7 @@ const formartDate = (val: Date) => {
         line-height: 23.17px;
     }
 
-    ::v-deep(.item .el-form-item__label) {
+    :deep(.item .el-form-item__label) {
         font-size: 16px;
         font-weight: 400;
         letter-spacing: 0px;
@@ -847,21 +843,21 @@ const formartDate = (val: Date) => {
         align-items: center;
     }
 
-    ::v-deep(.ml-4 .el-radio__label:hover) {
+    :deep(.ml-4 .el-radio__label:hover) {
         color: var(--el-color-primary);
 
     }
 
-    ::v-deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
+    :deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
         color: var(--el-color-primary);
     }
 
-    ::v-deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
+    :deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
         background: var(--el-color-primary);
         border-color: var(--el-color-primary);
     }
 
-    ::v-deep(.ml-4 .el-radio__inner:hover) {
+    :deep(.ml-4 .el-radio__inner:hover) {
         border-color: var(--el-color-primary);
     }
 

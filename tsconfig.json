@@ -31,6 +31,6 @@
     "src/**/*.vue",
     "src/utils/index.js",
     "src/lang/index.ts"
-  ],
+, "src/api/permission/index.js"  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
