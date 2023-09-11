@@ -49,7 +49,7 @@
 </script>
 <style lang="scss" scoped>
 .box {
-    background: url(../image/border_green.png) no-repeat;
+    background: url(@/assets/perceptionImage/border_green.png) no-repeat;
     background-size: 100% 100%;
     margin: 0px 10px 10px 15px;
 
@@ -79,7 +79,7 @@
         >div {
             background-color:  rgba(196, 204, 158, 0.8);
             flex:1;
-            background:url(../image/year_bg.png) no-repeat 0;
+            background:url(@/assets/perceptionImage/year_bg.png) no-repeat 0;
             background-size:cover;      
             display: flex;  
             justify-content: center;  

@@ -1,4 +1,4 @@
-import { createRouter,createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '@/layout/index.vue';
 
 export const constantRoutes = [ // 静态路由数据
@@ -15,7 +15,7 @@ export const constantRoutes = [ // 静态路由数据
         component: () => import("@/views/monitoring/index.vue"),
         meta: {
           title: '态势监控',
-          icon: 'Notification'
+          icon: 'Notification',
         },
       }
     ]
@@ -38,10 +38,11 @@ export const constantRoutes = [ // 静态路由数据
         name: 'taskMachine',
         component: () => import("@/views/machineryList/taskMachine.vue"),
         meta: {
-          title: '农机列表',
+          title: '历史轨迹',
           icon: 'List',
           activeMenu: '/machineryList',
-          hidden: true
+          hidden: true,
+          breadcrumb: [{ title: '农机列表' }]
         },
 
       },
@@ -90,10 +91,11 @@ export const constantRoutes = [ // 静态路由数据
         name: 'aftersale',
         component: () => import("@/views/infoManagement/aftersale/index.vue"),
         meta: {
-          title: '信息管理',
+          title: '售后处理',
           icon: 'Suitcase',
           activeMenu: '/infoManagement',
-          hidden: true
+          hidden: true,
+          breadcrumb: [{ title: '信息管理' }]
         },
 
       },
@@ -133,7 +135,6 @@ export const constantRoutes = [ // 静态路由数据
         meta: {
           title: '求助处理',
           icon: 'ChatDotSquare',
-
         },
 
       },
@@ -145,6 +146,7 @@ export const constantRoutes = [ // 静态路由数据
           title: '处理详情',
           icon: 'Suitcase',
           activeMenu: '/helpHandling',
+          breadcrumb: [{ title: '求助处理' }],
           hidden: true
         },
       },
@@ -160,7 +162,6 @@ export const constantRoutes = [ // 静态路由数据
     // component: Layout,
 
   },
-
 
 ]
 export const asyncRoutes = []; // 动态路由数据

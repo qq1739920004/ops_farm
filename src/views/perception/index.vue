@@ -51,7 +51,6 @@ const getMonitor = async () => {
     const res = await getMonitorAPI()
     monitorData.value=res.data
     carAreas.value = res.data.carAreas
-    console.log(carAreas.value,'carAreas.value');
     todayArea.value=res.data.todayArea
     totalArea.value=res.data.totalArea
     typeCounts.value=res.data.typeCounts
@@ -83,8 +82,8 @@ function getScale(w = 1920, h = 937) {
 .container {
     height: 100vh;
     width: 100vw;
-    background: url(../perception/image/scene.png),
-        url(../perception/image/border.png) no-repeat;
+    background: url(@/assets/perceptionImage/scene.png),
+        url(@/assets/perceptionImage/border.png) no-repeat;
     background-color: rgba(2, 28, 14, 1);
     background-size: cover, contain;
     background-position: center;
@@ -109,38 +108,36 @@ function getScale(w = 1920, h = 937) {
     .bottom {
         display: flex;
         height: 714px;
-
-
+        width: 100%;
         .left {
             flex: 1;
             display: flex;
-            flex-direction: column;
+            height: 100%;
 
+            flex-direction: column;
             .workarea {
                 height: 400px;
             }
-
             .year {
                 height: 270px;
             }
-
         }
-
         .middle {
-            flex: 2;
+            width: 1000px;
+            height: 100%;
         }
 
         .right {
             flex: 1;
+            height: 100%;
+
             display: flex;
             flex-direction: column;
             .online{
                 height: 270px;
-                
             }
             .state{
                 height: 400px;
-            
             }
         }
     }

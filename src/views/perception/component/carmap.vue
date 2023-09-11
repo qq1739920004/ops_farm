@@ -1,106 +1,134 @@
 <template>
-    <div class="box">
-        <div class="charts" ref="bar">
-        </div>
-
-    </div>
+  <div class="carmap">
+    <div id="container"></div>
+  </div>
 </template>
-    
-<script setup lang='ts' >
-import * as echarts from 'echarts'
-import china from '../china.json'
-import axios from "axios";
-import { ref,  onUnmounted, onMounted } from 'vue'
-import type { MonitorObj } from '@/api/perception/type'
-let imageUrl = 'https://lmg.jj20.com/up/allimg/1112/031119144257/1Z311144257-6-1200.jpg'
-interface Props {
-    provinceCars: MonitorObj['provinceCars']
-}
-const props = withDefaults(defineProps<Props>(), {
-    provinceCars:()=>[
-      {
-        name: '',
-        totalNum: 0,
-        onlineNum: 0,
-        code: ''
-      }
-    ]
-})
-let dataList = props.provinceCars
-let cityCode = ref('')
-let bar = ref();
-cityCode.value = dataList[0].code + '00'
-let option:any = {
-     // 定义地图
-     series: [
-        {
-            type: "map",
-            map: 'china', // 引入地图数据
-            // 使用地图的itemStyle来实现影像图层
-            itemStyle: {
-                color: {
-                    image: imageUrl, // 使用影像图作为填充
-                    repeat: 'no-repeat',  // 不重复
-                    aspectRatio: 'center' // 居中对齐
-                },
-                borderColor: 'rgba(0, 0, 0, 0.2)'
-            },
-        },
-    ],
-};
-let mycharts:echarts.ECharts
 
-const initEcharts = () => {
-    mycharts = echarts.init(bar.value)
-    echarts.registerMap('china', <any>china);
-      console.log(option);
-      mycharts.setOption(option, true);
+<script setup lang="ts">
+import { onMounted } from "vue";
+import type { MonitorObj } from "@/api/perception/type";
+import AMapLoader from "@amap/amap-jsapi-loader";
+import { shallowRef } from "@vue/reactivity";
+
+interface Props {
+  provinceCars: MonitorObj["provinceCars"];
 }
-onMounted(() => {
-    getProvicne(cityCode.value)
-})
-onUnmounted(() => {
-    mycharts.dispose;
+
+const map = shallowRef(null);
+const props = withDefaults(defineProps<Props>(), {
+  provinceCars: () => [
+    {
+      name: "",
+      totalNum: 0,
+      onlineNum: 0,
+      code: "",
+      cityName: "",
+    },
+  ],
 });
 
-const getProvicne = (provinceAlphabet: any) => {
-    let path = `https://geo.datav.aliyun.com/areas_v3/bound/${provinceAlphabet}_full.json`;
-     axios.get(path).then((res) => {
-        echarts.registerMap('mapname', res.data);
-        changeOptions("mapname");
-        initEcharts()
+let dataList = props.provinceCars;
+let mask: any = [];
+let bounds: any = [];
+//开始画出来
+function startDraw(AMap: any) {
+  console.log(mask);
+  console.log(22);
+  map.value = new AMap.Map("container", {
+    center: [126.968714, 46.654147], // 中国的大致中心点
+    zoom: 8, // 设置一个合适的缩放级别以显示多个城市
+    backgroundColor: "transparent",
+    mask: mask, // 设置遮罩层
+    disableSocket: true,
+    showLabel: false,
+    labelzIndex: 130,
+    pitch: 40,
+    // 允许缩放
+    zoomEnable: true,
+    //隐藏地图logo
+    showLogo: false,
+    layers: [new AMap.TileLayer.RoadNet(), new AMap.TileLayer.Satellite()],
+  });
+  for (let i = 0; i < bounds.length; i += 1) {
+    new AMap.Polyline({
+      path: mask[i],
+      strokeColor: "#99ffff",
+      strokeWeight: 4,
+      map: map.value,
     });
-
-
+  }
 }
-const changeOptions = (mapname: any) => {
-  option = {
-    series: [
-            {
-                type: "map",
-                map: mapname,
-                itemStyle: {
-                    color: {
-                        image: imageUrl,
-                        repeat: 'no-repeat',
-                        aspectRatio: 'center'
-                    },
-                    borderColor: 'rgba(0, 0, 0, 0.2)'
-                },
-            },
-        ],
+// 初始化地图并绘制省份边界
+function initMap(cityArr: string[]) {
+  AMapLoader.load({
+    key: "efbfb05a199884bfaaa3146624896021",
+    version: "2.0",
+    plugins: ["AMap.DistrictSearch", "AMap.Polyline"],
+  })
+    .then((AMap) => {
+      drawingCity(AMap, cityArr);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
+function drawingCity(AMap: any, cityArr: string[]) {
+  let district = new AMap.DistrictSearch({
+    // subdistrict: 1,
+    extensions: "all",
+    level: "city",
+  });
+  cityArr.forEach((cityName,index) => {
+    district.search(cityName, (status: any, result: any) => {
+      if (status != "complete") return;
+      bounds = result.districtList[0].boundaries;
+      for (let i = 0; i < bounds.length; i += 1) {
+        mask.push([bounds[i]]);
+      }
+      if (index === cityArr.length - 1) {
+        startDraw(AMap);
+      }
+    });
+  });
+}
+function purifyCityArr(data: MonitorObj["provinceCars"]) {
+  let arr: string[] = [];
+  data.forEach((item) => {
+    if (item.code) {
+      arr.push(item.code.padEnd(6, "0"));
     }
+  });
+  return arr;
 }
-
-
+onMounted(() => {
+  let cityArr = purifyCityArr(dataList);
+  initMap(cityArr);
+});
 </script>
-<style lang="scss" scoped>
-.box {
+
+<style scoped lang="scss">
+.carmap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  #container {
+    background-color: transparent;
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     height: 100%;
-
-    .charts {
-        height: 100%;
+    margin: 0;
+    padding: 0;
+    /* 隐藏地图的版权信息 */
+    ::v-deep .amap-scale,
+    ::v-deep .amap-copyright,
+    ::v-deep .amap-logo {
+      display: none !important;
     }
-
+  }
 }
 </style>
