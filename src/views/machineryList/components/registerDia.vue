@@ -74,7 +74,7 @@ const activationAddBtn = async () => {
 <style lang="scss" scoped>
 .content {
 
-    ::v-deep(.el-form-item__label) {
+    :deep(.el-form-item__label) {
         font-size: 16px;
         font-weight: 400;
 
@@ -95,21 +95,21 @@ const activationAddBtn = async () => {
         }
     }
 
-    ::v-deep(.ml-4 .el-radio__label:hover) {
+    :deep(.ml-4 .el-radio__label:hover) {
         color: var(--el-color-primary);
 
     }
 
-    ::v-deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
+    :deep(.ml-4 .el-radio__input.is-checked+.el-radio__label) {
         color: var(--el-color-primary);
     }
 
-    ::v-deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
+    :deep(.ml-4 .el-radio__input.is-checked .el-radio__inner) {
         background: var(--el-color-primary);
         border-color: var(--el-color-primary);
     }
 
-    ::v-deep(.ml-4 .el-radio__inner:hover) {
+    :deep(.ml-4 .el-radio__inner:hover) {
         border-color: var(--el-color-primary);
     }
 

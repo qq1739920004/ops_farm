@@ -124,9 +124,9 @@ onMounted(() => {
     margin: 0;
     padding: 0;
     /* 隐藏地图的版权信息 */
-    ::v-deep .amap-scale,
-    ::v-deep .amap-copyright,
-    ::v-deep .amap-logo {
+    :deep .amap-scale,
+    :deep .amap-copyright,
+    :deep .amap-logo {
       display: none !important;
     }
   }
