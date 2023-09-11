@@ -33,7 +33,6 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button style="margin-right: 100px;" type="danger" @click="cancel_dialog">取消</el-button>
                     <el-button :disabled="!carParamsData" type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
@@ -981,9 +980,6 @@ const pidSupLowRules = computed(() => {
     }
     return rules;
 })
-const cancel_dialog = () => {
-    dialogVisible.value = false
-}
 </script>
 <style lang="scss" scoped>
 .top {

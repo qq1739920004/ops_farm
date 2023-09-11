@@ -33,7 +33,6 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button style="margin-right: 100px;" type="danger" @click="cancel_dialog">取消</el-button>
                     <el-button type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
@@ -379,9 +378,6 @@ const getCarParams = async (val: string) => {
 const getParamParams = async () => {
     const res: paramCarParamResponseData = await paramCarParam_API(props.carId)
     res.data ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
-}
-const cancel_dialog = () => {
-    dialogVisible.value = false
 }
 
 const openRemoteAdjust = () => {

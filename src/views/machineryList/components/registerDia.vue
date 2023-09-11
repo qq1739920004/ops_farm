@@ -31,9 +31,6 @@
             </el-form>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button type="danger" @click="dialogVisible = false">
-                        取消
-                    </el-button>
                     <el-button type="primary" @click="activationAddBtn">
                         配置
                     </el-button>
