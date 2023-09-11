@@ -39,7 +39,7 @@
                 <div class="data">{{ NewDetail.creatorTel }}</div>
                 <div>向日葵SN:</div>
                 <div>{{ NewDetail.sunFlowerSn }}</div>
-                <div >软件版本:</div>
+                <div>软件版本:</div>
                 <div class="data" style="margin-right: 40px;">{{ NewDetail.softwareVersion }}</div>
             </div>
             <div class="line line2 ">
@@ -155,8 +155,9 @@ const getNewDetail = async () => {
 <style lang="scss" scoped>
 .tableData {
     .line:nth-child(2n-1) {
-        background: rgba(233, 242, 242, 1);
-        color: #606266;
+        // background: rgba(233, 242, 242, 1);
+        // color: #606266;
+        background-color: var(--el-fill-color-lighter);
     }
 
     .line1 {
@@ -181,7 +182,7 @@ const getNewDetail = async () => {
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            
+
 
             .circle {
                 width: 10px;
@@ -225,7 +226,7 @@ const getNewDetail = async () => {
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            
+
 
         }
 
@@ -238,7 +239,7 @@ const getNewDetail = async () => {
                 font-weight: 400;
                 letter-spacing: 0px;
                 line-height: 20.27px;
-                
+
                 text-align: left;
                 vertical-align: top
             }
@@ -259,7 +260,7 @@ const getNewDetail = async () => {
         }
 
         .half {
-            
+
             text-align: left;
             display: block;
             width: 50%;
@@ -267,7 +268,7 @@ const getNewDetail = async () => {
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            
+
         }
 
         .data {
@@ -278,7 +279,7 @@ const getNewDetail = async () => {
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-            
+
 
         }
     }

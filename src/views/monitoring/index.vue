@@ -49,7 +49,7 @@ let mapTitleOptions = [
   { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
 ];
 let mapTitleOptionsValue = ref(mapTitleOptions[1].id);
-let dataStatistics: any = []; // 数据统计数据
+// let dataStatistics: any = []; // 数据统计数据
 
 const iconOption: any = {
   typeLabel: "terminalType",
@@ -115,7 +115,9 @@ onMounted(() => {
 // 获取统计数据
 async function getFaromDataStatistics() {
   const { data } = await farmMachineDataStatistics_API();
-  dataStatistics = data;
+  // dataStatistics = data;
+  console.log(data);
+  
 
 
 
