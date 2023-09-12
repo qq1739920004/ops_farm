@@ -30,62 +30,62 @@
                 <ul class="base_info">
                     <li>
                         <span>类型：</span>
-                        <span>{{ baseInfo.model }}</span>
+                        <span class="time">{{ baseInfo.model }}</span>
                     </li>
                     <li>
                         <span>软件版本：</span>
-                        <span>{{ baseInfo.softwareVersion }}</span>
+                        <span class="time">{{ baseInfo.softwareVersion }}</span>
                     </li>
                     <li>
                         <span>更新时间：</span>
-                        <span>{{ baseInfo.updateTime }}</span>
+                        <span class="time">{{ baseInfo.updateTime }}</span>
                     </li>
                     <li>
                         <span>车辆厂家：</span>
-                        <span>{{ baseInfo.factory }}</span>
+                        <span class="time">{{ baseInfo.factory }}</span>
                     </li>
                     <li>
                         <span>SN:</span>
-                        <span>{{ baseInfo.sn }}</span>
+                        <span class="time">{{ baseInfo.sn }}</span>
                     </li>
                     <a href="" v-show="isShow">
 
                         <li>
                             <span>车辆名称：</span>
-                            <span>{{ baseInfo.name }}</span>
+                            <span class="time">{{ baseInfo.name }}</span>
                         </li>
                         <li>
                             <span>车主姓名：</span>
-                            <span>{{ baseInfo.factory }}</span>
+                            <span class="time">{{ baseInfo.factory }}</span>
                         </li>
                         <li>
                             <span>车主电话：</span>
-                            <span>{{ baseInfo.tel }}</span>
+                            <span class="time">{{ baseInfo.tel }}</span>
                         </li>
 
                         <li>
                             <span>车龄：</span>
-                            <span>{{ baseInfo.age }}</span>
+                            <span class="time">{{ baseInfo.age }}</span>
                         </li>
                         <li>
                             <span>创建人：</span>
-                            <span>{{ baseInfo.creatorName }}</span>
+                            <span class="time">{{ baseInfo.creatorName }}</span>
                         </li>
                         <li>
                             <span>创建人电话：</span>
-                            <span>{{ baseInfo.creatorTel }}</span>
+                            <span class="time">{{ baseInfo.creatorTel }}</span>
                         </li>
                         <li>
                             <span>创建时间：</span>
-                            <span>{{ baseInfo.createTime }}</span>
+                            <span class="time">{{ baseInfo.createTime }}</span>
                         </li>
                         <li>
                             <span>最近上线时间：</span>
-                            <span>{{ baseInfo.lastOnlineTime }}</span>
+                            <span class="time">{{ baseInfo.lastOnlineTime }}</span>
                         </li>
                         <li>
                             <span>最近自动驾驶时间：</span>
-                            <span>{{ baseInfo.lastAutoDriveTime }}</span>
+                            <span class="time">{{ baseInfo.lastAutoDriveTime }}</span>
                         </li>
                     </a>
                 </ul>
@@ -95,9 +95,9 @@
             <div class="card2">
                 <div class="card_title">报警信息</div>
                 <div class="alarm" v-for="(item, index)  in alarmRecord" :key="index">
-                    <span>等级：{{ item.grade }}</span>
-                    <span>时间：{{ item.time }}</span>
-                    <span>内容：{{ item.content }}</span>
+                    <span>等级：<span class="info">{{ item.grade }}</span></span>
+                    <span>时间：<span class="info">{{ item.time }}</span></span>
+                    <span>内容：<span class="info">{{ item.content }}</span></span>
                 </div>
 
             </div>
@@ -108,11 +108,12 @@
                     <span>参数名称</span>
                 </div>
                 <div class="change" v-for="(value, key, index) in paramChange" :key="index">
-                    <span class="change_time">时间：{{ tsToStr(key) }}</span>
-                    <div>{{ value[0].name }}:（
-                        <span style="color: red;">{{ value[0].newParam }}</span>→
+                    <span class="change_time">时间：<span class="time">{{ tsToStr(key) }}</span></span>
+                    <div class='change_area'><span style="color: #8c8c8c;">{{ value[0].name }}</span>:(
+                        <span style="color: red;">{{ value[0].newParam }}</span>
+                        <span style="margin: 8px ;">→</span>
                         <span style="color: red;">{{ value[0].oldParam }}</span>
-                        ）
+                        )
                     </div>
                 </div>
             </div>
@@ -322,8 +323,6 @@ const back = () => {
     });
 }
 
-
-
 // 指派人列表
 const getHandler = async () => {
     const res: HelpHandlerData = await getHelpHandlerAPI()
@@ -483,7 +482,6 @@ const assignConfirm = async () => {
     await formRef.value.validate()
     helpList.value.status = 1
     dialogFormVisible.value = false
-
     getHelpHandlingFinish(helpList.value)
 }
 // 完成处理按钮
@@ -567,7 +565,7 @@ const handle = () => {
                 margin-bottom: 10px;
 
                 span:nth-child(2) {
-                    color: #101010;
+                    color: var(--el-text-color-primary);
                 }
             }
         }
@@ -611,6 +609,10 @@ const handle = () => {
 
             }
 
+            .time {
+                color: var(--el-text-color-primary);
+            }
+
         }
     }
 
@@ -618,7 +620,6 @@ const handle = () => {
 
 
     .alarm {
-
         margin-left: 10px;
         font-size: 14px;
         color: #8c8c8c;
@@ -626,6 +627,10 @@ const handle = () => {
 
         span {
             margin: 10px;
+        }
+
+        .info {
+            color: var(--el-text-color-primary);
         }
 
     }
@@ -655,6 +660,16 @@ const handle = () => {
             .change_time {
                 display: inline-block;
                 width: 250px;
+
+                .time {
+                    color: var(--el-text-color-primary);
+                }
+            }
+
+            .change_area {
+                color: var(--el-text-color-primary);
+
+             
             }
 
             div {

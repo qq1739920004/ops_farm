@@ -2,23 +2,13 @@
   <div class="map_conatiner">
     <div id="map"></div>
     <div class="map_utils">
-      <el-select
-        v-model="mapTitleOptionsValue"
-        @change="mapTitleOptionsValueChange"
-      >
-        <el-option
-          v-for="item in mapTitleOptions"
-          :key="item.id"
-          :label="item.lable"
-          :value="item.id"
-        />
+      <el-select v-model="mapTitleOptionsValue" @change="mapTitleOptionsValueChange">
+        <el-option v-for="item in mapTitleOptions" :key="item.id" :label="item.lable" :value="item.id" />
       </el-select>
     </div>
     <!-- 实时趋势驾驶图diaLog -->
-    <realTimeChart
-      :visible="realTimeChartVisible"
-      @handleClose="realTimeChartHandleClose"
-    />
+    <realTimeChart ref="realTime" :sn="sn" />
+    <RemoteControl :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn" :name="name" />
   </div>
 </template>
 
@@ -55,6 +45,7 @@ import {
   onlineFarmMachinePosition_API,
   farmMachineDataStatistics_API,
 } from "@/api/monitoring";
+import RemoteControl from '@/components/remoteAdjust/index.vue'
 const router = useRouter();
 let map: any = null; // map实例对象
 let markerArr: any = []; // marker坐标点数字
@@ -70,6 +61,13 @@ let mapTitleOptions = [
   { id: 2, lable: "google地图", mapName: "Google", mapType: "Normal" },
   { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
 ];
+let sn = ref()
+let realTime = ref()
+let terminalType = ref()
+let version = ref()
+let carId = ref()
+let name = ref()
+let type = ref()
 let mapTitleOptionsValue = ref(mapTitleOptions[1].id);
 let dataStatistics: any = []; // 数据统计数据
 const iconOption: any = {
@@ -126,7 +124,6 @@ const iconOption: any = {
     },
   ],
 };
-const realTimeChartVisible = ref(false);
 
 // @ts-ignore
 window.goMachineryList_markerPopup = goMachineryList_markerPopup;
@@ -158,10 +155,6 @@ async function getOnlineFarmPosition() {
   deviceList = data.onlineFarmMachines;
   createMarker();
 }
-function realTimeChartHandleClose() {
-  realTimeChartVisible.value = false;
-}
-
 // 创建地图marker点
 function createMarker() {
   deviceList.forEach((item: any) => {
@@ -245,8 +238,8 @@ function createPopup(item: any) {
             <div class="r">
               <div class="label">SN:</div>
               <div class="value"  style="cursor: pointer;text-decoration: underline;" onclick='goMachineryList_markerPopup(${JSON.stringify(
-                item
-              )})'>${item.sn}</div>
+    item
+  )})'>${item.sn}</div>
             </div>
           </li>
           <li>
@@ -279,17 +272,15 @@ function createPopup(item: any) {
             <div class="l">
               <div class="label">解状态:</div>
               <div class="value">
-                <span class='status ${
-                  item.solStat == 4 ? "status_3" : "status_0"
-                }'></span>
+                <span class='status ${item.solStat == 4 ? "status_3" : "status_0"
+    }'></span>
                 <span>${snTypeReflect[item.solStat] || "未知解"}</span>
               </div>
             </div>
             <div class="r">
               <div class="label">差分链:</div>
-              <div class="value">${diffSource[item.diffSource] || "/"} (${
-    item.diffAge
-  }s)</div>
+              <div class="value">${diffSource[item.diffSource] || "/"} (${item.diffAge
+    }s)</div>
             </div>
           </li>
           <li>
@@ -339,19 +330,19 @@ function createPopup(item: any) {
         <ul class="btns_container">
           <li>
             <div class="btn" onclick='openRemote_markerPopup(${JSON.stringify(
-              item
-            )})'>远程管理</div>
+      item
+    )})'>远程管理</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
-              item
-            )})'>历史轨迹</div>
+      item
+    )})'>历史轨迹</div>
           </li>
           <li>
             <div class="btn" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
-              item
-            )})'>实时驾驶趋势图</div>
+      item
+    )})'>实时驾驶趋势图</div>
             <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
-              item
-            )})'>历史驾驶趋势图</div>
+      item
+    )})'>历史驾驶趋势图</div>
           </li>
         </ul>
       </div>`;
@@ -455,13 +446,22 @@ function gohistoryChart_markerPopup(arg: any) {
 // marker-弹窗-实时趋势图
 function openRealTimeChart_markerPopup(arg: any) {
   //
-  console.log(arg)
-  realTimeChartVisible.value = true
+  // console.log(arg)
+  sn.value = arg.sn
+  realTime.value.dialogVisible = true
 }
 // marker-弹窗-远程管理
 function openRemote_markerPopup(arg: any) {
-  console.log(arg,'--打开远程管理')
+  console.log(arg.terminalType);
+
+  terminalType.value = arg.terminalType
+  version.value = arg.version
+  type.value = arg.type
+  carId.value = arg.carId
+  sn.value = arg.sn
+  name.value = arg.carName
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -485,6 +485,7 @@ function openRemote_markerPopup(arg: any) {
     }
   }
 }
+
 // map popup
 
 :deep(.leaflet-popup) {
@@ -492,19 +493,25 @@ function openRemote_markerPopup(arg: any) {
     background-color: var(--el-bg-color);
     color: var(--color-scheme);
   }
+
   .leaflet-popup-content {
     width: auto !important;
   }
+
   .leaflet-popup-tip {
     background-color: var(--el-bg-color);
   }
+
   .map_popup {
     width: 360px;
+
     .popup_container {
       font-size: 14px;
+
       li {
         display: flex;
         line-height: 22px;
+
         &:nth-child(2) {
           margin-bottom: 12px;
         }
@@ -513,10 +520,12 @@ function openRemote_markerPopup(arg: any) {
           display: flex;
           width: 50%;
         }
+
         .r {
           display: flex;
           width: 50%;
         }
+
         .label {
           width: 66px;
           flex-shrink: 0;
@@ -524,16 +533,19 @@ function openRemote_markerPopup(arg: any) {
           text-overflow: ellipsis;
           white-space: nowrap;
         }
+
         .value {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+
           img {
             width: 12px;
             height: 12px;
             margin-right: 2px;
           }
         }
+
         .status {
           display: inline-block;
           width: 8px;
@@ -541,30 +553,38 @@ function openRemote_markerPopup(arg: any) {
           border-radius: 50%;
           margin-right: 2px;
         }
+
         .status_0 {
           background-color: #ea3729;
         }
+
         .status_1 {
           background-color: #666666;
         }
+
         .status_3 {
           background-color: #5dbe3c;
         }
+
         .status_2 {
           background-color: #76fafd;
         }
       }
     }
+
     .btns_container {
       padding-top: 12px;
+
       li {
         display: flex;
         justify-content: space-around;
         line-height: 22px;
+
         .btn {
           color: var(--el-color-primary);
           font-size: 14px;
           cursor: pointer;
+
           &:hover {
             opacity: 0.8;
           }

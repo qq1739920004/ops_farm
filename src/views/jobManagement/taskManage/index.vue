@@ -863,11 +863,11 @@ watch(() => paddyWorkList.value,
 }
 
 :deep(.leaflet-popup-content-wrapper) {
-
+    background-color: var(--el-bg-color);
+    color: var(--color-scheme);
     .popup_outsiders {
         opacity: 1;
         border-radius: 4px;
-        background: rgba(255, 255, 255, 1);
         width: 241px;
         height: 289px;
 
