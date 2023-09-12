@@ -47,7 +47,6 @@ let history_hDiffChart = <any>null
 let history_speedChart = <any>null
 let history_azimuthChart = <any>null
 const route = useRoute()
-console.log(route.query.sn)
 const disabledDate = (time: Date) => {
     return time.getTime() > Date.now()
 }

@@ -9,7 +9,7 @@
         <div class="gree"></div>
         <span>在线数</span>
       </div>
-     
+
     </div>
     <div id="container"></div>
   </div>
@@ -20,13 +20,13 @@
 import { onMounted, ref } from "vue";
 // 导入类型定义
 import type { MonitorObj } from "@/api/perception/type";
-import {getGeojson} from '@/api/perception/index.ts';
+import { getGeojson } from '@/api/perception/index.ts';
 // 导入高德地图加载器
 import AMapLoader from "@amap/amap-jsapi-loader";
-import {purifyBaiduData,purifyCityArr} from './utils';
+import { purifyBaiduData, purifyCityArr } from './utils';
 import { poly3d } from "./polygon3d";
 import { setMarker } from "./setMarker";
-import {mapEvent} from './mapEvent';
+import { mapEvent } from './mapEvent';
 interface Props {
   provinceCars: MonitorObj["provinceCars"];
 }
@@ -70,7 +70,7 @@ function startDraw(AMap: any) {
   //边框
   poly3d(AMap, maskPoly, map, polylines);
   //标注
-  setMarker(AMap,map,dataList);
+  setMarker(AMap, map, dataList);
   //注册的所有时间
   mapEvent(map);
   // 使用setFitView自动调整视图以适应所有的折线
@@ -84,26 +84,26 @@ function initMap(cityArr: string[]) {
     version: "2.0",
     plugins: ["AMap.DistrictSearch", "AMap.Polyline"],
   })
-    .then((AMap) => {
+    .then((AMap: any) => {
       drawingCity(AMap, cityArr);
     })
-    .catch((e) => {
+    .catch((e: any) => {
       console.log(e);
     });
 }
 // 使用百度地图API服务获取边界数据
 async function drawingCity(AMap: any, cityArr: string[]) {
-  cityArr = ["220700","220300","220100"];
+  cityArr = ["220700", "220300", "220100"];
   for (let i = 0; i < cityArr.length; i++) {
     const cityName = cityArr[i];
-    const response =await getGeojson(cityName)
+    const response = await getGeojson(cityName)
     // const response = await fetch(
     //   `/api-baidu/api_region_search/v1/?keyword=${cityName}&boundary=1&sub_admin=2&ak=TDKpTiQ7PNoT08EjLD41MTLbVdHp4Z1P`
     // );
     const data = JSON.parse(response.data)
     if (data.status == 0 && data.districts.length > 0) {
       //数据处理
-      let [maskTemp,maskPolyTemp]= purifyBaiduData(AMap,data, cityName)
+      let [maskTemp, maskPolyTemp] = purifyBaiduData(AMap, data, cityName)
       mask = maskTemp;
       maskPoly = maskPolyTemp;
     }
@@ -113,7 +113,7 @@ async function drawingCity(AMap: any, cityArr: string[]) {
   }
 }
 onMounted(() => {
-  let {codeArr} = purifyCityArr(dataList);
+  let { codeArr } = purifyCityArr(dataList);
   initMap(codeArr);
 });
 </script>
@@ -126,6 +126,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+
   #container {
     background-color: transparent;
     background: none;
@@ -137,15 +138,19 @@ onMounted(() => {
     margin: 0;
     padding: 0;
   }
-    /* 隐藏地图的版权信息 */
-  :deep(#container){
-    .amap-scale,.amap-copyright,.amap-logo{
+
+  /* 隐藏地图的版权信息 */
+  :deep(#container) {
+
+    .amap-scale,
+    .amap-copyright,
+    .amap-logo {
       display: none !important;
 
     }
   }
 
-  .map-bar-info{
+  .map-bar-info {
     position: absolute;
     top: 0;
     right: 0;
@@ -155,43 +160,51 @@ onMounted(() => {
     background-size: contain;
   }
 }
-.carmap::after{
-    content: '';
-    position: absolute;
-    top: -50px;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('@/assets/perceptionImage/mapBack.png') no-repeat;
-    background-position: center;
-    background-origin: content-box; 
-    background-size: 779px;
-    animation: rotate 30s linear infinite;
-    z-index: -999;
+
+.carmap::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('@/assets/perceptionImage/mapBack.png') no-repeat;
+  background-position: center;
+  background-origin: content-box;
+  background-size: 779px;
+  animation: rotate 30s linear infinite;
+  z-index: -999;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
   }
-  @keyframes rotate{
-    0%{
-      transform: rotate(0deg);
-    }
-    100%{
-      transform: rotate(360deg);
-    }
+
+  100% {
+    transform: rotate(360deg);
   }
-  .map-bar-info,.map-info{
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    >span{
-      padding-left: 5px;
-    }
-  .gree,.yellow{
+}
+
+.map-bar-info,
+.map-info {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
+  >span {
+    padding-left: 5px;
+  }
+
+  .gree,
+  .yellow {
     width: 44px;
     height: 21px;
     background-color: #ffeb3b;
   }
-  .gree{
-    background-color: #40b971;
-  } 
-}
 
+  .gree {
+    background-color: #40b971;
+  }
+}
 </style>
