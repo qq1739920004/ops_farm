@@ -118,7 +118,7 @@
                     effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
                     <el-button style="margin-right: -10px;"
                         :disabled="row.onlineTcp === 0 || row.driveState === (1 || 2) ? true : false" type="primary" link
-                        @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.name)">远程调参</el-button>
+                        @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.carName)">远程调参</el-button>
                 </el-tooltip>
                 <el-button style="margin-right: -10px;" type="primary" link>文件存储</el-button>
                 <el-button style="margin-right: -10px;" type="primary" link
@@ -128,7 +128,7 @@
     </el-table>
     <slot></slot>
     <MachineDetailDia ref="MachineD" :carId="carId" :terminalType="terminalType"></MachineDetailDia>
-    <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn"
+    <!-- <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn"
         :name="name">
     </RemoteAdjustDia360>
     <RemoteAdjustDia302 ref="RemoteD302" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
@@ -136,19 +136,18 @@
     </RemoteAdjustDia302>
     <RemoteAdjustDia502 ref="RemoteD502" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
         :sn="sn" :name="name">
-    </RemoteAdjustDia502>
+    </RemoteAdjustDia502> -->
+    <RemoteControl :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn" :name="name" />
     <RegisterDia ref='RegisterD' :sn="sn" :carId="carId" :deviceId="deviceId"></RegisterDia>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, nextTick } from 'vue'
+import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { carStatus_API, logOpen_API, logClose_API } from '@/api/machineryList/index'
 import { pageInfo, carStatusObj } from '@/api/machineryList/type'
 import MachineDetailDia from './machineDetailDia.vue'
-import RemoteAdjustDia360 from './remoteAdjust.vue'
-import RemoteAdjustDia302 from './remoteAdjust302.vue'
-import RemoteAdjustDia502 from './remoteAdjust502.vue'
+import RemoteControl from '@/components/remoteAdjust/index.vue'
 import RegisterDia from './registerDia.vue'
 import { useRouter } from 'vue-router'
 
@@ -158,9 +157,6 @@ const emits = defineEmits(['changeSort'])
 const switchStatus = ref<boolean>(false)
 const sn = ref()
 const MachineD = ref()
-const RemoteD = ref()
-const RemoteD302 = ref()
-const RemoteD502 = ref()
 const RegisterD = ref()
 const version = ref<string>('')
 const type = ref<string>('')
@@ -250,17 +246,6 @@ const gotoRemote = (val: any, val2: any, val3: any, val4: any, val5: any, val6: 
     carId.value = val4
     sn.value = val5
     name.value = val6
-    if (terminalType.value == 'AG360') {
-        RemoteD.value.dialogVisible = true
-    } if (terminalType.value == 'AG302') {
-        RemoteD302.value.dialogVisible = true
-    } if (terminalType.value == 'AG502') {
-        RemoteD502.value.dialogVisible = true
-    }
-    nextTick(() => {
-        RemoteD.value.carFormRef?.clearValidate()
-    })
-
 }
 // 历史轨迹
 const gotoMap = (sn: string, npn: string) => {
