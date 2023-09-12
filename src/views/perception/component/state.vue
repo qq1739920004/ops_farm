@@ -135,7 +135,6 @@ onMounted(() => {
       display: none;
     }
     -ms-overflow-style: scrollbar;
-    scrollbar-wcarIdth: thin;
     ul > li {
       margin-top: 10px;
       padding-top: 10px;

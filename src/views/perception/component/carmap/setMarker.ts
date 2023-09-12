@@ -14,7 +14,7 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"]){
         chartContainer.style.height = `${height.value}px`;
         chartContainer.style.marginTop = `-${marginTop.value}px`;
         markerContent.appendChild(chartContainer);
-        const marker = new AMap.Marker({
+        new AMap.Marker({
             position: [dataList[i].lng,dataList[i].lat],
             content: markerContent,
             map: map.value
@@ -79,7 +79,7 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"]){
                   show: true,
                   color: "white",
                   position: 'top',
-                  formatter: function(params: any) {
+                  formatter: function() {
                     return dataList[i].totalNum;  // 显示总数
                 },
                 },

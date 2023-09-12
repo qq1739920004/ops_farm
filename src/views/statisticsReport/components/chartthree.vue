@@ -1,28 +1,14 @@
 
 <template>
     <div class="rank">
-        <div class="rank_item">
+        <div class="rank_item" v-for="(item,index) in farmMachineData?.provinceRank">
             <div class="rank_picture">
-                <img src="@/assets/statisticsReport/one.png">
-                <div>{{ farmMachineData?.provinceRank[0].name }}</div>
+                <img v-if="index==0" src="@/assets/statisticsReport/one.png">
+                <img v-if="index==1" src="@/assets/statisticsReport/two.png">
+                <img v-if="index==2" src="@/assets/statisticsReport/three.png">
+                <div>{{ item.name }}</div>
             </div>
-            <div class="rank-ability">{{ farmMachineData?.provinceRank[0].online }}台</div>
-        </div>
-
-        <div class="rank_item">
-            <div class="rank_picture">
-                <img src="@/assets/statisticsReport/two.png">
-                <div>{{ farmMachineData?.provinceRank[1].name }}</div>
-            </div>
-            <div class="rank-ability">{{ farmMachineData?.provinceRank[1].online }}台</div>
-        </div>
-
-        <div class="rank_item">
-            <div class="rank_picture">
-                <img src="@/assets/statisticsReport/three.png">
-                <div>{{ farmMachineData?.provinceRank[2].name }}</div>
-            </div>
-            <div class="rank-ability">{{ farmMachineData?.provinceRank[2].online }}台</div>
+            <div class="rank-ability">{{ item.online }}台</div>
         </div>
     </div>
 </template>
@@ -44,7 +30,9 @@ onMounted(() => {
 })
 
 watch(props, (newValue) => {
-    fmData.value = newValue.farmMachineData   
+    fmData.value = newValue.farmMachineData  
+    console.log(fmData.value,'asdfsadf');
+
 });
 </script>
 
@@ -60,7 +48,8 @@ watch(props, (newValue) => {
 
         .rank_picture {
             width: 50%;
-
+            display: flex;
+            align-items: center;
             div {
                 display: inline;
                 margin-left: 20px;
