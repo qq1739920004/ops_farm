@@ -28,7 +28,7 @@
 import { ref, onMounted} from "vue";
 import Top from "./component/top.vue";
 import Year from "./component/year.vue";
-import Carmap from "./component/carmap.vue";
+import Carmap from "./component/carmap/index.vue";
 import Workarea from "./component/workarea.vue";
 import State from "./component/state.vue";
 import Online from "./component/online.vue"
@@ -107,7 +107,7 @@ function getScale(w = 1920, h = 937) {
     }
     .bottom {
         display: flex;
-        height: 714px;
+        height: 779px;
         width: 100%;
         .left {
             flex: 1;
@@ -123,7 +123,7 @@ function getScale(w = 1920, h = 937) {
             }
         }
         .middle {
-            width: 1000px;
+            width: 1039px;
             height: 100%;
         }
 

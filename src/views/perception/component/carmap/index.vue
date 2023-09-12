@@ -1,0 +1,197 @@
+<template>
+  <div class="carmap">
+    <div class="map-bar-info">
+      <div class='map-info'>
+        <div class="yellow"></div>
+        <span>总数</span>
+      </div>
+      <div class='map-info'>
+        <div class="gree"></div>
+        <span>在线数</span>
+      </div>
+     
+    </div>
+    <div id="container"></div>
+  </div>
+</template>
+
+<script setup lang="ts">
+// 导入Vue相关的库
+import { onMounted, ref } from "vue";
+// 导入类型定义
+import type { MonitorObj } from "@/api/perception/type";
+import {getGeojson} from '@/api/perception/index.ts';
+// 导入高德地图加载器
+import AMapLoader from "@amap/amap-jsapi-loader";
+import {purifyBaiduData,purifyCityArr} from './utils';
+import { poly3d } from "./polygon3d";
+import { setMarker } from "./setMarker";
+import {mapEvent} from './mapEvent';
+interface Props {
+  provinceCars: MonitorObj["provinceCars"];
+}
+
+const map = ref();
+const props = withDefaults(defineProps<Props>(), {
+  provinceCars: () => [
+    {
+      name: "",
+      totalNum: 0,
+      onlineNum: 0,
+      code: "",
+      cityName: "",
+      lat: '0',
+      lng: '0',
+    },
+  ],
+});
+
+let dataList = props.provinceCars;
+let polylines: any = [];
+let mask: any = [];
+let maskPoly: any = [];
+//开始画出来
+function startDraw(AMap: any) {
+  map.value = new AMap.Map("container", {
+    center: [126.968714, 46.654147], // 中国的大致中心点
+    zoom: 8, // 设置一个合适的缩放级别以显示多个城市
+    backgroundColor: "transparent",
+    mask: mask, // 设置遮罩层
+    disableSocket: true,
+    showLabel: false,
+    //开启3D
+    labelzIndex: 130,
+    pitch: 40, // 允许缩放
+    zoomEnable: true, //隐藏地图logo
+    showLogo: false,
+    layers: [new AMap.TileLayer.RoadNet(), new AMap.TileLayer.Satellite()],
+  });
+
+  //边框
+  poly3d(AMap, maskPoly, map, polylines);
+  //标注
+  setMarker(AMap,map,dataList);
+  //注册的所有时间
+  mapEvent(map);
+  // 使用setFitView自动调整视图以适应所有的折线
+  map.value.setFitView(polylines);
+}
+
+// 初始化地图
+function initMap(cityArr: string[]) {
+  AMapLoader.load({
+    key: "604de37af9e617ea3d9d26f306743698",
+    version: "2.0",
+    plugins: ["AMap.DistrictSearch", "AMap.Polyline"],
+  })
+    .then((AMap) => {
+      drawingCity(AMap, cityArr);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
+// 使用百度地图API服务获取边界数据
+async function drawingCity(AMap: any, cityArr: string[]) {
+  cityArr = ["220700","220300","220100"];
+  for (let i = 0; i < cityArr.length; i++) {
+    const cityName = cityArr[i];
+    const response =await getGeojson(cityName)
+    // const response = await fetch(
+    //   `/api-baidu/api_region_search/v1/?keyword=${cityName}&boundary=1&sub_admin=2&ak=TDKpTiQ7PNoT08EjLD41MTLbVdHp4Z1P`
+    // );
+    const data = JSON.parse(response.data)
+    if (data.status == 0 && data.districts.length > 0) {
+      //数据处理
+      let [maskTemp,maskPolyTemp]= purifyBaiduData(AMap,data, cityName)
+      mask = maskTemp;
+      maskPoly = maskPolyTemp;
+    }
+    if (i === cityArr.length - 1) {
+      startDraw(AMap);
+    }
+  }
+}
+onMounted(() => {
+  let {codeArr} = purifyCityArr(dataList);
+  initMap(codeArr);
+});
+</script>
+
+<style scoped lang="scss">
+.carmap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  #container {
+    background-color: transparent;
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+    /* 隐藏地图的版权信息 */
+  :deep(#container){
+    .amap-scale,.amap-copyright,.amap-logo{
+      display: none !important;
+
+    }
+  }
+
+  .map-bar-info{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 251px;
+    height: 41px;
+    background: url('@/assets/perceptionImage/mapBarInfo.png') no-repeat;
+    background-size: contain;
+  }
+}
+.carmap::after{
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('@/assets/perceptionImage/mapBack.png') no-repeat;
+    background-position: center;
+    background-origin: content-box; 
+    background-size: 779px;
+    animation: rotate 30s linear infinite;
+    z-index: -999;
+  }
+  @keyframes rotate{
+    0%{
+      transform: rotate(0deg);
+    }
+    100%{
+      transform: rotate(360deg);
+    }
+  }
+  .map-bar-info,.map-info{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    >span{
+      padding-left: 5px;
+    }
+  .gree,.yellow{
+    width: 44px;
+    height: 21px;
+    background-color: #ffeb3b;
+  }
+  .gree{
+    background-color: #40b971;
+  } 
+}
+
+</style>
