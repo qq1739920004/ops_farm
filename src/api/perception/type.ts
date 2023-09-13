@@ -2,7 +2,9 @@ export interface ResponseData {
     message?: string,
     code?: number,
 }
-
+export interface geojsonObj extends ResponseData{
+  data:string,
+}
 
   export interface MonitorObj{
     
@@ -26,6 +28,8 @@ export interface ResponseData {
         onlineNum: number,
         code: string,
         name: string,
+        lat:string,
+        lng:string,
       }
     ],
     carAreas: [
@@ -42,18 +46,22 @@ export interface StateObj{
   currentPage:number,
   pageSize:number,
 }
+export interface recordsType
+  {
+    carName: string,
+    code: string,
+    name: string,
+    onlineTime: string,
+    offlineTime: string,
+    sn: string,
+    onlineTcp:number,
+    time?:string,
+    carId: number
+}
 export interface StateResponseData extends ResponseData {
     data: {
       total: number,
-      records: {
-        carName: string,
-        code: string,
-        name: string,
-      onlineTime: string,
-        offlineTime: string,
-        sn: string,
-        carId: number
-    }[]
+      records: recordsType[]
         
       
     }

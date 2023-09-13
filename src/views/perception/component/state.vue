@@ -12,13 +12,13 @@
         <li v-for="item in dataArr" :key="item.carId">
           <div class="state_time">{{ item.time }}</div>
           <div class="state_main">
-            <span v-if="!item.online" class="circle-out">●</span>
+            <span v-if="!item.onlineTcp" class="circle-out">●</span>
             <span v-else class="circle-login">●</span>
-            <div :class="['state_bar',item.online?'state_bar_login':'state_bar_out']">
+            <div :class="['state_bar',item.onlineTcp?'state_bar_login':'state_bar_out']">
+              <span>{{ item.carName }}</span>
               <span>{{ item.name }}</span>
-              <span>{{ item.cityName }}</span>
               <span>
-                <el-tag v-if="!item.online" type="danger" size="small" effect="dark"
+                <el-tag v-if="!item.onlineTcp" type="danger" size="small" effect="dark"
                   >离线</el-tag>
                 <el-tag v-else type="success" size="small" effect="dark"
                   >上线</el-tag>
@@ -35,69 +35,46 @@
 <script setup lang="ts">
 import {ref,onMounted} from 'vue';
 import {getStateWs,getState} from '@/api/perception/index.ts';
-
+import type {recordsType} from '@/api/perception/type.ts';
 // const props = defineProps({
 //   provinceCars: {
 //     type: Object,
 //   },
 // });
-// let dataArr=ref([
-//   {
-//     carId:0,
-//     code:0,
-//   time:'2021/02/02 12:32',
-//   offlineTime: "2023-08-09 12:58:26",
-// onlineTime: "2023-08-09 12:54:27",
-// sn: "100750740000",
-//   name:'上海',
-//   carName:'A300',
-//   online:0,
-// }
-let dataArr=ref([
-  {
-    carId:0,
-    code:0,
-  time:'2021/02/02 12:32',
-  name:'上海',
-  cityName:'A300',
-  online:0,
-},
-  {
-    carId:1,
 
-  time:'2021/02/02 12:32',
-  name:'上海',
-  cityName:'A300',
-  online:1,
-},
-  {
-    carId:2,
-
-  time:'2021/02/02 12:32',
-  name:'上海',
-  cityName:'A300',
-  online:0,
+let dataArr=ref<recordsType[]>([]) 
+function getTime(item:recordsType){
+  if (item.onlineTcp) {
+    return item.onlineTime
+  }else{
+    return item.offlineTime
+  }
 }
-]) 
-let ii=ref(3)
 onMounted(() => {
   getStateWs(dataArr)
   getState({
     currentPage:1,
     pageSize:5
-  }).then(()=>{
-    // console.log(res.data.records[0])
+  }).then((res)=>{
+    res.data.records.map((item)=>{
+      dataArr.value.push({
+        time:getTime(item),
+        ...item
+      })
+    })
   })
-  setInterval(() => {
-  dataArr.value.unshift({
-    carId:ii.value,
-    time:'2021/02/02 12:32',
-    name:'上海',
-    cityName:'A300',
-    online:1,
-  })
-  ii.value++
-}, 2000);
+  
+// let ii=ref(3)
+//   setInterval(() => {
+//   dataArr.value.unshift({
+//     carId:ii.value,
+//     time:'2021/02/02 12:32',
+//     name:'上海',
+//     name:'A300',
+//     online:1,
+//   })
+//   ii.value++
+// }, 2000);
 })
 
 </script>
@@ -158,7 +135,6 @@ onMounted(() => {
       display: none;
     }
     -ms-overflow-style: scrollbar;
-    scrollbar-wcarIdth: thin;
     ul > li {
       margin-top: 10px;
       padding-top: 10px;

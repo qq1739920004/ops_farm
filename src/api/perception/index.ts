@@ -1,6 +1,6 @@
 
 import request from '@/utils/request'
-import {monitorResponseData,StateObj,StateResponseData} from './type'
+import {monitorResponseData,StateObj,StateResponseData,geojsonObj} from './type'
 // 未处理个数
 export function getMonitorAPI() {
     return request<any, monitorResponseData>({
@@ -8,9 +8,18 @@ export function getMonitorAPI() {
         method: 'get',
     })
 }
+export function getGeojson(keyWord:string) {
+  return request<any, geojsonObj>({
+    url: "/farm/monitor/geo",
+    method: 'get',
+    params:{
+      keyWord
+    }
+  })
+}
 export function getState(params:StateObj) {
     return request<StateObj, StateResponseData>({
-        url: "/monitor/carLog",
+        url: "/farm/monitor/carLog",
         method: 'get',
         params
     })
@@ -32,7 +41,6 @@ if ("geolocation" in navigator) {  // 检查浏览器是否支持Geolocation API
     // 获取成功时执行的函数
     var latitude = position.coords.latitude;   // 获取纬度
     var longitude = position.coords.longitude; // 获取经度
-    console.log("纬度: " + latitude + ", 经度: " + longitude);
     let res= await getWeatherData(longitude+','+latitude)
     resolve(res)
   }, function(error) {
@@ -51,7 +59,7 @@ if ("geolocation" in navigator) {  // 检查浏览器是否支持Geolocation API
 }
 function getWeatherData(location: string) {
   return request<any, any>({
-    url:"/monitor/weather",
+    url:"/farm/monitor/weather",
     method:'get',
     params:{
       dataType:0,
@@ -62,32 +70,30 @@ function getWeatherData(location: string) {
 export function getStateWs(resList: any) {
   //获取cookie
   let cookie =document.cookie.split('loginSysCookie=')[1].split('#').join('_')
-  console.log(cookie);
   let wsUrl=''
+
   //查看当前环境
-  if(!import.meta.env.DEV){
+  let currentUrl = window.location.href
+  if(!currentUrl.includes('cloud.sinognss')){
     wsUrl=`ws://140.207.166.210:9034/websocket?token=${cookie}`
   }else{
     wsUrl=`wss://cloud.sinognss.com/websocket?token=${cookie}`
-
   }
 const ws = new WebSocket(wsUrl);
 
 
 // 监听 WebSocket 连接成功事件
 ws.addEventListener('open', () => {
-  console.log('WebSocket 连接已建立');
   // 在这里可以发送消息或执行其他操作
 });
 
 // 监听 WebSocket 接收消息事件
 ws.addEventListener('message', (event) => {
-  console.log(event.type);
   // 处理接收到的消息
   if(event.type=="monitor"){
     resList.value.push(event.data)
-    console.log(event.data);
   }
+  
   // console.log('接收到数据:', receivedData);
 });
 

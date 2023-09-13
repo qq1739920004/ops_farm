@@ -3,12 +3,14 @@
     <div class="temp" v-if="weather">
       <span>{{ weather.now.temp }}℃</span>
       <span>{{ weather.now.text }}</span>
-      <!-- <img class="top_time_pic" src="../../perception/image/cloud.png" alt="" /> -->
-      <img
-        class="top_time_pic"
-        src="~@/assets/perceptionImage/cloud.png"
-        alt=""
-      />
+      <img v-if="weather.now.text=='阴'" class="top_time_pic" src="~@/assets/perceptionImage/cloud.png" alt="" />
+      <img v-else-if="weather.now.text=='晴'" class="top_time_pic" src="~@/assets/perceptionImage/shine.png" alt="" />
+      <img v-else-if="weather.now.text.includes('雷')" class="top_time_pic" src="~@/assets/perceptionImage/thunder.png" alt="" />
+      <img v-else-if="weather.now.text==='小雨'" class="top_time_pic" src="~@/assets/perceptionImage/rain.png" alt="" />
+      <img v-else-if="weather.now.text.includes('雨')" class="top_time_pic" src="~@/assets/perceptionImage/bigrain.png" alt="" />
+      <img v-else-if="weather.now.text==='多云'" class="top_time_pic" src="~@/assets/perceptionImage/weatherElse.png" alt="" />
+      <img v-else class="top_time_pic" src="~@/assets/perceptionImage/weatherElse.png" alt="" />
+
     </div>
     <div class="time">
       <span>{{ time.week }}</span>
@@ -33,7 +35,6 @@ setInterval(() => {
 // })
 async function weatherService() {
   let res: any = await getWeather();
-  console.log(JSON.parse(res.data));
   weather = JSON.parse(res.data);
 }
 weatherService();
@@ -59,6 +60,7 @@ weatherService();
     justify-content: center;
     align-items: center;
     .top_time_pic {
+      width: 41px;
       vertical-align: middle;
       padding-right: 15px;
     }

@@ -220,7 +220,6 @@ import { pageInfo } from '@/api/machineryList/type'
 import type { TabsPaneContext } from 'element-plus'
 
 const activeName = ref('1')
-
 const handleClick = (tab: TabsPaneContext) => {
     activeIndex.value = tab.props.name as never
 }
