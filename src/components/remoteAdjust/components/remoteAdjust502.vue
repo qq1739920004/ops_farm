@@ -432,10 +432,7 @@ const updateCarParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+           
         })
 }
 // 更新基本参数
@@ -464,10 +461,7 @@ const updatebasicParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+           
         })
 
 }
@@ -496,10 +490,7 @@ const updateCalibParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+           
         })
 
 }
@@ -545,10 +536,7 @@ const updateAdvanced1Params = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+           
         })
 
 }
@@ -608,10 +596,7 @@ const updateChafenData = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+           
         })
 
 }

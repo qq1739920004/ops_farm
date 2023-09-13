@@ -127,16 +127,8 @@
         </el-table-column>
     </el-table>
     <slot></slot>
-    <MachineDetailDia ref="MachineD" :carId="carId" :terminalType="terminalType"></MachineDetailDia>
-    <!-- <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn"
-        :name="name">
-    </RemoteAdjustDia360>
-    <RemoteAdjustDia302 ref="RemoteD302" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
-        :sn="sn" :name="name">
-    </RemoteAdjustDia302>
-    <RemoteAdjustDia502 ref="RemoteD502" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
-        :sn="sn" :name="name">
-    </RemoteAdjustDia502> -->
+    <MachineDetailDia ref="MachineD" :carId="carId" :terminalType="terminalType2"></MachineDetailDia>
+
     <RemoteControl :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn" :name="name" />
     <RegisterDia ref='RegisterD' :sn="sn" :carId="carId" :deviceId="deviceId"></RegisterDia>
 </template>
@@ -165,6 +157,7 @@ const deviceId = ref<string>('')
 // 车辆ID 
 const carId = ref<number>()
 const terminalType = ref<string>('')
+const terminalType2 = ref<string>('')
 // 星基请求参数
 const carStatus = ref<carStatusObj>({
     'ids': [],
@@ -230,7 +223,7 @@ const changeLogStatus = async (val: any, val2: any) => {
 }
 const gotoMachineDetail = (val: any, val2: any) => {
     carId.value = val
-    terminalType.value = val2
+    terminalType2.value = val2
     MachineD.value.dialogVisible = true
 }
 const gotoRegister = (val: any, val2: any, val3: any) => {

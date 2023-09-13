@@ -451,10 +451,7 @@ const updateCarParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+           
         })
 }
 // 更新PID参数
@@ -482,10 +479,7 @@ const updatePidParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+           
         })
 
 }
@@ -514,10 +508,7 @@ const updateCalibParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+           
         })
 
 }
@@ -593,10 +584,7 @@ const updateChafenData = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+           
         })
 
 }

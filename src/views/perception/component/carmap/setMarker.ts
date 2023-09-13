@@ -79,7 +79,7 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"]){
                   show: true,
                   color: "white",
                   position: 'top',
-                  formatter: function(params: any) {
+                  formatter: function(_params: any) {
                     return dataList[i].totalNum;  // 显示总数
                 },
                 },
@@ -88,4 +88,5 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"]){
         chart.setOption(option);
       }
 }
+
 export {setMarker,width,height,marginTop,chartContainerList,chartList}
