@@ -14,6 +14,53 @@
         />
       </el-select>
     </div>
+    <div class="statistics_box">
+      <ul class="top">
+        <li>
+          <span>{{ dataStatistics.device?.totalDevice }}</span>
+          <span>总数</span>
+        </li>
+        <li>
+          <span>{{ dataStatistics.workArea?.todayArea }}</span>
+          <span>今日作业(亩)</span>
+        </li>
+        <li>
+          <span>{{ dataStatistics.device?.onlineDevice }}</span>
+          <span>在线数</span>
+        </li>
+        <li>
+          <span>{{ dataStatistics.workArea?.totalArea }}</span>
+          <span>累计作业(万亩)</span>
+        </li>
+      </ul>
+      <ul class="center">
+        <li v-for="(item, index) in dataStatistics.type" :key="index">
+          <label>
+            <el-checkbox
+              size="large"
+              v-model="item.checked"
+              @change="markerTypeChange"
+            />
+            <SvgIcon icon="AG302" size="22" />
+            <span class="label">{{ item.typeName }}</span>
+          </label>
+          <span class="value">{{ item.onlineCount }}</span>
+        </li>
+        <br />
+      </ul>
+      <ul class="bottom">
+        <li>
+          <SvgIcon icon="AG302_warn" size="22" />
+          <span class="label">待机</span>
+          <span class="value">988</span>
+        </li>
+        <li>
+          <SvgIcon icon="AG302_warn" size="22" />
+          <span class="label">待机</span>
+          <span class="value">988</span>
+        </li>
+      </ul>
+    </div>
     <!-- 实时趋势驾驶图diaLog -->
     <realTimeChart
       :visible="realTimeChartVisible"
@@ -45,6 +92,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { mapTitleLayers } from "./utils/mapTitleLayers";
 import realTimeChart from "./components/realTimeChart.vue";
+import SvgIcon from "@/components/SvgIcon/index.vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.chinatmsproviders";
@@ -71,7 +119,7 @@ let mapTitleOptions = [
   { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
 ];
 let mapTitleOptionsValue = ref(mapTitleOptions[1].id);
-let dataStatistics: any = []; // 数据统计数据
+let dataStatistics: any = ref([]); // 数据统计数据
 const iconOption: any = {
   typeLabel: "terminalType",
   statusLabel: "driveState",
@@ -85,7 +133,7 @@ const iconOption: any = {
       },
     },
     {
-      typeValue: ["AG302", "AG302Pro"],
+      typeValue: ["AG302", "AG302Pro", "AG302Android"],
       icon: {
         0: AG302_warn,
         1: AG302,
@@ -137,7 +185,7 @@ window.gohistoryChart_markerPopup = gohistoryChart_markerPopup;
 // @ts-ignore
 window.openRealTimeChart_markerPopup = openRealTimeChart_markerPopup;
 // @ts-ignore
-window.openRemote_markerPopup = openRemote_markerPopup
+window.openRemote_markerPopup = openRemote_markerPopup;
 
 onMounted(() => {
   initMap();
@@ -148,8 +196,8 @@ onMounted(() => {
 // 获取统计数据
 async function getFaromDataStatistics() {
   const { data } = await farmMachineDataStatistics_API();
-  dataStatistics = data;
-  console.log(dataStatistics);
+  dataStatistics.value = data;
+  dataStatistics.value.type.forEach((item: any) => (item.checked = true));
 }
 
 // 初始化获取设备数据
@@ -162,6 +210,48 @@ function realTimeChartHandleClose() {
   realTimeChartVisible.value = false;
 }
 
+// marker点类型筛选
+function markerTypeChange() {
+  clearMapMarkers();
+  markerGroup.clearLayers();
+  let typeNames = dataStatistics.value.type.filter((item: any) => item.checked);
+  typeNames = typeNames.map((item: any) => item.typeName);
+  markerArr.forEach((item: any) => {
+    typeNames.forEach((v: any) => {
+      if (item.detail.terminalType.search(v) > -1) {
+        if (renderMode == "dom") {
+          markerGroup.addLayer(item);
+        }
+        if (renderMode == "polymer") {
+          markerClusterGroup.addLayer(item);
+        }
+      }
+    });
+  });
+
+  // markerGroup.length = 10
+
+  // let mm = markerArr.filter((item: any) => item.detail.terminalType.indexOf('AG302') > -1)
+  // markerClusterGroup.addLayers(mm)
+  // console.log(markerArr,'--219')
+
+  //   markerArr[0].setLatLng([0,0])
+
+  //  let ii  =  L.icon({
+  //     iconUrl: AG302 , // SVG图标的路径
+  //     iconSize: [25, 28], // 图标的大小 [宽度, 高度]
+  //     iconAnchor: [14, 28], // 图标的锚点位置 [水平, 垂直]
+  //     popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
+  //   })
+  //   markerArr[0].setIcon(ii)
+  //   markerArr[0].getPopup().setContent('fwefjw')
+
+  // console.log(markerArr[0], "--223");
+  // markerArr[1].setLatLng([0,0])
+  // markerArr[2].setLatLng([0,0])
+  // console.log(markerArr[0].getPopup())
+}
+
 // 创建地图marker点
 function createMarker() {
   deviceList.forEach((item: any) => {
@@ -172,8 +262,9 @@ function createMarker() {
     );
     const icon = createIcon(item);
     const popup = createPopup(item);
-    const marker = L.marker([posX, posY], { icon });
+    const marker: any = L.marker([posX, posY], { icon });
     marker.bindPopup(popup);
+    marker.detail = item;
     markerArr.push(marker);
   });
   if (renderMode == "dom") {
@@ -393,6 +484,16 @@ function initMap() {
   mapTitleOptionsValueChange();
 }
 
+// 清空地图marker点位
+function clearMapMarkers() {
+  if (renderMode == "dom") {
+    markerGroup.clearLayers();
+  }
+  if (renderMode == "polymer") {
+    markerClusterGroup.clearLayers();
+  }
+}
+
 // 图商发生变化
 function mapTitleOptionsValueChange() {
   const mapTitleOption = mapTitleOptions.find(
@@ -455,12 +556,12 @@ function gohistoryChart_markerPopup(arg: any) {
 // marker-弹窗-实时趋势图
 function openRealTimeChart_markerPopup(arg: any) {
   //
-  console.log(arg)
-  realTimeChartVisible.value = true
+  console.log(arg);
+  realTimeChartVisible.value = true;
 }
 // marker-弹窗-远程管理
 function openRemote_markerPopup(arg: any) {
-  console.log(arg,'--打开远程管理')
+  console.log(arg, "--打开远程管理");
 }
 </script>
 
@@ -482,6 +583,72 @@ function openRemote_markerPopup(arg: any) {
 
     .el-select {
       width: 120px;
+    }
+  }
+  .statistics_box {
+    padding: 12px;
+    right: 10px;
+    top: 10px;
+    position: absolute;
+    z-index: 999;
+    width: 360px;
+    // height: 260px;
+    background: url("@/assets/monitoring/bg_1.png") no-repeat center center;
+    background-size: 100% 100%;
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      border-bottom: 2px solid rgba(0, 218, 216, 0.3);
+      padding-bottom: 12px;
+
+      li {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        span:first-child {
+          color: #fff;
+          font-size: 24px;
+        }
+        span:last-child {
+          color: #00baad;
+          font-size: 14px;
+          font-weight: 700;
+        }
+      }
+    }
+    .center,
+    .bottom {
+      display: flex;
+      flex-wrap: wrap;
+      li {
+        width: 50%;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        :deep(.el-checkbox) {
+          margin-right: 8px;
+          .el-checkbox__inner {
+            background-color: transparent;
+            border: 1px solid #00fff7;
+          }
+        }
+        label {
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+        }
+        .label {
+          font-size: 14px;
+          margin-right: 16px;
+          margin-left: 8px;
+        }
+        .value {
+          font-size: 18px;
+          font-weight: 700;
+        }
+      }
     }
   }
 }
@@ -574,4 +741,3 @@ function openRemote_markerPopup(arg: any) {
   }
 }
 </style>
-./utils/mapTitleLayers

@@ -1,5 +1,7 @@
+
 import request from '@/utils/request'
 // 作业管理模块API
+
 
 import { onlineFarmMachinePosition_type } from './type'
 
