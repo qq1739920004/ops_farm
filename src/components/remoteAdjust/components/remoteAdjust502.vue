@@ -1,7 +1,7 @@
 <!--  -->
 <template>
-    <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" v-model="dialogVisible" title="远程管理" width="1012px"
-        height="516px" center>
+    <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" @close="closeRemoteAdjust" v-model="dialogVisible"
+        title="远程管理" width="1012px" height="516px" center>
         <div class="top">
             <span style="margin-right: 20px;">车辆名称：{{ props.name || '/' }}</span>
             <span>车辆类型：{{ props.terminalType }}</span>
@@ -19,8 +19,8 @@
 
         </div>
         <div class="mainContent">
-            <el-form ref="carFormRef" v-show="activeIndex == '1'" :rules="carParamRules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="paramParamsData"
+            <el-form :validate-on-rule-change="false" ref="carFormRef" v-show="activeName == '1'" :rules="carParamRules"
+                :inline="true" :label-position="labelPosition" label-width="160px" :model="paramParamsData"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="carParamsData" :span="12" v-for="(value, key, index) in carParamsData" :key="index">
@@ -36,9 +36,9 @@
                     <el-button type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form ref="calibFormRef" v-show="activeIndex == '2'" :rules="CalibParamRules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="CalibParamsData"
-                style="max-width: 1012px;margin-bottom:20px">
+            <el-form :validate-on-rule-change="false" ref="calibFormRef" v-show="activeName == '2'"
+                :rules="CalibParamRules" :inline="true" :label-position="labelPosition" label-width="160px"
+                :model="CalibParamsData" style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="CalibTitleData" :span="12" v-for="(value, key, index) in CalibTitleData" :key="index">
                         <el-form-item class="item" :label="value.name" :prop="key">
@@ -53,8 +53,8 @@
                     <el-button type="primary" @click="updateCalibParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form ref="pidFormRef" v-show="activeIndex == '3'" :rules="pibParamRules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="basicParamsData"
+            <el-form :validate-on-rule-change="false" ref="pidFormRef" v-show="activeName == '3'" :rules="pibParamRules"
+                :inline="true" :label-position="labelPosition" label-width="160px" :model="basicParamsData"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="basicTitleData" :span="12" v-for="(value, key, index) in basicTitleData" :key="index">
@@ -70,9 +70,9 @@
                     <el-button type="primary" @click="updatebasicParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form ref="advanceFormRef" v-show="activeIndex == '4'" :rules="advance1ParamRules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="advanced1ParamsData"
-                style="max-width: 1012px;margin-bottom:20px">
+            <el-form :validate-on-rule-change="false" ref="advanceFormRef" v-show="activeName == '4'"
+                :rules="advance1ParamRules" :inline="true" :label-position="labelPosition" label-width="160px"
+                :model="advanced1ParamsData" style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="advance1TitleData" :span="12" v-for="(value, key, index) in advance1TitleData"
                         :key="index">
@@ -88,8 +88,8 @@
                     <el-button type="primary" @click="updateAdvanced1Params">确定</el-button>
                 </div>
             </el-form>
-            <el-form v-show="activeIndex == '5'" ref="moudleRef" :rules="rules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="chaFenlist"
+            <el-form :validate-on-rule-change="false" v-show="activeName == '5'" ref="moudleRef" :rules="rules"
+                :inline="true" :label-position="labelPosition" label-width="160px" :model="chaFenlist"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="12" :offset="6">
@@ -158,8 +158,8 @@
                 </div>
             </el-form>
 
-            <el-form ref="formLabelAlignRef" v-show="activeIndex == '6'" :rules="rules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
+            <el-form :validate-on-rule-change="false" ref="formLabelAlignRef" v-show="activeName == '6'" :rules="rules"
+                :inline="true" :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col align="center">
@@ -167,9 +167,9 @@
                     </el-col>
                 </el-row>
             </el-form>
-            <el-form v-show="activeIndex == '7'" :rules="rules" :inline="true" :label-position="labelPosition"
-                label-width="160px" :model="formLabelAlign" style="max-width: 1012px;margin-bottom:20px">
-
+            <el-form :validate-on-rule-change="false" v-show="activeName == '7'" :rules="rules" :inline="true"
+                :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
+                style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col align="center">
                         AG302以及AG302_Android的日志回传功能暂未开放
@@ -192,7 +192,7 @@ import type { TabsPaneContext } from 'element-plus'
 const activeName = ref('1')
 
 const handleClick = (tab: TabsPaneContext) => {
-    activeIndex.value = tab.props.name as never
+    activeName.value = tab.props.name as never
 }
 const carFormRef = ref()
 const calibFormRef = ref()
@@ -201,7 +201,6 @@ const moudleRef = ref()
 const formLabelAlignRef = ref()
 const advanceFormRef = ref()
 const dialogVisible = ref<boolean>(false)
-const activeIndex = ref('1')
 const labelPosition = ref('right')
 const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn', 'name'])
 const carParamsData = ref<any | null>([])
@@ -379,10 +378,18 @@ const getParamParams = async () => {
     const res: paramCarParamResponseData = await paramCarParam_API(props.carId)
     res.data ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
 }
+const closeRemoteAdjust = () => {
+    carFormRef.value.resetFields()
+    calibFormRef.value.resetFields()
+    pidFormRef.value.resetFields()
+    moudleRef.value.resetFields()
+    formLabelAlignRef.value.resetFields()
+    advanceFormRef.value.resetFields()
+}
 
 const openRemoteAdjust = () => {
     // 强制更改index为1
-    activeIndex.value = '1'
+    activeName.value = '1'
     // 参数赋值
     paramDescribeList.value.version = props.version
     paramDescribeList.value.type = props.type
@@ -409,6 +416,7 @@ const openRemoteAdjust = () => {
 }
 // 更新车辆参数
 const updateCarParams = async () => {
+
     await carFormRef.value.validate()
     ElMessageBox.confirm(
         '此操作将覆盖当前车辆所有参数，是否继续？',
@@ -432,7 +440,7 @@ const updateCarParams = async () => {
             })
         })
         .catch(() => {
-           
+
         })
 }
 // 更新基本参数
@@ -461,7 +469,7 @@ const updatebasicParams = async () => {
             })
         })
         .catch(() => {
-           
+
         })
 
 }
@@ -490,25 +498,25 @@ const updateCalibParams = async () => {
             })
         })
         .catch(() => {
-           
+
         })
 
 }
 // 获取校准参数对应的值
 const getCalib = async () => {
     const res: paramcalibParamData = await paramCalibParam_API(props.carId)
-    res.data ? Object.assign(CalibParamsData, JSON.parse(res.data.paramJson)) : ''
+    res.data.paramJson ? Object.assign(CalibParamsData, JSON.parse(res.data.paramJson)) : ''
 }
 // 基本参数对应的值
 const getBasic = async () => {
     const res: paramcalibParamData = await basicParam_API((props.carId))
-    res.data ? Object.assign(basicParamsData, JSON.parse(res.data.paramJson)) : ''
+    res.data.paramJson ? Object.assign(basicParamsData, JSON.parse(res.data.paramJson)) : ''
 }
 // 高级参数1对应的值
 const getAdvanced1 = async () => {
     const { data }: paramAdvanced1ParamData = await getAdvanced1Param_API((props.carId))
     console.log(data);
-    data.data ? Object.assign(advanced1ParamsData, JSON.parse(data.data.paramJson)) : ''
+    data.data.paramJson ? Object.assign(advanced1ParamsData, JSON.parse(data.data.paramJson)) : ''
 }
 // 更新高级参数1
 
@@ -536,7 +544,7 @@ const updateAdvanced1Params = async () => {
             })
         })
         .catch(() => {
-           
+
         })
 
 }
@@ -596,7 +604,7 @@ const updateChafenData = async () => {
             })
         })
         .catch(() => {
-           
+
         })
 
 }
@@ -761,6 +769,41 @@ const advance1ParamRules = computed(() => {
     }
     return rules;
 })
+
+// watch(() => dialogVisible.value, () => {
+//     if (dialogVisible.value == false) {
+//         Object.assign(paramParamsData, {
+//             'Vehicle1': "",
+//             'Vehicle10': 0,
+//             'Vehicle11': 0,
+//             'Vehicle12': 0,
+//             'Vehicle13': 0,
+//             'Vehicle14': "",
+//             'Vehicle2': "",
+//             'Vehicle3': 0,
+//             'Vehicle4': "",
+//             'Vehicle5': "",
+//             'Vehicle6': 0,
+//             'Vehicle7': 0,
+//             'Vehicle8': 0,
+//             'Vehicle9': 0,
+
+//         })
+//         Object.assign(CalibParamsData, {
+//             "Just1": 0,
+//             "Just2": 0,
+//             "Just3": 0,
+//             "Just7": 0,
+//             "Just8": 0,
+//             "Just9": 0
+//         })
+//         Object.assign(basicParamsData, {})
+//         Object.assign(advanced1ParamsData, {})
+//         workPattern.value = {
+//             type: '3'
+//         }
+//     }
+// })
 </script>
 
 <style lang="scss" scoped>

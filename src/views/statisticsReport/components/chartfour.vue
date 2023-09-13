@@ -4,23 +4,31 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted,PropType} from "vue";
 import * as echarts from "echarts";
+import type {getStatisticsWxAPIResponse} from '@/api/statisticsReport/type'
+
+const props=defineProps({
+    data:{
+        type:Object as PropType<getStatisticsWxAPIResponse['data']>,
+        required:true
+    }
+})
+console.log(111);
+console.log(props.data);
 const main = ref()
+
 onMounted(
     () => {
         init()
     }
 )
 function init() {
-
     var myChart = echarts.init(main.value);
-
     var option = {
-
         xAxis: {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data: props.data.chart.date
         },
         yAxis: {
             type: 'value'
@@ -29,9 +37,8 @@ function init() {
             bottom: 30,
             top: 60,
             left: 50
-
         }, title: {
-            text: '访问次数统计',
+            text: '功能统计',
             left: 26,
             top: 16,
             textStyle: {
@@ -42,7 +49,7 @@ function init() {
         },
         series: [
             {
-                data: [150, 230, 224, 218, 135, 147, 260],
+                data: props.data.chart.data,
                 type: 'line'
             }
         ]

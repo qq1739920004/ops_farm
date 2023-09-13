@@ -55,7 +55,8 @@
                                 </el-checkbox>
                             </el-checkbox-group>
                         </li>
-                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: black;">—— 作业已全部加载
+                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: var(--el-text-color);">——
+                            作业已全部加载
                             ——</span>
                     </ul>
                 </div>
@@ -116,7 +117,7 @@ const tileUrl = reactive<any>({})
 Object.assign(tileUrl, mapTitleLayers)
 const pickupMode = ref<boolean>(false)
 const pickedPoints = ref<any[]>([])
-const calculationObj = ref<any[]>([])
+let calculationObj = <any[]>([])
 const mapId = ref(0)
 const mapOptions = reactive([
     {
@@ -136,7 +137,7 @@ const mapOptions = reactive([
         mapId: 3
     }
 ])
-const markerCollect = reactive<any>({})
+const markerCollect = <any>({})
 const initMap = () => {
     map = L.map('child6_map',
         {
@@ -156,7 +157,7 @@ const initMap = () => {
             })
 
             let marker = L.marker(point, { icon: icon }).addTo(map);
-            calculationObj.value.push(marker);
+            calculationObj.push(marker);
             if (pickedPoints.value.length === 2) {
                 let distance = pickedPoints.value[0].distanceTo(
                     pickedPoints.value[1]
@@ -165,7 +166,7 @@ const initMap = () => {
                     .addTo(map)
                     .bindPopup(`相距:${distance.toFixed(3)}米`)
                     .openPopup(); //划线
-                calculationObj.value.push(polyline);
+                calculationObj.push(polyline);
                 map.fitBounds(pickedPoints.value); //适应视野
                 //恢复状态
                 pickupMode.value = false;
@@ -233,11 +234,11 @@ const calculateDistance = () => {
 }
 // 清除测距
 const clearDistance = () => {
-    if (calculationObj.value.length) {
-        calculationObj.value.forEach((item) => {
+    if (calculationObj.length) {
+        calculationObj.forEach((item) => {
             map.removeLayer(item);
         });
-        calculationObj.value = [];
+        calculationObj = [];
     }
     pickupMode.value = false;
     pickedPoints.value = [];
@@ -693,7 +694,7 @@ watch(() => paddyWorkList.value,
                 align-items: center;
                 font-size: 10px;
                 height: 20px;
-                color: black;
+                color: var(--el-text-color);
                 padding-bottom: 5px;
             }
 
@@ -704,7 +705,7 @@ watch(() => paddyWorkList.value,
                 align-items: center;
                 font-size: 10px;
                 height: 0px;
-                color: black;
+                color: var(--el-text-color);
                 overflow: hidden;
             }
 
@@ -714,7 +715,7 @@ watch(() => paddyWorkList.value,
                 margin-left: auto;
                 width: 194px;
                 border-radius: 4px;
-                background-color: #fff;
+                background-color: var(--el-bg-color);
 
                 .li_title {
                     overflow: hidden;
@@ -772,10 +773,10 @@ watch(() => paddyWorkList.value,
                     height: 50px;
                     opacity: 1;
                     border-radius: 4px;
-                    background: #fff;
+                    background-color: var(--el-bg-color);
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-                    color: black;
+                    color: var(--el-text-color)
                 }
 
                 .infinite-list .infinite-list-item+.list-item {
@@ -789,7 +790,7 @@ watch(() => paddyWorkList.value,
                 margin-left: auto;
                 width: 194px;
                 border-radius: 4px;
-                background-color: #fff;
+                background-color: var(--el-bg-color);
 
                 .li_title {
                     overflow: hidden;
@@ -848,10 +849,10 @@ watch(() => paddyWorkList.value,
                     height: 50px;
                     opacity: 1;
                     border-radius: 4px;
-                    background: #fff;
+                    background-color: var(--el-bg-color);
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-                    color: black;
+                    color: var(--el-text-color)
                 }
 
                 .infinite-list .infinite-list-item+.list-item {
@@ -865,6 +866,7 @@ watch(() => paddyWorkList.value,
 :deep(.leaflet-popup-content-wrapper) {
     background-color: var(--el-bg-color);
     color: var(--color-scheme);
+
     .popup_outsiders {
         opacity: 1;
         border-radius: 4px;

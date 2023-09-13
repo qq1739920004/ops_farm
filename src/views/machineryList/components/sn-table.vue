@@ -128,8 +128,8 @@
     </el-table>
     <slot></slot>
     <MachineDetailDia ref="MachineD" :carId="carId" :terminalType="terminalType2"></MachineDetailDia>
-
-    <RemoteControl :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn" :name="name" />
+    <RemoteControl :isChange="isChange" :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn"
+        :name="name" />
     <RegisterDia ref='RegisterD' :sn="sn" :carId="carId" :deviceId="deviceId"></RegisterDia>
 </template>
 
@@ -154,6 +154,7 @@ const version = ref<string>('')
 const type = ref<string>('')
 const name = ref<string>('')
 const deviceId = ref<string>('')
+const isChange = ref(false)
 // 车辆ID 
 const carId = ref<number>()
 const terminalType = ref<string>('')
@@ -239,6 +240,7 @@ const gotoRemote = (val: any, val2: any, val3: any, val4: any, val5: any, val6: 
     carId.value = val4
     sn.value = val5
     name.value = val6
+    isChange.value = !isChange.value
 }
 // 历史轨迹
 const gotoMap = (sn: string, npn: string) => {
