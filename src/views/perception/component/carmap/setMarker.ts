@@ -6,6 +6,18 @@ let height=ref(220);
 let marginTop=ref(110);
 let chartList=ref<any>([]);
 let chartContainerList=ref<any>([]);
+let optionsList=ref<any>([]);
+let isUpdata=ref(false);
+function updateChart(dataList:MonitorObj["provinceCars"]){
+  if(!isUpdata.value) return
+  optionsList.value.forEach((item:any,index:number)=>{
+    item.xAxis.data[0]=dataList[index+1].cityName
+    item.series[0].data[0]=dataList[index+1].onlineNum
+    item.series[1].data[0]=dataList[index+1].totalNum-dataList[index+1].onlineNum
+    chartList.value[index].setOption(item,true)
+  })
+}
+
 function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"]){
   for(let i=1;i<4;i++){
         const markerContent = document.createElement('div');
@@ -85,7 +97,9 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"]){
                 },
             }]
         };
+        optionsList.value.push(option);
         chart.setOption(option);
       }
+      isUpdata.value=true;
 }
-export {setMarker,width,height,marginTop,chartContainerList,chartList}
+export {setMarker,updateChart,width,height,marginTop,chartContainerList,chartList}

@@ -147,6 +147,7 @@ const initEcharts = () => {
   mycharts = echarts.init(bar.value);
   mycharts.setOption(option);
 };
+let isDataUpdated = ref(false);
 //设置为定时器类型
 let dataZoomMoveTimer:any
 const startMoveDataZoom = (
@@ -154,6 +155,11 @@ const startMoveDataZoom = (
   dataZoomMove: DataZoomMove
 ) => {
   dataZoomMoveTimer = setInterval(() => {
+    if (isDataUpdated.value) {
+      // 如果数据已更新，重置标志并跳过此次移动
+      isDataUpdated.value = false;
+      return;
+    }
     dataZoomMove.start += 1;
     dataZoomMove.end += 1;
     if (dataZoomMove.end > listx.length - 1) {
@@ -169,7 +175,7 @@ const startMoveDataZoom = (
         },
       ],
     });
-  }, 3000);
+  }, 2000);
 };
 
 onMounted(() => {
@@ -192,9 +198,13 @@ onMounted(() => {
 });
 
 watch(props, (newValue) => {
+  isDataUpdated.value = true;
   option.yAxis.data = newValue.carAreas.map((item: any) => item.carName);
   option.series[0].data = newValue.carAreas.map((item: any) => item.carArea);
-  mycharts.setOption(option);
+   // 设置新数据后，保持当前的滚动位置
+   option.dataZoom[0].startValue = dataZoomMove.start;
+  option.dataZoom[0].endValue = dataZoomMove.end;
+  mycharts.setOption(option,true);
 });
 
 onUnmounted(() => {

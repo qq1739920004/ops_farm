@@ -8,11 +8,10 @@
       <div class="chart2">
         <div class="chart_title">网络状况</div>
 
-        <Charttwo></Charttwo>
+        <chart-net :data="networkData"></chart-net>
       </div>
       <div class="chart3">
         <div class="chart_title">省份在线车辆排名</div>
-
         <Chartthree :farmMachineData="farmMachineData"> </Chartthree>
       </div>
     </div>
@@ -39,7 +38,10 @@
         ></chartBase>
       </div>
       <div class="chart7">
-        <Chartseven></Chartseven>
+        <chartBase
+          :options="optionCarjobStatistics"
+          :istimeBox="false"
+        ></chartBase>
       </div>
     </div>
   </div>
@@ -47,18 +49,19 @@
 
 <script setup lang="ts">
 import Chartone from './components/chartone.vue'
-import Charttwo from './components/charttwo.vue'
+import chartNet from './components/chartNet.vue'
 import Chartthree from './components/chartthree.vue'
-import Chartseven from './components/chartseven.vue'
 import chartBase from './components/chartBase.vue'
 import { fnOption } from './components/fnStatistics'
 import { transportOption } from './components/transportStatistics'
 import { visitOption } from './components/visitStatistics'
+import {carjobOption} from './components/carjobStatistics';
 
-import { ref, shallowRef,onMounted} from 'vue'
-import {getStatisticsReportfarmMachineAPI,getStatisticsWxAPI,getStatisticsRemoteAPI,getStatisticsStatAPI} from '@/api/statisticsReport/index'
-import type {FarmMachineObj} from '@/api/statisticsReport/type'
+import { ref, shallowRef,onMounted,onUnmounted} from 'vue'
+import {getStatisticsReportfarmMachineAPI,getStatisticsReportcarjobAPI,getStatisticsReportnetworkAPI,getStatisticsWxAPI,getStatisticsRemoteAPI,getStatisticsStatAPI} from '@/api/statisticsReport/index'
+import type {FarmMachineObj,getStatisticsReportnetworkAPIResponse} from '@/api/statisticsReport/type'
 import type {EChartsOption} from 'echarts'
+import realTimeStore from '@/store/realTimeData';
 type timeType={
     st:string,
     et:string
@@ -71,17 +74,26 @@ let time:timeType={
   st:`${year}-${month}-01 00:00:00`,
   et:`${year}-${month}-${day} 23:59:59`
 }
+const realTime=realTimeStore()
 const farmMachineData=ref<FarmMachineObj>()
+const networkData=ref<getStatisticsReportnetworkAPIResponse['data']['onlineFarmMachines']>()
 let optionfnStatistics=shallowRef<EChartsOption>({})
 let optionTransportStatistics=shallowRef<EChartsOption>({})
 let optionVisitStatistics=shallowRef<EChartsOption>({})
+  let optionCarjobStatistics=shallowRef<EChartsOption>({})
+
 onMounted(()=>{
+  realTime.startRealTimeData()
     getStatisticsReportfarmMachine()
     getStatisticsWx(time)
     getStatisticsRemote(time)
     getStatisticsStat(time)
+    getStatisticsReportnetwork()
+    getStatisticsReportcarjob()
 })
-
+onUnmounted(()=>{
+  realTime.closeRealTimeData()
+})
 // 农机数据统计
 const getStatisticsReportfarmMachine=async()=>{
    try{
@@ -128,6 +140,24 @@ const getStatisticsStat=async(time:timeType)=>{
     console.log(err)
    }
 }
+//网络状况
+const getStatisticsReportnetwork=async()=>{
+    try{
+      let res= await getStatisticsReportnetworkAPI()
+      networkData.value=res.data.onlineFarmMachines
+   }catch(err){
+    console.log(err)
+   }
+}
+//作业面积统计
+const getStatisticsReportcarjob=async()=>{
+    try{
+      let res= await getStatisticsReportcarjobAPI()
+      carjobOption(res.data,optionCarjobStatistics)
+   }catch(err){
+    console.log(err)
+   }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -136,6 +166,11 @@ const getStatisticsStat=async(time:timeType)=>{
   margin: 16px 0px 0px 26px;
 }
 .app_container{
+  width: 100%;
+  padding:8px 0px;
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
   background-color: var(--el-bg-color-page);
 }
 .chart1,
@@ -145,7 +180,7 @@ const getStatisticsStat=async(time:timeType)=>{
 .chart5,
 .chart6,
 .chart7 {
-  box-shadow: 2px 2px 20px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 10px 2px rgba(0, 0, 0, 0.25);
   border-radius: 15px;
 }
 
@@ -153,7 +188,6 @@ const getStatisticsStat=async(time:timeType)=>{
   height: 203px;
   display: flex;
   justify-content: space-around;
-  margin-top: 10px;
 
   .chart1 {
     width: 36%;
@@ -175,7 +209,7 @@ const getStatisticsStat=async(time:timeType)=>{
   height: 305px;
   display: flex;
   justify-content: space-around;
-  margin-top: 20px;
+  margin-top: 13px;
 
   .chart4 {
     width: 48%;
@@ -187,10 +221,10 @@ const getStatisticsStat=async(time:timeType)=>{
 }
 
 .bottom {
-  height: 305px;
+  height: 310px;
   display: flex;
   justify-content: space-around;
-  margin-top: 20px;
+  margin-top: 13px;
 
   .chart6 {
     width: 48%;

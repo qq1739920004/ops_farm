@@ -134,6 +134,7 @@ function changeCollapse() {
   }
 }
 .el-main {
+  height: 100%;
   padding: 0;
 }
 </style>
