@@ -4,8 +4,8 @@
             <div class="dateContainer ">
                 <el-date-picker style="height: 34px; width: 200px;" v-model="filterDate" type="date" placeholder="选择日期"
                     :disabled-date="disabledDate" :clearable="false" @change="filterDateChange" />
-                <el-time-picker style="height: 34px; width: 240px;margin-left: 10px;margin-right: 10px;" v-model="timeRange" is-range
-                    :clearable="false" range-separator="-" start-placeholder="开始时间" end-placeholder="结束时间"
+                <el-time-picker style="height: 34px; width: 240px;margin-left: 10px;margin-right: 10px;" v-model="timeRange"
+                    is-range :clearable="false" range-separator="-" start-placeholder="开始时间" end-placeholder="结束时间"
                     placeholder="选择时间范围" format="HH:mm" @change="refreshData" />
                 <el-tooltip class="item" effect="dark" content="刷新数据" placement="top">
                     <el-icon>
@@ -171,7 +171,9 @@ const initHDiffChart = () => {
                 name: '横向偏差',
                 type: 'line',
                 showSymbol: false,
-                hoverAnimation: false,
+                emphasis: {
+                    scale: false
+                },
                 data: hDiffData,
                 markLine: {
                     silent: true,
@@ -306,7 +308,9 @@ const initSpeedChart = () => {
                 name: '速度',
                 type: 'line',
                 showSymbol: false,
-                hoverAnimation: false,
+                emphasis: {
+                    scale: false
+                },
                 data: speedData
             }
         ]
@@ -415,7 +419,9 @@ const initAzimuthChart = () => {
                 name: '航向角',
                 type: 'line',
                 showSymbol: false,
-                hoverAnimation: false,
+                emphasis: {
+                    scale: false
+                },
                 data: azimuthData
                 // lineStyle:{
                 //     color:"#409EFF"

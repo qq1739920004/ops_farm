@@ -1,7 +1,7 @@
 <!--  -->
 <template>
-    <el-dialog @open="openRemoteAdjust" style="border-radius: 8px;" v-model="dialogVisible" title="远程管理" width="1012px"
-        height="516px" center>
+    <el-dialog @open="openRemoteAdjust" @close="closeRemoteAdjust" style="border-radius: 8px;" v-model="dialogVisible"
+        title="远程管理" width="1012px" height="516px" center>
         <div class="top">
             <span>车辆名称：</span>
             <span>车辆类型：{{ props.terminalType }}</span>
@@ -19,8 +19,8 @@
             </el-tabs>
         </div>
         <div class="mainContent">
-            <el-form ref="carFormRef" v-show="activeIndex == '1'" :rules="carParamRules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="paramParamsData"
+            <el-form ref="carFormRef" :validate-on-rule-change="false" v-show="activeIndex == '1'" :rules="carParamRules"
+                :inline="true" :label-position="labelPosition" label-width="160px" :model="paramParamsData"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="carParamsData" :span="12" v-for="(value, key, index) in carParamsData" :key="index">
@@ -36,9 +36,9 @@
                     <el-button :disabled="!carParamsData" type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form ref="calibFormRef" v-show="activeIndex == '2'" :rules="CalibParamRules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="CalibParamsData"
-                style="max-width: 1012px;margin-bottom:20px">
+            <el-form ref="calibFormRef" :validate-on-rule-change="false" v-show="activeIndex == '2'"
+                :rules="CalibParamRules" :inline="true" :label-position="labelPosition" label-width="160px"
+                :model="CalibParamsData" style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="CalibTitleData" :span="12" v-for="(value, key, index) in CalibTitleData" :key="index">
                         <el-form-item class="item" :label="value.name" :prop="key">
@@ -53,8 +53,8 @@
                     <el-button :disabled="!CalibTitleData" type="primary" @click="updateCalibParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form ref="pidFormRef" v-show="activeIndex == '3'" :rules="pibParamRules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="PidParamsData"
+            <el-form ref="pidFormRef" :validate-on-rule-change="false" v-show="activeIndex == '3'" :rules="pibParamRules"
+                :inline="true" :label-position="labelPosition" label-width="160px" :model="PidParamsData"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="PidTitleData" :span="12" v-for="(value, key, index) in PidTitleData" :key="index">
@@ -70,8 +70,8 @@
                     <el-button :disabled="!PidTitleData" type="primary" @click="updatePidParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form ref="pidCurveRef" v-show="activeIndex == '9'" :rules="pidCurveRules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="pidCurveList"
+            <el-form ref="pidCurveRef" :validate-on-rule-change="false" v-show="activeIndex == '9'" :rules="pidCurveRules"
+                :inline="true" :label-position="labelPosition" label-width="160px" :model="pidCurveList"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="PidCurveTitleData" :span="12" v-for="(value, key, index) in PidCurveTitleData"
@@ -88,9 +88,9 @@
                     <el-button :disabled="!PidCurveTitleData" type="primary" @click="updatePidCurveParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form ref="supLowFormRef" v-show="activeIndex == '10'" :rules="pidSupLowRules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="pidSupLowList"
-                style="max-width: 1012px;margin-bottom:20px">
+            <el-form ref="supLowFormRef" :validate-on-rule-change="false" v-show="activeIndex == '10'"
+                :rules="pidSupLowRules" :inline="true" :label-position="labelPosition" label-width="160px"
+                :model="pidSupLowList" style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="PidSupLowTitleData" :span="12" v-for="(value, key, index) in PidSupLowTitleData"
                         :key="index">
@@ -106,8 +106,8 @@
                     <el-button :disabled="!PidSupLowTitleData" type="primary" @click="updatePidSupLowParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form ref="moudleRef" v-show="activeIndex == '5'" :rules="rules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="chaFenlist"
+            <el-form ref="moudleRef" :validate-on-rule-change="false" v-show="activeIndex == '5'" :rules="rules"
+                :inline="true" :label-position="labelPosition" label-width="160px" :model="chaFenlist"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="12" :offset="6">
@@ -235,8 +235,8 @@
                 </div>
             </el-form>
 
-            <el-form ref="formLabelAlignRef" v-show="activeIndex == '6'" :rules="rules" :inline="true"
-                :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
+            <el-form ref="formLabelAlignRef" :validate-on-rule-change="false" v-show="activeIndex == '6'" :rules="rules"
+                :inline="true" :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
                 <div class="mktitle">
                     双天线一体机
@@ -274,8 +274,9 @@
                 </div>
             </el-form>
 
-            <el-form v-show="activeIndex == '7'" :rules="rules" :inline="true" :label-position="labelPosition"
-                label-width="160px" :model="formLabelAlign" style="max-width: 1012px;margin-bottom:20px">
+            <el-form :validate-on-rule-change="false" v-show="activeIndex == '7'" :rules="rules" :inline="true"
+                :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
+                style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col align="center">
                         AG302以及AG302_Android的日志回传功能暂未开放
@@ -481,17 +482,27 @@ const getCarParams = async (val: string) => {
 // 获取车辆参数对应的值
 const getParamParams = async () => {
     const res: paramCarParamResponseData = await paramCarParam_API(props.carId)
-    res.data ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
+    res.data.paramJson ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
 }
 // 获取PID曲线对应的值
 const getPidCurveList = async () => {
     const res = await pidCurveParam_API(props.carId)
-    res.data ? Object.assign(pidCurveList, JSON.parse(res.data.paramJson)) : ''
+    res.data.paramJson ? Object.assign(pidCurveList, JSON.parse(res.data.paramJson)) : ''
 }
 // 获取PID超低速曲线对应的值
 const getPidSupLowList = async () => {
     const res = await pidSlsParam_API(props.carId)
-    res.data ? Object.assign(pidSupLowList, JSON.parse(res.data.paramJson)) : ''
+    res.data.paramJson ? Object.assign(pidSupLowList, JSON.parse(res.data.paramJson)) : ''
+}
+const closeRemoteAdjust = () => {
+    carFormRef.value.resetFields()
+    calibFormRef.value.resetFields()
+    pidFormRef.value.resetFields()
+    moudleRef.value.resetFields()
+    formLabelAlignRef.value.resetFields()
+    pidCurveRef.value.resetFields()
+    supLowFormRef.value.resetFields()
+
 }
 const openRemoteAdjust = () => {
     // 强制更改index为1
@@ -549,10 +560,7 @@ const updateCarParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+
         })
 }
 // 更新PID参数
@@ -580,10 +588,7 @@ const updatePidParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+
         })
 
 }
@@ -612,10 +617,7 @@ const updatePidCurveParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+
         })
 
 }
@@ -645,10 +647,7 @@ const updatePidSupLowParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+
         })
 
 }
@@ -678,10 +677,7 @@ const updateCalibParams = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+
         })
 
 }
@@ -750,10 +746,7 @@ const updateChafenData = async () => {
             })
         })
         .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: 'Delete canceled',
-            })
+
         })
 
 }

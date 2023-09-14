@@ -1,5 +1,5 @@
 import type { MonitorObj } from "@/api/perception/type";
-import {ref} from 'vue';
+import { ref } from 'vue';
 import * as echarts from 'echarts';
 let width=ref(40);
 let height=ref(220);

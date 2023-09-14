@@ -55,7 +55,8 @@
                                 </el-checkbox>
                             </el-checkbox-group>
                         </li>
-                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: black;">—— 作业已全部加载
+                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: var(--el-text-color);">——
+                            作业已全部加载
                             ——</span>
                     </ul>
                 </div>
@@ -108,7 +109,7 @@ onMounted(() => {
 })
 
 // 地图相关
-const map = ref<any>(null)
+let map = <any>null
 const originPoint = ref<any>([31.172800343248, 121.406021546488])
 const originZoom = ref<any>(5)
 const tileLayer = reactive<any>([])
@@ -116,7 +117,7 @@ const tileUrl = reactive<any>({})
 Object.assign(tileUrl, mapTitleLayers)
 const pickupMode = ref<boolean>(false)
 const pickedPoints = ref<any[]>([])
-const calculationObj = ref<any[]>([])
+let calculationObj = <any[]>([])
 const mapId = ref(0)
 const mapOptions = reactive([
     {
@@ -136,9 +137,9 @@ const mapOptions = reactive([
         mapId: 3
     }
 ])
-const markerCollect = reactive<any>({})
+const markerCollect = <any>({})
 const initMap = () => {
-    map.value = L.map('child6_map',
+    map = L.map('child6_map',
         {
             attributionControl: false,
             closePopupOnClick: false,
@@ -146,7 +147,7 @@ const initMap = () => {
         }
     ).setView(originPoint.value, originZoom.value)
     handleMapChange(mapId.value)
-    map.value.on("click", function (event: any) {
+    map.on("click", function (event: any) {
         if (pickupMode.value) {
             let point = event.latlng;
             pickedPoints.value.push(point);
@@ -155,18 +156,18 @@ const initMap = () => {
                 iconAnchor: [23, 46],
             })
 
-            let marker = L.marker(point, { icon: icon }).addTo(map.value);
-            calculationObj.value.push(marker);
+            let marker = L.marker(point, { icon: icon }).addTo(map);
+            calculationObj.push(marker);
             if (pickedPoints.value.length === 2) {
                 let distance = pickedPoints.value[0].distanceTo(
                     pickedPoints.value[1]
                 ); //算距离
                 let polyline = L.polyline(pickedPoints.value, { color: "red" })
-                    .addTo(map.value)
-                    .bindPopup(`相距:${distance.toFixed(3)}米`, { closeButton: false })
+                    .addTo(map)
+                    .bindPopup(`相距:${distance.toFixed(3)}米`)
                     .openPopup(); //划线
-                calculationObj.value.push(polyline);
-                map.value.fitBounds(pickedPoints.value); //适应视野
+                calculationObj.push(polyline);
+                map.fitBounds(pickedPoints.value); //适应视野
                 //恢复状态
                 pickupMode.value = false;
                 pickedPoints.value = [];
@@ -197,7 +198,7 @@ const handleMapChange = (mapId: any) => {
 }
 const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
     try {
-        if (!map.value) {
+        if (!map) {
             console.warn('未初始化底图实例')
             return
         }
@@ -215,7 +216,7 @@ const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
             options.key = tileUrl[mapName]['key']
         }
         for (let key in mapUrl) {
-            let layer = L.tileLayer(mapUrl[key], options).addTo(map.value)
+            let layer = L.tileLayer(mapUrl[key], options).addTo(map)
             tileLayer.push(layer as never)
         }
     } catch (error) {
@@ -233,11 +234,11 @@ const calculateDistance = () => {
 }
 // 清除测距
 const clearDistance = () => {
-    if (calculationObj.value.length) {
-        calculationObj.value.forEach((item) => {
-            map.value.removeLayer(item);
+    if (calculationObj.length) {
+        calculationObj.forEach((item) => {
+            map.removeLayer(item);
         });
-        calculationObj.value = [];
+        calculationObj = [];
     }
     pickupMode.value = false;
     pickedPoints.value = [];
@@ -296,14 +297,14 @@ const loadWorkData = async (workId: any) => {
                 middlePoint.value[0] = middlePoint.value[0] / middleKey.value
                 middlePoint.value[1] = middlePoint.value[1] / middleKey.value
             }
-            let line = L.polyline(PointListTransed, { color: '#00ff00' }).addTo(map.value)
+            let line = L.polyline(PointListTransed, { color: '#00ff00' }).addTo(map)
             let htmlStr = '<p><div class="map-circle-name"></div><p/>'
             let icon = L.divIcon({
                 html: htmlStr,
                 iconSize: [98, 98],
                 className: 'iconImage'
             })
-            let marker = L.marker(middlePoint.value, { icon: icon }).addTo(map.value)
+            let marker = L.marker(middlePoint.value, { icon: icon }).addTo(map)
             line.bindPopup(`<div class="popup_outsiders">
             <div class="popupTitle">${machine[workId].name}</div>
             <div class="popupMain">
@@ -326,11 +327,11 @@ const loadWorkData = async (workId: any) => {
             <div class="popupArea2"> <span class="left">农具：</span> <span class="right">${machine[workId].toolName}</span></div>
             <div class="popupBottom"> <div class="leftt">${machine[workId].createtime}</div> <span class="left"></span><span class="left"></span><span class="left"></span></div>
             <div class="popupBottom"><span class="right"></span><span class="right"></span><span class="right"></span> <span class="rightt">${machine[workId].updatetime}</span></div>
-            </div>`, { closeButton: false }).addTo(map.value).openPopup()
+            </div>`).addTo(map).openPopup()
             saveMarker(workId, [{ markerObj: line, name: 'lines', markerObj2: marker, name2: 'picture' }])
         }
     })
-    map.value.fitBounds(tranpatrnt.value)
+    map.fitBounds(tranpatrnt.value)
 }
 //坐标转换
 const coorTransform = (point = [], mapType = 1) => {
@@ -381,15 +382,15 @@ const addPathAB = (item: any) => {
             iconAnchor: [12, 30],
             popupAnchor: [0, -30],
         })
-        let markerA = L.marker(pointA as never, { icon: iconA }).addTo(map.value)
-        let markerB = L.marker(pointB as never, { icon: iconB }).addTo(map.value)
+        let markerA = L.marker(pointA as never, { icon: iconA }).addTo(map)
+        let markerB = L.marker(pointB as never, { icon: iconB }).addTo(map)
         let line = L.polyline([pointA, pointB], {
             color: 'red',
             dashArray: [9, 9],
         })
             .bindTooltip(`AB点距离 ${distance} 米`, { permanent: true })
-            .addTo(map.value)
-        map.value.fitBounds([pointA, pointB])
+            .addTo(map)
+        map.fitBounds([pointA, pointB])
         let temMarkers = [
             {
                 markerObj: markerA,
@@ -427,11 +428,11 @@ const removeMarker = (workId: any) => {
             let a = markerCollect[workId]['marker']
             a.forEach((item: any) => {
                 if (item.markerObj) {
-                    map.value.removeLayer(item.markerObj)
-                    // map.value.removeLayer(item.markerObj2)
+                    map.removeLayer(item.markerObj)
+                    // map.removeLayer(item.markerObj2)
                 }
                 if (item.markerObj2) {
-                    map.value.removeLayer(item.markerObj2)
+                    map.removeLayer(item.markerObj2)
                 }
             })
             markerCollect[workId]['marker'] = []
@@ -470,9 +471,9 @@ const clearAllMarkers = () => {
                 if (markerCollect[key]['marker'].length) {
                     markerCollect[key]['marker'].forEach((item: any) => {
                         if (item && item.markerObj) {
-                            map.value.removeLayer(item.markerObj)
+                            map.removeLayer(item.markerObj)
                             if (item && item.markerObj2) {
-                                map.value.removeLayer(item.markerObj2)
+                                map.removeLayer(item.markerObj2)
                             }
                         }
                     })
@@ -693,7 +694,7 @@ watch(() => paddyWorkList.value,
                 align-items: center;
                 font-size: 10px;
                 height: 20px;
-                color: black;
+                color: var(--el-text-color);
                 padding-bottom: 5px;
             }
 
@@ -704,7 +705,7 @@ watch(() => paddyWorkList.value,
                 align-items: center;
                 font-size: 10px;
                 height: 0px;
-                color: black;
+                color: var(--el-text-color);
                 overflow: hidden;
             }
 
@@ -714,7 +715,7 @@ watch(() => paddyWorkList.value,
                 margin-left: auto;
                 width: 194px;
                 border-radius: 4px;
-                background-color: #fff;
+                background-color: var(--el-bg-color);
 
                 .li_title {
                     overflow: hidden;
@@ -772,10 +773,10 @@ watch(() => paddyWorkList.value,
                     height: 50px;
                     opacity: 1;
                     border-radius: 4px;
-                    background: #fff;
+                    background-color: var(--el-bg-color);
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-                    color: black;
+                    color: var(--el-text-color)
                 }
 
                 .infinite-list .infinite-list-item+.list-item {
@@ -789,7 +790,7 @@ watch(() => paddyWorkList.value,
                 margin-left: auto;
                 width: 194px;
                 border-radius: 4px;
-                background-color: #fff;
+                background-color: var(--el-bg-color);
 
                 .li_title {
                     overflow: hidden;
@@ -848,10 +849,10 @@ watch(() => paddyWorkList.value,
                     height: 50px;
                     opacity: 1;
                     border-radius: 4px;
-                    background: #fff;
+                    background-color: var(--el-bg-color);
                     margin: 8px 5px;
                     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-                    color: black;
+                    color: var(--el-text-color)
                 }
 
                 .infinite-list .infinite-list-item+.list-item {
@@ -865,6 +866,7 @@ watch(() => paddyWorkList.value,
 :deep(.leaflet-popup-content-wrapper) {
     background-color: var(--el-bg-color);
     color: var(--color-scheme);
+
     .popup_outsiders {
         opacity: 1;
         border-radius: 4px;

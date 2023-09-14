@@ -109,7 +109,7 @@ const changeA = () => {
 }
 
 // 地图相关
-const map = ref<any>(null)
+let map = <any>null
 const originPoint = ref<any>([31.172800343248, 121.406021546488])
 const originZoom = ref<any>(5)
 const tileLayer = reactive<any>([])
@@ -138,7 +138,7 @@ const markerCollect = reactive<any>({
     'marker': []
 })
 const initMap = () => {
-    map.value = L.map('child6_map',
+    map = L.map('child6_map',
         {
             attributionControl: false,
             closePopupOnClick: false,
@@ -165,7 +165,7 @@ const handleMapChange = (mapId: any) => {
 }
 const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
     try {
-        if (!map.value) {
+        if (!map) {
             console.warn('未初始化底图实例')
             return
         }
@@ -183,7 +183,7 @@ const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
             options.key = tileUrl[mapName]['key']
         }
         for (let key in mapUrl) {
-            let layer = L.tileLayer(mapUrl[key], options).addTo(map.value)
+            let layer = L.tileLayer(mapUrl[key], options).addTo(map)
             tileLayer.push(layer as never)
         }
     } catch (error) {
@@ -217,9 +217,9 @@ const getSingleCarTrick = async () => {
         })
         // 取中间点
         ElMessage.success(`${route.query.sn}轨迹获取成功！`);
-        let line = L.polyline(PointListTransed, { color: '#00ff00' }).addTo(map.value)
+        let line = L.polyline(PointListTransed, { color: '#00ff00' }).addTo(map)
         saveMarker([{ markerObj: line, name: 'lines' }])
-        map.value.fitBounds(PointListTransed)
+        map.fitBounds(PointListTransed)
     }
     loading.value = false
 }
@@ -255,7 +255,7 @@ const removeMarker = () => {
             let a = markerCollect['marker']
             a.forEach((item: any) => {
                 if (item.markerObj) {
-                    map.value.removeLayer(item.markerObj)
+                    map.removeLayer(item.markerObj)
                 }
             })
             markerCollect['marker'] = []
