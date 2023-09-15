@@ -1,11 +1,6 @@
 <template>
-  <div class="map_conatiner">
-    <div id="map"></div>
-    <div class="map_utils">
-      <el-select v-model="mapTitleOptionsValue" @change="mapTitleOptionsValueChange">
-        <el-option v-for="item in mapTitleOptions" :key="item.id" :label="item.lable" :value="item.id" />
-      </el-select>
-    </div>
+  <div class="map_container">
+    <sino-map :markerData="markerData" :markerDataValue="[]" />
     <div class="statistics_box">
       <ul class="top">
         <li>
@@ -53,9 +48,6 @@
         </li>
       </ul>
     </div>
-    <!-- 实时趋势驾驶图diaLog -->
-    <realTimeChart ref="realTime" :sn="sn" />
-    <RemoteControl :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn" :name="name" />
   </div>
 </template>
 
@@ -66,10 +58,10 @@ import AG360 from "@/assets/icons/AG360.svg";
 import AG360_warn from "@/assets/icons/AG360_warn.svg";
 import AG501 from "@/assets/icons/AG501.svg";
 import AG501_warn from "@/assets/icons/AG501_warn.svg";
-import AG501Pro from "@/assets/icons/AG501Pro.svg";
-import AG501Pro_warn from "@/assets/icons/AG501Pro_warn.svg";
 import AG502 from "@/assets/icons/AG502.svg";
 import AG502_warn from "@/assets/icons/AG502_warn.svg";
+import AG302Android from "@/assets/icons/AG302Android.svg";
+import AG302Android_warn from "@/assets/icons/AG302Android_warn.svg";
 import AGunknown from "@/assets/icons/AGunknown.svg";
 import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
 import wifi_0 from "@/assets/monitoring/wifi_0.png";
@@ -77,118 +69,18 @@ import wifi_1 from "@/assets/monitoring/wifi_1.png";
 import wifi_2 from "@/assets/monitoring/wifi_2.png";
 import wifi_3 from "@/assets/monitoring/wifi_3.png";
 import wifi_4 from "@/assets/monitoring/wifi_4.png";
-import gcoord from "gcoord";
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { mapTitleLayers } from "./utils/mapTitleLayers";
-import realTimeChart from "./components/realTimeChart.vue";
+import SinoMap from "@/components/SinoMap/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import "leaflet.chinatmsproviders";
-import "leaflet.markercluster";
-import "leaflet.markercluster/dist/MarkerCluster.css";
-import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import { ref } from "vue";
 import {
   onlineFarmMachinePosition_API,
   farmMachineDataStatistics_API,
 } from "@/api/monitoring";
-import RemoteControl from '@/components/remoteAdjust/index.vue'
-const router = useRouter();
-let map: any = null; // map实例对象
-let markerArr: any = []; // marker坐标点数字
-let deviceList: any = []; // 设备列表
-let renderMode = "dom"; // 原生dom渲染， 或者 polymer 聚合引擎；
-let markerGroup = L.layerGroup();
-//@ts-ignore
-let markerClusterGroup = L.markerClusterGroup();
-// 地图瓦片图选项
-let mapTitleOptions = [
-  { id: 0, lable: "高德地图", mapName: "GaoDe", mapType: "Normal" },
-  { id: 1, lable: "卫星地图", mapName: "GaoDe", mapType: "Satellite" },
-  { id: 2, lable: "google地图", mapName: "Google", mapType: "Normal" },
-  { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
-];
-let sn = ref()
-let realTime = ref()
-let terminalType = ref()
-let version = ref()
-let carId = ref()
-let name = ref()
-let type = ref()
-let mapTitleOptionsValue = ref(mapTitleOptions[1].id);
-let dataStatistics: any = ref([]); // 数据统计数据
-const iconOption: any = {
-  typeLabel: "terminalType",
-  statusLabel: "driveState",
-  iconList: [
-    {
-      typeValue: "",
-      icon: {
-        0: AGunknown_warn,
-        1: AGunknown,
-        2: AGunknown,
-      },
-    },
-    {
-      typeValue: ["AG302", "AG302Pro", "AG302Android"],
-      icon: {
-        0: AG302_warn,
-        1: AG302,
-        2: AG302,
-      },
-    },
-    {
-      typeValue: ["AG360", "AG360Pro"],
-      icon: {
-        0: AG360_warn,
-        1: AG360,
-        2: AG360,
-      },
-    },
-    {
-      typeValue: ["AG501"],
-      icon: {
-        0: AG501_warn,
-        1: AG501,
-        2: AG501,
-      },
-    },
-    {
-      typeValue: ["AG501Pro"],
-      icon: {
-        0: AG501Pro_warn,
-        1: AG501Pro,
-        2: AG501Pro,
-      },
-    },
-    {
-      typeValue: ["AG502"],
-      icon: {
-        0: AG502_warn,
-        1: AG502,
-        2: AG502,
-      },
-    },
-  ],
-};
+let markerData: any = ref([]);
+let dataStatistics: any = ref([]);
 
-// @ts-ignore
-window.goMachineryList_markerPopup = goMachineryList_markerPopup;
-// @ts-ignore
-window.goTaskMachine_markerPopup = goTaskMachine_markerPopup;
-// @ts-ignore
-window.gohistoryChart_markerPopup = gohistoryChart_markerPopup;
-// @ts-ignore
-window.openRealTimeChart_markerPopup = openRealTimeChart_markerPopup;
-// @ts-ignore
-window.openRemote_markerPopup = openRemote_markerPopup;
-
-onMounted(() => {
-  initMap();
-  getFaromDataStatistics();
-  getOnlineFarmPosition();
-});
+getFaromDataStatistics();
+getOnlineFarmPosition();
 
 // 获取统计数据
 async function getFaromDataStatistics() {
@@ -200,84 +92,40 @@ async function getFaromDataStatistics() {
 // 初始化获取设备数据
 async function getOnlineFarmPosition() {
   const { data } = await onlineFarmMachinePosition_API({});
-  deviceList = data.onlineFarmMachines;
-  createMarker();
+  const onlineFarmMachines = data.onlineFarmMachines;
+  onlineFarmMachines.forEach((item: any) => {
+    item.markerId = item.sn;
+    item.markerLng = item.posX;
+    item.markerLat = item.posY;
+    item.markerIcon = createMarkerIcon(item);
+    item.markerPopup = createMarkerPopup(item);
+    item.markerVisible = true;
+  });
+  markerData.value = onlineFarmMachines;
 }
-// function realTimeChartHandleClose() {
-//   realTimeChartVisible.value = false;
-// }
 
-// marker点类型筛选
+//
 function markerTypeChange() {
-  clearMapMarkers();
-  markerGroup.clearLayers();
-  let typeNames = dataStatistics.value.type.filter((item: any) => item.checked);
-  typeNames = typeNames.map((item: any) => item.typeName);
-  markerArr.forEach((item: any) => {
-    typeNames.forEach((v: any) => {
-      if (item.detail.terminalType.search(v) > -1) {
-        if (renderMode == "dom") {
-          markerGroup.addLayer(item);
-        }
-        if (renderMode == "polymer") {
-          markerClusterGroup.addLayer(item);
-        }
+  let types = dataStatistics.value.type.filter((item: any) => item.checked);
+  types = types.map((item: any) => item.typeName);
+  markerData.value.forEach((item: any) => (item.markerVisible = false));
+  types.forEach((item: any) => {
+    let findList = markerData.value.filter((v: any) => {
+      if (v.terminalType == "AG302Android" && v.terminalType == item) {
+        return true;
+      }
+      if (v.terminalType != "AG302Android" && v.terminalType.includes(item)) {
+        return true;
       }
     });
+    findList.forEach((item: any) => {
+      item.markerVisible = true;
+    });
   });
-
-  // markerGroup.length = 10
-
-  // let mm = markerArr.filter((item: any) => item.detail.terminalType.indexOf('AG302') > -1)
-  // markerClusterGroup.addLayers(mm)
-  // console.log(markerArr,'--219')
-
-  //   markerArr[0].setLatLng([0,0])
-
-  //  let ii  =  L.icon({
-  //     iconUrl: AG302 , // SVG图标的路径
-  //     iconSize: [25, 28], // 图标的大小 [宽度, 高度]
-  //     iconAnchor: [14, 28], // 图标的锚点位置 [水平, 垂直]
-  //     popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
-  //   })
-  //   markerArr[0].setIcon(ii)
-  //   markerArr[0].getPopup().setContent('fwefjw')
-
-  // console.log(markerArr[0], "--223");
-  // markerArr[1].setLatLng([0,0])
-  // markerArr[2].setLatLng([0,0])
-  // console.log(markerArr[0].getPopup())
 }
 
-// 创建地图marker点
-function createMarker() {
-  deviceList.forEach((item: any) => {
-    const [posY, posX] = gcoord.transform(
-      [item.posY, item.posX],
-      gcoord.WGS84,
-      gcoord.GCJ02
-    );
-    const icon = createIcon(item);
-    const popup = createPopup(item);
-    const marker: any = L.marker([posX, posY], { icon });
-    marker.bindPopup(popup);
-    marker.detail = item;
-    markerArr.push(marker);
-  });
-  if (renderMode == "dom") {
-    markerGroup = L.layerGroup(markerArr);
-    markerGroup.addTo(map);
-  }
-  if (renderMode == "polymer") {
-    markerClusterGroup.addLayers(markerArr);
-    markerClusterGroup.addTo(map);
-    // let marker = L.marker([59.06097, 111.93969]);
-    // marker.addTo(markerClusterGroup);
-  }
-}
-
-// 创建popup
-function createPopup(item: any) {
+// marker弹窗
+function createMarkerPopup(item: any) {
   const driveState: any = {
     0: "未开始",
     1: "入线",
@@ -333,8 +181,8 @@ function createPopup(item: any) {
             <div class="r">
               <div class="label">SN:</div>
               <div class="value"  style="cursor: pointer;text-decoration: underline;" onclick='goMachineryList_markerPopup(${JSON.stringify(
-    item
-  )})'>${item.sn}</div>
+                item
+              )})'>${item.sn}</div>
             </div>
           </li>
           <li>
@@ -350,7 +198,7 @@ function createPopup(item: any) {
           <li>
             <div class="l">
               <div class="label">工作状态:</div>
-              <div class="value"> 
+              <div class="value">
                 <span class='status ${workingStatus[item.judgeLevel]}'></span>
                 <span>${item.judgeLevel || "无"}</span>
               </div>
@@ -367,15 +215,17 @@ function createPopup(item: any) {
             <div class="l">
               <div class="label">解状态:</div>
               <div class="value">
-                <span class='status ${item.solStat == 4 ? "status_3" : "status_0"
-    }'></span>
+                <span class='status ${
+                  item.solStat == 4 ? "status_3" : "status_0"
+                }'></span>
                 <span>${snTypeReflect[item.solStat] || "未知解"}</span>
               </div>
             </div>
             <div class="r">
               <div class="label">差分链:</div>
-              <div class="value">${diffSource[item.diffSource] || "/"} (${item.diffAge
-    }s)</div>
+              <div class="value">${diffSource[item.diffSource] || "/"} (${
+    item.diffAge
+  }s)</div>
             </div>
           </li>
           <li>
@@ -425,98 +275,45 @@ function createPopup(item: any) {
         <ul class="btns_container">
           <li>
             <div class="btn" onclick='openRemote_markerPopup(${JSON.stringify(
-      item
-    )})'>远程管理</div>
+              item
+            )})'>远程管理</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
-      item
-    )})'>历史轨迹</div>
+              item
+            )})'>历史轨迹</div>
           </li>
           <li>
             <div class="btn" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
-      item
-    )})'>实时驾驶趋势图</div>
+              item
+            )})'>实时驾驶趋势图</div>
             <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
-      item
-    )})'>历史驾驶趋势图</div>
+              item
+            )})'>历史驾驶趋势图</div>
           </li>
         </ul>
       </div>`;
 
   return popup;
 }
-
-// 创建icon图标
-function createIcon(item: any) {
-  const { typeLabel, statusLabel, iconList } = iconOption;
-  let defaultIcon = iconList.find((item: any) => !item.typeValue);
-  if (!defaultIcon) defaultIcon = iconList[0];
-  const typeValue = item[typeLabel];
-  iconList.forEach((v: any) => {
-    if (!v.typeValue.includes(typeValue)) return;
-    item.icon = v.icon[item[statusLabel]];
-  });
-  if (!item.icon) {
-    item.icon = defaultIcon.icon[item[statusLabel]];
+// marker 图标
+function createMarkerIcon(item: any) {
+  const { terminalType, driveState } = item;
+  let icon: string = "";
+  if (terminalType.includes("AG360")) {
+    icon = driveState == 0 ? AG360_warn : AG360;
+  } else if (terminalType.includes("AG501")) {
+    icon = driveState == 0 ? AG501_warn : AG501;
+  } else if (terminalType.includes("AG502")) {
+    icon = driveState == 0 ? AG502_warn : AG502;
+  } else if (terminalType.includes("AG302") && terminalType != "AG302Android") {
+    icon = driveState == 0 ? AG302_warn : AG302;
+  } else if (terminalType == "AG302Android") {
+    icon = driveState == 0 ? AG302Android_warn : AG302Android;
+  } else {
+    icon = driveState == 0 ? AGunknown_warn : AGunknown;
   }
-  return L.icon({
-    iconUrl: item.icon, // SVG图标的路径
-    iconSize: [25, 28], // 图标的大小 [宽度, 高度]
-    iconAnchor: [14, 28], // 图标的锚点位置 [水平, 垂直]
-    popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
-  });
+
+  return icon;
 }
-
-// 初始化加载地图
-function initMap() {
-  map = L.map("map", {
-    minZoom: 1, //最小缩放值
-    maxZoom: 18, //最大缩放值
-    center: L.latLng(31.086444, 121.734942), //注意和其他地图经纬度格式区别
-    zoom: 4, //初始缩放值
-    zoomControl: false, //是否启用地图缩放控件
-    attributionControl: false, //是否启用地图属性控件
-  });
-  mapTitleOptionsValueChange();
-}
-
-// 清空地图marker点位
-function clearMapMarkers() {
-  if (renderMode == "dom") {
-    markerGroup.clearLayers();
-  }
-  if (renderMode == "polymer") {
-    markerClusterGroup.clearLayers();
-  }
-}
-
-// 图商发生变化
-function mapTitleOptionsValueChange() {
-  const mapTitleOption = mapTitleOptions.find(
-    (item) => item.id == mapTitleOptionsValue.value
-  );
-  changeTileLayer(mapTitleOption?.mapName, mapTitleOption?.mapType);
-}
-
-// 设置图商
-function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
-  if (!map) {
-    console.warn("未初始化底图实例");
-    return;
-  }
-  let mapUrl = mapTitleLayers[mapName][mapType];
-  let options: any = {};
-  options.subdomains = mapTitleLayers[mapName]["Subdomains"];
-  if ("tms" in mapTitleLayers[mapName]) {
-    options.tms = mapTitleLayers[mapName]["tms"];
-  }
-  if ("key" in mapTitleLayers[mapName]) {
-    options.key = mapTitleLayers[mapName]["key"];
-  }
-  for (let key in mapUrl) {
-    L.tileLayer(mapUrl[key], options).addTo(map);
-  }
-}
-
 // 处理经纬度
 function dmsTrans(decimal: any) {
   try {
@@ -535,60 +332,12 @@ function dmsTrans(decimal: any) {
     return decimal;
   }
 }
-
-// marker弹窗-前往农机列表
-function goMachineryList_markerPopup(arg: any) {
-  router.push({ path: "/machineryList", query: { sn: arg.sn } });
-}
-// marker弹窗-前往历史轨迹
-function goTaskMachine_markerPopup(arg: any) {
-  router.push({ path: "/monitoring/taskMachine", query: { sn: arg.sn } });
-}
-// marker-弹窗-前往历史趋势图
-function gohistoryChart_markerPopup(arg: any) {
-  router.push({ path: "/monitoring/historyChart", query: { sn: arg.sn } });
-}
-// marker-弹窗-实时趋势图
-function openRealTimeChart_markerPopup(arg: any) {
-  //
-  // console.log(arg)
-  sn.value = arg.sn
-  realTime.value.dialogVisible = true
-}
-// marker-弹窗-远程管理
-function openRemote_markerPopup(arg: any) {
-  console.log(arg.terminalType);
-
-  terminalType.value = arg.terminalType
-  version.value = arg.version
-  type.value = arg.type
-  carId.value = arg.carId
-  sn.value = arg.sn
-  name.value = arg.carName
-}
-
 </script>
 
 <style lang="scss" scoped>
-.map_conatiner {
+.map_container {
   height: 100%;
   position: relative;
-
-  #map {
-    height: 100%;
-  }
-
-  .map_utils {
-    position: absolute;
-    z-index: 999;
-    bottom: 10px;
-    left: 10px;
-    display: flex;
-
-    .el-select {
-      width: 120px;
-    }
-  }
   .statistics_box {
     padding: 12px;
     right: 10px;
@@ -656,109 +405,89 @@ function openRemote_markerPopup(arg: any) {
     }
   }
 }
+:deep(.map_popup) {
+  width: 360px;
+  .popup_container {
+    font-size: 14px;
+    li {
+      display: flex;
+      line-height: 22px;
 
-// map popup
+      &:nth-child(2) {
+        margin-bottom: 12px;
+      }
 
-:deep(.leaflet-popup) {
-  .leaflet-popup-content-wrapper {
-    background-color: var(--el-bg-color);
-    color: var(--color-scheme);
-  }
-
-  .leaflet-popup-content {
-    width: auto !important;
-  }
-
-  .leaflet-popup-tip {
-    background-color: var(--el-bg-color);
-  }
-
-  .map_popup {
-    width: 360px;
-
-    .popup_container {
-      font-size: 14px;
-
-      li {
+      .l {
         display: flex;
-        line-height: 22px;
+        width: 50%;
+      }
 
-        &:nth-child(2) {
-          margin-bottom: 12px;
-        }
+      .r {
+        display: flex;
+        width: 50%;
+      }
 
-        .l {
-          display: flex;
-          width: 50%;
-        }
+      .label {
+        width: 66px;
+        flex-shrink: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
 
-        .r {
-          display: flex;
-          width: 50%;
-        }
+      .value {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
-        .label {
-          width: 66px;
-          flex-shrink: 0;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        .value {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-
-          img {
-            width: 12px;
-            height: 12px;
-            margin-right: 2px;
-          }
-        }
-
-        .status {
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
+        img {
+          width: 12px;
+          height: 12px;
           margin-right: 2px;
         }
+      }
 
-        .status_0 {
-          background-color: #ea3729;
-        }
+      .status {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 2px;
+      }
 
-        .status_1 {
-          background-color: #666666;
-        }
+      .status_0 {
+        background-color: #ea3729;
+      }
 
-        .status_3 {
-          background-color: #5dbe3c;
-        }
+      .status_1 {
+        background-color: #666666;
+      }
 
-        .status_2 {
-          background-color: #76fafd;
-        }
+      .status_3 {
+        background-color: #5dbe3c;
+      }
+
+      .status_2 {
+        background-color: #76fafd;
       }
     }
+  }
 
-    .btns_container {
-      padding-top: 12px;
+  .btns_container {
+    padding-top: 12px;
 
-      li {
-        display: flex;
-        justify-content: space-around;
-        line-height: 22px;
+    li {
+      display: flex;
+      justify-content: space-around;
+      line-height: 22px;
 
-        .btn {
-          color: var(--el-color-primary);
-          font-size: 14px;
-          cursor: pointer;
+      .btn {
+        color: var(--el-color-primary);
+        font-size: 14px;
+        cursor: pointer;
 
-          &:hover {
-            opacity: 0.8;
-          }
+        &:hover {
+          opacity: 0.8;
         }
       }
     }
