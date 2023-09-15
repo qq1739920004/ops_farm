@@ -3,7 +3,6 @@ import request from '@/utils/request'
 // 作业管理模块API
 
 
-import { onlineFarmMachinePosition_type } from './type'
 import { onlineFarmMachinePosition_type, driveStatusPathResponseData, paramsObj, driveTendenctResponseData } from './type'
 
 export function onlineFarmMachinePosition_API(data: onlineFarmMachinePosition_type) {

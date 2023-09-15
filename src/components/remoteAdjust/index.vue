@@ -19,7 +19,7 @@ import RemoteAdjustDia360 from './components/remoteAdjust.vue'
 import RemoteAdjustDia302 from './components/remoteAdjust302.vue'
 import RemoteAdjustDia502 from './components/remoteAdjust502.vue'
 
-const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn', 'name'])
+const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn', 'name', 'isChange'])
 const terminalType = ref<string>('')
 const version = ref<string>('')
 const type = ref<string>('')
@@ -39,10 +39,12 @@ const gotoRemote = () => {
     }
     nextTick(() => {
         RemoteD.value.carFormRef?.clearValidate()
+        RemoteD302.value.carFormRef?.clearValidate()
+        RemoteD502.value.carFormRef?.clearValidate()
     })
 
 }
-watch(() => props.terminalType, () => {
+watch(() => props.isChange, () => {
     terminalType.value = props.terminalType
     version.value = props.version
     type.value = props.type

@@ -23,11 +23,7 @@
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
-            <el-checkbox
-              size="large"
-              v-model="item.checked"
-              @change="markerTypeChange"
-            />
+            <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange" />
             <SvgIcon icon="AG302" size="22" />
             <span class="label">{{ item.typeName }}</span>
           </label>
@@ -348,6 +344,7 @@ function dmsTrans(decimal: any) {
     // height: 260px;
     background: url("@/assets/monitoring/bg_1.png") no-repeat center center;
     background-size: 100% 100%;
+
     .top {
       display: flex;
       flex-wrap: wrap;
@@ -360,10 +357,12 @@ function dmsTrans(decimal: any) {
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
+
         span:first-child {
           color: #fff;
           font-size: 24px;
         }
+
         span:last-child {
           color: #00baad;
           font-size: 14px;
@@ -371,32 +370,39 @@ function dmsTrans(decimal: any) {
         }
       }
     }
+
     .center,
     .bottom {
       display: flex;
       flex-wrap: wrap;
+
       li {
         width: 50%;
         color: #fff;
         display: flex;
         align-items: center;
+
         :deep(.el-checkbox) {
           margin-right: 8px;
+
           .el-checkbox__inner {
             background-color: transparent;
             border: 1px solid #00fff7;
           }
         }
+
         label {
           cursor: pointer;
           display: flex;
           align-items: center;
         }
+
         .label {
           font-size: 14px;
           margin-right: 16px;
           margin-left: 8px;
         }
+
         .value {
           font-size: 18px;
           font-weight: 700;

@@ -8,7 +8,7 @@ interface locationType{
 let mask: any = [];
 let maskPoly: any = [];
 
-function purifyBaiduData(AMap:any,data: any, cityName: string){
+function purifyBaiduData(AMap:any,data: any, _cityName: string){
   let poly = wktToMask(AMap, data.districts[0].polyline);
       if (poly.length) {
         if (poly[0].length > 1) {

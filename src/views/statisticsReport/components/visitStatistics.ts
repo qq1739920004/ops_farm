@@ -7,7 +7,6 @@ export function visitOption(
   data: getStatisticsStatAPIResponse["data"],
   optionfnStatistics: ShallowRef<EChartsOption>
 ) {
-  console.log(data,'asdfl');
   let option = shallowRef<EChartsOption>({});
  const purifyData:number[][]=[[],[]]
   data.chart.data.forEach((item)=>{
