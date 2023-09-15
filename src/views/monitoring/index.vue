@@ -44,6 +44,16 @@
         </li>
       </ul>
     </div>
+     <!-- 实时趋势驾驶图diaLog -->
+     <realTimeChart ref="realTime" :sn="sn" />
+    <RemoteControl
+      :terminalType="terminalType"
+      :version="version"
+      :type="type"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    />
   </div>
 </template>
 
@@ -67,13 +77,36 @@ import wifi_3 from "@/assets/monitoring/wifi_3.png";
 import wifi_4 from "@/assets/monitoring/wifi_4.png";
 import SinoMap from "@/components/SinoMap/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
+import realTimeChart from "./components/realTimeChart.vue";
+import RemoteControl from "@/components/remoteAdjust/index.vue";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import {
   onlineFarmMachinePosition_API,
   farmMachineDataStatistics_API,
 } from "@/api/monitoring";
+const router = useRouter()
 let markerData: any = ref([]);
 let dataStatistics: any = ref([]);
+
+let sn = ref();
+let realTime = ref();
+let terminalType = ref();
+let version = ref();
+let carId = ref();
+let name = ref();
+let type = ref();
+
+// @ts-ignore
+window.goMachineryList_markerPopup = goMachineryList_markerPopup;
+// @ts-ignore
+window.goTaskMachine_markerPopup = goTaskMachine_markerPopup;
+// @ts-ignore
+window.gohistoryChart_markerPopup = gohistoryChart_markerPopup;
+// @ts-ignore
+window.openRealTimeChart_markerPopup = openRealTimeChart_markerPopup;
+// @ts-ignore
+window.openRemote_markerPopup = openRemote_markerPopup;
 
 getFaromDataStatistics();
 getOnlineFarmPosition();
@@ -328,6 +361,38 @@ function dmsTrans(decimal: any) {
     return decimal;
   }
 }
+
+// marker弹窗-前往农机列表
+function goMachineryList_markerPopup(arg: any) {
+  router.push({ path: "/machineryList", query: { sn: arg.sn } });
+}
+// marker弹窗-前往历史轨迹
+function goTaskMachine_markerPopup(arg: any) {
+  router.push({ path: "/monitoring/taskMachine", query: { sn: arg.sn } });
+}
+// marker-弹窗-前往历史趋势图
+function gohistoryChart_markerPopup(arg: any) {
+  router.push({ path: "/monitoring/historyChart", query: { sn: arg.sn } });
+}
+// marker-弹窗-实时趋势图
+function openRealTimeChart_markerPopup(arg: any) {
+  //
+  // console.log(arg)
+  sn.value = arg.sn;
+  realTime.value.dialogVisible = true;
+}
+// marker-弹窗-远程管理
+function openRemote_markerPopup(arg: any) {
+  console.log(arg.terminalType);
+
+  terminalType.value = arg.terminalType;
+  version.value = arg.version;
+  type.value = arg.type;
+  carId.value = arg.carId;
+  sn.value = arg.sn;
+  name.value = arg.carName;
+}
+
 </script>
 
 <style lang="scss" scoped>
