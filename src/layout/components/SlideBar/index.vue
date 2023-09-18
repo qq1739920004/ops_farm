@@ -3,9 +3,9 @@
     :mode="appStore.layout"
     :default-active="activeMenu"
     :collapse="collapse"
-    background-color="#192035"
+    :background-color="variables.appMenuColor"
     text-color="#fff"
-    active-text-color="#ffd04b"
+    :active-text-color="variables.elColorPrimary"
     @select="elMenuSelect"
     :ellipsis="false"
   >
@@ -31,6 +31,7 @@ import { computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import SlidebarItem from "./SlidebarItem.vue";
 import useAppStore from "@/store/app";
+import variables from "@/styles/variables.module.scss";
 const appStore = useAppStore();
 const router = useRouter();
 const route = useRoute();

@@ -1,15 +1,27 @@
 
+// 导入 Element Plus 中英文语言包
+import zhCn from "element-plus/es/locale/lang/zh-cn";
+import en from "element-plus/es/locale/lang/en";
+
 import { defineStore } from 'pinia'
 import { useStorage, useDark, useToggle } from "@vueuse/core";
 import { getLightColor, getDarkColor } from "@/utils/color";
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const useAppStore = defineStore("app", () => {
     const isDark = useDark();
-    const layout = useStorage('layout', 'vertical') 
+    const layout = useStorage('layout', 'vertical')
     const themeColor = useStorage('themeColor', '#67ae5b')
     const device = ref('desktop') // 屏幕类型
-
+    const language = useStorage("language", 'zh-cn');
+    const locale = computed(() => {
+        if (language.value == 'zh-cn') {
+            return zhCn
+        }
+        if (language.value == 'en') {
+            return en
+        }
+    });
     setPrimaryColor()
 
     // 修改layout 
@@ -32,6 +44,10 @@ const useAppStore = defineStore("app", () => {
         useToggle(isDark)
         setPrimaryColor()
     }
+    // 修改语言
+    function updateLanguage(arg: string) {
+        language.value = arg;
+    }
 
     // 设置主题颜色
     function setPrimaryColor() {
@@ -52,10 +68,13 @@ const useAppStore = defineStore("app", () => {
         device,
         layout,
         themeColor,
+        language,
+        locale,
         updateIsDark,
         updateDevice,
         updateLayout,
-        updateThemeColor
+        updateThemeColor,
+        updateLanguage
     }
 
 })

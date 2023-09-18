@@ -1,0 +1,12 @@
+
+
+$appMenuColor: var(--app-menu-color);
+$elColorPrimary: var(--el-color-primary);
+
+:export {
+    appMenuColor: $appMenuColor;
+    elColorPrimary:$elColorPrimary
+}
+
+
+// 192035

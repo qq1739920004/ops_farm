@@ -10,7 +10,9 @@
       <SvgIcon icon="language" size="22" />
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item :disabled="locale == 'zh'" @click="changeLang('zh')"
+          <el-dropdown-item
+            :disabled="locale == 'zh-cn'"
+            @click="changeLang('zh-cn')"
             >中文</el-dropdown-item
           >
           <el-dropdown-item
@@ -128,6 +130,7 @@ function changeIsDark() {
 // 修改语言
 function changeLang(value: string) {
   locale.value = value;
+  appStore.updateLanguage(value);
 }
 </script>
 

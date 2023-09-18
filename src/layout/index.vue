@@ -97,7 +97,7 @@ function changeCollapse() {
   .el-container {
     height: 100%;
     .el-header {
-      background-color: #192035;
+      background-color: var(--app-menu-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -122,7 +122,7 @@ function changeCollapse() {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #192035;
+      background-color: var(--app-menu-color);
       .header_content {
         display: flex;
         align-items: center;

@@ -1,6 +1,9 @@
 <template>
   <div class="map_container">
     <sino-map :markerData="markerData" :markerDataValue="[]" />
+    <div class="search_box">
+      
+    </div>
     <div class="statistics_box">
       <ul class="top">
         <li>
@@ -23,7 +26,11 @@
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
-            <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange" />
+            <el-checkbox
+              size="large"
+              v-model="item.checked"
+              @change="markerTypeChange"
+            />
             <SvgIcon icon="AG302" size="22" />
             <span class="label">{{ item.typeName }}</span>
           </label>
@@ -44,8 +51,53 @@
         </li>
       </ul>
     </div>
-     <!-- 实时趋势驾驶图diaLog -->
-     <realTimeChart ref="realTime" :sn="sn" />
+    <div
+      :class="{
+        notice_box: true,
+        notice_box_active: notice_box_isActive,
+      }"
+    >
+      <div class="header" @click="notice_box_isActive = !notice_box_isActive">
+        <h3>状态通知</h3>
+        <el-icon v-if="!notice_box_isActive" color="#fff"
+          ><ArrowDownBold
+        /></el-icon>
+        <el-icon v-else color="#fff"><ArrowUpBold /></el-icon>
+      </div>
+      <div class="content">
+        <el-timeline>
+          <el-timeline-item
+            v-for="(item, index) in carLogList"
+            :key="index"
+            :color="item.color"
+          >
+            <div class="item">
+              <div class="l">
+                <span :class="['state', item.class_state]">{{
+                  item.stateName
+                }}</span>
+              </div>
+              <div class="r">
+                <p v-if="item.state == 2" :class="[item.class_state]">
+                  驾驶效果差
+                </p>
+                <div class="title">
+                  <span>{{ item.carName }}</span>
+                  <span>{{ item.deviceSn }}</span>
+                </div>
+                <p>{{ item.position }}</p>
+                <p v-if="item.state != 2">
+                  {{ item.state == 0 ? item.offlineTime : item.onlineTime }}
+                </p>
+              </div>
+            </div>
+          </el-timeline-item>
+        </el-timeline>
+      </div>
+    </div>
+
+    <!-- 实时趋势驾驶图diaLog -->
+    <realTimeChart ref="realTime" :sn="sn" />
     <RemoteControl
       :terminalType="terminalType"
       :version="version"
@@ -84,10 +136,12 @@ import { useRouter } from "vue-router";
 import {
   onlineFarmMachinePosition_API,
   farmMachineDataStatistics_API,
+  carLog_API,
 } from "@/api/monitoring";
-const router = useRouter()
+const router = useRouter();
 let markerData: any = ref([]);
 let dataStatistics: any = ref([]);
+let carLogList: any = ref([]);
 
 let sn = ref();
 let realTime = ref();
@@ -96,6 +150,7 @@ let version = ref();
 let carId = ref();
 let name = ref();
 let type = ref();
+let notice_box_isActive = ref(false);
 
 // @ts-ignore
 window.goMachineryList_markerPopup = goMachineryList_markerPopup;
@@ -110,6 +165,40 @@ window.openRemote_markerPopup = openRemote_markerPopup;
 
 getFaromDataStatistics();
 getOnlineFarmPosition();
+getCarLogList();
+
+// 获取车辆列表日志信息
+async function getCarLogList() {
+  let params = {
+    currentPage: 1,
+    pageSize: 1000,
+  };
+  const { data } = await carLog_API(params);
+  carLogList.value = data;
+  carLogList.value.forEach((item: any) => {
+    if (item.judgeLevel) {
+      // 告警状态
+      item.color = "#e9c75d";
+      item.stateName = "告警";
+      item.class_state = "state_2";
+      item.state = 2;
+    } else if (item.offlineTime !== item.onlineTime) {
+      // 离线状态
+      item.color = "#919392";
+      // item.time = this.dateTimeTrans(item.offlineTime)
+      item.stateName = "离线";
+      item.class_state = "state_0";
+      item.state = 0;
+    } else {
+      // 上线状态
+      item.color = "#58c15e";
+      item.stateName = "上线";
+      item.class_state = "state_1";
+      item.state = 1;
+      // item.time = this.dateTimeTrans(item.onlineTime)
+    }
+  });
+}
 
 // 获取统计数据
 async function getFaromDataStatistics() {
@@ -130,16 +219,16 @@ async function getOnlineFarmPosition() {
     item.markerPopup = createMarkerPopup(item);
     item.markerVisible = true;
   });
-  markerData.value = onlineFarmMachines;
+  markerData.value.push(onlineFarmMachines);
 }
 
 //
 function markerTypeChange() {
   let types = dataStatistics.value.type.filter((item: any) => item.checked);
   types = types.map((item: any) => item.typeName);
-  markerData.value.forEach((item: any) => (item.markerVisible = false));
+  markerData.value[0].forEach((item: any) => (item.markerVisible = false));
   types.forEach((item: any) => {
-    let findList = markerData.value.filter((v: any) => {
+    let findList = markerData.value[0].filter((v: any) => {
       if (v.terminalType == "AG302Android" && v.terminalType == item) {
         return true;
       }
@@ -392,7 +481,6 @@ function openRemote_markerPopup(arg: any) {
   sn.value = arg.sn;
   name.value = arg.carName;
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -474,6 +562,77 @@ function openRemote_markerPopup(arg: any) {
         }
       }
     }
+  }
+  .notice_box {
+    position: absolute;
+    z-index: 999;
+    right: 10px;
+    bottom: 10px;
+    width: 304px;
+    height: 400px;
+    transition: all 0.3s;
+    background: url("@/assets/monitoring/bg_2.png") no-repeat center center;
+    background-size: cover;
+    .header {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 40px;
+      padding: 0 12px;
+      h3 {
+        color: #fff;
+        margin: 0;
+        font-size: 16px;
+      }
+    }
+    .content {
+      // background-color: red;
+      overflow: scroll;
+      height: calc(100% - 40px);
+      padding: 12px 12px 0px 12px;
+      :deep(.el-timeline-item) {
+        .item {
+          display: flex;
+          .l {
+            .state {
+              font-size: 14px;
+              margin-right: 10px;
+            }
+            .state_0 {
+              color: #919392;
+            }
+            .state_1 {
+              color: #58c15e;
+            }
+            .state_2 {
+              color: #e9c75d;
+            }
+          }
+          .r {
+            flex: 1;
+            .title {
+              color: #fff;
+              font-size: 14px;
+              display: flex;
+              justify-content: space-between;
+              span:last-child {
+                text-decoration: underline;
+                font-size: 12px;
+              }
+            }
+            p {
+              margin: 0;
+              font-size: 12px;
+              color: #919392;
+            }
+          }
+        }
+      }
+    }
+  }
+  .notice_box_active {
+    height: 40px;
   }
 }
 :deep(.map_popup) {

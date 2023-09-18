@@ -35,12 +35,14 @@ const props = defineProps({
     default: [],
   },
 });
-let lastMarkerData: any = []; // 上一次markerData数据
+let markerData_flat: any = [];
+let lastMarkerData_flat: any = []; // 上一次markerData数据
 watch(
   () => props.markerData,
   (markerData) => {
-    diffArray(lastMarkerData, markerData);
-    lastMarkerData = JSON.parse(JSON.stringify(markerData));
+    markerData_flat = arryFlat(markerData);
+    diffArray(lastMarkerData_flat, markerData_flat);
+    lastMarkerData_flat = markerData_flat
   },
   { deep: true }
 );
@@ -48,9 +50,10 @@ watch(
 let map: any = null; // map实例对象
 let renderMode = "polymer"; // 原生dom渲染， 或者 polymer 聚合引擎；
 let markerArr: any = []; // marker坐标点数字
-let markerGroup = L.layerGroup();
+
 //@ts-ignore
 let markerClusterGroup = L.markerClusterGroup();
+let markerGroup = L.featureGroup();
 // 地图瓦片图选项
 let mapTileOptions = reactive({
   id: props.mapTile[0],
@@ -68,16 +71,28 @@ mapTileOptions.list = mapTileOptions.list.filter((item: any) =>
 
 onMounted(() => {
   initMap();
-  createMarker(props.markerData);
+  createMarker(markerData_flat);
 });
 
-function diffArray(lastMarkerData: any, markerData: any) {
+// 处理markerId后扁平化数组
+function arryFlat(data: any) {
+  data = JSON.parse(JSON.stringify(data))
+  data.forEach((item: any, index: number) => {
+    item.forEach((v: any) => {
+      v.markerId = v.markerId + "_" + index;
+    });
+  });
+
+  return data.flat();
+}
+
+function diffArray(arr1: any, arr2: any) {
   // 新增了marker点
-  if (lastMarkerData.length < markerData.length) {
+  if (arr1.length < arr2.length) {
     let resList: any = [];
-    markerData.forEach((item: any) => {
+    arr2.forEach((item: any) => {
       let flag = true;
-      lastMarkerData.forEach((v: any) => {
+      arr1.forEach((v: any) => {
         if (item.markerId == v.markerId) {
           flag = false;
         }
@@ -87,11 +102,11 @@ function diffArray(lastMarkerData: any, markerData: any) {
     createMarker(resList);
   }
   // 删除了marke点
-  if (lastMarkerData.length > markerData.length) {
+  if (arr1.length > arr2.length) {
     let resList: any = [];
-    lastMarkerData.forEach((item: any) => {
+    arr1.forEach((item: any) => {
       let flag = true;
-      markerData.forEach((v: any) => {
+      arr2.forEach((v: any) => {
         if (item.markerId == v.markerId) {
           flag = false;
         }
@@ -102,11 +117,11 @@ function diffArray(lastMarkerData: any, markerData: any) {
   }
 
   // 更新了marker点
-  if (lastMarkerData.length == markerData.length) {
+  if (arr1.length == arr2.length) {
     let resList: any = [];
     let resVisibleList: any = [];
-    lastMarkerData.forEach((item: any) => {
-      markerData.forEach((v: any) => {
+    arr1.forEach((item: any) => {
+      arr2.forEach((v: any) => {
         if (item.markerId == v.markerId) {
           if (JSON.stringify(item) != JSON.stringify(v)) {
             resList.push(v);
@@ -142,6 +157,17 @@ function createMarker(list: any) {
       item.markerVisible ? markerClusterGroup.addLayers(marker) : "";
     }
   });
+
+  // if (markerArr.length > 0) {
+  //   var groupBounds = markerGroup.getBounds();
+
+  //   // 使用 fitBounds 方法来适应包含所有标记的边界框
+  //   map.fitBounds(groupBounds);
+  // }
+  // console.log(markerArr, "--145");
+  // var groupBounds = markerArr.getBounds();
+  // console.log(groupBounds, "--147");
+  // 使用 fitBounds 方法来适应包含所有标记的边界框
 }
 // 删除地图marker点
 function removeMarker(list: any) {
@@ -158,6 +184,8 @@ function removeMarker(list: any) {
       }
     });
   });
+  console.log(markerArr.length)
+  console.log(markerData_flat.length)
 }
 // 修改地图marker点
 function updateMarker(list: any) {
