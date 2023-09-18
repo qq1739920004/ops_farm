@@ -2,22 +2,22 @@
 <template>
     <el-dialog @open="getNewDetail" v-model="dialogVisible" title="详情" height="392px">
         <div class="tableData">
-            <div class="line line1">
-                <div>SN:</div>
+            <div class="line line3">
+                <div class="tit">SN:</div>
                 <div class="data">{{ NewDetail.sn }}</div>
-                <div>在线状态:</div>
-                <div v-if="NewDetail.onlineTcp != 0" class="data ">在线 <span class="circle"></span></div>
-                <div v-else class="data">离线 <span class="circle2"></span></div>
-                <div>驾驶状态:</div>
+                <div class="tit">在线状态:</div>
+                <div v-if="NewDetail.onlineTcp != 0" class="data data4">在线 <span class="circle"></span></div>
+                <div v-else class="data data4">离线 <span class="circle2"></span></div>
+                <div class="tit">驾驶状态:</div>
                 <!-- 0:未自动驾驶 1：上线 2：在线 -->
                 <div class="data" v-if="NewDetail.driveState == 0">未自动驾驶</div>
                 <div class="data" v-if="NewDetail.driveState == 1">上线</div>
                 <div class="data" v-if="NewDetail.driveState == 2">在线</div>
             </div>
-            <div class="line line3">
-                <div>公司名称:</div>
-                <div class="half">{{ NewDetail.companyName }}</div>
-                <div>车主姓名:</div>
+            <div class="line line2">
+                <div class="tit">公司名称:</div>
+                <div class="data">{{ NewDetail.companyName }}</div>
+                <div class="tit">车主姓名:</div>
                 <div class="data">{{ NewDetail.userName }}</div>
             </div>
             <div class="line line2 ">
@@ -26,21 +26,21 @@
                 <div class="tit">车辆厂家:</div>
                 <div class="data">{{ NewDetail.factory }}</div>
             </div>
-            <div class="line line1">
-                <div>车辆型号:</div>
+            <div class="line line3">
+                <div class="tit">车辆型号:</div>
                 <div class="data">{{ NewDetail.model }}</div>
-                <div>车龄:</div>
-                <div class="data">{{ NewDetail.age }}</div>
-                <div>创始人:</div>
+                <div class="tit">车龄:</div>
+                <div class="data data4">{{ NewDetail.age }}</div>
+                <div class="tit">创始人:</div>
                 <div class="data">{{ NewDetail.creatorName }}</div>
             </div>
-            <div class="line line1 ">
+            <div class="line line3 ">
                 <div>创建人电话:</div>
                 <div class="data">{{ NewDetail.creatorTel }}</div>
                 <div>向日葵SN:</div>
-                <div>{{ NewDetail.sunFlowerSn }}</div>
+                <div class="data data4"> {{ NewDetail.sunFlowerSn }}</div>
                 <div>软件版本:</div>
-                <div class="data" style="margin-right: 40px;">{{ NewDetail.softwareVersion }}</div>
+                <div style="overflow: hidden;" class="data">{{ NewDetail.softwareVersion }}</div>
             </div>
             <div class="line line2 ">
                 <div class="tit">创建时间:</div>
@@ -178,29 +178,13 @@ const getNewDetail = async () => {
             text-align: left;
             display: block;
             width: 16.6%;
-            margin-left: 20px;
+            margin-left: 10px;
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
 
 
-            .circle {
-                width: 10px;
-                height: 10px;
-                background-color: var(--el-color-primary);
-                border-radius: 50%;
-                display: inline-block;
-                margin-right: 5px;
-            }
 
-            .circle2 {
-                width: 10px;
-                height: 10px;
-                background-color: rgba(123, 138, 138, 0.425);
-                border-radius: 50%;
-                display: inline-block;
-                margin-right: 5px;
-            }
         }
     }
 
@@ -222,7 +206,7 @@ const getNewDetail = async () => {
             text-align: left;
             display: block;
             width: 33.3%;
-            margin-left: 20px;
+            margin-left: 10px;
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
@@ -234,7 +218,7 @@ const getNewDetail = async () => {
             width: 50%;
 
             span {
-                margin-left: 20px;
+                margin-left: 10px;
                 font-size: 14px;
                 font-weight: 400;
                 letter-spacing: 0px;
@@ -253,18 +237,38 @@ const getNewDetail = async () => {
         display: flex;
         align-items: center;
 
+        .circle {
+            width: 10px;
+            height: 10px;
+            background-color: var(--el-color-primary);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .circle2 {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(123, 138, 138, 0.425);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+
         div {
             width: 16.6%;
-            text-align: right;
-
+            text-align: right
         }
+
+
 
         .half {
 
             text-align: left;
             display: block;
             width: 50%;
-            margin-left: 20px;
+            margin-left: 10px;
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
@@ -275,12 +279,16 @@ const getNewDetail = async () => {
             text-align: left;
             display: block;
             width: 16.6%;
-            margin-left: 20px;
+            margin-left: 10px;
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
 
 
+        }
+
+        .data4 {
+            width: 6%;
         }
     }
 }
