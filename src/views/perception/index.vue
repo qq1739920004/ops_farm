@@ -13,11 +13,11 @@
                 </div>
 
                 <div class="middle">
-                    <Carmap v-if="carAreas.length" :provinceCars="provinceCars"></Carmap>
+                    <Carmap v-if="carAreas.length" @mapFinish="mapFinish" :provinceCars="provinceCars"></Carmap>
                 </div>
                 <div class="right">
                     <Online class="online" v-if="typeCounts.length"  :typeCounts="typeCounts"></Online>
-                    <State class="state" :provinceCars="provinceCars"></State>
+                    <State class="state" :stateObj="stateObj"></State>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
 </template>
   
 <script setup lang='ts'>
-import { ref, onMounted} from "vue";
+import { ref, onMounted,onUnmounted,watch} from "vue";
 import Top from "./component/top.vue";
 import Year from "./component/year.vue";
 import Carmap from "./component/carmap/index.vue";
@@ -33,10 +33,15 @@ import Workarea from "./component/workarea.vue";
 import State from "./component/state.vue";
 import Online from "./component/online.vue"
 import { getMonitorAPI } from '@/api/perception/index.ts'
-import type { MonitorObj } from '@/api/perception/type'
+import type { MonitorObj,recordsType } from '@/api/perception/type'
+import realTimeStore from '@/store/realTimeData';
+
+const realTime=realTimeStore()
+
 // 监测数据
 const monitorData = ref<MonitorObj>()
-
+//状态通知
+let stateObj=ref<recordsType>() 
 // 各车辆作业面积
 const carAreas = ref<Array<object>>([])
 
@@ -59,11 +64,18 @@ const getMonitor = async () => {
 
 // 屏幕
 let screen = ref();
+function mapFinish(){
+  realTime.startRealTimeData()
+}
 
 onMounted(() => {
     getMonitor()
     screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
 });
+
+onUnmounted(()=>{
+  realTime.closeRealTimeData()
+})
 window.onresize = () => {
     screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
 };
@@ -72,7 +84,21 @@ function getScale(w = 1920, h = 937) {
     const wh = window.innerHeight / h;
     return ww < wh ? ww : wh;
 }
-
+watch(()=>realTime.realTimeData,(newValue)=>{
+  if(newValue){
+    monitorData.value=newValue
+    typeCounts.value=newValue.typeCounts
+    provinceCars.value=newValue.provinceCars
+    stateObj.value=newValue.wsNowCar
+  }
+},{deep:true})
+watch(()=>realTime.realTimeDataArea,(newValue)=>{
+  if(newValue){
+    carAreas.value = newValue.carAreas
+    todayArea.value=newValue.todayArea
+    totalArea.value=newValue.totalArea
+  }
+},{deep:true})
 
 // 实时监听
 

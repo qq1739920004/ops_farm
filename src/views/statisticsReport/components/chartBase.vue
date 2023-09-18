@@ -2,7 +2,7 @@
 <template>
   <div class="chart-base">
     <div class="container" ref="main"></div>
-    <time-box @timeSelect="timeSelect"></time-box>
+    <time-box v-if="istimeBox" @timeSelect="timeSelect"></time-box>
   </div>
 </template>
 
@@ -15,6 +15,10 @@ const props = defineProps({
   options: {
     type: Object as PropType<echarts.EChartsCoreOption>,
     default: () => ({})
+  },
+  istimeBox:{
+    type:Boolean,
+    default:true
   }
 });
 const main = ref()

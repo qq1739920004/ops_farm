@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 // 导入Vue相关的库
-import { onMounted, ref } from "vue";
+import { onMounted, ref ,watch} from "vue";
 // 导入类型定义
 import type { MonitorObj } from "@/api/perception/type";
 import { getGeojson } from '@/api/perception/index.ts';
@@ -25,12 +25,12 @@ import { getGeojson } from '@/api/perception/index.ts';
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { purifyBaiduData, purifyCityArr } from './utils';
 import { poly3d } from "./polygon3d";
-import { setMarker } from "./setMarker";
+import { setMarker,updateChart } from "./setMarker";
 import { mapEvent } from './mapEvent';
 interface Props {
   provinceCars: MonitorObj["provinceCars"];
 }
-
+const emits = defineEmits(["mapFinish"]);
 const map = ref();
 const props = withDefaults(defineProps<Props>(), {
   provinceCars: () => [
@@ -75,6 +75,7 @@ function startDraw(AMap: any) {
   mapEvent(map);
   // 使用setFitView自动调整视图以适应所有的折线
   map.value.setFitView(polylines);
+  emits("mapFinish");
 }
 
 // 初始化地图
@@ -116,6 +117,9 @@ onMounted(() => {
   let { codeArr } = purifyCityArr(dataList);
   initMap(codeArr);
 });
+watch(() =>props.provinceCars, () => {
+  updateChart(props.provinceCars)
+}, { deep: true })
 </script>
 
 <style scoped lang="scss">

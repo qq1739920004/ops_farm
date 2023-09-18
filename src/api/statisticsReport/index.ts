@@ -1,9 +1,23 @@
 import request from '@/utils/request'
-import {FarmMachineResponseData,timeParams,getStatisticsWxAPIResponse,getStatisticsRemoteAPIResponse,getStatisticsStatAPIResponse} from './type'
+import {FarmMachineResponseData,getStatisticsReportnetworkAPIResponse,getStatisticsReportcarjobAPIResponse, timeParams,getStatisticsWxAPIResponse,getStatisticsRemoteAPIResponse,getStatisticsStatAPIResponse} from './type'
 // 农机在线位置
 export function getStatisticsReportonlinePositionAPI() {
     return request<any, any>({
         url: "/farm/device/onlineFarmMachinePosition",
+      method: 'get',
+    })
+  }
+// 农机作业统计
+export function getStatisticsReportcarjobAPI() {
+    return request<any, getStatisticsReportcarjobAPIResponse>({
+        url: "/farm/stat/rank/province",
+      method: 'get',
+    })
+}
+//  网络状况
+export function getStatisticsReportnetworkAPI() {
+    return request<any,getStatisticsReportnetworkAPIResponse>({
+        url: "/farm/device/new/onlineFarmMachinePosition",
       method: 'get',
     })
   }
@@ -38,10 +52,4 @@ export function getStatisticsReportonlinePositionAPI() {
       params,
     })
   }
-// 总车辆数、按省份排名
-  export function getStatisticsProvinceAPI() {
-    return request<any, any>({
-        url: "/farm/stat/rank/province",
-      method: 'get',
-    })
-  }
+

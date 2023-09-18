@@ -33,15 +33,15 @@
 </template>
 
 <script setup lang="ts">
-import {ref,onMounted} from 'vue';
-import {getStateWs,getState} from '@/api/perception/index.ts';
+import {ref,onMounted,watch,PropType} from 'vue';
+import {getState} from '@/api/perception/index.ts';
 import type {recordsType} from '@/api/perception/type.ts';
-// const props = defineProps({
-//   provinceCars: {
-//     type: Object,
-//   },
-// });
 
+const props=defineProps({
+  stateObj:{
+    type:Object as PropType<recordsType>,
+  }
+})
 let dataArr=ref<recordsType[]>([]) 
 function getTime(item:recordsType){
   if (item.onlineTcp) {
@@ -51,7 +51,6 @@ function getTime(item:recordsType){
   }
 }
 onMounted(() => {
-  getStateWs(dataArr)
   getState({
     currentPage:1,
     pageSize:5
@@ -63,7 +62,15 @@ onMounted(() => {
       })
     })
   })
-  
+watch(()=>props.stateObj,(newValue)=>{
+  if(newValue){
+  dataArr.value.unshift({
+    time:getTime(newValue),
+    ...newValue
+  })
+}
+
+})
 // let ii=ref(3)
 //   setInterval(() => {
 //   dataArr.value.unshift({
