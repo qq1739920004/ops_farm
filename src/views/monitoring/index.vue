@@ -1,8 +1,23 @@
 <template>
   <div class="map_container">
-    <sino-map :markerData="markerData" :markerDataValue="[]" />
+    <sino-map :markerData="markerData" />
     <div class="search_box">
-      
+      <!-- <el-select
+        v-model="searchForm.sn"
+        multiple
+        filterable
+        remote
+        reserve-keyword
+        placeholder="Please enter a keyword"
+        :remote-method="remoteMethod"
+      > -->
+        <!-- <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        /> -->
+      <!-- </el-select> -->
     </div>
     <div class="statistics_box">
       <ul class="top">
@@ -151,6 +166,7 @@ let carId = ref();
 let name = ref();
 let type = ref();
 let notice_box_isActive = ref(false);
+// let searchForm = reactive({ sn: "" });
 
 // @ts-ignore
 window.goMachineryList_markerPopup = goMachineryList_markerPopup;
@@ -166,6 +182,19 @@ window.openRemote_markerPopup = openRemote_markerPopup;
 getFaromDataStatistics();
 getOnlineFarmPosition();
 getCarLogList();
+
+// const options = ref([]);
+
+// function querySearch(queryString: string, cb: any) {
+//   cb([{ value: 1, link: 2 }]);
+//   return;
+// }
+// function handleSelect(item: any) {
+//   console.log(item, "---193");
+// }
+// function remoteMethod(query: string) {
+//   console.log(query, "--194");
+// }
 
 // 获取车辆列表日志信息
 async function getCarLogList() {
@@ -487,22 +516,33 @@ function openRemote_markerPopup(arg: any) {
 .map_container {
   height: 100%;
   position: relative;
+  .search_box {
+    left: 10px;
+    top: 10px;
+    position: absolute;
+    z-index: 999;
+    //     :deep(.el-autocomplete) {
+    //       width: 500px;
+    // }
+    .el-select {
+      position: relative;
+    }
+  }
   .statistics_box {
-    padding: 12px;
+    padding: 10px;
     right: 10px;
     top: 10px;
     position: absolute;
     z-index: 999;
-    width: 360px;
-    // height: 260px;
+    width: 304px;
     background: url("@/assets/monitoring/bg_1.png") no-repeat center center;
-    background-size: 100% 100%;
+    background-size: cover;
 
     .top {
       display: flex;
       flex-wrap: wrap;
       border-bottom: 2px solid rgba(0, 218, 216, 0.3);
-      padding-bottom: 12px;
+      padding-bottom: 10px;
 
       li {
         width: 50%;
@@ -510,7 +550,6 @@ function openRemote_markerPopup(arg: any) {
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-
         span:first-child {
           color: #fff;
           font-size: 24px;
@@ -534,7 +573,7 @@ function openRemote_markerPopup(arg: any) {
         color: #fff;
         display: flex;
         align-items: center;
-
+        height: 35px;
         :deep(.el-checkbox) {
           margin-right: 8px;
 
@@ -552,12 +591,12 @@ function openRemote_markerPopup(arg: any) {
 
         .label {
           font-size: 14px;
-          margin-right: 16px;
-          margin-left: 8px;
+          margin-right: 8px;
+          margin-left: 3px;
         }
 
         .value {
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 700;
         }
       }
@@ -569,7 +608,7 @@ function openRemote_markerPopup(arg: any) {
     right: 10px;
     bottom: 10px;
     width: 304px;
-    height: 400px;
+    height: 397px;
     transition: all 0.3s;
     background: url("@/assets/monitoring/bg_2.png") no-repeat center center;
     background-size: cover;
