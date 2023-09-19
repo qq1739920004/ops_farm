@@ -2,12 +2,14 @@ import { defineStore } from 'pinia'
 type realTimeType={
     realTimeData: any,
     realTimeDataArea: any,
+    realTimeDataActive: any,
     ws: WebSocket | null
 }
 const realTimeStore = defineStore("realTime", {
    state: ():realTimeType => ({
       realTimeData: {},
       realTimeDataArea: {},
+      realTimeDataActive: {},
       ws: null,
    }),
    //websocket接收实时数据
@@ -25,6 +27,9 @@ const realTimeStore = defineStore("realTime", {
               }
               else if(data.type=="monitorArea"){
                 this.realTimeDataArea = data.data
+              }
+              else if(data.type=="monitorCarNum"){
+                this.realTimeDataActive = data.data
               }
           };
           this.ws.onclose = () => {

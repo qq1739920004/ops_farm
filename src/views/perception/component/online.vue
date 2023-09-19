@@ -20,8 +20,6 @@ let chartIcon = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGwAAABsCAYAAACPZ
 
 let bar = ref();
 var mycharts: any;
-let leftPosition = ref(0);
-let titleWidth = ref(80);
 const props = defineProps({
   typeCounts: {
     type: Object,
@@ -56,7 +54,7 @@ const option = {
     containLabel: true,
     bottom: "5%",
     top: "5%",
-    left: "3%", // 增加这个值，从而减少第二个yAxis的宽度
+    left: "0%", // 增加这个值，从而减少第二个yAxis的宽度
     right: "5%",
   },
   xAxis: {
@@ -84,13 +82,12 @@ const option = {
           //   leftPosition.value = titleWidth.value + 5; // 在 title 宽度的右侧再添加 5 像素的间距
           // }
           // console.log(value);
-          return "{rank" + "|" + "}{title|" + value + "}";
+          return "{rank|"+"}{title|" + value + "}";
         },
         rich: {
           rank: {
             width: 26,
             height: 26,
-            left: leftPosition.value,
             backgroundColor: {
               image: chartIcon,
             },
@@ -98,7 +95,6 @@ const option = {
           },
           title: {
             color: "#43cf7c",
-            width: titleWidth.value,
             fontSize: 24,
           },
         },

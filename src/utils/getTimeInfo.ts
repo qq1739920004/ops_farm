@@ -21,3 +21,17 @@ export function getCurrentDateTime() {
 
   return result;
 }
+//获取当天0点和当前时间
+export function getCurrentTimeAndMidnight(): {st:string, et:string} {
+  const currentDate = new Date();
+  
+  const midnightTime = new Date(currentDate);
+  midnightTime.setHours(0, 0, 0, 0);
+  
+  currentDate.setMinutes(0, 0, 0);
+  
+  const midnightTimeString = `${midnightTime.getFullYear()}-${String(midnightTime.getMonth() + 1).padStart(2, '0')}-${String(midnightTime.getDate()).padStart(2, '0')} 00:00:00`;
+  const currentTimeString = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')} ${String(currentDate.getHours()).padStart(2, '0')}:00:00`;
+
+  return {st:midnightTimeString, et:currentTimeString};
+}
