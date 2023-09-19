@@ -1,5 +1,11 @@
-export interface onlineFarmMachinePosition_type {
+export interface onlineFarmMachinePosition_Type {
     name?: string;
+}
+
+export interface carLog_Type {
+    currentPage: number;
+    pageSize: number;
+    [property: string]: any;
 }
 
 export interface driveStatusPathObj {
