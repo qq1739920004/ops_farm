@@ -503,17 +503,21 @@ function createMarkerPopup(item: any) {
         </ul>
         <ul class="btns_container">
           <li>
-            <div class="btn" onclick='openRemote_markerPopup(${JSON.stringify(
-              item
-            )})'>远程管理</div>
+            <div class="btn ${
+              item.driveState != 0 ? "disabled" : ""
+            }" onclick='openRemote_markerPopup(${JSON.stringify(
+    item
+  )})'>远程管理</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
               item
             )})'>历史轨迹</div>
           </li>
           <li>
-            <div class="btn" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
-              item
-            )})'>实时驾驶趋势图</div>
+            <div class="btn ${
+              item.driveState == 0 ? "disabled" : ""
+            }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
+    item
+  )})'>实时驾驶趋势图</div>
             <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
               item
             )})'>历史驾驶趋势图</div>
@@ -578,15 +582,13 @@ function gohistoryChart_markerPopup(arg: any) {
 }
 // marker-弹窗-实时趋势图
 function openRealTimeChart_markerPopup(arg: any) {
-  //
-  // console.log(arg)
+  if (arg.driveState == 0) return;
   sn.value = arg.sn;
   realTime.value.dialogVisible = true;
 }
 // marker-弹窗-远程管理
 function openRemote_markerPopup(arg: any) {
-  console.log(arg.terminalType);
-
+  if (arg.driveState != 0) return;
   terminalType.value = arg.terminalType;
   version.value = arg.version;
   type.value = arg.type;
@@ -842,6 +844,10 @@ function openRemote_markerPopup(arg: any) {
         &:hover {
           opacity: 0.8;
         }
+      }
+      .disabled {
+        cursor: not-allowed !important;
+        color: #8f8f8f !important;
       }
     }
   }
