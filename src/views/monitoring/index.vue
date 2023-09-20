@@ -247,6 +247,10 @@ function handleSocketData(socketData: any) {
     const { data } = socketData;
     dataStatistics.value.device.totalDevice = data.totalDevice;
     dataStatistics.value.device.onlineDevice = data.onlineDevice;
+    const typeCounts = data.typeCounts
+    dataStatistics.type.forEach((item: any,index:number) => {
+      item.onlineCount = typeCounts[index].onlineCount
+    })
   }
   if (socketData.module == "farm" && socketData.type == "monitorArea") {
     const { data } = socketData;
