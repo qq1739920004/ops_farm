@@ -4,7 +4,7 @@
         <div class="tableData">
             <div class="line line3">
                 <div class="tit">SN:</div>
-                <div class="data">{{ NewDetail.sn }}</div>
+                <div class="data data4" >{{ NewDetail.sn }}</div>
                 <div class="tit">在线状态:</div>
                 <div v-if="NewDetail.onlineTcp != 0" class="data data4">在线 <span class="circle"></span></div>
                 <div v-else class="data data4">离线 <span class="circle2"></span></div>
@@ -28,7 +28,7 @@
             </div>
             <div class="line line3">
                 <div class="tit">车辆型号:</div>
-                <div class="data">{{ NewDetail.model }}</div>
+                <div class="data data4">{{ NewDetail.model }}</div>
                 <div class="tit">车龄:</div>
                 <div class="data data4">{{ NewDetail.age }}</div>
                 <div class="tit">创始人:</div>
@@ -36,11 +36,11 @@
             </div>
             <div class="line line3 ">
                 <div>创建人电话:</div>
-                <div class="data">{{ NewDetail.creatorTel }}</div>
+                <div class="data data4">{{ NewDetail.creatorTel }}</div>
                 <div>向日葵SN:</div>
                 <div class="data data4"> {{ NewDetail.sunFlowerSn }}</div>
                 <div>软件版本:</div>
-                <div style="overflow: hidden;" class="data">{{ NewDetail.softwareVersion }}</div>
+                <div class="data">{{ NewDetail.softwareVersion }}</div>
             </div>
             <div class="line line2 ">
                 <div class="tit">创建时间:</div>
@@ -182,9 +182,6 @@ const getNewDetail = async () => {
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-
-
-
         }
     }
 
@@ -264,7 +261,6 @@ const getNewDetail = async () => {
 
 
         .half {
-
             text-align: left;
             display: block;
             width: 50%;
@@ -288,7 +284,7 @@ const getNewDetail = async () => {
         }
 
         .data4 {
-            width: 6%;
+            width: 12.5%;
         }
     }
 }
