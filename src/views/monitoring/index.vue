@@ -11,7 +11,7 @@
         placeholder="Please enter a keyword"
         :remote-method="remoteMethod"
       > -->
-        <!-- <el-option
+      <!-- <el-option
           v-for="item in options"
           :key="item.value"
           :label="item.label"
@@ -55,14 +55,14 @@
       </ul>
       <ul class="bottom">
         <li>
-          <SvgIcon icon="AG302_warn" size="22" />
-          <span class="label">待机</span>
-          <span class="value">988</span>
+          <SvgIcon icon="AG302" size="22" />
+          <span class="label">工作中</span>
+          <span class="value">{{ dataStatistics.drive?.driving }}</span>
         </li>
         <li>
           <SvgIcon icon="AG302_warn" size="22" />
           <span class="label">待机</span>
-          <span class="value">988</span>
+          <span class="value">{{ dataStatistics.drive?.standbyDevice }}</span>
         </li>
       </ul>
     </div>
@@ -88,14 +88,12 @@
           >
             <div class="item">
               <div class="l">
-                <span :class="['state', item.class_state]">{{
-                  item.stateName
+                <span class="state" :style="{ color: item.color }">{{
+                  item.state == 0 ? "离线" : item.state == 1 ? "上线" : "告警"
                 }}</span>
               </div>
               <div class="r">
-                <p v-if="item.state == 2" :class="[item.class_state]">
-                  驾驶效果差
-                </p>
+                <p v-if="item.state == 2" class="state_2">驾驶效果差</p>
                 <div class="title">
                   <span>{{ item.carName }}</span>
                   <span>{{ item.deviceSn }}</span>
@@ -131,6 +129,8 @@ import AG360 from "@/assets/icons/AG360.svg";
 import AG360_warn from "@/assets/icons/AG360_warn.svg";
 import AG501 from "@/assets/icons/AG501.svg";
 import AG501_warn from "@/assets/icons/AG501_warn.svg";
+import AG501Pro from "@/assets/icons/AG501Pro.svg";
+import AG501Pro_warn from "@/assets/icons/AG501Pro_warn.svg";
 import AG502 from "@/assets/icons/AG502.svg";
 import AG502_warn from "@/assets/icons/AG502_warn.svg";
 import AG302Android from "@/assets/icons/AG302Android.svg";
@@ -146,7 +146,8 @@ import SinoMap from "@/components/SinoMap/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import realTimeChart from "./components/realTimeChart.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
-import { ref } from "vue";
+import { reactive, ref, watch } from "vue";
+import useSocketStore from "@/store/socket";
 import { useRouter } from "vue-router";
 import {
   onlineFarmMachinePosition_API,
@@ -154,8 +155,9 @@ import {
   carLog_API,
 } from "@/api/monitoring";
 const router = useRouter();
-let markerData: any = ref([]);
-let dataStatistics: any = ref([]);
+const socketStore = useSocketStore();
+let markerData = reactive<any>([]);
+let dataStatistics = ref<any>({});
 let carLogList: any = ref([]);
 
 let sn = ref();
@@ -179,9 +181,20 @@ window.openRealTimeChart_markerPopup = openRealTimeChart_markerPopup;
 // @ts-ignore
 window.openRemote_markerPopup = openRemote_markerPopup;
 
+watch(
+  () => socketStore.socketData,
+  (socketData) => {
+    if (markerData.length <= 0) return;
+    handleSocketData(socketData);
+  },
+  { deep: true }
+);
+
 getFaromDataStatistics();
 getOnlineFarmPosition();
 getCarLogList();
+
+socketStore.connect();
 
 // const options = ref([]);
 
@@ -196,35 +209,97 @@ getCarLogList();
 //   console.log(query, "--194");
 // }
 
+// 处理socketData数据
+function handleSocketData(socketData: any) {
+  if (socketData.module == "farm" && socketData.type == "farmPt") {
+    let { action, data } = socketData;
+    if (action == "upline") {
+      data.markerId = data.sn;
+      data.markerVisible = true;
+      data.markerLng = data.posX;
+      data.markerLat = data.posY;
+      data.markerIcon = createMarkerIcon(data);
+      // data.markerPopup = createMarkerPopup(data);
+      markerData[0].push(data);
+    }
+    if (action == "offline") {
+      const idx = markerData[0].find((item: any) => item.markerId == data.sn);
+      markerData[0].splice(idx, 1);
+    }
+    if (action == "online") {
+      data.markerId = data.sn;
+      data.markerLng = data.posX;
+      data.markerLat = data.posY;
+      data.markerIcon = createMarkerIcon(data);
+      // data.markerPopup = createMarkerPopup(JSON.parse(JSON.stringify(data)));
+      const find = markerData[0].find(
+        (item: any) => item.markerId == data.markerId
+      );
+      find.markerLng = data.markerLng;
+      find.markerLat = data.markerLat;
+      find.markerIcon = data.markerIcon;
+      // find.markerPopup =  data.markerPopup
+    }
+  }
+  if (socketData.module == "farm" && socketData.type == "monitor") {
+    const { data } = socketData;
+    dataStatistics.value.device.totalDevice = data.totalDevice;
+    dataStatistics.value.device.onlineDevice = data.onlineDevice;
+  }
+  if (socketData.module == "farm" && socketData.type == "monitorArea") {
+    const { data } = socketData;
+    dataStatistics.value.workArea.todayArea = data.todayArea;
+    dataStatistics.value.workArea.totalArea = data.totalArea;
+  }
+  if (socketData.module == "farm" && socketData.type == "monitorCarNum") {
+    const { data } = socketData;
+    dataStatistics.value.drive.driving = data.driving;
+    dataStatistics.value.workArea.standbyDevice = data.standbyDevice;
+  }
+
+  if (socketData.module == "farm" && socketData.type == "notification") {
+    const { data } = socketData;
+    let list = data.list;
+    list.forEach((item: any) => {
+      if (item.judgeLevel) {
+        // 告警状态
+        item.state = 2;
+        item.color = "#e9c75d";
+      } else if (item.offlineTime !== item.onlineTime) {
+        // 离线状态
+        item.state = 0;
+        item.color = "#919392";
+      } else {
+        // 上线状态
+        item.state = 1;
+        item.color = "#58c15e";
+      }
+    });
+    carLogList.value.unshift(...list);
+  }
+}
+
 // 获取车辆列表日志信息
 async function getCarLogList() {
   let params = {
     currentPage: 1,
-    pageSize: 1000,
+    pageSize: 100,
   };
   const { data } = await carLog_API(params);
   carLogList.value = data;
   carLogList.value.forEach((item: any) => {
     if (item.judgeLevel) {
       // 告警状态
-      item.color = "#e9c75d";
-      item.stateName = "告警";
-      item.class_state = "state_2";
       item.state = 2;
+      item.color = "#e9c75d";
     } else if (item.offlineTime !== item.onlineTime) {
       // 离线状态
-      item.color = "#919392";
-      // item.time = this.dateTimeTrans(item.offlineTime)
-      item.stateName = "离线";
-      item.class_state = "state_0";
       item.state = 0;
+      item.color = "#919392";
     } else {
       // 上线状态
-      item.color = "#58c15e";
-      item.stateName = "上线";
-      item.class_state = "state_1";
       item.state = 1;
-      // item.time = this.dateTimeTrans(item.onlineTime)
+      item.color = "#58c15e";
     }
   });
 }
@@ -248,20 +323,27 @@ async function getOnlineFarmPosition() {
     item.markerPopup = createMarkerPopup(item);
     item.markerVisible = true;
   });
-  markerData.value.push(onlineFarmMachines);
+  markerData.push(onlineFarmMachines);
 }
 
 //
 function markerTypeChange() {
   let types = dataStatistics.value.type.filter((item: any) => item.checked);
   types = types.map((item: any) => item.typeName);
-  markerData.value[0].forEach((item: any) => (item.markerVisible = false));
+  markerData[0].forEach((item: any) => (item.markerVisible = false));
   types.forEach((item: any) => {
-    let findList = markerData.value[0].filter((v: any) => {
-      if (v.terminalType == "AG302Android" && v.terminalType == item) {
+    let findList = markerData[0].filter((v: any) => {
+      if (
+        (v.terminalType == "AG302Android" || v.terminalType == "AG501Pro") &&
+        v.terminalType == item
+      ) {
         return true;
       }
-      if (v.terminalType != "AG302Android" && v.terminalType.includes(item)) {
+      if (
+        v.terminalType != "AG302Android" &&
+        v.terminalType != "AG501Pro" &&
+        v.terminalType.includes(item)
+      ) {
         return true;
       }
     });
@@ -447,8 +529,10 @@ function createMarkerIcon(item: any) {
   let icon: string = "";
   if (terminalType.includes("AG360")) {
     icon = driveState == 0 ? AG360_warn : AG360;
-  } else if (terminalType.includes("AG501")) {
+  } else if (terminalType.includes("AG501") && terminalType != "AG501Pro") {
     icon = driveState == 0 ? AG501_warn : AG501;
+  } else if (terminalType == "AG501Pro") {
+    icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
   } else if (terminalType.includes("AG502")) {
     icon = driveState == 0 ? AG502_warn : AG502;
   } else if (terminalType.includes("AG302") && terminalType != "AG302Android") {
@@ -590,13 +674,13 @@ function openRemote_markerPopup(arg: any) {
         }
 
         .label {
-          font-size: 14px;
+          font-size: 12px;
           margin-right: 8px;
           margin-left: 3px;
         }
 
         .value {
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 700;
         }
       }

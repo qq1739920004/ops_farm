@@ -1,21 +1,10 @@
 import { defineStore } from 'pinia'
-
-const useUserStore = defineStore("user", {
-    state: () => (
-        {
-            nickName: 'ls',
-        }
-    ),
-    getters: {
-        ddNickname(state) { return state.nickName + 'ss' },
-
-    },
-    actions: {
-        updateNickName(name: string) {
-            this.nickName = name
-        },
+import { ref } from 'vue'
+const useUserStore = defineStore("use", () => {
+    const oldUserCookie = ref('')
+    oldUserCookie.value = document.cookie.split('loginSysCookie=')[1].split('#').join('_')
+    return {
+        oldUserCookie
     }
-
 })
-
 export default useUserStore
