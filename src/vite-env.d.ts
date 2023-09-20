@@ -14,3 +14,7 @@ declare module 'wkt' {
   export function parse(wkt: string): Geometry;
   // 其他需要的类型声明可以在这里添加
 }
+declare module "*.json" {
+  const value: any;
+  export default value;
+}

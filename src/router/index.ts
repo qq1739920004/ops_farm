@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory,RouteRecordRaw } from 'vue-router'
 import Layout from '@/layout/index.vue';
 
 export const constantRoutes = [ // 静态路由数据
@@ -192,7 +192,18 @@ const router = createRouter({
   routes: constantRoutes,
   scrollBehavior: () => ({ left: 0, top: 0 })
 })
+export function perception(target:string) {
+  const dynamicRoute: RouteRecordRaw = {
+    path: '/perception',
+    meta: {
+      title: '感知平台',
+      icon: 'ChatSquare'
+    },
+    component: () => import(`@/views/${target}/index.vue`) // 假设Dynamic.vue是你要动态添加的页面
+  };
 
+  router.addRoute(dynamicRoute);
+}
 
 
 

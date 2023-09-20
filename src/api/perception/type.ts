@@ -7,7 +7,7 @@ export interface geojsonObj extends ResponseData{
 }
 
   export interface MonitorObj{
-    
+    todayAcDevice?: number,
     onlineDevice: number,
     addNowYearDevice: number,
     totalDevice: number,
@@ -46,6 +46,10 @@ export interface StateObj{
   currentPage:number,
   pageSize:number,
 }
+export interface timeParams {
+  st: string,
+  et: string,
+}
 export interface recordsType
   {
     carName: string,
@@ -57,6 +61,26 @@ export interface recordsType
     onlineTcp:number,
     time?:string,
     carId: number
+}
+// 定义一个车辆数量的类型
+interface CarCount {
+  activeCar: number;  // 活跃车辆数量
+  totalCar: number;   // 总车辆数量
+  newCar: number;     // 新增车辆数量
+}
+
+// 定义一个图表数据的类型
+export interface ChartData {
+  formatDate: string;  // 格式化的日期
+  count: number;       // 数量
+}
+
+// 定义主数据类型
+export interface CarData extends ResponseData {
+  data:{
+    count: CarCount;     // 车辆数量数据
+    chart: ChartData[];  // 图表数据数组
+  }
 }
 export interface StateResponseData extends ResponseData {
     data: {

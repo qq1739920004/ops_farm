@@ -20,11 +20,8 @@
 import { onMounted, ref ,watch} from "vue";
 // 导入类型定义
 import type { MonitorObj } from "@/api/perception/type";
-import { getGeojson } from '@/api/perception/index.ts';
 // 导入高德地图加载器
 import AMapLoader from "@amap/amap-jsapi-loader";
-import { purifyBaiduData, purifyCityArr } from './utils';
-import { poly3d } from "./polygon3d";
 import { setMarker,updateChart } from "./setMarker";
 import { mapEvent } from './mapEvent';
 interface Props {
@@ -47,14 +44,12 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 let dataList = props.provinceCars;
-let polylines: any = [];
 let mask: any = [];
-let maskPoly: any = [];
 //开始画出来
-function startDraw(AMap: any,cityArr: string[]) {
+function startDraw(AMap: any) {
   map.value = new AMap.Map("container", {
-    center: [126.968714, 46.654147], // 中国的大致中心点
-    zoom: 8, // 设置一个合适的缩放级别以显示多个城市
+    center: [104.114129, 37.550339], // 中国的大致中心点
+    zoom:4.5, // 设置一个合适的缩放级别以显示多个城市
     backgroundColor: "transparent",
     mask: mask, // 设置遮罩层
     disableSocket: true,
@@ -66,55 +61,55 @@ function startDraw(AMap: any,cityArr: string[]) {
     showLogo: false,
     layers: [new AMap.TileLayer.RoadNet(), new AMap.TileLayer.Satellite()],
   });
-
   //边框
-  poly3d(AMap, maskPoly, map, polylines);
-  //标注
-  setMarker(AMap, map, dataList,cityArr.length);
+  // poly3d(AMap, maskPoly, map, polylines);
+  // //标注
+  setMarker(AMap, map, dataList);
   //注册的所有时间
   mapEvent(map);
   // 使用setFitView自动调整视图以适应所有的折线
-  map.value.setFitView(polylines);
   emits("mapFinish");
+
+  // map.value.setFitView(polylines);
+  // setTimeout(() => {
+  //   emits("mapFinish");
+  // }, 1000);
 }
 
 // 初始化地图
-function initMap(cityArr: string[]) {
+function initMap() {
   AMapLoader.load({
     key: "604de37af9e617ea3d9d26f306743698",
     version: "2.0",
-    plugins: ["AMap.DistrictSearch", "AMap.Polyline"],
+    plugins: ["AMap.DistrictSearch", "AMap.Polyline","AMap.DistrictLayer"],
   })
     .then((AMap: any) => {
-      drawingCity(AMap, cityArr);
+      AMap.plugin('AMap.DistrictSearch', function () {
+  let district = new AMap.DistrictSearch({ // 创建行政区查询对象
+    extensions: 'all', // 返回行政区边界坐标等具体信息
+    level: 'province' // 设置查询行政区级别为国 
+  });
+  district.search('中国', function(status:any, result:any) {
+      if(status=='complete'){
+        drawingCity(AMap,result.districtList[0].boundaries);
+      }
+ })
+})
     })
     .catch((e: any) => {
       console.log(e);
     });
 }
-// 使用百度地图API服务获取边界数据
-async function drawingCity(AMap: any, cityArr: string[]) {
-  for (let i = 0; i < cityArr.length; i++) {
-    const cityName = cityArr[i];
-    const response = await getGeojson(cityName)
-    // const response = await fetch(
-    //   `/api-baidu/api_region_search/v1/?keyword=${cityName}&boundary=1&sub_admin=2&ak=TDKpTiQ7PNoT08EjLD41MTLbVdHp4Z1P`
-    // );
-    const data = JSON.parse(response.data)
-    if (data.status == 0 && data.districts.length > 0) {
+async function drawingCity(AMap: any,data:any) {
       //数据处理
-      let [maskTemp, maskPolyTemp] = purifyBaiduData(AMap, data, cityName)
-      mask = maskTemp;
-      maskPoly = maskPolyTemp;
-    }
-    if (i === cityArr.length - 1) {
-      startDraw(AMap,cityArr);
-    }
-  }
+      for(let i=0;i<data.length;i+=1){//构造MultiPolygon的path
+        data[i] = [data[i]]
+              }
+      mask = data;
+      startDraw(AMap);
 }
 onMounted(() => {
-  let { codeArr } = purifyCityArr(dataList);
-  initMap(codeArr);
+  initMap();
 });
 watch(() =>props.provinceCars, () => {
   updateChart(props.provinceCars)
@@ -154,9 +149,10 @@ watch(() =>props.provinceCars, () => {
   }
 
   .map-bar-info {
+    z-index: 99;
     position: absolute;
-    top: 0;
-    right: 0;
+    bottom: 20px;
+    left: 10px;
     width: 251px;
     height: 41px;
     background: url('@/assets/perceptionImage/mapBarInfo.png') no-repeat;
@@ -174,7 +170,7 @@ watch(() =>props.provinceCars, () => {
   background: url('@/assets/perceptionImage/mapBack.png') no-repeat;
   background-position: center;
   background-origin: content-box;
-  background-size: 779px;
+  background-size: 739px;
   animation: rotate 30s linear infinite;
   z-index: -999;
 }
@@ -191,7 +187,6 @@ watch(() =>props.provinceCars, () => {
 
 .map-bar-info,
 .map-info {
-  z-index: 999;
   display: flex;
   justify-content: space-evenly;
   align-items: center;

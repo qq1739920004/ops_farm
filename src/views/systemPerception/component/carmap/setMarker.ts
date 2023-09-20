@@ -1,9 +1,9 @@
 import type { MonitorObj } from "@/api/perception/type";
-import { ref,shallowRef } from 'vue';
+import { ref ,shallowRef} from 'vue';
 import * as echarts from 'echarts';
 let width=ref(40);
-let height=ref(220);
-let marginTop=ref(110);
+let height=ref(160);
+let marginTop=ref(80);
 let chartList=shallowRef<any>([]);
 let chartContainerList=ref<any>([]);
 let optionsList=ref<any>([]);
@@ -18,9 +18,14 @@ function updateChart(dataList:MonitorObj["provinceCars"]){
   })
 }
 
-function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:number){
-  for(let i=1;i<length;i++){
+function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"]){
+  for(let i=1;i<=dataList.length;i++){
+    if(!dataList[i].code) return
         const markerContent = document.createElement('div');
+        const markerContent2 = document.createElement('div');
+        markerContent2.style.width = `${width.value}px`;
+        markerContent2.style.height = `${height.value}px`;
+        markerContent2.style.marginTop = `-${marginTop.value}px`;
         const chartContainer = document.createElement('div');
         chartContainer.style.width = `${width.value}px`;
         chartContainer.style.height = `${height.value}px`;
@@ -31,6 +36,11 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
             content: markerContent,
             map: map.value
         });
+        new AMap.Marker({
+          position: [dataList[i].lng,dataList[i].lat],
+          content: markerContent,
+          map: map.value
+      });
         // 使用ECharts初始化柱状图容器并设置数据
         const chart = echarts.init(chartContainer);
         chartList.value.push(chart);
@@ -43,67 +53,69 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
             boxWidth: 400,
 
         },
-          xAxis: {
-              type: 'category',
-              data: [dataList[i].cityName],
-              axisTick: {
+            xAxis: {
+                type: 'category',
+                data: [dataList[i].name],
+                axisTick: {
                   show: false,
-              },
-              axisLabel: {
+                },
+                axisLabel: {
                   show: true,
                   color: "white",
-              },
-              axisLine: {
+                },
+                axisLine: {
                   show: false,
-              },
-          },
-          yAxis: {
-              type: 'value',
-              show: false  // 隐藏y轴
-          },
-          series: [{
+                },
+            },
+            yAxis: {
+                type: 'value',
+                show: false  // 隐藏y轴
+            },
+            series: [{
               name: '在线数',
-              data: [dataList[i].onlineNum],
-              type: 'bar',
-              itemStyle: {
-                  color: '#54d176',
+                data: [dataList[i].onlineNum],
+                type: 'bar',
+                
+                itemStyle: {
+                //柱子颜色
+                  color:'#54d176',
                   borderRadius: [2, 2, 0, 0],
-              },
-              stack: "total", //设置堆叠
-              emphasis: {
+                },
+                stack: "total",//设置堆叠
+                emphasis: {//
                   focus: "series",
-              },
-              label: {
+                },
+                label: {
                   show: true,
                   color: "white",
                   position: 'top',
                   formatter: "{c}",
-              },
-          },
-          {
+                },
+            },
+            {
               name: '总数',
-              data: [dataList[i].totalNum - dataList[i].onlineNum],
-              type: 'bar',
-              itemStyle: {
-                  color: '#eddb39',
+                data: [dataList[i].totalNum-dataList[i].onlineNum],
+                type: 'bar',
+                itemStyle: {
+                  color:'#eddb39',
                   borderRadius: [2, 2, 0, 0],
-              },
-              stack: "total",
-              emphasis: {
+                },
+                stack: "total",
+                emphasis: {
                   focus: "series",
-              },
-              label: {
+                },
+                label: {
                   show: true,
                   color: "white",
                   position: 'top',
-                  formatter: function () {
-                      return dataList[i].totalNum;  // 显示总数
-                  },
-              },
-          }]
-      };
-      optionsList.value.push(option);
-      chart.setOption(option);
+                  formatter: function() {
+                    return dataList[i].totalNum;  // 显示总数
+                },
+                },
+            }]
+        };
+        optionsList.value.push(option);
+        chart.setOption(option);
       }
       isUpdata.value=true;
 }

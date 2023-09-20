@@ -78,12 +78,10 @@ const fmData = ref<FarmMachineObj>();
 
 onMounted(() => {
   fmData.value = props.farmMachineData;
-  console.log(props.farmMachineData, "newValue");
 });
 
 watch(props, (newValue) => {
   fmData.value = newValue.farmMachineData;
-  console.log(newValue.farmMachineData, "newValue");
 });
 watch(
   () => realTime.realTimeData,
