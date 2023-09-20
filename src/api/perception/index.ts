@@ -1,6 +1,6 @@
 
 import request from '@/utils/request'
-import {monitorResponseData,StateObj,StateResponseData,geojsonObj} from './type'
+import {monitorResponseData,StateObj,timeParams,StateResponseData,geojsonObj,CarData} from './type'
 // 未处理个数
 export function getMonitorAPI() {
     return request<any, monitorResponseData>({
@@ -65,6 +65,14 @@ function getWeatherData(location: string) {
       dataType:0,
       addrCode:location
     }
+  })
+}
+//活跃度查询
+export function getActiveData(params:timeParams) {
+  return request<timeParams, CarData>({
+    url: "/farm/stat/car",
+    method: 'get',
+    params
   })
 }
 export function getStateWs(resList: any) {

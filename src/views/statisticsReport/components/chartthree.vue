@@ -31,7 +31,6 @@ onMounted(() => {
 
 watch(props, (newValue) => {
     fmData.value = newValue.farmMachineData  
-    console.log(fmData.value,'asdfsadf');
 
 });
 </script>

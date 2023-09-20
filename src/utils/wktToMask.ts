@@ -23,3 +23,32 @@ export function wktToMask(AMap:any,wktString: string){
 
   return [result];
 }
+
+export function convertGeojsonToAMapLngLat(AMap:any,geojson: any){
+  // 结果数组，用于存储转换后的AMap.LngLat对象
+  let result:any = [];
+  // 遍历geojson的features属性
+  geojson.features.forEach((feature:any) => {
+      let resultItem:any=[];
+      // 获取geometry中的坐标数据
+      let coordinates = feature.geometry.coordinates
+      // 遍历坐标数据
+      coordinates.forEach((coordinateGroup:any) => {
+          //用下方的isArray函数替换
+          isArray(resultItem,coordinateGroup,AMap)
+      });
+      result.push([resultItem]);
+  });
+
+  // 返回结果数组
+  return result;
+}
+function isArray(resultItem:any[],data:any,AMap:any){
+  if(Array.isArray(data[0])){
+    data.forEach((item:any)=>{
+      isArray(resultItem,item,AMap)
+    })
+  }else{
+    resultItem.push(new AMap.LngLat(data[0],data[1]));
+  }
+}

@@ -2,32 +2,38 @@
     <div class="container">
         <!-- 内容展示区 -->
         <div class="screen" ref="screen">
+      <img src="~@/assets/systemPerceptionImage/top_title_logo.png" class="top-img"  key=""  alt="" />
+
             <div class="top">
                 <Top :monitorData ="monitorData "/>
             </div>
 
             <div class="bottom">
                 <div class="left">
-                    <Workarea class="workarea" :carAreas="carAreas" v-if="carAreas.length" />
-                    <Year class="year" :totalArea="totalArea" :todayArea="todayArea" />
+                  <Online class="online" v-if="typeCounts.length"  :typeCounts="typeCounts"></Online>
+                    <Year class="year" :totalArea="totalArea" :addNowYearDevice="addNowYearDevice" />
+                    <active class="active"  :dataNow="dataNow"/>
                 </div>
 
                 <div class="middle">
                     <Carmap v-if="carAreas.length" @mapFinish="mapFinish" :provinceCars="provinceCars"></Carmap>
                 </div>
                 <div class="right">
-                    <Online class="online" v-if="typeCounts.length"  :typeCounts="typeCounts"></Online>
+                    <Workarea class="workarea" :carAreas="carAreas" v-if="typeCounts.length" />
                     <State class="state" :stateObj="stateObj"></State>
                 </div>
             </div>
+            <div class="bottom-logo"></div>
+
         </div>
     </div>
 </template>
   
 <script setup lang='ts'>
-import { ref, onMounted,onUnmounted,watch} from "vue";
+import { ref,watch, onMounted,onUnmounted} from "vue";
 import Top from "./component/top.vue";
 import Year from "./component/year.vue";
+import active from "./component/active.vue";
 import Carmap from "./component/carmap/index.vue";
 import Workarea from "./component/workarea.vue";
 import State from "./component/state.vue";
@@ -35,6 +41,7 @@ import Online from "./component/online.vue"
 import { getMonitorAPI } from '@/api/perception/index.ts'
 import type { MonitorObj,recordsType } from '@/api/perception/type'
 import realTimeStore from '@/store/realTimeData';
+import type {ChartData} from '@/api/perception/type.ts';
 
 const realTime=realTimeStore()
 
@@ -42,11 +49,12 @@ const realTime=realTimeStore()
 const monitorData = ref<MonitorObj>()
 //状态通知
 let stateObj=ref<recordsType>() 
-// 各车辆作业面积
+// 各省在线数/总数
 const carAreas = ref<Array<object>>([])
-
+const dataNow=ref<ChartData>()
 const todayArea=ref<number>()
 const totalArea=ref<number>()
+const addNowYearDevice=ref(0)
 // 各类型农机在线数
 const typeCounts=ref<Array<object>>([])
 // 各省车辆状态
@@ -55,8 +63,9 @@ const provinceCars=ref<MonitorObj['provinceCars']>()
 const getMonitor = async () => {
     const res = await getMonitorAPI()
     monitorData.value=res.data
-    carAreas.value = res.data.carAreas
+    carAreas.value = res.data.provinceCars
     todayArea.value=res.data.todayArea
+    addNowYearDevice.value=res.data.addNowYearDevice
     totalArea.value=res.data.totalArea
     typeCounts.value=res.data.typeCounts
     provinceCars.value=res.data.provinceCars
@@ -86,37 +95,47 @@ function getScale(w = 1920, h = 937) {
 }
 watch(()=>realTime.realTimeData,(newValue)=>{
   if(newValue){
-    monitorData.value=newValue
+    monitorData.value={...newValue,...monitorData.value}
     typeCounts.value=newValue.typeCounts
     provinceCars.value=newValue.provinceCars
+    carAreas.value = newValue.provinceCars
     stateObj.value=newValue.wsNowCar
   }
 },{deep:true})
 watch(()=>realTime.realTimeDataArea,(newValue)=>{
   if(newValue){
-    carAreas.value = newValue.carAreas
     todayArea.value=newValue.todayArea
     totalArea.value=newValue.totalArea
   }
 },{deep:true})
+watch(()=>realTime.realTimeDataActive,(newValue)=>{
+  if(newValue){
+    monitorData.value!.todayAcDevice=newValue.todayAcDevice
+    dataNow.value=newValue.chart[0]
 
+  }
+},{deep:true})
 // 实时监听
 
 </script>
   
 <style lang="scss" scoped>
 .container {
-  width: 100%;
-  height: 100%;
-    max-height: 100vh;
-    max-width: 100vw;
-    background: url(@/assets/perceptionImage/scene.png) no-repeat,url(@/assets/perceptionImage/border_lr.png) no-repeat,url(@/assets/perceptionImage/border_tb.png) no-repeat;
+    height: 100vh;
+    width: 100vw;
+    background: url(@/assets/perceptionImage/scene.png) no-repeat;
     background-color: rgba(2, 28, 14, 1);
-  background-size: cover,contain,100% 100%;
+    background-size: cover;
     background-position: center;
     color: white;
 
     .screen {
+      .top-img{
+        position: fixed;
+        top: 0;
+        height: 61px;
+        width: 100%;
+      }
         width: 1920px;
         height: 937px;
         position: fixed;
@@ -127,14 +146,14 @@ watch(()=>realTime.realTimeDataArea,(newValue)=>{
           display: flex;
           justify-content: space-between;
         width: 100%;
-        height: 223px;
+        height: 182px;
         .top_time{
           align-self: flex-start;
         }
     }
     .bottom {
         display: flex;
-        height: 779px;
+        height: 739px;
         width: 100%;
         .left {
             flex: 1;
@@ -142,11 +161,14 @@ watch(()=>realTime.realTimeDataArea,(newValue)=>{
             height: 100%;
 
             flex-direction: column;
-            .workarea {
-                height: 400px;
+            .online {
+                height: 270px;
             }
             .year {
-                height: 270px;
+                height: 173px;
+            }
+            .active{
+                height: 256px;
             }
         }
         .middle {
@@ -157,21 +179,27 @@ watch(()=>realTime.realTimeDataArea,(newValue)=>{
         .right {
             flex: 1;
             height: 100%;
-
+            transform: translateY(-50px);
             display: flex;
             flex-direction: column;
-            .online{
-                height: 270px;
+            justify-content: space-between;
+            .workarea{
+                height: 391px;
             }
             .state{
-                height: 400px;
+                height: 358px;
             }
         }
     }
     }
 
    
-
+.bottom-logo{
+  width: 100%;
+  height:16px ;
+  background-image: url('@/assets/systemPerceptionImage/bottom_logo.png');
+  background-size: contain;
+}
     
 }
 </style>
