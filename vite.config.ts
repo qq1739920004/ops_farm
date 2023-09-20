@@ -46,8 +46,8 @@ export default defineConfig({
     open: true, // 运行是否自动打开浏览器
     proxy: {
       '/dev-api': {
-        target: "http://127.0.0.1:4523/m1/2885822-0-default",
-        // target: 'http://140.207.166.210:9030',
+        // target: "http://127.0.0.1:4523/m1/2885822-0-default",
+        target: 'http://140.207.166.210:9030',
         // target: 'http://192.168.2.112:9901',        //王宇开发环境
         // target: 'http://140.207.166.210:9030/gateway',
         // target: 'http://140.207.166.210:9030/gateway/farm',

@@ -148,10 +148,10 @@ const option = {
       },
       label: {
         show: true,
-        position: "insideRight",
+        position: "inside",//
         color: "#f5fff5",
         fontSize: 20,
-        offset: [5, -5],
+        // offset: [15, -5],
         formatter: "{c}",
       },
       data: seriesDataO,
