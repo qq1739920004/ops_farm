@@ -10,6 +10,20 @@
           :value="item.id"
         />
       </el-select>
+      <div class="map_utils_item">
+        <el-tooltip effect="light" content="测距">
+          <el-button @click="calculateDistance">
+            <SvgIcon icon="ranging" color="blue" />
+          </el-button>
+        </el-tooltip>
+        <el-button
+          class="clear_btn"
+          v-if="calculationObj.length > 0"
+          @click="clearDistance"
+          type="danger"
+          >清除</el-button
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -24,6 +38,7 @@ import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { mapTileLayers } from "./utils/mapTileLayers";
 import { reactive, onMounted, watch } from "vue";
+import SvgIcon from "@/components/SvgIcon/index.vue";
 
 const props = defineProps({
   mapTile: {
@@ -37,12 +52,15 @@ const props = defineProps({
 });
 let markerData_flat: any = [];
 let lastMarkerData_flat: any = []; // 上一次markerData数据
+let pickupMode: boolean = false;
+let pickedPoints: any = [];
+let calculationObj: any = reactive([]);
 watch(
   () => props.markerData,
   (markerData) => {
     markerData_flat = arryFlat(markerData);
     diffArray(lastMarkerData_flat, markerData_flat);
-    lastMarkerData_flat = markerData_flat
+    lastMarkerData_flat = markerData_flat;
   },
   { deep: true }
 );
@@ -76,7 +94,7 @@ onMounted(() => {
 
 // 处理markerId后扁平化数组
 function arryFlat(data: any) {
-  data = JSON.parse(JSON.stringify(data))
+  data = JSON.parse(JSON.stringify(data));
   data.forEach((item: any, index: number) => {
     item.forEach((v: any) => {
       v.markerId = v.markerId + "_" + index;
@@ -184,8 +202,8 @@ function removeMarker(list: any) {
       }
     });
   });
-  console.log(markerArr.length)
-  console.log(markerData_flat.length)
+  console.log(markerArr.length);
+  console.log(markerData_flat.length);
 }
 // 修改地图marker点
 function updateMarker(list: any) {
@@ -247,6 +265,7 @@ function initMap() {
   markerGroup.addTo(map);
   markerClusterGroup.addTo(map);
   mapTileChange();
+  initRanging();
 }
 
 // 图商发生变化
@@ -285,6 +304,63 @@ function gcoordLngLat(markerLng: number, markerLat: number) {
   );
   return [lng, lat];
 }
+
+function calculateDistance() {
+  try {
+    // @ts-ignore
+    document.getElementById("map").style.cursor = "crosshair"; // 改变鼠标状态
+  } catch (err) {
+    console.log(err);
+  }
+  pickupMode = true; //开启拾取模式
+}
+
+function clearDistance() {
+  if (calculationObj.length) {
+    calculationObj.forEach((item: any) => {
+      map.removeLayer(item);
+    });
+    calculationObj.length = 0
+  }
+  pickupMode = false;
+  pickedPoints = [];
+  try {
+    // @ts-ignore
+    document.getElementById("_map").style.cursor = "grab";
+  } catch (err) {
+    console.log(err);
+  }
+}
+// 初始化测距
+function initRanging() {
+  map.on("click", function (event: any) {
+    if (pickupMode) {
+      let point = event.latlng;
+      pickedPoints.push(point);
+      let marker = L.marker(point).addTo(map);
+      calculationObj.push(marker);
+      if (pickedPoints.length === 2) {
+        let distance = pickedPoints[0].distanceTo(pickedPoints[1]); //算距离
+        let polyline = L.polyline(pickedPoints, { color: "red" })
+          .addTo(map)
+          .bindPopup(`相距:${distance.toFixed(3)}米`)
+          .openPopup(); //划线
+        calculationObj.push(polyline);
+        map.fitBounds(pickedPoints); //适应视野
+        //恢复状态
+        pickupMode = false;
+        pickedPoints = [];
+        try {
+          // @ts-ignore
+          document.getElementById("map").style.cursor = "grab";
+        } catch (err) {
+          console.log(err);
+        }
+        return;
+      }
+    }
+  });
+}
 </script>
 
 <style lang="scss" scoped>
@@ -301,8 +377,15 @@ function gcoordLngLat(markerLng: number, markerLat: number) {
   bottom: 10px;
   left: 10px;
   display: flex;
+  align-items: center;
   .el-select {
     width: 120px;
+  }
+  .map_utils_item {
+    margin-left: 6px;
+    .clear_btn {
+      margin-left: 6px;
+    }
   }
 }
 

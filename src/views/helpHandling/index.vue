@@ -111,8 +111,6 @@
       >
       </Pagination>
     </div>
-
-    <div class="test_box">测试</div>
   </div>
 </template>
 
@@ -260,8 +258,5 @@ const chooseStatus = () => {
       margin-right: 5px;
     }
   }
-}
-.test_box {
-  color: var(--testcolor);
 }
 </style>
