@@ -112,6 +112,7 @@
     <!-- 实时趋势驾驶图diaLog -->
     <realTimeChart ref="realTime" :sn="sn" />
     <RemoteControl
+    :isChange="isChange"
       :terminalType="terminalType"
       :version="version"
       :type="type"
@@ -168,6 +169,7 @@ let carId = ref();
 let name = ref();
 let type = ref();
 let notice_box_isActive = ref(false);
+let isChange = ref(false)
 // let searchForm = reactive({ sn: "" });
 
 // @ts-ignore
@@ -398,6 +400,21 @@ function createMarkerPopup(item: any) {
     4: "强",
   };
 
+  let openRemote: any = true; //是否远程管理
+
+  if (
+    item.terminalType == "AG320" ||
+    item.terminalType == "AG360" ||
+    item.terminalType == "AG502"
+  ) {
+    openRemote = true;
+  } else {
+    openRemote = false;
+  }
+  if (item.driveState != 0) {
+    openRemote = false;
+  }
+
   const cardUsage =
     item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
   const popup = `<div class="map_popup">
@@ -504,7 +521,7 @@ function createMarkerPopup(item: any) {
         <ul class="btns_container">
           <li>
             <div class="btn ${
-              item.driveState != 0 ? "disabled" : ""
+              !openRemote ? "disabled" : ""
             }" onclick='openRemote_markerPopup(${JSON.stringify(
     item
   )})'>远程管理</div>
@@ -589,6 +606,7 @@ function openRealTimeChart_markerPopup(arg: any) {
 // marker-弹窗-远程管理
 function openRemote_markerPopup(arg: any) {
   if (arg.driveState != 0) return;
+  isChange.value = !isChange.value
   terminalType.value = arg.terminalType;
   version.value = arg.version;
   type.value = arg.type;

@@ -66,7 +66,7 @@ watch(
 );
 
 let map: any = null; // map实例对象
-let renderMode = "polymer"; // 原生dom渲染， 或者 polymer 聚合引擎；
+let renderMode = "dom"; // 原生dom渲染， 或者 polymer 聚合引擎；
 let markerArr: any = []; // marker坐标点数字
 
 //@ts-ignore
