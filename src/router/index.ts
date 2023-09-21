@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory,RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import Layout from '@/layout/index.vue';
 
 export const constantRoutes = [ // 静态路由数据
@@ -61,6 +61,31 @@ export const constantRoutes = [ // 静态路由数据
         component: () => import("@/views/machineryList/taskMachine.vue"),
         meta: {
           title: '历史轨迹',
+          icon: 'List',
+          activeMenu: '/machineryList',
+          hidden: true,
+          breadcrumb: [{ title: '农机列表' }]
+        },
+
+      }, {
+        path: 'file',
+        name: 'file',
+        component: () => import("@/views/machineryList/file.vue"),
+        meta: {
+          title: '文件存储',
+          icon: 'List',
+          activeMenu: '/machineryList',
+          hidden: true,
+          breadcrumb: [{ title: '农机列表' }]
+        },
+
+      },
+      {
+        path: 'backFile/:sn',
+        name: 'backFile/:sn',
+        component: () => import("@/views/machineryList/backFile.vue"),
+        meta: {
+          title: '回传文件',
           icon: 'List',
           activeMenu: '/machineryList',
           hidden: true,
@@ -192,7 +217,7 @@ const router = createRouter({
   routes: constantRoutes,
   scrollBehavior: () => ({ left: 0, top: 0 })
 })
-export function perception(target:string) {
+export function perception(target: string) {
   const dynamicRoute: RouteRecordRaw = {
     path: '/perception',
     meta: {

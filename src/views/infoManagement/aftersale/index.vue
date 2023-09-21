@@ -341,7 +341,7 @@ const changeHubSnBtn = async (val: string) => {
         display: flex;
 
         .left {
-            padding: 15px 0 0 60px;
+            padding: 16px 0 0 20px;
             height: 100%;
             width: 50%;
 
@@ -370,7 +370,7 @@ const changeHubSnBtn = async (val: string) => {
         }
 
         .right {
-            padding: 15px 0 0 0;
+            padding: 16px 0 0 0;
             height: 100%;
             width: 50%;
 
@@ -434,7 +434,7 @@ const changeHubSnBtn = async (val: string) => {
             font-weight: 400;
             letter-spacing: 0px;
             line-height: 26.06px;
-            padding: 20px 0 0 60px;
+            padding: 20px 0 0 20px;
             margin-bottom: 20px;
             height: 50px;
 
@@ -451,7 +451,7 @@ const changeHubSnBtn = async (val: string) => {
         }
 
         .main {
-            margin-left: 167px;
+            margin-left: 124px;
             padding: 20px 8px 0px 8px;
             width: 755px;
             height: 376px;

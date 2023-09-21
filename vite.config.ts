@@ -45,9 +45,16 @@ export default defineConfig({
     port: 8088,
     open: true, // 运行是否自动打开浏览器
     proxy: {
+      '/dev-api/lu': {
+        target:'http://140.143.154.216:9051',
+        changeOrigin: true,
+        rewrite: (path) =>
+          path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
+      },
       '/dev-api': {
         // target: "http://127.0.0.1:4523/m1/2885822-0-default",
         target: 'http://140.207.166.210:9030',
+        // target:'http://140.143.154.216:9051',
         // target: 'http://192.168.2.112:9901',        //王宇开发环境
         // target: 'http://140.207.166.210:9030/gateway',
         // target: 'http://140.207.166.210:9030/gateway/farm',
@@ -55,6 +62,7 @@ export default defineConfig({
         rewrite: (path) =>
           path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
       },
+
       // 自定义地图服务代理
       '/_AMapService/v4/map/styles': {
         target: 'https://webapi.amap.com/v4/map/styles',
@@ -68,17 +76,17 @@ export default defineConfig({
         rewrite: (path) => `${path.replace(/^\/_AMapService\/v3\/vectormap/, '/v3/vectormap')}?jscode=3cb63ed59c6e453ae7acb031f0968686`
       },
       // Web服务API代理
-        '/_AMapService': {
-          target: 'https://restapi.amap.com',  // 实际的服务端地址
-          changeOrigin: true,  // 改变请求源
-          rewrite: (path) => `${path.replace(/^\/_AMapService\//, '/')}?jscode=3cb63ed59c6e453ae7acb031f0968686`  // 重写请求路径
-        },
-        //百度地图
-        '/api-baidu': {
-          target: baiduUrl,
-          changeOrigin: true,
-          rewrite: (path) => `${path.replace(/^\/api-baidu/, '')}`
-        }
+      '/_AMapService': {
+        target: 'https://restapi.amap.com',  // 实际的服务端地址
+        changeOrigin: true,  // 改变请求源
+        rewrite: (path) => `${path.replace(/^\/_AMapService\//, '/')}?jscode=3cb63ed59c6e453ae7acb031f0968686`  // 重写请求路径
+      },
+      //百度地图
+      '/api-baidu': {
+        target: baiduUrl,
+        changeOrigin: true,
+        rewrite: (path) => `${path.replace(/^\/api-baidu/, '')}`
+      }
     },
   },
 })

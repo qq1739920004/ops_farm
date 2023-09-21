@@ -154,9 +154,6 @@ export interface singleCarTrackObj {
     satNum: number,
     baseDist: number,
     diffSource: number,
-    xOffset: number,
-    headingOffset: number,
-    netSignal: number,
     gnssTime: number,
     diffAge: number,
     dirSolState: number,
@@ -164,4 +161,7 @@ export interface singleCarTrackObj {
     sn: string,
     workName: string | null,
     npn: string
+}
+export interface ChildrenFileListResponseData extends ResponseData {
+
 }
