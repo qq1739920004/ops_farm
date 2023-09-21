@@ -97,4 +97,7 @@ function elMenuSelect() {
 .el-menu--horizontal {
   height: 100%;
 }
+.el-menu--horizontal.el-menu {
+  border-bottom: none;
+}
 </style>

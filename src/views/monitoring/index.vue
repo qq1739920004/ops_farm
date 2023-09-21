@@ -1,23 +1,30 @@
 <template>
   <div class="map_container">
-    <sino-map :markerData="markerData" />
+    <sino-map :markerData="markerData" :mapCenter="mapCenter" />
     <div class="search_box">
-      <!-- <el-select
-        v-model="searchForm.sn"
-        multiple
-        filterable
-        remote
-        reserve-keyword
-        placeholder="Please enter a keyword"
-        :remote-method="remoteMethod"
-      > -->
-      <!-- <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        /> -->
-      <!-- </el-select> -->
+      <el-autocomplete
+        v-model="searchSn"
+        :fetch-suggestions="querySearch"
+        popper-class="my-autocomplete"
+        placeholder="SN、车辆名、公司、电话"
+        @select="handleSelect"
+      >
+        <template #suffix>
+          <el-icon><Search /></el-icon>
+        </template>
+        <template #default="{ item }">
+          <div>
+            <span>{{ item.carName }}</span>
+            |
+            <span>{{ item.sn }}</span>
+          </div>
+          <div>
+            <span>{{ item.companyName }}</span>
+            |
+            <span>{{ item.tel }}</span>
+          </div>
+        </template>
+      </el-autocomplete>
     </div>
     <div class="statistics_box">
       <ul class="top">
@@ -96,7 +103,9 @@
                 <p v-if="item.state == 2" class="state_2">驾驶效果差</p>
                 <div class="title">
                   <span>{{ item.carName }}</span>
-                  <span>{{ item.deviceSn }}</span>
+                  <span @click="searchDevicePosition(item.markerId)">{{
+                    item.deviceSn
+                  }}</span>
                 </div>
                 <p>{{ item.position }}</p>
                 <p v-if="item.state != 2">
@@ -112,7 +121,7 @@
     <!-- 实时趋势驾驶图diaLog -->
     <realTimeChart ref="realTime" :sn="sn" />
     <RemoteControl
-    :isChange="isChange"
+      :isChange="isChange"
       :terminalType="terminalType"
       :version="version"
       :type="type"
@@ -169,8 +178,13 @@ let carId = ref();
 let name = ref();
 let type = ref();
 let notice_box_isActive = ref(false);
-let isChange = ref(false)
+let isChange = ref(false);
 // let searchForm = reactive({ sn: "" });
+
+const searchSn = ref(""); // sn 车辆名 公司 手机号
+const mapCenter = reactive<any>({
+  markerId: '',
+});
 
 // @ts-ignore
 window.goMachineryList_markerPopup = goMachineryList_markerPopup;
@@ -197,22 +211,40 @@ getOnlineFarmPosition();
 getCarLogList();
 
 socketStore.connect();
+//查询设备地图定位
+function searchDevicePosition(id: any) {
+  mapCenter.markerId = id;
+}
 
-// const options = ref([]);
-
-// function querySearch(queryString: string, cb: any) {
-//   cb([{ value: 1, link: 2 }]);
-//   return;
-// }
-// function handleSelect(item: any) {
-//   console.log(item, "---193");
-// }
-// function remoteMethod(query: string) {
-//   console.log(query, "--194");
-// }
+// sn、车辆名、公司名、电话 搜索
+function querySearch(queryString: string, cb: any) {
+  if (!queryString) return;
+  let filterData = markerData.filter((item: any) => {
+    if (item.sn.includes(queryString)) {
+      return true;
+    }
+    if (item.carName.includes(queryString)) {
+      return true;
+    }
+    if (item.companyName.includes(queryString)) {
+      return true;
+    }
+    if (item.tel.includes(queryString)) {
+      return true;
+    }
+  });
+  if (filterData.length > 3) filterData.length = 3;
+  cb(filterData);
+  return;
+}
+// 搜索框确认选择
+function handleSelect(item: any) {
+  mapCenter.markerId = item.markerId;
+}
 
 // 处理socketData数据
 function handleSocketData(socketData: any) {
+  console.log(socketData,'--247')
   if (socketData.module == "farm" && socketData.type == "farmPt") {
     let { action, data } = socketData;
     if (action == "upline") {
@@ -222,11 +254,11 @@ function handleSocketData(socketData: any) {
       data.markerLat = data.posY;
       data.markerIcon = createMarkerIcon(data);
       // data.markerPopup = createMarkerPopup(data);
-      markerData[0].push(data);
+      markerData.push(data);
     }
     if (action == "offline") {
-      const idx = markerData[0].find((item: any) => item.markerId == data.sn);
-      markerData[0].splice(idx, 1);
+      const idx = markerData.find((item: any) => item.markerId == data.sn);
+      markerData.splice(idx, 1);
     }
     if (action == "online") {
       data.markerId = data.sn;
@@ -234,7 +266,7 @@ function handleSocketData(socketData: any) {
       data.markerLat = data.posY;
       data.markerIcon = createMarkerIcon(data);
       // data.markerPopup = createMarkerPopup(JSON.parse(JSON.stringify(data)));
-      const find = markerData[0].find(
+      const find = markerData.find(
         (item: any) => item.markerId == data.markerId
       );
       find.markerLng = data.markerLng;
@@ -247,10 +279,10 @@ function handleSocketData(socketData: any) {
     const { data } = socketData;
     dataStatistics.value.device.totalDevice = data.totalDevice;
     dataStatistics.value.device.onlineDevice = data.onlineDevice;
-    const typeCounts = data.typeCounts
-    dataStatistics.type.forEach((item: any,index:number) => {
-      item.onlineCount = typeCounts[index].onlineCount
-    })
+    const typeCounts = data.typeCounts;
+    dataStatistics.type.forEach((item: any, index: number) => {
+      item.onlineCount = typeCounts[index].onlineCount;
+    });
   }
   if (socketData.module == "farm" && socketData.type == "monitorArea") {
     const { data } = socketData;
@@ -320,7 +352,7 @@ async function getFaromDataStatistics() {
 // 初始化获取设备数据
 async function getOnlineFarmPosition() {
   const { data } = await onlineFarmMachinePosition_API({});
-  const onlineFarmMachines = data.onlineFarmMachines;
+  let onlineFarmMachines = data.onlineFarmMachines;
   onlineFarmMachines.forEach((item: any) => {
     item.markerId = item.sn;
     item.markerLng = item.posX;
@@ -329,16 +361,18 @@ async function getOnlineFarmPosition() {
     item.markerPopup = createMarkerPopup(item);
     item.markerVisible = true;
   });
-  markerData.push(onlineFarmMachines);
+  onlineFarmMachines = onlineFarmMachines.filter((item: any) => item.markerLng);
+  markerData.push(...onlineFarmMachines);
+  
 }
 
 //
 function markerTypeChange() {
   let types = dataStatistics.value.type.filter((item: any) => item.checked);
   types = types.map((item: any) => item.typeName);
-  markerData[0].forEach((item: any) => (item.markerVisible = false));
+  markerData.forEach((item: any) => (item.markerVisible = false));
   types.forEach((item: any) => {
-    let findList = markerData[0].filter((v: any) => {
+    let findList = markerData.filter((v: any) => {
       if (
         (v.terminalType == "AG302Android" || v.terminalType == "AG501Pro") &&
         v.terminalType == item
@@ -610,7 +644,7 @@ function openRealTimeChart_markerPopup(arg: any) {
 // marker-弹窗-远程管理
 function openRemote_markerPopup(arg: any) {
   if (arg.driveState != 0) return;
-  isChange.value = !isChange.value
+  isChange.value = !isChange.value;
   terminalType.value = arg.terminalType;
   version.value = arg.version;
   type.value = arg.type;
@@ -621,6 +655,10 @@ function openRemote_markerPopup(arg: any) {
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-autocomplete) {
+  transition-property: opacity, background-color !important; /* 仅过渡opacity和background-color属性 */
+  /* 其他样式 */
+}
 .map_container {
   height: 100%;
   position: relative;
@@ -629,11 +667,8 @@ function openRemote_markerPopup(arg: any) {
     top: 10px;
     position: absolute;
     z-index: 999;
-    //     :deep(.el-autocomplete) {
-    //       width: 500px;
-    // }
-    .el-select {
-      position: relative;
+    :deep(.el-autocomplete) {
+      width: 230px;
     }
   }
   .statistics_box {
@@ -766,6 +801,7 @@ function openRemote_markerPopup(arg: any) {
               span:last-child {
                 text-decoration: underline;
                 font-size: 12px;
+                cursor: pointer;
               }
             }
             p {
