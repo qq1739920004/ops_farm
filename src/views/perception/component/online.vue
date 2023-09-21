@@ -96,6 +96,8 @@ const option = {
           title: {
             color: "#43cf7c",
             fontSize: 24,
+            align: 'left',
+            width: 170 
           },
         },
       },

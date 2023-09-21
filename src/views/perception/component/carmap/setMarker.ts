@@ -1,7 +1,7 @@
 import type { MonitorObj } from "@/api/perception/type";
 import { ref,shallowRef } from 'vue';
 import * as echarts from 'echarts';
-let width=ref(40);
+let width=ref(50);
 let height=ref(220);
 let marginTop=ref(110);
 let chartList=shallowRef<any>([]);
@@ -52,6 +52,21 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
               axisLabel: {
                   show: true,
                   color: "white",
+                  formatter: function(value: string) {
+                    let result = '';
+                    for (let i = 0; i < value.length; i += 3) {
+                        let lineText = value.substr(i, 3);
+                        result += `{line${i / 3 + 1}|${lineText}}\n`;
+                    }
+                    return result.trim();
+                },
+                rich: {
+                    line1: { align: 'left', width: '100%' },
+                    line2: { align: 'left', width: '100%' },
+                    line3: { align: 'left', width: '100%' },
+                    line4: { align: 'left', width: '100%' },
+                    line5: { align: 'left', width: '100%' }
+                }
               },
               axisLine: {
                   show: false,

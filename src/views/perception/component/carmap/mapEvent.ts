@@ -1,7 +1,7 @@
 import {chartContainerList,chartList,width,height,marginTop} from './setMarker'
 let timer:any=null
 //防抖函数
-export function antiShake(fn:any,wait:number){}
+export function antiShake(){}
 export function mapEvent(map:any){  
   map.value.on('zoomend',()=>{
     if(timer){

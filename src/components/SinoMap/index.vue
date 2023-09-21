@@ -11,15 +11,22 @@
         />
       </el-select>
       <div class="map_utils_item">
+        <el-tooltip effect="light" content="点回回全局">
+          <el-button @click="handleMapCenter('')">
+            <SvgIcon icon="refresh" />
+          </el-button>
+        </el-tooltip>
+      </div>
+      <div class="map_utils_item">
         <el-tooltip effect="light" content="测距">
-          <el-button @click="calculateDistance">
-            <SvgIcon icon="ranging" color="blue" />
+          <el-button @click="mapRanging">
+            <SvgIcon icon="ranging" />
           </el-button>
         </el-tooltip>
         <el-button
           class="clear_btn"
-          v-if="calculationObj.length > 0"
-          @click="clearDistance"
+          v-if="rangingArray.length > 0"
+          @click="clearMapRanging"
           type="danger"
           >清除</el-button
         >
@@ -49,24 +56,39 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  mapCenter: {
+    type: Object,
+    default: {
+      center: [[31.086444, 121.734942]],
+      zoom: 4,
+    },
+  },
 });
-let markerData_flat: any = [];
-let lastMarkerData_flat: any = []; // 上一次markerData数据
-let pickupMode: boolean = false;
+let lastMarkerData: any = []; // 上一次markerData数据
+let pickupMode: boolean = false; // 是否地图拾取模式
 let pickedPoints: any = [];
-let calculationObj: any = reactive([]);
+let rangingArray: any = reactive([]);
+const center = L.latLng(31.086444, 121.734942);
+const zoom = 4;
+
 watch(
   () => props.markerData,
   (markerData) => {
-    markerData_flat = arryFlat(markerData);
-    diffArray(lastMarkerData_flat, markerData_flat);
-    lastMarkerData_flat = markerData_flat;
+    diffArray(lastMarkerData, markerData);
+    lastMarkerData = JSON.parse(JSON.stringify(markerData));
+  },
+  { deep: true }
+);
+watch(
+  () => props.mapCenter,
+  (mapCenter) => {
+    handleMapCenter(mapCenter);
   },
   { deep: true }
 );
 
 let map: any = null; // map实例对象
-let renderMode = "polymer"; // 原生dom渲染， 或者 polymer 聚合引擎；
+let renderMode = "dom"; // 原生dom渲染， 或者 polymer 聚合引擎；
 let markerArr: any = []; // marker坐标点数字
 
 //@ts-ignore
@@ -89,20 +111,20 @@ mapTileOptions.list = mapTileOptions.list.filter((item: any) =>
 
 onMounted(() => {
   initMap();
-  createMarker(markerData_flat);
+  createMarker(props.markerData);
 });
 
 // 处理markerId后扁平化数组
-function arryFlat(data: any) {
-  data = JSON.parse(JSON.stringify(data));
-  data.forEach((item: any, index: number) => {
-    item.forEach((v: any) => {
-      v.markerId = v.markerId + "_" + index;
-    });
-  });
+// function arryFlat(data: any) {
+//   data = JSON.parse(JSON.stringify(data));
+//   data.forEach((item: any, index: number) => {
+//     item.forEach((v: any) => {
+//       v.markerId = v.markerId + "_" + index;
+//     });
+//   });
 
-  return data.flat();
-}
+//   return data.flat();
+// }
 
 function diffArray(arr1: any, arr2: any) {
   // 新增了marker点
@@ -202,8 +224,6 @@ function removeMarker(list: any) {
       }
     });
   });
-  console.log(markerArr.length);
-  console.log(markerData_flat.length);
 }
 // 修改地图marker点
 function updateMarker(list: any) {
@@ -257,11 +277,12 @@ function initMap() {
   map = L.map("map", {
     minZoom: 1, //最小缩放值
     maxZoom: 18, //最大缩放值
-    center: L.latLng(31.086444, 121.734942), //注意和其他地图经纬度格式区别
-    zoom: 4, //初始缩放值
+    center: center, //注意和其他地图经纬度格式区别
+    zoom: zoom, //初始缩放值
     zoomControl: false, //是否启用地图缩放控件
     attributionControl: false, //是否启用地图属性控件
   });
+
   markerGroup.addTo(map);
   markerClusterGroup.addTo(map);
   mapTileChange();
@@ -274,6 +295,21 @@ function mapTileChange() {
     (item) => item.id == mapTileOptions.id
   );
   changeTileLayer(mapTitleOption?.mapName, mapTitleOption?.mapType);
+}
+// 处理地图定位
+function handleMapCenter(data: any) {
+  if (!data) {
+    // map.fitBounds([center]);
+    // map.setZoom(zoom);
+    // return;
+    map.setView(center, zoom);
+    return
+  }
+  const { markerId } = data;
+  const findMarker = markerArr.find((item: any) => item.markerId == markerId);
+  findMarker.openPopup();
+  map.fitBounds([findMarker._latlng]);
+  map.setZoom(map.getZoom() - 2);
 }
 
 // 设置图商
@@ -305,7 +341,8 @@ function gcoordLngLat(markerLng: number, markerLat: number) {
   return [lng, lat];
 }
 
-function calculateDistance() {
+// 地图测距
+function mapRanging() {
   try {
     // @ts-ignore
     document.getElementById("map").style.cursor = "crosshair"; // 改变鼠标状态
@@ -315,12 +352,13 @@ function calculateDistance() {
   pickupMode = true; //开启拾取模式
 }
 
-function clearDistance() {
-  if (calculationObj.length) {
-    calculationObj.forEach((item: any) => {
+// 清除地图测距
+function clearMapRanging() {
+  if (rangingArray.length) {
+    rangingArray.forEach((item: any) => {
       map.removeLayer(item);
     });
-    calculationObj.length = 0
+    rangingArray.length = 0;
   }
   pickupMode = false;
   pickedPoints = [];
@@ -338,14 +376,14 @@ function initRanging() {
       let point = event.latlng;
       pickedPoints.push(point);
       let marker = L.marker(point).addTo(map);
-      calculationObj.push(marker);
+      rangingArray.push(marker);
       if (pickedPoints.length === 2) {
         let distance = pickedPoints[0].distanceTo(pickedPoints[1]); //算距离
         let polyline = L.polyline(pickedPoints, { color: "red" })
           .addTo(map)
           .bindPopup(`相距:${distance.toFixed(3)}米`)
           .openPopup(); //划线
-        calculationObj.push(polyline);
+        rangingArray.push(polyline);
         map.fitBounds(pickedPoints); //适应视野
         //恢复状态
         pickupMode = false;
