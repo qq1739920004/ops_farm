@@ -121,7 +121,7 @@
                         type="primary" link
                         @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.carName)">远程调参</el-button>
                 </el-tooltip>
-                <el-button style="margin-right: -10px;" type="primary" link>文件存储</el-button>
+                <el-button style="margin-right: -10px;" type="primary" link @click="toFileList(row)">文件存储</el-button>
                 <el-button style="margin-right: -10px;" type="primary" link
                     @click="gotoRegister(row.id, row.sn, row.deviceId)">注册</el-button>
             </template>
@@ -197,6 +197,15 @@ const changeCarStatus = async (val: any) => {
         carStatus.value.ids = []
     }
 
+}
+// 文件存储
+const toFileList = (row: any) => {
+    router.push({
+        path: 'machineryList/file', query: {
+            pid: row.type == 4 ? 9004 : "",
+            sn: row.sn,
+        }
+    })
 }
 // 更改日志上传状态
 const changeLogStatus = async (val: any, val2: any) => {
