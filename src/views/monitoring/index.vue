@@ -33,7 +33,7 @@
           <span>总数</span>
         </li>
         <li>
-          <span>{{ dataStatistics.workArea?.todayArea }}</span>
+          <span>{{ dataStatistics.workArea?.todayArea.toFixed(2) }}</span>
           <span>今日作业(亩)</span>
         </li>
         <li>
@@ -41,7 +41,7 @@
           <span>在线数</span>
         </li>
         <li>
-          <span>{{ dataStatistics.workArea?.totalArea }}</span>
+          <span>{{ dataStatistics.workArea?.totalArea.toFixed(2) }}</span>
           <span>累计作业(万亩)</span>
         </li>
       </ul>
@@ -183,7 +183,7 @@ let isChange = ref(false);
 
 const searchSn = ref(""); // sn 车辆名 公司 手机号
 const mapCenter = reactive<any>({
-  markerId: '',
+  markerId: "",
 });
 
 // @ts-ignore
@@ -244,35 +244,43 @@ function handleSelect(item: any) {
 
 // 处理socketData数据
 function handleSocketData(socketData: any) {
-  console.log(socketData,'--247')
   if (socketData.module == "farm" && socketData.type == "farmPt") {
     let { action, data } = socketData;
     if (action == "upline") {
-      data.markerId = data.sn;
-      data.markerVisible = true;
-      data.markerLng = data.posX;
-      data.markerLat = data.posY;
-      data.markerIcon = createMarkerIcon(data);
-      // data.markerPopup = createMarkerPopup(data);
-      markerData.push(data);
+      const markerId = data.sn;
+      const markerVisible = true;
+      const markerLng = data.posX;
+      const markerLat = data.posY;
+      const markerIcon = createMarkerIcon(data);
+      const markerPopup = createMarkerPopup(data);
+      markerData.push({
+        markerId,
+        markerVisible,
+        markerLng,
+        markerLat,
+        markerIcon,
+        markerPopup,
+      });
     }
     if (action == "offline") {
-      const idx = markerData.find((item: any) => item.markerId == data.sn);
+      const markerId = data.sn;
+      const idx = markerData.findIndex(
+        (item: any) => item.markerId == markerId
+      );
       markerData.splice(idx, 1);
     }
     if (action == "online") {
-      data.markerId = data.sn;
-      data.markerLng = data.posX;
-      data.markerLat = data.posY;
-      data.markerIcon = createMarkerIcon(data);
-      // data.markerPopup = createMarkerPopup(JSON.parse(JSON.stringify(data)));
-      const find = markerData.find(
-        (item: any) => item.markerId == data.markerId
-      );
-      find.markerLng = data.markerLng;
-      find.markerLat = data.markerLat;
-      find.markerIcon = data.markerIcon;
-      // find.markerPopup =  data.markerPopup
+      const markerId = data.sn;
+      const markerLng = data.posX;
+      const markerLat = data.posY;
+      const markerIcon = createMarkerIcon(data);
+      const markerPopup = createMarkerPopup(data);
+      const find = markerData.find((item: any) => item.markerId == markerId);
+      if (!find) return;
+      find.markerLng = markerLng;
+      find.markerLat = markerLat;
+      find.markerIcon = markerIcon;
+      find.markerPopup = markerPopup;
     }
   }
   if (socketData.module == "farm" && socketData.type == "monitor") {
@@ -361,9 +369,10 @@ async function getOnlineFarmPosition() {
     item.markerPopup = createMarkerPopup(item);
     item.markerVisible = true;
   });
-  onlineFarmMachines = onlineFarmMachines.filter((item: any) => item.markerLng);
+  onlineFarmMachines = onlineFarmMachines.filter(
+    (item: any) => item.markerLng || item.markerLng == 0
+  );
   markerData.push(...onlineFarmMachines);
-  
 }
 
 //
@@ -655,6 +664,9 @@ function openRemote_markerPopup(arg: any) {
 </script>
 
 <style lang="scss" scoped>
+.el-timeline {
+  --el-timeline-node-color:#63d7a8;
+}
 :deep(.el-autocomplete) {
   transition-property: opacity, background-color !important; /* 仅过渡opacity和background-color属性 */
   /* 其他样式 */
@@ -782,13 +794,13 @@ function openRemote_markerPopup(arg: any) {
               margin-right: 10px;
             }
             .state_0 {
-              color: #919392;
+              color: #232c1e;
             }
             .state_1 {
               color: #58c15e;
             }
             .state_2 {
-              color: #e9c75d;
+              color: #e9c65d;
             }
           }
           .r {
@@ -816,6 +828,7 @@ function openRemote_markerPopup(arg: any) {
   }
   .notice_box_active {
     height: 40px;
+    overflow: hidden;
   }
 }
 :deep(.map_popup) {
