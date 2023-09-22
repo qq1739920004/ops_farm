@@ -61,3 +61,13 @@ export function getSingleCarTrick_API(params: PageInfoObj) {
         params
     })
 }
+
+// 文件存储
+export function getChildrenFileList_API(params: any) {
+    return request<any, any>({
+        url: '/lu/log/filesForSn',
+        method: 'post',
+        data:params,
+        headers:{'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
+    })
+}

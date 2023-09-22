@@ -117,6 +117,7 @@ const switchTabShow = (val: boolean) => {
 }
 
 onMounted(() => {
+    getCarList()
     getRouterParam()
     getDealerList()
 })

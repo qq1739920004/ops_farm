@@ -123,6 +123,10 @@ function changeCollapse() {
       justify-content: space-between;
       align-items: center;
       background-color: var(--app-menu-color);
+      background-image: url('@/assets/layout/navbar.png');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size:contain;
       .header_content {
         display: flex;
         align-items: center;
