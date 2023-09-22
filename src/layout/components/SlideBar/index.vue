@@ -90,6 +90,12 @@ function elMenuSelect() {
 .el-menu {
   border-right: none;
 }
+.el-menu--vertical {
+  background-image: url("@/assets/layout/slidebar.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
 .el-menu--vertical:not(.el-menu--collapse) {
   width: 210px;
   min-height: 400px;
