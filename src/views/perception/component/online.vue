@@ -44,7 +44,6 @@ dataList.forEach(r=>{
   seriesData.push(r.totalCount)
   seriesDataO.push({value:r.onlineCount,symbol:barimg})
 })
-
 const option = {
   tooltip: {
             show: true, // 显示提示框,
