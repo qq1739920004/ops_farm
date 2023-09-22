@@ -33,6 +33,12 @@ const dataZoomMove: DataZoomMove = {
 };
 
 const option = {
+  tooltip: {
+            show: true, // 显示提示框,
+            trigger: 'axis', // 'axis' 表示与坐标轴触发，适用于柱状图、折线图等
+            renderMode: 'html',
+            boxWidth: 400,
+        },
   xAxis: {
     type: "value",
     show: false,
@@ -92,6 +98,7 @@ const option = {
   ],
   series: [
     {
+      name:'亩',
       barGap: "0%", // 柱子之间的间隔，这里没有间隔
       data: listy,
       type: "bar",
@@ -101,6 +108,8 @@ const option = {
         show: true, //是否显示标签
         position: "right", //标签位置
         color: "#3aed81", //标签颜色
+        //字体
+        fontFamily: "perceptionFont",
         formatter: function (params: any) {
           //标签内容
           if (params.value > 0) {

@@ -5,7 +5,6 @@
             <div class="top">
                 <Top :monitorData ="monitorData "/>
             </div>
-
             <div class="bottom">
                 <div class="left">
                     <Workarea class="workarea" :carAreas="carAreas" v-if="carAreas.length" />
@@ -100,11 +99,10 @@ watch(()=>realTime.realTimeDataArea,(newValue)=>{
   }
 },{deep:true})
 
-// 实时监听
-
 </script>
   
 <style lang="scss" scoped>
+
 .container {
   width: 100%;
   height: 100%;
@@ -155,13 +153,13 @@ watch(()=>realTime.realTimeDataArea,(newValue)=>{
         }
 
         .right {
+          transform: translateY(-20px);
             flex: 1;
             height: 100%;
-
             display: flex;
             flex-direction: column;
             .online{
-                height: 270px;
+                height: 300px;
             }
             .state{
                 height: 400px;

@@ -7,7 +7,10 @@
       <span class="arrows-shadow">◂</span>
     </div>
 
-    <div class="state">
+    <div class="state" :style="{
+      '--lineHeight':(dataArr.length-1)*70+'px'
+    }">
+      <img class="state-line" src="@/assets/perceptionImage/stateLine.png" alt="">
     <TransitionGroup name="list" tag="ul">
         <li v-for="item in dataArr" :key="item.carId">
           <div class="state_time">{{ item.time }}</div>
@@ -17,11 +20,9 @@
             <div :class="['state_bar',item.onlineTcp?'state_bar_login':'state_bar_out']">
               <span>{{ item.carName }}</span>
               <span>{{ item.name }}</span>
-              <span>
-                <el-tag v-if="!item.onlineTcp" type="danger" size="small" effect="dark"
-                  >离线</el-tag>
-                <el-tag v-else type="success" size="small" effect="dark"
-                  >上线</el-tag>
+              <span class="state-tips">
+                  <img v-if="!item.onlineTcp" src="@/assets/perceptionImage/stateOut.png" alt="">
+                  <img v-else src="@/assets/perceptionImage/stateIn.png" alt="">
                 </span>
             </div>
           </div>
@@ -56,10 +57,13 @@ onMounted(() => {
     pageSize:5
   }).then((res)=>{
     res.data.records.map((item)=>{
+      if(item){
       dataArr.value.push({
         time:getTime(item),
         ...item
       })
+    }
+
     })
   })
 watch(()=>props.stateObj,(newValue)=>{
@@ -135,6 +139,15 @@ watch(()=>props.stateObj,(newValue)=>{
   }
 
   .state {
+    position: relative;
+    .state-line{
+      position: absolute;
+      height: var(--lineHeight);
+      left: 14px;
+      top: 48px;
+      z-index: -9;
+      opacity: 0.8;
+    }
     height: calc(100% - 40px);
     overflow: auto;
     //影藏滚动条
@@ -161,6 +174,7 @@ watch(()=>props.stateObj,(newValue)=>{
       display: flex;
 
       .circle-out {
+        font-size:16px ;
         padding-left: 5px;
         flex: 1;
         color: rgb(243, 19, 19);
@@ -171,6 +185,17 @@ watch(()=>props.stateObj,(newValue)=>{
       }
 
       .state_bar {
+        .state-tips{
+          position: absolute;
+          right: 26px;
+          top: -1px;
+          img{
+            width: 45px;
+            height: 30px;
+          }
+          
+          
+        }
         position: relative;
         background-size: 100% 100%;
         flex: 20;
@@ -186,11 +211,7 @@ watch(()=>props.stateObj,(newValue)=>{
           right: 80px;
         }
 
-        span:nth-child(3) {
-          padding-top: 5px;
-          position: absolute;
-          right: 80px;
-        }
+     
       }
       .state_bar_login{
         background: url(@/assets/perceptionImage/rectangle_green.png) no-repeat;

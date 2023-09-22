@@ -155,8 +155,8 @@ watch(() =>props.provinceCars, () => {
 
   .map-bar-info {
     position: absolute;
-    top: 0;
-    right: 0;
+    left: 20px;
+    bottom: 95px;
     width: 251px;
     height: 41px;
     background: url('@/assets/perceptionImage/mapBarInfo.png') no-repeat;

@@ -46,10 +46,13 @@ dataList.forEach(r=>{
 })
 
 const option = {
-  backgroundColor: "",
   tooltip: {
-    show: false,
-  },
+            show: true, // 显示提示框,
+            trigger: 'axis', // 'axis' 表示与坐标轴触发，适用于柱状图、折线图等
+            renderMode: 'html',
+            boxWidth: 400,
+        },
+  backgroundColor: "",
   grid: {
     containLabel: true,
     bottom: "5%",
@@ -60,6 +63,7 @@ const option = {
   xAxis: {
     type: "value",
     axisLabel: {
+      show:false,
       color: "#fff",
     },
     splitLine: {
@@ -81,23 +85,28 @@ const option = {
           // if (leftPosition.value < titleWidth.value) {
           //   leftPosition.value = titleWidth.value + 5; // 在 title 宽度的右侧再添加 5 像素的间距
           // }
-          // console.log(value);
-          return "{rank|"+"}{title|" + value + "}";
+          //如果value大于6，截取前6个字符，后面加...
+          if (value.length > 6) {
+            value = value.substring(0, 6) + "...";
+          }
+          return "{rank|}{title|" + value + "}";
         },
         rich: {
           rank: {
             width: 26,
             height: 26,
+            align: "left",
             backgroundColor: {
               image: chartIcon,
             },
             borderRadius: 20,
           },
           title: {
+            fontFamily: "perceptionFont",
             color: "#43cf7c",
             fontSize: 24,
-            align: 'left',
-            width: 170 
+            width: 95,
+            align: "left",
           },
         },
       },
@@ -124,12 +133,15 @@ const option = {
       data: seriesData,
       axisLabel: {
         color: "#43cf7c",
+        fontFamily: "perceptionFont",
+
         fontSize: 20,
       },
     },
   ],
   series: [
     {
+      name:'在线数',
       type: "pictorialBar",
       symbol: "path://M1 1,L140 1,L140 15,L1 15,Z",
       symbolKeepAspect: false,
@@ -137,18 +149,10 @@ const option = {
       barWidth: 16,
       itemStyle: {
         borderWidth: 0,
-        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-          {
-            offset: 0,
-            color: "rgba(99, 229, 255, 0.07)",
-          },
-          {
-            offset: 1,
-            color: "rgba(94, 255, 0, 1)",
-          },
-        ]),
+        color: "#43cf7c",
       },
       label: {
+        fontFamily: "perceptionFont",
         show: true,
         position: "inside",//
         color: "#f5fff5",
@@ -195,6 +199,7 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .box {
+
   background: url(@/assets/perceptionImage/border_green.png) no-repeat;
   background-size: 100% 100%;
   margin: 0px 10px 10px 15px;

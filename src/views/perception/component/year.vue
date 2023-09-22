@@ -18,7 +18,7 @@
         </div>
         <div class="charts_title">
             <div>
-                今年作业面积
+                今日作业面积
             </div>
             <div>
                 当年累计作业面积
@@ -74,6 +74,7 @@
     }
 
     .charts {
+        font-family: 'perceptionFont';
         height: calc(100% - 80px);
         display: flex;
         >div {
@@ -94,7 +95,7 @@
     >div{
         width: 50%;
         text-align: center;
-        font-size: 20px;
+        font-size: 18px;
     }
 }
 }

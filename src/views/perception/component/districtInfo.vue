@@ -1,6 +1,6 @@
 <template>
   <div class="top_time">
-    <div class="temp" v-if="weather">
+    <!-- <div class="temp" v-if="weather">
       <span>{{ weather.now.temp }}℃</span>
       <span>{{ weather.now.text }}</span>
       <img v-if="weather.now.text=='阴'" class="top_time_pic" src="~@/assets/perceptionImage/cloud.png" alt="" />
@@ -10,12 +10,19 @@
       <img v-else-if="weather.now.text.includes('雨')" class="top_time_pic" src="~@/assets/perceptionImage/bigrain.png" alt="" />
       <img v-else-if="weather.now.text==='多云'" class="top_time_pic" src="~@/assets/perceptionImage/weatherElse.png" alt="" />
       <img v-else class="top_time_pic" src="~@/assets/perceptionImage/weatherElse.png" alt="" />
+    </div> -->
+    <div class="time">
+      <!-- <span>{{ time.week }}</span> -->
+      <span>{{ time.date }}</span>
+      <span>{{ time.time }}</span>
 
     </div>
-    <div class="time">
-      <span>{{ time.week }}</span>
-      <span>{{ time.time }}</span>
-      <span>{{ time.date }}</span>
+    <!-- //公司logo -->
+    <div class="corporation-logo">
+      <img src="@/assets/perceptionImage/corporation-logo.png" alt="">
+    </div>
+    <div class="logo-text">
+      <span>北斗农机智能监管平台</span>
     </div>
   </div>
 </template>
@@ -23,10 +30,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { getCurrentDateTime } from "@/utils/getTimeInfo";
-import { getWeather } from "@/api/perception/index.ts";
+// import { getWeather } from "@/api/perception/index.ts";
 // import {getWeatherAPI} from '@/api/perception/index.ts';
 const time = ref(getCurrentDateTime());
-let weather: any = ref(null);
+// let weather: any = ref(null);
 setInterval(() => {
   time.value = getCurrentDateTime();
 }, 1000);
@@ -34,8 +41,8 @@ setInterval(() => {
 //   console.log(res)
 // })
 async function weatherService() {
-  let res: any = await getWeather();
-  weather = JSON.parse(res.data);
+  // let res: any = await getWeather();
+  // weather = JSON.parse(res.data);
 }
 weatherService();
 </script>
@@ -44,11 +51,11 @@ weatherService();
 .top_time {
   height: 223px;
   display: flex;
-  flex: 1;
   flex-direction: column;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: start !important;
   padding-right: 25px;
+  margin-top: 10px;
   font-size: 20px;
 
   span {
@@ -67,9 +74,14 @@ weatherService();
   }
 
   .time {
+    color: #64cc77;
     :nth-child(2) {
       font-size: 34.87px;
     }
+   
   }
+  .logo-text{
+      font-size: 22px;
+    }
 }
 </style>
