@@ -29,7 +29,7 @@ import { useRoute } from "vue-router";
 import { getChildrenFileList_API } from '@/api/machineryList/index'
 
 const route = useRoute()
-const fileListData = ref<any>(['回传文件1', '回传文件2', '回传文件3'])
+const fileListData = ref<any>([])
 const total = ref(0)
 const current = ref(1)
 const pageSize = ref(10)

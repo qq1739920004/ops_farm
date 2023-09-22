@@ -2,10 +2,11 @@
     <div class='app_container'>
         <div class="search_container app_card">
             <div class="input_area">
-                <el-select v-model="pageInfo.companyId" class="input-with-select" placeholder="请选择" @change="changeBlur1">
+                <el-select filterable v-model="pageInfo.companyId" class="input-with-select" placeholder="请选择"
+                    @change="changeBlur1">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
-                <el-select v-model="pageInfo.carId" class="m-2" placeholder="请选择" @change="changeBlur2">
+                <el-select filterable v-model="pageInfo.carId" class="m-2" placeholder="请选择" @change="changeBlur2">
 
                     <el-option v-if="CarDealerList.length" v-for="item in CarDealerList" :label="item.nameNpn"
                         :value="item.id" :key="item.id"></el-option>
@@ -30,7 +31,7 @@
             </div>
             <div class="button_area">
                 <el-button type="primary" @click="openExportDia">导出</el-button>
-                <el-button  @click="router.push({ path: '/jobManagement/taskManage' })" icon="MapLocation"
+                <el-button @click="router.push({ path: '/jobManagement/taskManage' })" icon="MapLocation"
                     class="btn2"></el-button>
             </div>
         </div>
