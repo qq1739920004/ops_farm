@@ -1,3 +1,11 @@
 .arrows-shadow{
   text-shadow: 0px 0px 10px white;
 }
+@font-face{
+  font-family: 'perceptionFont';
+  src:url('@/assets/DIN.ttf')
+}
+@font-face{
+  font-family: 'perceptionTitle';
+  src: url('@/assets/perceptionTitle.ttf');
+}

@@ -1,6 +1,9 @@
 import type { MonitorObj } from "@/api/perception/type";
 import { ref,shallowRef } from 'vue';
 import * as echarts from 'echarts';
+type EChartsParams = {
+  value: number;
+};
 let width=ref(50);
 let height=ref(220);
 let marginTop=ref(110);
@@ -41,7 +44,6 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
             trigger: 'axis', // 'axis' 表示与坐标轴触发，适用于柱状图、折线图等
             renderMode: 'html',
             boxWidth: 400,
-
         },
           xAxis: {
               type: 'category',
@@ -79,6 +81,9 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
           series: [{
               name: '在线数',
               data: [dataList[i].onlineNum],
+              //如果是0，就不显示这个值
+              
+
               type: 'bar',
               itemStyle: {
                   color: '#54d176',
@@ -92,7 +97,14 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
                   show: true,
                   color: "white",
                   position: 'top',
-                  formatter: "{c}",
+                  formatter: function(params:EChartsParams) {
+                    // 如果在线数为0，则不显示
+                    if (params.value === 0) {
+                        return '';
+                    }
+                    return params.value;
+                },
+                  
               },
           },
           {

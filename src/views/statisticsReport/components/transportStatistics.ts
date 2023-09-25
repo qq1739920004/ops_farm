@@ -23,7 +23,7 @@ export function transportOption(
       left: 40
     },
     title: {
-      text: '运输统计',
+      text: '运维统计',
       left: 13,
       top: 16,
       textStyle: {
