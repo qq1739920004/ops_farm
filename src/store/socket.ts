@@ -5,9 +5,8 @@ const userStore = useUserStore()
 const useSocketStore = defineStore("socket", () => {
     let ws: any = null
     let socketData = ref({})
-    // let cookie = 'b5e11a57-ea28-49b8-adbe-7ed0aa8c2aa8_wdl_42_3'
     function connect() {
-        ws = new WebSocket(`ws://${import.meta.env.VITE_APP_BASE_WSURL}/websocket?token=${userStore.oldUserCookie}`);
+        ws = new WebSocket(`ws://${import.meta.env.VITE_APP_BASE_WSURL}/websocket?Authorization=${userStore.Authorization}`);
         ws.onopen = () => {
             // console.success('连接成功');
         };

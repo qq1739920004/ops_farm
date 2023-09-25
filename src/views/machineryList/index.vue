@@ -2,13 +2,13 @@
     <div class="app_container">
         <div class="search_container app_card">
             <div class="input_area">
-                <el-input placeholder="请输入SN号" v-model="pageInfo.key" class="input-with-select"
-                    @keyup.enter.native="search">
+                <el-input placeholder="请输入SN号" v-model="pageInfo.key" class="input-with-select" @keyup.enter.native="search"
+                    clearable>
                     <template #append>
                         <el-button icon="Search" @click="search" />
                     </template>
                 </el-input>
-                <el-select v-if="dealerList.length > 1" class="m_2" placeholder="公司/经销商" v-model="pageInfo.companyId"
+                <el-select filterable v-if="dealerList.length > 1" class="m_2" placeholder="公司/经销商" v-model="pageInfo.companyId"
                     @change="changeBlur">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
@@ -98,7 +98,7 @@ const getDealerList = async () => {
     const res: carDealerResponseData = await carDealer_API()
     if (res.data == null) {
     } else {
-        dealerList.value = res.data
+        dealerList.value = [{ 'id': '', 'name': '全部经销商' }, ...res.data]
         if (dealerList.value.length == 1) {
             pageInfo.companyId = dealerList.value[0].id
         }

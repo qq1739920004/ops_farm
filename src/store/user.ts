@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useStorage } from "@vueuse/core";
 const useUserStore = defineStore("use", () => {
-    const oldUserCookie = ref('')
-    oldUserCookie.value = document.cookie.split('loginSysCookie=')[1].split('#').join('_')
+    const Authorization = useStorage('Authorization', '')
     return {
-        oldUserCookie
+        Authorization
     }
 })
 export default useUserStore

@@ -164,41 +164,13 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { RecordsObj, carModuleInfoOperationLogResponseData, LogObj, carMoudleInfoGetLeftResponseData, MoudleInfoGetLeftObj } from "@/api/infoManagement/type"
+import { carModuleInfoOperationLogResponseData, LogObj, carMoudleInfoGetLeftResponseData, MoudleInfoGetLeftObj } from "@/api/infoManagement/type"
 import { reactive, ref } from 'vue';
 import { carModuleInfoGet_API, carModuleInfoOperationLog_API, carModuleInfoUpdate_API } from '@/api/infoManagement/index'
 import { ElMessage } from 'element-plus'
 const scence = ref<string>('')
 let $route = useRoute()
-scence.value = JSON.parse($route.query.scence as string)
 const formRef = ref()
-const saleObj = reactive<RecordsObj>({
-    carImuSn: '',
-    hubSn: '',
-    code: '',
-    expirationTime: '',
-    netDate: '',
-    superCattleModuleInfo: '',
-    npn: '',
-    warrantyDate: '',
-    tel: '',
-    creatorName: '',
-    companyId: 0,
-    satelliteDate: '',
-    terminalType: '',
-    id: null,
-    steeringWheelSn: '',
-    wheelImuSn: '',
-    antennaTwo: '',
-    creatorId: 0,
-    userId: 0,
-    motorSn: '',
-    username: '',
-    antennaOne: '',
-    companyName: '',
-    sn: '',
-    type: ''
-})
 const topvalue = reactive<MoudleInfoGetLeftObj>({
     id: 0,
     terminalType: '',
@@ -234,10 +206,9 @@ const rules = {
     antennaTwo: [{ required: true, message: '请输入天线_2SN', trigger: 'blur' }],
     hubSn: [{ required: true, message: '请输入HUB_SN', trigger: 'blur' }],
 }
-Object.assign(saleObj, JSON.parse($route.query.row as string))
 const tableData = reactive<LogObj[]>([])
 const getInfo = async () => {
-    const res: carModuleInfoOperationLogResponseData = await carModuleInfoOperationLog_API(saleObj.id as number)
+    const res: carModuleInfoOperationLogResponseData = await carModuleInfoOperationLog_API($route.query.id as never)
     if (res.data.length > 0) {
         Object.assign(tableData, res.data)
         ElMessage({ type: 'success', message: '获取成功' })
@@ -246,9 +217,24 @@ const getInfo = async () => {
     }
 
 }
+const getStartInfo = async () => {
+    const res: carModuleInfoOperationLogResponseData = await carModuleInfoOperationLog_API($route.query.id as never)
+    if (res.data.length > 0) {
+        Object.assign(tableData, res.data)
+    }
+}
+getStartInfo()
 const getTopInfo = async () => {
-    const res: carMoudleInfoGetLeftResponseData = await carModuleInfoGet_API(saleObj.id as number)
+    const res: carMoudleInfoGetLeftResponseData = await carModuleInfoGet_API($route.query.id as never)
     Object.assign(topvalue, res.data)
+    if (res.data.terminalType.includes('AG360')) {
+        scence.value = '1'
+    } else if (res.data.terminalType.includes("AG502")) {
+        scence.value = '2'
+    } else {
+        scence.value = '3'
+    }
+
 }
 getTopInfo()
 const changeSnBtn = async (val: string) => {

@@ -8,7 +8,7 @@ export interface pageInfo {
     key?: string,
     currentPage: number,
     pageSize: number,
-    companyId?: string,
+    companyId?: number | string,
     order: string,
     cityCode?: string,
     provinceCode?: string
@@ -88,7 +88,7 @@ export interface carNewDetailObj {
     name: string,
     companyName: string,
     userName: string,
-    tel?:string,
+    tel?: string,
     model: string,
     lastOnlineTime: string,
     lastAutoDriveTime: string,
@@ -112,8 +112,8 @@ export interface carNewDetailResponseData extends ResponseData {
     data: carNewDetailObj
 }
 export interface carDealerObj {
-    id: string,
-    name: number
+    id: number | string,
+    name: string
 }
 export interface carDealerResponseData extends ResponseData {
     data: carDealerObj[]
