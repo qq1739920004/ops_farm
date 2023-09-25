@@ -12,9 +12,9 @@
                     设备类型：
                 </div>
                 <el-select v-model="pageInfo.terminalType" class="m-2" placeholder="请选择设备类型" @change="changeBlur">
-                    <el-option value="AG360" label="G360" />
-                    <el-option value="AG502" label="G502" />
-                    <el-option value="AG501" label="G501" />
+                    <el-option value="AG360" label="AG360" />
+                    <el-option value="AG502" label="AG502" />
+                    <el-option value="AG501" label="AG501" />
                 </el-select>
             </div>
             <div>
@@ -271,16 +271,13 @@
                     <el-form-item label="设备类型" prop="terminalType">
                         <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
                             style="width:100%" prop="terminalType">
-                            <el-option value="AG360" label="G360" />
-                            <el-option value="AG502" label="G502" />
-                            <el-option value="AG501" label="G501" />
+                            <el-option value="AG360" label="AG360" />
+                            <el-option value="AG502" label="AG502" />
+                            <el-option value="AG501" label="AG501" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="铭牌SN" prop="npn">
                         <el-input v-model="newRecords.npn"></el-input>
-                    </el-form-item>
-                    <el-form-item label="质保日期" prop="warrantyDate">
-                        <el-input v-model="newRecords.warrantyDate"></el-input>
                     </el-form-item>
                     <el-form-item label="一体机SN" prop="sn">
                         <el-input v-model="newRecords.sn"></el-input>
@@ -353,7 +350,6 @@ const newRecords = reactive<newRecordsObj>({
     sn: "",
     npn: "",
     steeringWheelSn: "",
-    warrantyDate: "",
     antennaOne: "",
     type: 'all',
     terminalType: "",
@@ -374,19 +370,19 @@ const handleSelectionChange = (val: any) => {
     multipleSelection.value = val
 
 }
-const validatorwarrantyDate = (_rule: any, value: any, callBack: any) => {
-    let zz = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/
-    if (zz.test(value)) {
-        callBack();
-    } else {
-        callBack(new Error("时间的格式应为:2020-01-01 09:11:23"));
-    }
-};
+// const validatorwarrantyDate = (_rule: any, value: any, callBack: any) => {
+//     let zz = /^([1-2][0-9][0-9][0-9]-[0-1]{0,1}[0-9]-[0-3]{0,1}[0-9])\s(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/
+//     if (zz.test(value)) {
+//         callBack();
+//     } else {
+//         callBack(new Error("时间的格式应为:2020-01-01 09:11:23"));
+//     }
+// };
 const rules = {
     terminalType: [{ required: true, message: '请选择种类', trigger: 'blur' }],
     npn: [{ required: true, message: '请输入铭牌名称', trigger: 'blur' }],
     name: [{ required: true, message: '请输入车辆名称', trigger: 'blur' }],
-    warrantyDate: [{ required: true, validator: validatorwarrantyDate }],
+    // warrantyDate: [{ required: true, validator: validatorwarrantyDate }],
     sn: [{ required: true, message: '请输入一体机SN', trigger: 'blur' }],
     hubSn: [{ required: true, message: '请输入HUB_SN', trigger: 'blur' }],
     motorSn: [{ required: true, message: '请输入电机SN', trigger: 'blur' }],
@@ -452,7 +448,6 @@ const edit = (row: any) => {
     newRecords.sn = row.sn
     newRecords.npn = row.npn
     newRecords.steeringWheelSn = row.steeringWheelSn
-    newRecords.warrantyDate = row.warrantyDate
     newRecords.antennaOne = row.antennaOne
     newRecords.terminalType = row.terminalType
     newRecords.motorSn = row.motorSn
@@ -500,7 +495,6 @@ const openDialog = () => {
         newRecords.sn = ''
         newRecords.npn = ''
         newRecords.steeringWheelSn = ''
-        newRecords.warrantyDate = ''
         newRecords.antennaOne = ''
         newRecords.type = 'all'
         newRecords.motorSn = ''

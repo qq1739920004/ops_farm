@@ -246,6 +246,13 @@ const getInfo = async () => {
     }
 
 }
+const getStartInfo = async () => {
+    const res: carModuleInfoOperationLogResponseData = await carModuleInfoOperationLog_API(saleObj.id as number)
+    if (res.data.length > 0) {
+        Object.assign(tableData, res.data)
+    }
+}
+getStartInfo()
 const getTopInfo = async () => {
     const res: carMoudleInfoGetLeftResponseData = await carModuleInfoGet_API(saleObj.id as number)
     Object.assign(topvalue, res.data)

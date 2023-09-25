@@ -7,7 +7,6 @@
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
                 <el-select filterable v-model="pageInfo.carId" class="m-2" placeholder="请选择" @change="changeBlur2">
-
                     <el-option v-if="CarDealerList.length" v-for="item in CarDealerList" :label="item.nameNpn"
                         :value="item.id" :key="item.id"></el-option>
                     <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
