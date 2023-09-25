@@ -3,32 +3,20 @@
     <div class="top_left">
       <div class="top_tittle">
         <router-link to="/monitoring">
-          <img
-            src="~@/assets/perceptionImage/top_title_logo.png"
-            key=""
-            alt=""
-          />
+          <img src="~@/assets/perceptionImage/top_title_logo.png" key="" alt="" />
           <h1>XXXXXX数字大屏</h1>
         </router-link>
       </div>
       <div class="top_num">
         <div>
-          <img
-            class="top-left"
-            src="~@/assets/perceptionImage/top_number1.png"
-            alt=""
-          />
+          <img class="top-left" src="~@/assets/perceptionImage/top_number1.png" alt="" />
           <div class="word">
             <p>{{ onlineDeviceValue }}</p>
             <p>当前在线数</p>
           </div>
         </div>
         <div>
-          <img
-            class="top-left"
-            src="~@/assets/perceptionImage/top_number2.png"
-            alt=""
-          />
+          <img class="top-left" src="~@/assets/perceptionImage/top_number2.png" alt="" />
           <div class="word">
             <p>{{ addNowYearDeviceValue }}</p>
             <p>当年新增农机</p>
@@ -36,37 +24,21 @@
         </div>
         <div>
           <div class="rotate-dance">
-            <img
-              class="top-rigth"
-              src="~@/assets/perceptionImage/top_number4.png"
-              alt=""
-            />
-            <img
-              class="rotate-content"
-              src="~@/assets/perceptionImage/car.png"
-              alt=""
-            />
+            <img class="top-rigth" src="~@/assets/perceptionImage/top_number4.png" alt="" />
+            <img class="rotate-content" src="~@/assets/perceptionImage/car.png" alt="" />
           </div>
           <div class="word2">
-            <p>{{totalDeviceValue }}</p>
+            <p>{{ totalDeviceValue }}</p>
             <p>农机总数</p>
           </div>
         </div>
         <div>
           <div class="rotate-dance2">
-            <img
-              class="top-rigth"
-              src="~@/assets/perceptionImage/top_number3.png"
-              alt=""
-            />
-            <img
-              class="rotate-content"
-              src="~@/assets/perceptionImage/consumer.png"
-              alt=""
-            />
+            <img class="top-rigth" src="~@/assets/perceptionImage/top_number3.png" alt="" />
+            <img class="rotate-content" src="~@/assets/perceptionImage/consumer.png" alt="" />
           </div>
           <div class="word2">
-            <p class="yellow-text">{{ activeDeviceValue}}</p>
+            <p class="yellow-text">{{ activeDeviceValue }}</p>
             <p>已售农机数</p>
           </div>
         </div>
@@ -77,9 +49,9 @@
 </template>
 <script setup lang="ts">
 import districtInfo from "@/views/perception/component/districtInfo.vue";
-import { ref, watch} from "vue";
+import { ref, watch } from "vue";
 import { gsap } from 'gsap';
-const props=defineProps({
+const props = defineProps({
   monitorData: {
     type: Object,
     default: {
@@ -117,36 +89,35 @@ let totalDeviceValue = ref(initialValue);
 let activeDeviceValue = ref(initialValue);
 let onlineDeviceValue = ref(initialValue);
 let addNowYearDeviceValue = ref(initialValue);
-let durationTime=ref(3)
-function animationTop(animatedValue: any,newValue:number){
+let durationTime = ref(3)
+function animationTop(animatedValue: any, newValue: number) {
   gsap.to(animatedValue, {
-        value: newValue,
-        duration: durationTime.value, // 动画持续时间，可以根据需要调整
-        onUpdate: () => {
-          animatedValue.value = Math.round(animatedValue.value);
-        },
-        //动画结束
-        onComplete: () => {
-          durationTime.value=0.5
-        },
-      });
+    value: newValue,
+    duration: durationTime.value, // 动画持续时间，可以根据需要调整
+    onUpdate: () => {
+      animatedValue.value = Math.round(animatedValue.value);
+    },
+    //动画结束
+    onComplete: () => {
+      durationTime.value = 0.5
+    },
+  });
 }
-watch(()=>props.monitorData.totalDevice,(newValue)=>{
-  animationTop(totalDeviceValue,newValue)
+watch(() => props.monitorData.totalDevice, (newValue) => {
+  animationTop(totalDeviceValue, newValue)
 })
-watch(()=>props.monitorData.activeDevice,(newValue)=>{
-  animationTop(activeDeviceValue,newValue)
+watch(() => props.monitorData.activeDevice, (newValue) => {
+  animationTop(activeDeviceValue, newValue)
 })
-watch(()=>props.monitorData.onlineDevice,(newValue)=>{
-  animationTop(onlineDeviceValue,newValue)
+watch(() => props.monitorData.onlineDevice, (newValue) => {
+  animationTop(onlineDeviceValue, newValue)
 })
-watch(()=>props.monitorData.addNowYearDevice,(newValue)=>{
-  animationTop(addNowYearDeviceValue,newValue)
+watch(() => props.monitorData.addNowYearDevice, (newValue) => {
+  animationTop(addNowYearDeviceValue, newValue)
 })
 </script>
 
 <style scoped lang="scss">
-
 .top {
   font-family: 'perceptionFont';
 
@@ -167,9 +138,11 @@ watch(()=>props.monitorData.addNowYearDevice,(newValue)=>{
       display: flex;
       justify-content: start;
       align-items: center;
+
       img {
         width: 140px;
-        }
+      }
+
       h1 {
         text-shadow: 0px 3px 4px rgba(255, 255, 255, 0.3),
           0px 2px 32px rgba(153, 255, 194, 0.8);
@@ -178,6 +151,7 @@ watch(()=>props.monitorData.addNowYearDevice,(newValue)=>{
         letter-spacing: 12px;
         font-family: 'perceptionTitle';
       }
+
       a {
         display: flex;
         align-items: center;
@@ -190,16 +164,19 @@ watch(()=>props.monitorData.addNowYearDevice,(newValue)=>{
       // background-color: rgb(210, 149, 159, 0.2);
       display: flex;
       justify-content: start;
-      > div {
+
+      >div {
         height: 140px;
         display: flex;
+
         .top-left {
           width: 82px;
-height: 85.5px;
+          height: 85.5px;
         }
 
         .word {
           margin-left: 19px;
+
           :first-child {
             margin: 0px;
             line-height: 60px;
@@ -217,16 +194,20 @@ height: 85.5px;
 
         .word2 {
           min-width: 80px;
-          
-    .yellow-text{
-      color: #ffc300;
-    }
+
+          .yellow-text {
+            color: #ffc300;
+          }
+
           padding-top: 12px;
+
           :first-child {
             margin: 0px;
           }
+
           color: rgba(67, 207, 124, 1);
           font-size: 36px;
+
           :last-child {
             margin: 0px;
             margin-top: -8px;
@@ -265,6 +246,7 @@ height: 85.5px;
       }
     }
   }
+
   .rotate {
     position: absolute;
     width: 64px;
@@ -275,14 +257,17 @@ height: 85.5px;
     content: "";
     display: block;
   }
+
   .rotate-dance {
     display: flex;
     justify-content: center;
     align-items: center;
+
     .top-rigth {
       width: 64px !important;
       height: 64px !important;
     }
+
     .rotate-content {
       width: 24px;
       height: 24px !important;
@@ -291,36 +276,45 @@ height: 85.5px;
       top: 50% !important;
       transform: translate(-50%, -50%);
     }
+
     position: relative;
     width: 100px;
     height: 100px;
+
     &::after {
       @extend .rotate;
       animation: rotate-danc 3s linear infinite;
     }
+
     &::before {
       @extend .rotate;
       //反着运行动画
       animation: rotate-danc 3s linear infinite reverse;
     }
   }
+
   .rotate-dance2 {
     @extend .rotate-dance;
+
     .rotate-content {
       width: 22px;
       height: 20px !important;
     }
+
     &::after {
       border-top: 2px solid #b1c144;
     }
+
     &::before {
       border-top: 2px solid #b1c144;
     }
   }
+
   @keyframes rotate-danc {
     0% {
       transform: rotate(0deg);
     }
+
     100% {
       transform: rotate(360deg);
     }
