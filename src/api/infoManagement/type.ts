@@ -10,31 +10,7 @@ export interface PageObj {
     pageSize: number
 }
 export interface RecordsObj {
-    carImuSn: string,
-    hubSn: string,
-    code: string,
-    expirationTime: string,
-    netDate: string,
-    superCattleModuleInfo: string,
-    npn: string,
-    warrantyDate: string,
-    tel: string,
-    creatorName: string,
-    companyId: number,
-    satelliteDate: string,
-    terminalType: string,
-    id: number | null,
-    steeringWheelSn: string,
-    wheelImuSn: string,
-    antennaTwo: string,
-    creatorId: number,
-    userId: number,
-    motorSn: string,
-    username: string,
-    antennaOne: string,
-    companyName: string,
-    sn: string,
-    type: string
+    id: number | null
 }
 
 export interface newRecordsObj {

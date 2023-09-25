@@ -537,7 +537,7 @@ const submit = async () => {
 const gotoAfterSale = (row: any) => {
     console.log(row);
     $router.push({
-        path: 'infoManagement/aftersale', query: { row: JSON.stringify(row), scence: JSON.stringify(scence.value) }
+        path: 'infoManagement/aftersale', query: { id:row.id, scence: JSON.stringify(scence.value) }
     })
 }
 const openExportDia = () => {
