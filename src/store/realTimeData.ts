@@ -15,8 +15,9 @@ const realTimeStore = defineStore("realTime", {
    //websocket接收实时数据
     actions: {
         startRealTimeData() {
-      let cookie =document.cookie.split('loginSysCookie=')[1].split('#').join('_')
-          this.ws = new WebSocket(`ws://${import.meta.env.VITE_APP_BASE_WSURL}/websocket?token=${cookie}`);
+      // let cookie =document.cookie.split('loginSysCookie=')[1].split('#').join('_')
+          let auth=localStorage.getItem('Authorization') || ''
+          this.ws = new WebSocket(`ws://${import.meta.env.VITE_APP_BASE_WSURL}/websocket?token=${auth}`);
           this.ws.onopen = () => {
               console.log('连接成功');
           };
