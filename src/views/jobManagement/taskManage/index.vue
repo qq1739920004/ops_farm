@@ -72,6 +72,7 @@
 import { ref, reactive, watch, onMounted } from 'vue'
 import { PageObj, dealerCarObj, dealerCarResponseData, paddyWorkObj, paddyWorkListResponsenumber } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
+import { useRoute } from "vue-router";
 import { getCarDealerList_API, paddyWorkList_API } from '@/api/jobManagement/index'
 import { carDealer_API } from '@/api/machineryList/index'
 import { historyList_path } from '@/api/jobManagement/taskManage/index'
@@ -90,11 +91,14 @@ import SvgIcon from "@/components/SvgIcon/index.vue";
 // 提交的车辆数组
 const ids = ref<any>([])
 const isShow = ref<boolean>(true)
-// 提交数据
+const $route = useRoute()
+console.log($route.query);
+
+// 提交数据 3274
 const pageInfo = reactive<PageObj>({
-    carId: 3274,
+    carId: parseInt($route.query.carId as string ),
     name: '',
-    companyId: 3,
+    companyId: parseInt($route.query.companyId as string ),
     currentPage: 1,
     pageSize: 7,
     st: '',

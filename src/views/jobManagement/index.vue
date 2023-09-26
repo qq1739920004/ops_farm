@@ -30,7 +30,7 @@
             </div>
             <div class="button_area">
                 <el-button type="primary" @click="openExportDia">导出</el-button>
-                <el-button @click="router.push({ path: '/jobManagement/taskManage' })" icon="MapLocation"
+                <el-button @click="router.push({ path: '/jobManagement/taskManage',query:{companyId:pageInfo.companyId,carId:pageInfo.carId} })" icon="MapLocation"
                     class="btn2"></el-button>
             </div>
         </div>
