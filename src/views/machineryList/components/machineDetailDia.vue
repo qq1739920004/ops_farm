@@ -28,7 +28,7 @@
             </div>
             <div class="line line3">
                 <div class="tit">车辆厂家:</div>
-                <div class="data">{{ NewDetail.factory }}</div>
+                <div class="data data4">{{ NewDetail.factory }}</div>
                 <div class="tit">车辆型号:</div>
                 <div class="data data4">{{ NewDetail.model }}</div>
                 <div class="tit">年龄:</div>
