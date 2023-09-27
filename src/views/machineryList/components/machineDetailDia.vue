@@ -4,7 +4,7 @@
         <div class="tableData">
             <div class="line line3">
                 <div class="tit">SN:</div>
-                <div class="data data4" >{{ NewDetail.sn }}</div>
+                <div class="data data4">{{ NewDetail.sn }}</div>
                 <div class="tit">在线状态:</div>
                 <div v-if="NewDetail.onlineTcp != 0" class="data data4">在线 <span class="circle"></span></div>
                 <div v-else class="data data4">离线 <span class="circle2"></span></div>
@@ -17,30 +17,28 @@
             <div class="line line2">
                 <div class="tit">公司名称:</div>
                 <div class="data">{{ NewDetail.companyName }}</div>
-                <div class="tit">车主姓名:</div>
-                <div class="data">{{ NewDetail.userName }}</div>
-            </div>
-            <div class="line line2 ">
-                <div class="tit">车辆名称:</div>
-                <div class="data">{{ NewDetail.name }}</div>
-                <div class="tit">车辆厂家:</div>
-                <div class="data">{{ NewDetail.factory }}</div>
-            </div>
-            <div class="line line3">
-                <div class="tit">车辆型号:</div>
-                <div class="data data4">{{ NewDetail.model }}</div>
-                <div class="tit">车龄:</div>
-                <div class="data data4">{{ NewDetail.age }}</div>
                 <div class="tit">创始人:</div>
                 <div class="data">{{ NewDetail.creatorName }}</div>
             </div>
-            <div class="line line3 ">
-                <div>创建人电话:</div>
-                <div class="data data4">{{ NewDetail.creatorTel }}</div>
-                <div>向日葵SN:</div>
+            <div class="line line2 ">
+                <div class="tit">车主姓名:</div>
+                <div class="data">{{ NewDetail.userName }}</div>
+                <div class="tit">车主电话:</div>
+                <div class="data">{{ NewDetail.tel }}</div>
+            </div>
+            <div class="line line3">
+                <div class="tit">车辆厂家:</div>
+                <div class="data data4">{{ NewDetail.factory }}</div>
+                <div class="tit">车辆型号:</div>
+                <div class="data data4">{{ NewDetail.model }}</div>
+                <div class="tit">年龄:</div>
+                <div class="data data4">{{ NewDetail.age }}</div>
+            </div>
+            <div class="line line2 ">
+                <div class="tit">向日葵SN:</div>
                 <div class="data data4"> {{ NewDetail.sunFlowerSn }}</div>
-                <div>软件版本:</div>
-                <div class="data">{{ NewDetail.softwareVersion }}</div>
+                <div class="tit">软件版本:</div>
+                <div class="data ">{{ NewDetail.softwareVersion }}</div>
             </div>
             <div class="line line2 ">
                 <div class="tit">创建时间:</div>

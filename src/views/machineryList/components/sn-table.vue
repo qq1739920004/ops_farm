@@ -81,9 +81,9 @@
                 </el-popover>
             </template>
         </el-table-column>
-        <el-table-column sortable label="最近上线时间" align="center" prop="createtime" width="140">
+        <el-table-column sortable label="最近上线时间" align="center" prop="createtime" width="180">
             <template #="{ row }">
-                {{ row.lastOnlineTime?.split(' ')[0] }}
+                {{ row.lastOnlineTime }}
             </template>
         </el-table-column>
         <el-table-column label="公司/经销商" align="center">
