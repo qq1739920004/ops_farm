@@ -41,7 +41,7 @@
                     <div class="el_icon" v-show="!isShow" @click="changeisShow(true)">
                         <SvgIcon icon="minus-square" size="16" />
                     </div>
-                    <div :class="isShow ? 'empty_list' : 'empty_list2'" v-if='!paddyWorkList.length'>—— 暂无数据 ——</div>
+                    <div :class="isShow ? 'empty_list' : 'empty_list2'" v-if='!paddyWorkList.length'> 暂无数据 </div>
                     <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
                         <li v-for="(item, index) in paddyWorkList" :key="index"
                             :class="item.checked ? 'infinite-list-item' : 'infinite-list-item2'">
@@ -57,9 +57,9 @@
                                 </el-checkbox>
                             </el-checkbox-group>
                         </li>
-                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: var(--el-text-color);">——
+                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: var(--el-text-color);">
                             作业已全部加载
-                            ——</span>
+                            </span>
                     </ul>
                 </div>
             </div>
@@ -685,6 +685,7 @@ watch(() => paddyWorkList.value,
             }
 
             .el_icon {
+                cursor: pointer;
                 margin-left: auto;
                 margin-right: 10px;
                 margin-bottom: 6px;
@@ -726,6 +727,8 @@ watch(() => paddyWorkList.value,
                 background-color: var(--el-bg-color);
 
                 .li_title {
+                    cursor: default;
+                    padding: 3px 5px;
                     margin-left: 10px;
                     width: 75px;
                     height: 27px;
@@ -799,6 +802,8 @@ watch(() => paddyWorkList.value,
                 background-color: var(--el-bg-color);
 
                 .li_title {
+                    cursor:default;
+                    padding: 3px 5px;
                     margin-left: 10px;
                     width: 75px;
                     height: 27px;
