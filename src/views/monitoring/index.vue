@@ -5,24 +5,26 @@
       <el-autocomplete
         v-model="searchSn"
         :fetch-suggestions="querySearch"
-        popper-class="my-autocomplete"
         placeholder="SN、车辆名、公司、电话"
         @select="handleSelect"
+        clearable
+
       >
         <template #suffix>
           <el-icon><Search /></el-icon>
         </template>
         <template #default="{ item }">
-          <div>
+          <div v-if="item.markerId">
             <span>{{ item.carName }}</span>
             |
             <span>{{ item.sn }}</span>
           </div>
-          <div>
+          <div v-if="item.markerId">
             <span>{{ item.companyName }}</span>
             |
             <span>{{ item.tel }}</span>
           </div>
+          <div v-if="!item.markerId">{{ item }}</div>
         </template>
       </el-autocomplete>
     </div>
@@ -218,7 +220,7 @@ function searchDevicePosition(id: any) {
 
 // sn、车辆名、公司名、电话 搜索
 function querySearch(queryString: string, cb: any) {
-  if (!queryString) return;
+  // if (!queryString) return;
   let filterData = markerData.filter((item: any) => {
     if (item.sn.includes(queryString)) {
       return true;
@@ -233,12 +235,17 @@ function querySearch(queryString: string, cb: any) {
       return true;
     }
   });
+  if (filterData.length <= 0) {
+    cb(["无数据"]);
+    return;
+  }
   if (filterData.length > 3) filterData.length = 3;
   cb(filterData);
   return;
 }
 // 搜索框确认选择
 function handleSelect(item: any) {
+  if(!item.markerId) return 
   mapCenter.markerId = item.markerId;
 }
 
@@ -665,7 +672,7 @@ function openRemote_markerPopup(arg: any) {
 
 <style lang="scss" scoped>
 .el-timeline {
-  --el-timeline-node-color:#63d7a8;
+  --el-timeline-node-color: #63d7a8;
 }
 :deep(.el-autocomplete) {
   transition-property: opacity, background-color !important; /* 仅过渡opacity和background-color属性 */
