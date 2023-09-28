@@ -91,15 +91,13 @@
                 {{ row.companyName || '/' }}
             </template>
         </el-table-column>
-        <el-table-column label="星基" align="center">
+        <!-- <el-table-column label="星基" align="center">
             <template #="{ row }">
-                <!-- v-model="row.satelliteStatus" 
-                            :active-value="1"
-                            :inactive-value="0" -->
+              
                 <el-switch v-model="row.satelliteStatus" :before-change="beforeSwitchChange" @change="changeCarStatus(row)"
                     :active-value="1" :inactive-value="0" class="ml-2" inline-prompt active-text="开" inactive-text="关" />
             </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="数据存储" align="center">
             <template #="{ row }">
                 <el-switch :before-change="beforeSwitchChange" @change="changeLogStatus(row.sn, row.isTransfer)"
@@ -137,8 +135,10 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { carStatus_API, logOpen_API, logClose_API } from '@/api/machineryList/index'
-import { pageInfo, carStatusObj } from '@/api/machineryList/type'
+// import { carStatus_API, logOpen_API, logClose_API } from '@/api/machineryList/index'
+import { logOpen_API, logClose_API } from '@/api/machineryList/index'
+// import { pageInfo, carStatusObj } from '@/api/machineryList/type'
+import { pageInfo } from '@/api/machineryList/type'
 import MachineDetailDia from './machineDetailDia.vue'
 import RemoteControl from '@/components/remoteAdjust/index.vue'
 import RegisterDia from './registerDia.vue'
@@ -161,11 +161,11 @@ const carId = ref<number>()
 const terminalType = ref<string>('')
 const terminalType2 = ref<string>('')
 // 星基请求参数
-const carStatus = ref<carStatusObj>({
-    'ids': [],
-    'commandType': 0,
-    'commandStatus': 0
-})
+// const carStatus = ref<carStatusObj>({
+//     'ids': [],
+//     'commandType': 0,
+//     'commandStatus': 0
+// })
 const pageInfo = reactive<any>({
     order: '1'
 })
@@ -182,22 +182,22 @@ const beforeSwitchChange = () => {
     switchStatus.value = true;
     return switchStatus.value;
 }
-const changeCarStatus = async (val: any) => {
-    if (switchStatus.value == true) {
-        carStatus.value.ids.push(val.id)
-        carStatus.value.commandType = 11
-        carStatus.value.commandStatus = val.satelliteStatus
-        try {
-            await carStatus_API(carStatus.value)
-            ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
-        }
-        catch {
-            ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
-        }
-        carStatus.value.ids = []
-    }
+// const changeCarStatus = async (val: any) => {
+//     if (switchStatus.value == true) {
+//         carStatus.value.ids.push(val.id)
+//         carStatus.value.commandType = 11
+//         carStatus.value.commandStatus = val.satelliteStatus
+//         try {
+//             await carStatus_API(carStatus.value)
+//             ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
+//         }
+//         catch {
+//             ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
+//         }
+//         carStatus.value.ids = []
+//     }
 
-}
+// }
 // 文件存储
 const toFileList = (row: any) => {
     router.push({
