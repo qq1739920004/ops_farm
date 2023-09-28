@@ -7,6 +7,7 @@ type EChartsParams = {
 let width=ref(50);
 let height=ref(220);
 let marginTop=ref(110);
+let numCurent=ref(0)
 let chartList=shallowRef<any>([]);
 let chartContainerList=ref<any>([]);
 let optionsList=ref<any>([]);
@@ -44,6 +45,26 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
             trigger: 'axis', // 'axis' 表示与坐标轴触发，适用于柱状图、折线图等
             renderMode: 'html',
             boxWidth: 400,
+            formatter: function(params:any) {
+              // params 是一个包含每个系列数据点信息的数组
+              // 您可以根据 params 的内容自定义 tooltip 的格式
+              let tooltipHtml = '<div style="border:1px solid #ccc;padding:10px;">';
+              tooltipHtml += '<h4 style="margin:0;">' + params[0].name + '</h4>';
+              params.forEach(function(param:any) {
+                tooltipHtml += '<p style="margin:0;">';
+                tooltipHtml += '<span style="display:inline-block;width:10px;height:10px;background:' + param.color + ';"></span>';
+                // 判断系列名称并显示相应的数据
+                if (param.seriesName === '在线数') {
+                    tooltipHtml += ' ' + param.seriesName + ': ' + param.data;
+                    numCurent.value=param.data
+                } else if (param.seriesName === '总数') {
+                    tooltipHtml += ' ' + param.seriesName + ': ' + (param.data+numCurent.value); // 使用 totalNum
+                }
+                tooltipHtml += '</p>';
+            });
+            tooltipHtml += '</div>';
+            return tooltipHtml;
+          },
         },
           xAxis: {
               type: 'category',
@@ -127,7 +148,18 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
                       return dataList[i].totalNum;  // 显示总数
                   },
               },
-          }]
+          },{
+            name: '隐藏的总数',
+            data: [dataList[i].totalNum], // 存储您想要在 tooltip 中显示的值
+            type: 'bar',
+            stack: "total",
+            itemStyle: {
+                opacity: 0 // 设置为 0 以隐藏这个系列
+            },
+            tooltip: {
+                show: false // 确保 tooltip 不会显示这个系列的值
+            }
+        }]
       };
       optionsList.value.push(option);
       chart.setOption(option);
