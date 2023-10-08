@@ -97,11 +97,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import useAppstore from "@/store/app";
+import useAppStore from "@/store/app";
 import { useFullscreen } from "@vueuse/core";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 const { locale } = useI18n();
-const appStore = useAppstore();
+const appStore = useAppStore();
 const { isFullscreen, toggle } = useFullscreen();
 let drawer = ref(false);
 
