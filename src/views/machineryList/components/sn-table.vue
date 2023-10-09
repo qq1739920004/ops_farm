@@ -86,11 +86,11 @@
                 {{ row.lastOnlineTime }}
             </template>
         </el-table-column>
-        <el-table-column label="公司/经销商" align="center">
+        <!-- <el-table-column label="公司/经销商" align="center">
             <template #="{ row }">
                 {{ row.companyName || '/' }}
             </template>
-        </el-table-column>
+        </el-table-column> -->
         <!-- <el-table-column label="星基" align="center">
             <template #="{ row }">
               
@@ -114,8 +114,9 @@
                 <el-tooltip style="margin-right: -10px;"
                     :disabled="row.onlineTcp === 0 || row.driveState === 1 || row.driveState === 2 ? false : true"
                     class="box-item" effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
+                    <!--  :disabled="(row.terminalType === 'AG502' || row.terminalType === 'AG302' || row.terminalType === 'AG360') && row.onlineTcp !== 0 && (row.driveState !== 1 || row.driveState !== 2) ? false : true" -->
                     <el-button style="margin-right: -10px;"
-                        :disabled="(row.terminalType === 'AG502' || row.terminalType === 'AG302' || row.terminalType === 'AG360') && row.onlineTcp !== 0 && (row.driveState !== 1 || row.driveState !== 2) ? false : true"
+                       
                         type="primary" link
                         @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.carName)">远程调参</el-button>
                 </el-tooltip>
@@ -150,6 +151,7 @@ const emits = defineEmits(['changeSort'])
 const switchStatus = ref<boolean>(false)
 const sn = ref()
 const MachineD = ref()
+
 const RegisterD = ref()
 const version = ref<string>('')
 const type = ref<string>('')
