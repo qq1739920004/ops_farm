@@ -3,7 +3,7 @@ import request from "@/utils/request";
 //公用的相关请求接口-
 export function getUserCompanyManager_path(params) {
   return request({
-    url: "/user/getUserCompanyManager",
+    url: "/usercenter/user/getUserCompanyManager",
     method: "get",
     params,
   });
@@ -11,7 +11,7 @@ export function getUserCompanyManager_path(params) {
 
 export function userAuthApply_path(data) {
   return request({
-    url: "/userAuthApply/add",
+    url: "/usercenter/userAuthApply/add",
     method: "post",
     data,
   });

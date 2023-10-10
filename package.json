@@ -23,7 +23,7 @@
     "leaflet.pm": "^2.2.0",
     "path-browserify": "^1.0.1",
     "path-to-regexp": "^6.2.1",
-    "pinia": "^2.1.4",
+    "pinia": "^2.0.33",
     "sass": "^1.63.6",
     "url": "^0.11.1",
     "vue": "^3.3.4",
