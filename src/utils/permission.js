@@ -1,26 +1,31 @@
-
-// import Vue from "vue";
+import useAppStore from "@/store/app";
 import { ElMessage } from "element-plus";
 import { asyncRoutes } from "@/router";
 import router from "@/router";
 import { menusPermissionByUser } from "@/api/permission";
 import Layout from "@/layout/index.vue";
-
-
-console.log(10)
+const appStore = useAppStore();
 
 let params = {
   appid: 1691041354632, // 项目id
 };
-menusPermissionByUser(params).then((res) => {
-  if (res.code == 200) {
-    let menuPermissions = res.data.menuPermissions; // 菜单权限数据
-    let buttonPermissions = res.data.buttonPermissions; // 按钮权限数据
+// menusPermissionByUser(params).then((res) => {
+//   if (res.code == 200) {
+//     let menuPermissions = res.data.menuPermissions; // 菜单权限数据
+//     let buttonPermissions = res.data.buttonPermissions; // 按钮权限数据
 
-    formatRoute(menuPermissions);
-    formatButton(buttonPermissions);
-  }
-});
+//     formatRoute(menuPermissions);
+//     formatButton(buttonPermissions);
+
+//   }
+
+// });
+
+let res = await menusPermissionByUser(params);
+let menuPermissions = res.data.menuPermissions; // 菜单权限数据
+let buttonPermissions = res.data.buttonPermissions; // 按钮权限数据
+formatRoute(menuPermissions);
+formatButton(buttonPermissions);
 
 // 初始化菜单权限
 function formatRoute(menuPermissions) {
@@ -53,14 +58,15 @@ function formatRoute(menuPermissions) {
   setRouterParams(serializeRoutes);
   setDefaultRoute();
 
-  let addRouteList = [...serializeRoutes, ...asyncRoutes];
+  let addRouteList = [...asyncRoutes, ...serializeRoutes];
 
+  addRouteList.forEach((item) => {
+    router.addRoute(item);
+  });
 
-  console.log(addRouteList,'--59')
-
-
-  router.addRoute(addRouteList);
   router.options.routes.push(...addRouteList);
+
+  appStore.updateRoutes(router.options.routes);
 
   function setFirstRouter(list) {
     list.forEach((item) => {
@@ -107,9 +113,9 @@ function formatRoute(menuPermissions) {
         keepAlive: item.keepAlive,
         activeMenu: item.activeMenu ? item.activeMenu : "",
         breadcrumb: item.breadcrumb ? [item.breadcrumb] : "",
-        hideTitle: !item.crumb
+        // hideTitle: !item.crumb
       };
-      item.visible ? (item.hidden = true) : "";
+      item.visible ? (item.meta.hidden = true) : "";
       !item.children ? delete item.children : "";
       if (item.file_path) {
         // 设置路由对象name属性
@@ -134,14 +140,53 @@ function formatRoute(menuPermissions) {
       }
 
       if (item.isHavePermission) {
-        item.file_path
-          ? (item.component = (resolve) =>
-              require([`@/views${item.filePath || item.file_path}/index.vue`], resolve))
-          : "";
+        let componentName = item.filePath || item.file_path || "";
+        componentName = componentName.split("/");
+        componentName = componentName.filter((item) => item);
+
+        if (componentName.length == 1) {
+          item.file_path
+            ? (item.component = () =>
+                import(`@/views/${componentName[0]}/index.vue`))
+            : "";
+        }
+        if (componentName.length == 2) {
+          item.file_path
+            ? (item.component = () =>
+                import(
+                  `@/views/${componentName[0]}/${componentName[1]}/index.vue`
+                ))
+            : "";
+        }
+
+        if (componentName.length == 3) {
+          item.file_path
+            ? (item.component = () =>
+                import(
+                  `@/views/${componentName[0]}/${componentName[1]}/${componentName[2]}/index.vue`
+                ))
+            : "";
+        }
+        if (componentName.length == 4) {
+          item.file_path
+            ? (item.component = () =>
+                import(
+                  `@/views/${componentName[0]}/${componentName[1]}/${componentName[2]}/${componentName[3]}/index.vue`
+                ))
+            : "";
+        }
+        if (componentName.length == 5) {
+          item.file_path
+            ? (item.component = () =>
+                import(
+                  `@/views/${componentName[0]}/${componentName[1]}/${componentName[2]}/${componentName[3]}/${componentName[4]}/index.vue`
+                ))
+            : "";
+        }
       } else {
         item.file_path
-          ? (item.component = (resolve) =>
-              require([`@/components/noPermission`], resolve))
+          ? (item.component = () =>
+              import(`@/components/noPermission/index.vue`))
           : "";
       }
 
@@ -170,7 +215,6 @@ function formatRoute(menuPermissions) {
       let character = serializeRoutes[0].children[0].path ? "/" : "";
       asyncRoutes.unshift({
         path: "/",
-        component: Layout,
         redirect:
           serializeRoutes[0].path +
           character +
@@ -180,16 +224,16 @@ function formatRoute(menuPermissions) {
       // 没有权限数据
       asyncRoutes.unshift({
         path: "/",
-        component: () => import("@/components/noPermission"),
+        component: () => import("@/components/noPermission/index.vue"),
       });
     }
     serializeRoutes.push(
       {
         path: "/404",
-        component: () => import("@/components/404"),
-        hidden: true,
+        component: () => import("@/components/404/index.vue"),
+        meta: { hidden: true },
       },
-      { path: "*", redirect: "/404", hidden: true }
+      { path: "/:catchAll(.*)", redirect: "/404", meta: { hidden: true } }
     );
   }
 }

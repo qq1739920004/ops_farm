@@ -37,7 +37,7 @@
     </el-container>
   </div>
   <!-- 小屏 -->
-  <div v-else class="app-layout-mobile">
+  <div v-if="appStore.device == 'mobile'" class="app-layout-mobile">
     <el-container>
       <el-header height="50px">
         <SvgIcon
@@ -65,6 +65,8 @@ import Breadcrumb from "./components/Breadcrumb/index.vue";
 import AppMain from "./components/AppMain.vue";
 import { useWindowSize } from "@vueuse/core";
 import useAppStore from "@/store/app";
+// import usePermissionStore from "@/store/permission";
+// const permissionStore = usePermissionStore();
 
 const appStore = useAppStore();
 const { width } = useWindowSize();
@@ -123,10 +125,10 @@ function changeCollapse() {
       justify-content: space-between;
       align-items: center;
       background-color: var(--app-menu-color);
-      background-image: url('@/assets/layout/navbar.png');
+      background-image: url("@/assets/layout/navbar.png");
       background-repeat: no-repeat;
       background-position: center center;
-      background-size:contain;
+      background-size: contain;
       .header_content {
         display: flex;
         align-items: center;

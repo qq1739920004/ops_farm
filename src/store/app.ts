@@ -7,8 +7,11 @@ import { defineStore } from 'pinia'
 import { useStorage, useDark, useToggle } from "@vueuse/core";
 import { getLightColor, getDarkColor } from "@/utils/color";
 import { ref, computed } from 'vue'
+import { constantRoutes } from "@/router";
+
 
 const useAppStore = defineStore("app", () => {
+    const routes: any = ref([])
     const isDark = useDark();
     const layout = useStorage('layout', 'vertical')
     const themeColor = useStorage('themeColor', '#67ae5b')
@@ -23,6 +26,11 @@ const useAppStore = defineStore("app", () => {
         }
     });
     setPrimaryColor()
+
+    // 修改路由
+    function updateRoutes(arg: any) {
+        routes.value = arg 
+    }
 
     // 修改layout 
     function updateLayout(arg: string) {
@@ -64,12 +72,14 @@ const useAppStore = defineStore("app", () => {
     }
 
     return {
+        routes,
         isDark,
         device,
         layout,
         themeColor,
         language,
         locale,
+        updateRoutes,
         updateIsDark,
         updateDevice,
         updateLayout,

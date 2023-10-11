@@ -28,13 +28,13 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import SlidebarItem from "./SlidebarItem.vue";
 import useAppStore from "@/store/app";
 import variables from "@/styles/variables.module.scss";
 const appStore = useAppStore();
-const router = useRouter();
 const route = useRoute();
+const router = useRouter();
 const emit = defineEmits(["handleChange"]);
 defineProps({
   collapse: {

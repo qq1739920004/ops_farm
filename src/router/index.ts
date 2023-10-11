@@ -211,7 +211,7 @@ export const constantRoutes = [ // 静态路由数据
   // },
 
 ]
-export const asyncRoutes = []; // 动态路由数据
+export const asyncRoutes: any = []; // 动态路由数据
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: constantRoutes,
@@ -229,6 +229,10 @@ export function perception(target: string) {
 
   router.addRoute(dynamicRoute);
 }
+
+
+
+
 
 
 

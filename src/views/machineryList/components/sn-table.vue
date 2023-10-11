@@ -257,7 +257,7 @@ const gotoRemote = (val: any, val2: any, val3: any, val4: any, val5: any, val6: 
 // 历史轨迹
 const gotoMap = (sn: string, npn: string) => {
     console.log(sn, npn);
-    router.push({ path: 'machineryList/taskMachine', query: { sn, npn } })
+    router.push({ path: '/machineryList/taskMachine', query: { sn, npn } })
 }
 </script>
 
