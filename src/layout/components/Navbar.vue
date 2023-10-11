@@ -35,7 +35,7 @@
           <el-dropdown-item divided @click="drawer = true"
             >主题设置</el-dropdown-item
           >
-          <el-dropdown-item divided>退出登陆</el-dropdown-item>
+          <el-dropdown-item @click="logOut" divided>退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -98,10 +98,12 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import useAppStore from "@/store/app";
+import useUserStore from '@/store/user'
 import { useFullscreen } from "@vueuse/core";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 const { locale } = useI18n();
 const appStore = useAppStore();
+const userStore = useUserStore()
 const { isFullscreen, toggle } = useFullscreen();
 let drawer = ref(false);
 
@@ -131,6 +133,10 @@ function changeIsDark() {
 function changeLang(value: string) {
   locale.value = value;
   appStore.updateLanguage(value);
+}
+// 退出登录
+function logOut() {
+  userStore.logOut()
 }
 </script>
 

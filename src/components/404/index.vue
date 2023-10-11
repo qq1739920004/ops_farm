@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 
 export default {
   name: 'Page404',

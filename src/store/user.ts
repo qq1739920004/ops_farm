@@ -1,9 +1,17 @@
 import { defineStore } from 'pinia'
 import { useStorage } from "@vueuse/core";
 const useUserStore = defineStore("use", () => {
-    const Authorization = useStorage('Authorization', '')
+    let Authorization = useStorage('Authorization', '')
+
+
+    function logOut() {
+        Authorization.value = ''
+        location.href = '/'
+    }
+
     return {
-        Authorization
+        Authorization,
+        logOut
     }
 })
 export default useUserStore

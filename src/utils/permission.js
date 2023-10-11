@@ -22,7 +22,9 @@ let params = {
 
 // });
 
+// @ts-ignore
 let res = await menusPermissionByUser(params);
+// @ts-ignore
 let menuPermissions = res.data.menuPermissions; // 菜单权限数据
 let buttonPermissions = res.data.buttonPermissions; // 按钮权限数据
 formatRoute(menuPermissions);
