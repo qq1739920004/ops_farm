@@ -9,6 +9,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import topLevelAwait from 'vite-plugin-top-level-await'
 
 const baiduUrl = `https://api.map.baidu.com`;
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "./",
