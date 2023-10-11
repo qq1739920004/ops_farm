@@ -212,7 +212,7 @@
                                 <el-select style=" width: 280px;
                 height: 32px;" v-model="chaFenlist.radioStatus">
                                     <el-option label="TX_MODE" :value="0" />
-                                    <el-option label="RX_MODE" :value="1" />
+                                    <el-option label="RX_MODE" :value="1" />     r
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -757,14 +757,14 @@ const updateChafenData2 = async () => {
     ) {
         chaFenlist.value.radioChannel = custom.value * 10000;
     }
-    await updateCar_API({
-        id: props.carId,
-        workPattern: workPattern.value.type,
-        protocol: chaFenlist.value.protocol as number,
-        radioChannel: chaFenlist.value.radioChannel as number,
-        radioStatus: chaFenlist.value.radioStatus as number,
-        radioPower: chaFenlist.value.radioPower as number,
-    })
+    // await updateCar_API({
+    //     id: props.carId,
+    //     workPattern: workPattern.value.type,
+    //     protocol: chaFenlist.value.protocol as number,
+    //     radioChannel: chaFenlist.value.radioChannel as number,
+    //     radioStatus: chaFenlist.value.radioStatus as number,
+    //     radioPower: chaFenlist.value.radioPower as number,
+    // }) 
     try {
         await updateCar_API({
             id: props.carId,
