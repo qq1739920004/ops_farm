@@ -1,7 +1,9 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { ElMessage } from "element-plus";
 import useUserStore from '@/store/user'
-// const userStore = useUserStore()
+const userStore = useUserStore()
+import { ElLoading } from 'element-plus'
+let loadingInstance: any;
 // 创建 axios 实例
 const service = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
@@ -12,7 +14,14 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    config.headers["Authorization"] = localStorage.getItem('Authorization');
+
+    config.headers["Authorization"] = userStore.Authorization;
+    loadingInstance = ElLoading.service({
+      lock: true,
+      text: "Loading",
+      background: 'rgba(0, 0, 0, 0.3)',
+    });
+
     return config;
   },
   (error: any) => {
@@ -23,6 +32,7 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
+    loadingInstance.close()
     const { code, message } = response.data;
     if (code === 0 || code === 200 || code === 'ok') {
       return response.data;
@@ -36,6 +46,7 @@ service.interceptors.response.use(
     return Promise.reject(new Error(message || 'Error'));
   },
   (error: any) => {
+    loadingInstance.close()
     const { status } = error.response;
     if (status == 403) {
       ElMessage.error('暂无权限');
