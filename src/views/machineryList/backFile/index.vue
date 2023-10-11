@@ -33,7 +33,7 @@ const fileListData = ref<any>([])
 const total = ref(0)
 const current = ref(1)
 const pageSize = ref(10)
-const parentSn = route.params.sn
+const parentSn = route.query.sn
 const baseUrl = import.meta.env.VITE_APP_BASE_API
 const loading = ref(false)
 

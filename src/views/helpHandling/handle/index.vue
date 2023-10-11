@@ -201,8 +201,8 @@
                 </el-form>
                 <template #footer>
                     <span class="dialog-footer">
-                        <el-button ref="finish" @click="finishConfirm">完成处理</el-button>
-                        <el-button ref="assign" type="primary" @click="assignConfirm">
+                        <el-button v-auth="499" ref="finish" @click="finishConfirm">完成处理</el-button>
+                        <el-button v-auth="499" ref="assign" type="primary" @click="assignConfirm">
                             指派
                         </el-button>
                     </span>

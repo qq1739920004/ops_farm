@@ -4,7 +4,8 @@ import { asyncRoutes } from "@/router";
 import router from "@/router";
 import { menusPermissionByUser } from "@/api/permission";
 import Layout from "@/layout/index.vue";
-const appStore = useAppStore();
+import { app } from "@/store";
+// const appStore = useAppStore();
 
 let params = {
   appid: 1691041354632, // 项目id
@@ -61,8 +62,6 @@ function formatRoute(menuPermissions) {
     }
   });
 
-  console.log(serializeRoutes, "---56");
-
   setFirstRouter(serializeRoutes);
   changeRouterFormat(serializeRoutes);
   setRouterParams(serializeRoutes);
@@ -76,7 +75,7 @@ function formatRoute(menuPermissions) {
 
   router.options.routes.push(...addRouteList);
 
-  appStore.updateRoutes(router.options.routes);
+  // appStore.updateRoutes(router.options.routes);
 
   function setFirstRouter(list) {
     list.forEach((item) => {
@@ -237,14 +236,14 @@ function formatRoute(menuPermissions) {
         component: () => import("@/components/noPermission/index.vue"),
       });
     }
-    serializeRoutes.push(
-      {
-        path: "/404",
-        component: () => import("@/components/404/index.vue"),
-        meta: { hidden: true },
-      },
-      { path: "/:catchAll(.*)", redirect: "/404", meta: { hidden: true } }
-    );
+    // serializeRoutes.push(
+    //   {
+    //     path: "/404",
+    //     component: () => import("@/components/404/index.vue"),
+    //     meta: { hidden: true },
+    //   },
+    //   { path: "/:catchAll(.*)", redirect: "/404", meta: { hidden: true } }
+    // );
   }
 }
 
@@ -260,29 +259,30 @@ function formatButton(buttonPermissions) {
   );
   haveButtonPermissionsIds = haveButtonPermissionsIds.map((item) => item.id);
 
-  // Vue.directive("auth", {
-  //   inserted: function(el, binding, vnode) {
-  //     const btn_value = binding.value;
-  //     if (haveButtonPermissionsIds.includes(btn_value)) return;
-  //     if (buttonPermissionsObj[btn_value] == 1) {
-  //       el.remove();
-  //     } else {
-  //       el.disabled = true;
-  //       el.classList.add("is-disabled");
-  //       vnode.componentInstance.handleClick = function(e) {};
-  //       vnode.componentInstance.handleChange = function() {};
+  app.directive("auth", {
+    mounted: function (el, binding, vnode) {
+      const btn_value = binding.value;
+      if (haveButtonPermissionsIds.includes(btn_value)) return;
+      if (buttonPermissionsObj[btn_value] == 1) {
+        el.remove();
+      } else {
+        el.addEventListener("click", function (e) {
+          ElMessage({
+            message: "暂无权限哦！",
+            type: "warning",
+          });
+          return;
+        });
+        el.title = "暂无权限";
+        el.disabled = true;
+        el.classList.add("is-disabled");
+        // vnode.componentInstance.handleClick = function (e) {};
+        // vnode.componentInstance.handleChange = function () {};
 
-  //       if (el.style.color == "rgb(245, 108, 108)") {
-  //         el.style.color = "#ccc";
-  //       }
-  //       el.addEventListener("click", function(e) {
-  //         ElMessage({
-  //           message: "暂无权限哦！",
-  //           type: "warning",
-  //         });
-  //         return;
-  //       });
-  //     }
-  //   },
-  // });
+        // if (el.style.color == "rgb(245, 108, 108)") {
+        //   el.style.color = "#ccc";
+        // }
+      }
+    },
+  });
 }

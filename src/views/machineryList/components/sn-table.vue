@@ -94,22 +94,22 @@
         <!-- <el-table-column label="星基" align="center">
             <template #="{ row }">
               
-                <el-switch v-model="row.satelliteStatus" :before-change="beforeSwitchChange" @change="changeCarStatus(row)"
+                <el-switch v-auth='473' v-model="row.satelliteStatus" :before-change="beforeSwitchChange" @change="changeCarStatus(row)"
                     :active-value="1" :inactive-value="0" class="ml-2" inline-prompt active-text="开" inactive-text="关" />
             </template>
         </el-table-column> -->
         <el-table-column label="数据存储" align="center">
             <template #="{ row }">
-                <el-switch :before-change="beforeSwitchChange" @change="changeLogStatus(row.sn, row.isTransfer)"
+                <el-switch v-auth ='474' :before-change="beforeSwitchChange" @change="changeLogStatus(row.sn, row.isTransfer)"
                     v-model="row.isTransfer" class="ml-2" inline-prompt active-text="开" inactive-text="关" />
             </template>
         </el-table-column>
         <!-- 说明  离线和自动驾驶状态不可编辑 -->
         <el-table-column label="操作" align="center" width="290">
             <template #="{ row }">
-                <el-button style="margin-right: -10px;" type="primary" link
+                <el-button v-auth="458" style="margin-right: -10px;" type="primary" link
                     @click="gotoMachineDetail(row.id, row.terminalType)">详情</el-button>
-                <el-button style="margin-right: -10px;" type="primary" link
+                <el-button v-auth="503" style="margin-right: -10px;" type="primary" link
                     @click="gotoMap(row.sn, row.npn)">历史轨迹</el-button>
                 <el-tooltip style="margin-right: -10px;"
                     :disabled="row.onlineTcp === 0 || row.driveState === 1 || row.driveState === 2 ? false : true"
@@ -120,8 +120,8 @@
                         type="primary" link
                         @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.carName)">远程调参</el-button>
                 </el-tooltip>
-                <el-button style="margin-right: -10px;" type="primary" link @click="toFileList(row)">文件存储</el-button>
-                <el-button style="margin-right: -10px;" type="primary" link
+                <el-button v-auth="531" style="margin-right: -10px;" type="primary" link @click="toFileList(row)">文件存储</el-button>
+                <el-button v-auth="476" style="margin-right: -10px;" type="primary" link
                     @click="gotoRegister(row.id, row.sn, row.deviceId)">注册</el-button>
             </template>
         </el-table-column>

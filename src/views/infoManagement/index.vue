@@ -22,7 +22,7 @@
                     <el-icon class="el-icon--left">
                         <SvgIcon icon="export" size="16" />
                     </el-icon>导出</el-button>
-                <el-button type="primary" icon="Plus" @click="openDialog">新建</el-button>
+                <el-button v-auth="448" type="primary" icon="Plus" @click="openDialog">新建</el-button>
             </div>
         </div>
         <div class="table_container app_card">
@@ -85,10 +85,10 @@
                 <el-table-column label="操作" align="center" width="180">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
+                            <el-button v-auth="446" type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
                             </el-button>
-                            <el-button @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
-                            <el-button class="aftersale_btn" type="primary" link
+                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
+                            <el-button  v-auth="505" class="aftersale_btn" type="primary" link
                                 @click="gotoAfterSale(row)">售后处理</el-button>
                         </div>
                     </template>
@@ -150,10 +150,10 @@
                 <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
+                            <el-button  v-auth="446" type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
                             </el-button>
-                            <el-button @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
-                            <el-button class="aftersale_btn" type="primary" link
+                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
+                            <el-button v-auth="505" class="aftersale_btn" type="primary" link
                                 @click="gotoAfterSale(row)">售后处理</el-button>
                         </div>
                     </template>
@@ -251,10 +251,10 @@
                 <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <el-button type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
+                            <el-button v-auth="446" type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
                             </el-button>
-                            <el-button @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
-                            <el-button type="primary" link @click="gotoAfterSale(row)"
+                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
+                            <el-button  v-auth="505" type="primary" link @click="gotoAfterSale(row)"
                                 class="aftersale_btn">售后处理</el-button>
                         </div>
                     </template>

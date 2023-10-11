@@ -93,6 +93,7 @@
         <el-table-column label="操作" prop="status" align="center">
           <template #="{ row }">
             <el-button
+              v-auth="506"
               size="small"
               text
               type="success"
