@@ -5,7 +5,7 @@
     :collapse="collapse"
     :background-color="variables.appMenuColor"
     text-color="#fff"
-    :active-text-color="variables.elColorPrimary"
+    active-text-color="#fff"
     @select="elMenuSelect"
     :ellipsis="false"
   >
@@ -105,5 +105,9 @@ function elMenuSelect() {
 }
 .el-menu--horizontal.el-menu {
   border-bottom: none;
+}
+
+:deep(.el-menu-item.is-active) {
+  background: linear-gradient(90deg, rgba(76, 176, 79, 0) 0%, var(--el-color-primary) 100%);
 }
 </style>

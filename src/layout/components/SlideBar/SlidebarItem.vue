@@ -12,8 +12,10 @@
       :index="resolvePath(onlyOneChild.path)"
     >
       <el-icon v-if="onlyOneChild.meta.icon">
-        <component :is="onlyOneChild.meta.icon"></component>
+        <SvgIcon v-if="onlyOneChild.meta.icon.includes('_local')" :icon="onlyOneChild.meta.icon.split('_local')[0]"></SvgIcon>
+        <component v-else :is="onlyOneChild.meta.icon"></component>
       </el-icon>
+   
       <span v-if="onlyOneChild.meta.title">
         {{ onlyOneChild.meta.title }}
       </span>
@@ -23,7 +25,8 @@
   <el-sub-menu v-else :index="resolvePath(item.path)" teleported>
     <template #title>
       <el-icon v-if="item.meta && item.meta.icon">
-        <component :is="item.meta.icon"></component>
+        <SvgIcon v-if="item.meta.icon.includes('_local')" :icon="item.meta.icon.split('_local')[0]"></SvgIcon>
+        <component v-else :is="item.meta.icon"></component>
       </el-icon>
       <span v-if="item.meta && item.meta.title">{{ item.meta.title }}</span>
     </template>
@@ -43,6 +46,7 @@ import { useRouter } from "vue-router";
 import path from "path-browserify";
 import { isExternal } from "@/utils";
 import SlidebarItem from "./SlidebarItem.vue";
+import SvgIcon from '@/components/SvgIcon/index.vue'
 const router = useRouter();
 const props = defineProps({
   /**
