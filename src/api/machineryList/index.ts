@@ -32,18 +32,18 @@ export function carStatus_API(data: carStatusObj) {
     })
 }
 // 控制日志上传开关？
-export function logOpen_API(sn: number) {
+export function logOpen_API(data: { sn: string, flag: string }) {
     return request<any, any>({
-        url: `/farm/log/open?sn=${sn}`,
+        url: `/farm/log/choice?sn=${data.sn}&flag=${data.flag}`,
         method: 'post',
     })
 }
-export function logClose_API(sn: number) {
-    return request<any, any>({
-        url: `/farm/log/close?sn=${sn}`,
-        method: 'post',
-    })
-}
+// export function logClose_API(sn: number) {
+//     return request<any, any>({
+//         url: `/farm/log/close?sn=${sn}`,
+//         method: 'post',
+//     })
+// }
 // 注册时长
 export function activationCodeAdd_API(params: activationCodeObj) {
     return request<any, any>({
@@ -67,7 +67,7 @@ export function getChildrenFileList_API(params: any) {
     return request<any, any>({
         url: '/lu/log/filesForSn',
         method: 'post',
-        data:params,
-        headers:{'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}
+        data: params,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }
     })
 }

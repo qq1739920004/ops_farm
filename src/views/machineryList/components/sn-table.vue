@@ -137,7 +137,7 @@
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 // import { carStatus_API, logOpen_API, logClose_API } from '@/api/machineryList/index'
-import { logOpen_API, logClose_API } from '@/api/machineryList/index'
+import { logOpen_API } from '@/api/machineryList/index'
 // import { pageInfo, carStatusObj } from '@/api/machineryList/type'
 import { pageInfo } from '@/api/machineryList/type'
 import MachineDetailDia from './machineDetailDia.vue'
@@ -210,28 +210,16 @@ const toFileList = (row: any) => {
     })
 }
 // 更改日志上传状态
-const changeLogStatus = async (val: any, val2: any) => {
+const changeLogStatus = async (val: string, val2: string) => {
     if (switchStatus) {
         console.log(val, val2);
-        if (val2 == true) {
-            try {
-                await logOpen_API(val)
-                ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
-            }
-            catch {
-                ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
-            }
-        } else {
-            try {
-                await logClose_API(val)
-                ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
-
-            }
-            catch {
-                ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
-            }
+        try {
+            await logOpen_API({ 'sn': val, 'flag': val2 })
+            ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
         }
-
+        catch {
+            ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
+        }
     }
 }
 const gotoMachineDetail = (val: any, val2: any) => {
