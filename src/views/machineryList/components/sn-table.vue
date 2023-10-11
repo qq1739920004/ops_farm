@@ -114,9 +114,9 @@
                 <el-tooltip style="margin-right: -10px;"
                     :disabled="row.onlineTcp === 0 || row.driveState === 1 || row.driveState === 2 ? false : true"
                     class="box-item" effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
-                    <!--  :disabled="(row.terminalType === 'AG502' || row.terminalType === 'AG302' || row.terminalType === 'AG360') && row.onlineTcp !== 0 && (row.driveState !== 1 || row.driveState !== 2) ? false : true" -->
+
                     <el-button style="margin-right: -10px;"
-                       
+                        :disabled="(row.terminalType === 'AG502' || row.terminalType === 'AG302' || row.terminalType === 'AG360') && row.onlineTcp !== 0 && (row.driveState !== 1 || row.driveState !== 2) ? false : true"
                         type="primary" link
                         @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.carName)">远程调参</el-button>
                 </el-tooltip>
@@ -137,7 +137,7 @@
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 // import { carStatus_API, logOpen_API, logClose_API } from '@/api/machineryList/index'
-import { logOpen_API, logClose_API } from '@/api/machineryList/index'
+import { logOpen_API } from '@/api/machineryList/index'
 // import { pageInfo, carStatusObj } from '@/api/machineryList/type'
 import { pageInfo } from '@/api/machineryList/type'
 import MachineDetailDia from './machineDetailDia.vue'
@@ -210,28 +210,16 @@ const toFileList = (row: any) => {
     })
 }
 // 更改日志上传状态
-const changeLogStatus = async (val: any, val2: any) => {
+const changeLogStatus = async (val: string, val2: string) => {
     if (switchStatus) {
         console.log(val, val2);
-        if (val2 == true) {
-            try {
-                await logOpen_API(val)
-                ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
-            }
-            catch {
-                ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
-            }
-        } else {
-            try {
-                await logClose_API(val)
-                ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
-
-            }
-            catch {
-                ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
-            }
+        try {
+            await logOpen_API({ 'sn': val, 'flag': val2 })
+            ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
         }
-
+        catch {
+            ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
+        }
     }
 }
 const gotoMachineDetail = (val: any, val2: any) => {

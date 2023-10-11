@@ -1,7 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Layout from '@/layout/index.vue';
-import useAppStore  from '@/store/app';
-const appStore = useAppStore()
+// import Layout from '@/layout/index.vue';
 
 export const constantRoutes = [ // 静态路由数据
   // {
