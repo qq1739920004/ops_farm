@@ -37,12 +37,20 @@ function formatRoute(menuPermissions) {
     if (flag) {
       let path = item.path;
       item.path = "";
-      return {
-        path,
-        component: Layout,
-        children: [item],
-        isHavePermission: item.isHavePermission,
-      };
+      if (item.crumb) {
+        return {
+          path,
+          component: Layout,
+          children: [item],
+          isHavePermission: item.isHavePermission,
+        };
+      } else {
+        return {
+          path,
+          children: [item],
+          isHavePermission: item.isHavePermission,
+        };
+      }
     } else {
       item.component = Layout;
       item.meta = {
@@ -52,6 +60,8 @@ function formatRoute(menuPermissions) {
       return item;
     }
   });
+
+  console.log(serializeRoutes, "---56");
 
   setFirstRouter(serializeRoutes);
   changeRouterFormat(serializeRoutes);
@@ -112,7 +122,7 @@ function formatRoute(menuPermissions) {
         icon: item.icon,
         keepAlive: item.keepAlive,
         activeMenu: item.activeMenu ? item.activeMenu : "",
-        breadcrumb: item.breadcrumb ? [item.breadcrumb] : "",
+        breadcrumb: item.breadcrumb ? [{ title: item.breadcrumb }] : "",
         // hideTitle: !item.crumb
       };
       item.visible ? (item.meta.hidden = true) : "";
