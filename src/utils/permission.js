@@ -158,7 +158,7 @@ function formatRoute(menuPermissions) {
                 ))
             : "";
         }
-        
+
         if (componentName.length == 3) {
           item.file_path
             ? (item.component = () =>
@@ -233,7 +233,7 @@ function formatRoute(menuPermissions) {
         component: () => import("@/components/404/index.vue"),
         meta: { hidden: true },
       },
-      { path: "/:catchAll(.*)", redirect: "/404", hidden: true }
+      { path: "/:catchAll(.*)", redirect: "/404", meta: { hidden: true } }
     );
   }
 }
