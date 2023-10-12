@@ -51,7 +51,7 @@
                     <div class="tit">板卡固件号:</div>
                     <div class="data">{{ NewDetail.board }}</div>
                     <div class="tit">EC20固件号: </div>
-                    <div class="data">{{ NewDetail.lastAutoDriveTime?.split(' ')[0] }}</div>
+                    <div class="data">{{ NewDetail.ec20 }}</div>
                 </div>
                 <div class="line line2 ">
                     <div class="tit">电台固件号:</div>
