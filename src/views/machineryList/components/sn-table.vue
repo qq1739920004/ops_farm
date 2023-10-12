@@ -112,7 +112,7 @@
                 <el-button v-auth="503" style="margin-right: -10px;" type="primary" link
                     @click="gotoMap(row.sn, row.npn)">历史轨迹</el-button>
                 <el-tooltip style="margin-right: -10px;"
-                    :disabled="row.onlineTcp === 0 || row.driveState === 1 || row.driveState === 2 ? false : true"
+                    :disabled="row.onlineTcp === 0 || row.driveState === 1 || row.driveState === 2 ? true : false"
                     class="box-item" effect="dark" content="车辆在线或处于自动驾驶状态" placement="top-start">
 
                     <el-button style="margin-right: -10px;"

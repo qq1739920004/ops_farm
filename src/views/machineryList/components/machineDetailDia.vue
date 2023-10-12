@@ -1,20 +1,4 @@
-<!--  -->
-<template>
-    <el-dialog @open="getNewDetail" v-model="dialogVisible" title="详情" height="392px">
-        <div class="tableData">
-            <div class="line line3">
-                <div class="tit">SN:</div>
-                <div class="data data4">{{ NewDetail.sn }}</div>
-                <div class="tit">在线状态:</div>
-                <div v-if="NewDetail.onlineTcp != 0" class="data data4">在线 <span class="circle"></span></div>
-                <div v-else class="data data4">离线 <span class="circle2"></span></div>
-                <div class="tit">驾驶状态:</div>
-                <!-- 0:未自动驾驶 1：上线 2：在线 -->
-                <div class="data" v-if="NewDetail.driveState == 0">未自动驾驶</div>
-                <div class="data" v-if="NewDetail.driveState == 1">上线</div>
-                <div class="data" v-if="NewDetail.driveState == 2">在线</div>
-            </div>
-            <div class="line line2">
+<!--  <div class="line line2">
                 <div class="tit">公司名称:</div>
                 <div class="data">{{ NewDetail.companyName }}</div>
                 <div class="tit">创始人:</div>
@@ -89,7 +73,106 @@
                     <div class="tit">Hub_SN: </div>
                     <div class="data">{{ NewDetail.hub }}</div>
                 </div>
+            </div> -->
+<template>
+    <el-dialog @open="getNewDetail"  v-model="dialogVisible" title="详情" center height="600px" width="1108px">
+        <div class="titleArea">
+            基本信息
+        </div>
+        <div class="tableData">
+            <div class="line line3">
+                <div class="tit">SN:</div>
+                <div class="data data4 " :class="NewDetail.onlineTcp != 0 ? 'circlearea' : ''">{{ NewDetail.sn }}
+                    <span v-if="NewDetail.onlineTcp != 0">(在线) <span class="circle"></span></span>
+                    <span v-else>(离线) <span class="circle2"></span> </span>
+                </div>
+                <div class="tit">驾驶状态:</div>
+                <!-- 0:未自动驾驶 1：上线 2：在线 -->
+                <div class="data" v-if="NewDetail.driveState == 0">未自动驾驶</div>
+                <div class="data" v-if="NewDetail.driveState == 1">上线</div>
+                <div class="data" v-if="NewDetail.driveState == 2">在线</div>
+                <div class="tit">公司名称:</div>
+                <div class="data">{{ NewDetail.companyName }}</div>
             </div>
+            <div class="line line3">
+                <div class="tit">车主姓名:</div>
+                <div class="data">{{ NewDetail.userName }}</div>
+                <div class="tit">车主电话:</div>
+                <div class="data">{{ NewDetail.tel }}</div>
+                <div class="tit">车辆厂家:</div>
+                <div class="data">{{ NewDetail.factory }}</div>
+            </div>
+            <div class="line line3">
+                <div class="tit">车辆型号:</div>
+                <div class="data">{{ NewDetail.model }}</div>
+                <div class="tit">车龄:</div>
+                <div class="data">{{ NewDetail.age }}</div>
+                <div class="tit">向日葵SN:</div>
+                <div class="data">{{ NewDetail.sunFlowerSn }}</div>
+            </div>
+
+        </div>
+        <div class="titleArea">
+            模块信息
+        </div>
+        <div class="tableData">
+            <div class="line line3">
+                <div class="tit">板卡固件号:</div>
+                <div class="data">{{ NewDetail.board }}</div>
+                <div class="tit">EC20固件号:</div>
+                <div class="data">{{ NewDetail.ec20 }}</div>
+                <div class="tit">电台固件号:</div>
+                <div class="data">{{ NewDetail.sunFlowerSn }}</div>
+            </div>
+            <div class="line line3">
+                <div class="tit">车身IMU固件号:</div>
+                <div class="data">{{ NewDetail.carImu }}</div>
+                <div class="tit">车身IMU_SN:</div>
+                <div class="data">{{ NewDetail.carImuSn }}</div>
+                <div class="tit">前轮IMU固件号:</div>
+                <div class="data">{{ NewDetail.wheelImu }}</div>
+            </div>
+            <div class="line line3">
+                <div class="tit">前轮IMU_SN:</div>
+                <div class="data">{{ NewDetail.wheelImuSn }}</div>
+                <div class="tit">电机固件号:</div>
+                <div class="data">{{ NewDetail.motor }}</div>
+                <div class="tit">电机SN:</div>
+                <div class="data">{{ NewDetail.motorSn }}</div>
+            </div>
+            <div class="line line3">
+                <div class="tit">多功能方向盘固件号:</div>
+                <div class="data">{{ NewDetail.steeringWheel }}</div>
+                <div class="tit">多功能方向盘SN:</div>
+                <div class="data">{{ NewDetail.steeringWheelSn }}</div>
+                <div class="tit">Hub蓝牙固件号:</div>
+                <div class="data">{{ NewDetail.hubBluetooth }}</div>
+            </div>
+            <div class="line line3">
+                <div class="tit">Hub固件号:</div>
+                <div class="data">{{ NewDetail.hub }}</div>
+                <div class="tit">Hub_SN:</div>
+                <div class="data">{{ NewDetail.hubSn }}</div>
+                <div class="tit">软件版本:</div>
+                <div class="data">{{ NewDetail.softwareVersion }}</div>
+            </div>
+
+        </div>
+        <div class="titleArea">
+            模块信息
+        </div>
+        <div class="tableData">
+
+            <div class="line line3">
+                <div class="tit">创建时间:</div>
+                <div class="data">{{ NewDetail.createTime }}</div>
+                <div class="tit">更新时间:</div>
+                <div class="data">{{ NewDetail.updateTime }}</div>
+                <div class="tit">最近创建时间:</div>
+                <div class="data">{{ NewDetail.lastOnlineTime }}</div>
+            </div>
+
+
         </div>
     </el-dialog>
 </template>
@@ -151,77 +234,43 @@ const getNewDetail = async () => {
 </script>
 
 <style lang="scss" scoped>
+
+.titleArea {
+    text-align: left;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 26.06px;
+    color: var(--el-menu-text-color);
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
 .tableData {
+    margin-bottom: 30px;
+
     .line:nth-child(2n-1) {
         // background: rgba(233, 242, 242, 1);
         // color: #606266;
         background-color: var(--el-fill-color-lighter);
-    }
-
-    .line1 {
-        width: 100%;
-        height: 41px;
-        opacity: 1;
-        display: flex;
-        align-items: center;
-
-        div {
-            width: 16.6%;
-            text-align: right;
-
-        }
-
-        .data {
-            margin-right: 40px;
-            text-align: left;
-            display: block;
-            width: 16.6%;
-            margin-left: 10px;
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 0px;
-        }
-    }
-
-    .line2 {
-        width: 100%;
-        height: 41px;
-        opacity: 1;
-        display: flex;
-        align-items: center;
-        flex-flow: nowrap;
 
         .tit {
-            width: 16.6%;
-            text-align: right;
+            height: 41px;
+            width: 130px;
+            background-color: rgba(233, 242, 242, 1);
         }
+    }
 
-        .data {
+    .line {
+        .tit {
+            display: flex;
             align-items: center;
-            text-align: left;
-            display: block;
-            width: 33.3%;
-            margin-left: 10px;
-            font-size: 16px;
+            padding-left: 10px;
+            height: 41px;
+            width: 130px;
+            font-size: 12px;
             font-weight: 400;
             letter-spacing: 0px;
-
-
-        }
-
-        .bottomr {
-            width: 50%;
-
-            span {
-                margin-left: 10px;
-                font-size: 14px;
-                font-weight: 400;
-                letter-spacing: 0px;
-                line-height: 20.27px;
-
-                text-align: left;
-                vertical-align: top
-            }
         }
     }
 
@@ -231,6 +280,7 @@ const getNewDetail = async () => {
         opacity: 1;
         display: flex;
         align-items: center;
+
 
         .circle {
             width: 10px;
@@ -250,40 +300,19 @@ const getNewDetail = async () => {
             margin-right: 5px;
         }
 
-
-        div {
-            width: 16.6%;
-            text-align: right
-        }
-
-
-
-        .half {
-            text-align: left;
-            display: block;
-            width: 50%;
-            margin-left: 10px;
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 0px;
-
-        }
-
         .data {
-            text-align: left;
             display: block;
-            width: 16.6%;
+            width: 224px;
             margin-left: 10px;
-            font-size: 16px;
+            font-size: 12px;
             font-weight: 400;
             letter-spacing: 0px;
-
-
         }
 
-        .data4 {
-            width: 12.5%;
+        .circlearea {
+            color: var(--el-color-primary);
         }
+
     }
 }
 </style>
