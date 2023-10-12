@@ -8,7 +8,6 @@
         placeholder="SN、车辆名、公司、电话"
         @select="handleSelect"
         clearable
-
       >
         <template #suffix>
           <el-icon><Search /></el-icon>
@@ -245,7 +244,7 @@ function querySearch(queryString: string, cb: any) {
 }
 // 搜索框确认选择
 function handleSelect(item: any) {
-  if(!item.markerId) return 
+  if (!item.markerId) return;
   mapCenter.markerId = item.markerId;
 }
 
@@ -458,7 +457,7 @@ function createMarkerPopup(item: any) {
 
   if (
     item.terminalType == "AG320" ||
-    item.terminalType == "AG360" ||
+    item.terminalType.includes("AG360") ||
     item.terminalType == "AG502"
   ) {
     openRemote = true;

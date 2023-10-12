@@ -1,60 +1,90 @@
-
 <template>
-    <div>
-        <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
-            :sn="sn" :name="name">
-        </RemoteAdjustDia360>
-        <RemoteAdjustDia302 ref="RemoteD302" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
-            :sn="sn" :name="name">
-        </RemoteAdjustDia302>
-        <RemoteAdjustDia502 ref="RemoteD502" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
-            :sn="sn" :name="name">
-        </RemoteAdjustDia502>
-    </div>
+  <div>
+    <RemoteAdjustDia360
+      ref="RemoteD"
+      :terminalType="terminalType"
+      :version="version"
+      :type="type"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    >
+    </RemoteAdjustDia360>
+    <RemoteAdjustDia302
+      ref="RemoteD302"
+      :terminalType="terminalType"
+      :version="version"
+      :type="type"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    >
+    </RemoteAdjustDia302>
+    <RemoteAdjustDia502
+      ref="RemoteD502"
+      :terminalType="terminalType"
+      :version="version"
+      :type="type"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    >
+    </RemoteAdjustDia502>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, watch } from 'vue'
-import RemoteAdjustDia360 from './components/remoteAdjust.vue'
-import RemoteAdjustDia302 from './components/remoteAdjust302.vue'
-import RemoteAdjustDia502 from './components/remoteAdjust502.vue'
+import { ref, nextTick, watch } from "vue";
+import RemoteAdjustDia360 from "./components/remoteAdjust.vue";
+import RemoteAdjustDia302 from "./components/remoteAdjust302.vue";
+import RemoteAdjustDia502 from "./components/remoteAdjust502.vue";
 
-const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn', 'name', 'isChange'])
-const terminalType = ref<string>('')
-const version = ref<string>('')
-const type = ref<string>('')
-const name = ref<string>('')
-const carId = ref<number>()
-const sn = ref()
-const RemoteD = ref()
-const RemoteD302 = ref()
-const RemoteD502 = ref()
+const props = defineProps([
+  "terminalType",
+  "type",
+  "version",
+  "carId",
+  "sn",
+  "name",
+  "isChange",
+]);
+const terminalType = ref<string>("");
+const version = ref<string>("");
+const type = ref<string>("");
+const name = ref<string>("");
+const carId = ref<number>();
+const sn = ref();
+const RemoteD = ref();
+const RemoteD302 = ref();
+const RemoteD502 = ref();
 const gotoRemote = () => {
-    if (terminalType.value == 'AG360') {
-        RemoteD.value.dialogVisible = true
-    } if (terminalType.value == 'AG302') {
-        RemoteD302.value.dialogVisible = true
-    } if (terminalType.value == 'AG502') {
-        RemoteD502.value.dialogVisible = true
-    }
-    nextTick(() => {
-        RemoteD.value.carFormRef?.clearValidate()
-        RemoteD302.value.carFormRef?.clearValidate()
-        RemoteD502.value.carFormRef?.clearValidate()
-    })
-
-}
-watch(() => props.isChange, () => {
-    terminalType.value = props.terminalType
-    version.value = props.version
-    type.value = props.type
-    carId.value = props.carId
-    sn.value = props.sn
-    name.value = props.name
-    gotoRemote()
-})
-
-
+  if (terminalType.value.includes("AG360")) {
+    RemoteD.value.dialogVisible = true;
+  }
+  if (terminalType.value == "AG302") {
+    RemoteD302.value.dialogVisible = true;
+  }
+  if (terminalType.value == "AG502") {
+    RemoteD502.value.dialogVisible = true;
+  }
+  nextTick(() => {
+    RemoteD.value.carFormRef?.clearValidate();
+    RemoteD302.value.carFormRef?.clearValidate();
+    RemoteD502.value.carFormRef?.clearValidate();
+  });
+};
+watch(
+  () => props.isChange,
+  () => {
+    terminalType.value = props.terminalType;
+    version.value = props.version;
+    type.value = props.type;
+    carId.value = props.carId;
+    sn.value = props.sn;
+    name.value = props.name;
+    gotoRemote();
+  }
+);
 </script>
 
 <style lang="scss" scoped></style>
