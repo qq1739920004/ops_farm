@@ -112,10 +112,10 @@
             </div>
 
         </div>
-        <div class="titleArea">
+        <div class="titleArea" v-if="props.terminalType != 'AG302'">
             模块信息
         </div>
-        <div class="tableData">
+        <div class="tableData" v-if="props.terminalType != 'AG302'">
             <div class="line line3">
                 <div class="tit">板卡固件号:</div>
                 <div class="data">{{ NewDetail.board }}</div>
