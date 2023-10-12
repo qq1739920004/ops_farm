@@ -5,7 +5,7 @@
       <el-autocomplete
         v-model="searchSn"
         :fetch-suggestions="querySearch"
-        placeholder="SN、车辆名、公司、电话"
+        placeholder="SN、铭牌SN、车辆名、公司、电话"
         @select="handleSelect"
         clearable
       >
@@ -17,6 +17,8 @@
             <span>{{ item.carName }}</span>
             |
             <span>{{ item.sn }}</span>
+            |
+            <span>{{ item.npn }}</span>
           </div>
           <div v-if="item.markerId">
             <span>{{ item.companyName }}</span>
@@ -221,16 +223,19 @@ function searchDevicePosition(id: any) {
 function querySearch(queryString: string, cb: any) {
   // if (!queryString) return;
   let filterData = markerData.filter((item: any) => {
-    if (item.sn.includes(queryString)) {
+    if (item.sn && item.sn.includes(queryString)) {
       return true;
     }
-    if (item.carName.includes(queryString)) {
+    if (item.npn && item.npn.includes(queryString)) {
       return true;
     }
-    if (item.companyName.includes(queryString)) {
+    if (item.carName && item.carName.includes(queryString)) {
       return true;
     }
-    if (item.tel.includes(queryString)) {
+    if (item.companyName && item.companyName.includes(queryString)) {
+      return true;
+    }
+    if (item.tel && item.tel.includes(queryString)) {
       return true;
     }
   });
@@ -238,6 +243,7 @@ function querySearch(queryString: string, cb: any) {
     cb(["无数据"]);
     return;
   }
+  console.log(241)
   if (filterData.length > 3) filterData.length = 3;
   cb(filterData);
   return;
@@ -686,7 +692,7 @@ function openRemote_markerPopup(arg: any) {
     position: absolute;
     z-index: 999;
     :deep(.el-autocomplete) {
-      width: 230px;
+      width: 280px;
     }
   }
   .statistics_box {
