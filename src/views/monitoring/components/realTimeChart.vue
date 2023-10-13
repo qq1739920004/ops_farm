@@ -356,54 +356,54 @@ const dateTimeTrans = (timestamp: number) => {
     return '/';
   }
 }
-// const handleMessageChange = (data: any) => {
-//   try {
-//     if (data.deviceSn === props.sn) {
-//       // 过滤非自动驾驶驾驶状态的值；
-//       if (data.data.driveState === 0) {
-//         data.data.xOffset = null
-//         // data.data.speed = null;
-//         // data.data.heading = null;
-//       }
-//       let time = dateTimeTrans(data.data.gnssTime).slice(11)
-//       let xOffset = data.data.xOffset
-//       let speed = data.data.speed
-//       let direction = data.data.heading
-//       let diffAge = data.data.diffAge
-//       // x轴数据更新
-//       optionOffset.xAxis.data.push(time as never)
-//       optionSpeed.xAxis.data.push(time as never)
-//       optionDirection.xAxis.data.push(time as never)
-//       optionDifference.xAxis.data.push(time as never)
-//       // x轴数据
-//       // if(this.optionOffset.xAxis.data.length >= 30) {
-//       // 	this.optionOffset.xAxis.data.shift();
-//       // 	this.optionSpeed.xAxis.data.shift();
-//       // 	this.optionDirection.xAxis.data.shift();
-//       // 	this.optionDifference.xAxis.data.shift();
-//       // }
-//       // 系列数据
-//       optionOffset.series[0].data.push(xOffset as never)
-//       optionSpeed.series[0].data.push(speed as never)
-//       optionDirection.series[0].data.push(direction as never)
-//       optionDifference.series[0].data.push(diffAge as never)
-//       // 系列数据
-//       // if(this.optionOffset.series[0].data.length >= 30) {
-//       // 	this.optionOffset.series[0].data.shift();
-//       // 	this.optionSpeed.series[0].data.shift();
-//       // 	this.optionDirection.series[0].data.shift();
-//       // 	this.optionDifference.series[0].data.shift();
-//       // }
-//       // setOption
-//       chartOffset.value ? chartOffset.value.setOption(optionOffset) : ''
-//       chartSpeed.value ? chartSpeed.value.setOption(optionSpeed) : ''
-//       chartDirection.value ? chartDirection.value.setOption(optionDirection) : ''
-//       chartDifference.value ? chartDifference.value.setOption(optionDifference) : ''
-//     }
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
+const handleMessageChange = (data: any) => {
+  try {
+    if (data.deviceSn === props.sn) {
+      // 过滤非自动驾驶驾驶状态的值；
+      if (data.data.driveState === 0) {
+        data.data.xOffset = null
+        // data.data.speed = null;
+        // data.data.heading = null;
+      }
+      let time = dateTimeTrans(data.data.gnssTime).slice(11)
+      let xOffset = data.data.xOffset
+      let speed = data.data.speed
+      let direction = data.data.heading
+      let diffAge = data.data.diffAge
+      // x轴数据更新
+      optionOffset.xAxis.data.push(time as never)
+      optionSpeed.xAxis.data.push(time as never)
+      optionDirection.xAxis.data.push(time as never)
+      optionDifference.xAxis.data.push(time as never)
+      // x轴数据
+      // if(this.optionOffset.xAxis.data.length >= 30) {
+      // 	this.optionOffset.xAxis.data.shift();
+      // 	this.optionSpeed.xAxis.data.shift();
+      // 	this.optionDirection.xAxis.data.shift();
+      // 	this.optionDifference.xAxis.data.shift();
+      // }
+      // 系列数据
+      optionOffset.series[0].data.push(xOffset as never)
+      optionSpeed.series[0].data.push(speed as never)
+      optionDirection.series[0].data.push(direction as never)
+      optionDifference.series[0].data.push(diffAge as never)
+      // 系列数据
+      // if(this.optionOffset.series[0].data.length >= 30) {
+      // 	this.optionOffset.series[0].data.shift();
+      // 	this.optionSpeed.series[0].data.shift();
+      // 	this.optionDirection.series[0].data.shift();
+      // 	this.optionDifference.series[0].data.shift();
+      // }
+      // setOption
+      chartOffset.value ? chartOffset.value.setOption(optionOffset) : ''
+      chartSpeed.value ? chartSpeed.value.setOption(optionSpeed) : ''
+      chartDirection.value ? chartDirection.value.setOption(optionDirection) : ''
+      chartDifference.value ? chartDifference.value.setOption(optionDifference) : ''
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
 // 获取数据
 const loadData = async () => {
   const res: driveStatusPathResponseData = await driveStatusPath_API(props.sn)
@@ -435,7 +435,11 @@ const loadData = async () => {
   chartSpeed.setOption(optionSpeed)
   chartDirection.setOption(optionDirection)
   chartDifference.setOption(optionDifference)
-
+  handleMessageChange({
+    'type': 'farmPt',
+    'module':'farm',
+    'action':'online'
+  })
 }
 const beforeOpen = () => {
   initCharts()

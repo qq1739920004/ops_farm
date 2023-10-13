@@ -159,7 +159,7 @@
 
         </div>
         <div class="titleArea">
-            模块信息
+            时间信息
         </div>
         <div class="tableData">
 
@@ -168,7 +168,7 @@
                 <div class="data">{{ NewDetail.createTime }}</div>
                 <div class="tit">更新时间:</div>
                 <div class="data">{{ NewDetail.updateTime }}</div>
-                <div class="tit">最近创建时间:</div>
+                <div class="tit">最近上线时间:</div>
                 <div class="data">{{ NewDetail.lastOnlineTime }}</div>
             </div>
 
