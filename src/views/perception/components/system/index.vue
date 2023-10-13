@@ -51,13 +51,13 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from "vue";
-import Top from "./component/top.vue";
-import Year from "./component/year.vue";
-import active from "./component/active.vue";
-import Carmap from "./component/carmap/index.vue";
-import Workarea from "./component/workarea.vue";
-import State from "./component/state.vue";
-import Online from "./component/online.vue";
+import Top from "./top.vue";
+import Year from "./year.vue";
+import active from "./active.vue";
+import Carmap from "./carmap/index.vue";
+import Workarea from "./workarea.vue";
+import State from "./state.vue";
+import Online from "./online.vue";
 import { getMonitorAPI } from "@/api/perception/index.ts";
 import type { MonitorObj, recordsType } from "@/api/perception/type";
 import socket from "@/store/socket";
@@ -152,8 +152,6 @@ function getScale(w = 1920, h = 937) {
     .top-img {
       position: fixed;
       top: 0;
-      height: 61px;
-      width: 100%;
     }
     width: 1920px;
     height: 937px;
@@ -220,3 +218,4 @@ function getScale(w = 1920, h = 937) {
   }
 }
 </style>
+../perception/component/system/carmap/index.vue

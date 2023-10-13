@@ -4,7 +4,7 @@
       <div class="top_tittle">
         <router-link to="/monitoring">
           <img src="~@/assets/perceptionImage/top_title_logo.png" key="" alt="" />
-          <h1>XXXXXX数字大屏</h1>
+          <h1>{{companyName}}数字大屏</h1>
         </router-link>
       </div>
       <div class="top_num">
@@ -48,10 +48,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import districtInfo from "@/views/perception/component/districtInfo.vue";
+import districtInfo from "./districtInfo.vue";
 import { ref, watch } from "vue";
 import { gsap } from 'gsap';
 const props = defineProps({
+  companyName:{
+    type:String,
+    default:'XXXXXX',
+  },
   monitorData: {
     type: Object,
     default: {
@@ -128,13 +132,13 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
   justify-content: space-between;
 
   .top_left {
-    flex: 1;
+    flex: 2.2;
     height: 223px;
 
     .top_tittle {
       height: 83px;
       margin-bottom: 15px;
-      padding: 0px 0 0 0px;
+      padding: 0;
       display: flex;
       justify-content: start;
       align-items: center;

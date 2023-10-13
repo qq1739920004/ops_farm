@@ -243,7 +243,6 @@ function querySearch(queryString: string, cb: any) {
     cb(["无数据"]);
     return;
   }
-  console.log(241)
   if (filterData.length > 3) filterData.length = 3;
   cb(filterData);
   return;
@@ -417,9 +416,9 @@ function markerTypeChange() {
 // marker弹窗
 function createMarkerPopup(item: any) {
   const driveState: any = {
-    0: "未开始",
-    1: "入线",
-    2: "在线", //自动驾驶
+    0: "非自动驾驶",
+    1: "自动驾驶",
+    2: "自动驾驶", //自动驾驶
   };
   const onlineStatus: any = {
     0: "status_1",
@@ -461,17 +460,18 @@ function createMarkerPopup(item: any) {
 
   let openRemote: any = true; //是否远程管理
 
-  if (
-    item.terminalType == "AG320" ||
-    item.terminalType.includes("AG360") ||
-    item.terminalType == "AG502"
-  ) {
-    openRemote = true;
+  if (item.onlineTcp == 0 || item.driveState != 0) {
+    openRemote = false; // 禁用
   } else {
-    openRemote = false;
-  }
-  if (item.driveState != 0) {
-    openRemote = false;
+    if (
+      item.terminalType == "AG320" ||
+      item.terminalType.includes("AG360") ||
+      item.terminalType == "AG502"
+    ) {
+      openRemote = true; // 可用
+    } else {
+      openRemote = false; // 禁用
+    }
   }
 
   const cardUsage =
@@ -496,6 +496,12 @@ function createMarkerPopup(item: any) {
               <div class="value">${item.carOwnerName}</div>
             </div>
             <div class="r">
+              <div class="label">铭牌号:</div>
+              <div class="value">${item.npn || "/"}</div>
+            </div>
+          </li>
+          <li>
+            <div class="l">
               <div class="label">公司名称:</div>
               <div class="value">${item.companyName}</div>
             </div>
@@ -851,7 +857,7 @@ function openRemote_markerPopup(arg: any) {
       display: flex;
       line-height: 22px;
 
-      &:nth-child(2) {
+      &:nth-child(3) {
         margin-bottom: 12px;
       }
 
