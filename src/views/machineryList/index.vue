@@ -112,7 +112,7 @@ const getCarList = async () => {
     carNewList.value = res.data.records.map(item => {
         return {
             ...item,
-            openRemote: (item.terminalType === 'AG502' || item.terminalType === 'AG302' || item.terminalType.includes('AG360')) && item.onlineTcp === 0 && (item.driveState !== 1 && item.driveState !== 2) ? false : true,
+            openRemote: (item.terminalType === 'AG502' || item.terminalType === 'AG302' || item.terminalType.includes('AG360')) && item.onlineTcp === 1 && (item.driveState !== 1 && item.driveState !== 2) ? false : true,
         }
       
 
