@@ -13,9 +13,9 @@
                 <el-tab-pane label="PID参数" name="3"></el-tab-pane>
                 <el-tab-pane label="PID曲线参数" name="9"></el-tab-pane>
                 <el-tab-pane label="PID超低速参数" name="10"></el-tab-pane>
-                <el-tab-pane label="差分设置" name="5" @click="gotoChafen"></el-tab-pane>
                 <el-tab-pane label="在线升级" name="6"></el-tab-pane>
-                <el-tab-pane label="日志回传" name="7"></el-tab-pane>
+                <el-tab-pane label="远程设置" name="5" @click="gotoChafen"></el-tab-pane>
+                <!-- <el-tab-pane label="日志回传" name="7"></el-tab-pane> -->
             </el-tabs>
         </div>
         <div class="mainContent">
@@ -25,7 +25,7 @@
                 <el-row>
                     <el-col v-if="carParamsData" :span="12" v-for="(value, key, index) in carParamsData" :key="index">
                         <el-form-item class="item" :label="value.name" :prop="key">
-                            <el-input style=" width: 280px;height: 32px;" v-model="paramParamsData[key as never]" />
+                            <el-input style=" width: 187px;height: 32px;" v-model="paramParamsData[key as never]" />
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
@@ -42,7 +42,7 @@
                 <el-row>
                     <el-col v-if="CalibTitleData" :span="12" v-for="(value, key, index) in CalibTitleData" :key="index">
                         <el-form-item class="item" :label="value.name" :prop="key">
-                            <el-input style=" width: 280px;height: 32px;" v-model="CalibParamsData[key as never]" />
+                            <el-input style=" width: 187px;height: 32px;" v-model="CalibParamsData[key as never]" />
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
@@ -59,7 +59,7 @@
                 <el-row>
                     <el-col v-if="PidTitleData" :span="12" v-for="(value, key, index) in PidTitleData" :key="index">
                         <el-form-item class="item" :label="(value.name)" :prop="key">
-                            <el-input style=" width: 280px;height: 32px;" v-model="PidParamsData[key]" />
+                            <el-input style=" width: 187px;height: 32px;" v-model="PidParamsData[key]" />
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
@@ -77,7 +77,7 @@
                     <el-col v-if="PidCurveTitleData" :span="12" v-for="(value, key, index) in PidCurveTitleData"
                         :key="index">
                         <el-form-item class="item" :label="(value.name)" :prop="key">
-                            <el-input style=" width: 280px;height: 32px;" v-model="pidCurveList[key]" />
+                            <el-input style=" width: 187px;height: 32px;" v-model="pidCurveList[key]" />
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
@@ -95,7 +95,7 @@
                     <el-col v-if="PidSupLowTitleData" :span="12" v-for="(value, key, index) in PidSupLowTitleData"
                         :key="index">
                         <el-form-item class="item" :label="(value.name)" :prop="key">
-                            <el-input style=" width: 280px;height: 32px;" v-model="pidSupLowList[key]" />
+                            <el-input style=" width: 187px;height: 32px;" v-model="pidSupLowList[key]" />
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
@@ -110,14 +110,20 @@
                 :inline="true" :label-position="labelPosition" label-width="160px" :model="chaFenlist"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
-                    <el-col :span="12" :offset="6">
+                    <el-col :span="18" :offset="6">
                         <el-form-item class="item" label="工作模式：" prop="type">
-                            <el-select v-model="workPattern.type" style=" width: 280px;
+                            <el-select v-model="workPattern.type" style=" width: 187px;
                 height: 32px;">
                                 <el-option label="内置网络" :value="'1'" />
                                 <el-option label="罗网" :value="'3'" disabled />
                                 <el-option label="内置电台" :value="0"></el-option>
                             </el-select>
+                            <el-button v-show="workPattern.type != '0'" :disabled="workPattern.type === '3' ? true : false" style="margin-left: 20px;"
+                                type="primary" @click="updateChafenData">设置</el-button>
+                            <el-button v-show="workPattern.type == '1'" type="primary" text class="btn3"
+                                @click="getExtendSourceNode">获取源节点</el-button>
+                            <el-button v-show="workPattern.type == '0'" style="margin-left: 20px;" type="primary"
+                                @click="updateChafenData2">设置</el-button>
                         </el-form-item>
                     </el-col>
 
@@ -126,7 +132,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="服务器IP:" prop="insideHost">
-                                <el-input style=" width: 280px;
+                                <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideHost" />
                             </el-form-item>
                         </el-col>
@@ -135,7 +141,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="端口：" prop="insidePort">
-                                <el-input style=" width: 280px;
+                                <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insidePort" />
                             </el-form-item>
                         </el-col>
@@ -144,7 +150,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="源节点：" prop="insideSourceNode">
-                                <el-select style=" width: 280px;
+                                <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideSourceNode">
                                     <el-option v-for="(item, index) in sourceNode" :key="index" :label="item"
                                         :value="item" />
@@ -155,7 +161,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="用户名：" prop="insideUsername">
-                                <el-input style=" width: 280px;
+                                <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideUsername" />
                             </el-form-item>
                         </el-col>
@@ -164,21 +170,17 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="密码：" prop="insidePassword">
-                                <el-input type="password" show-password style=" width: 280px;
+                                <el-input type="password" show-password style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insidePassword" />
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <div class="buttonarea">
-                        <el-button class="btn3" style="" @click="getExtendSourceNode">获取源节点</el-button>
-                        <el-button type="primary" @click="updateChafenData">设置</el-button>
-                    </div>
                 </div>
                 <div v-show="workPattern.type == '0'">
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="协议：" prop="protocol">
-                                <el-select style=" width: 280px;
+                                <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.protocol">
                                     <el-option label="MAC" :value="0" />
                                     <el-option label="TT450S" :value="1" />
@@ -193,7 +195,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="信道：" prop="radioChannel">
-                                <el-select style=" width: 280px;
+                                <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.radioChannel">
                                     <el-option v-if="chaFenlist.protocol === 2" label="自定义" :value="0" />
                                     <!-- <el-option v-for="item in radioChannelOptions" :key="item" :label="item" :value="item"></el-option> -->
@@ -209,10 +211,10 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="模式：" prop="radioStatus">
-                                <el-select style=" width: 280px;
+                                <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.radioStatus">
                                     <el-option label="TX_MODE" :value="0" />
-                                    <el-option label="RX_MODE" :value="1" />     r
+                                    <el-option label="RX_MODE" :value="1" /> r
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -220,7 +222,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="功率：" prop="radioPower">
-                                <el-select style=" width: 280px;
+                                <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.radioPower">
                                     <el-option label="0.5W" :value="0.5" />
                                     <el-option label="1W" :value="1" />
@@ -229,10 +231,28 @@
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <div class="buttonarea">
-                        <el-button type="primary" @click="updateChafenData2">设置</el-button>
-                    </div>
                 </div>
+                <el-row style="margin-bottom: 10px;">
+                    <el-col :span="18" :offset="6">
+                        <el-form-item class="item" label="日志回传:">
+                            <el-row>
+                                <el-col align="center">
+                                    AG302以及A3502_Android的日志回传功能暂未开放
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+
+                    </el-col>
+                </el-row>
+                <el-row style="margin-bottom: 10px;">
+                    <el-col :span="12" :offset="6">
+                        <el-form-item class="item" label="数据存储:">
+                            <el-switch v-auth='474' :before-change="beforeSwitchChange"
+                                @change="changeLogStatus(props.sn, chaFenlist.isTransfer)" v-model="chaFenlist.isTransfer"
+                                class="ml-2" inline-prompt active-text="开" inactive-text="关" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
 
             <el-form ref="formLabelAlignRef" :validate-on-rule-change="false" v-show="activeIndex == '6'" :rules="rules"
@@ -256,12 +276,12 @@
                 <el-row style="margin-bottom: 20px;">
                     <el-col :span="12" :offset="6">
                         <el-form-item class="item" label="版本选择：" prop="name">
-                            <el-select v-if="productList.length >= 1" style=" width: 280px;
+                            <el-select v-if="productList.length >= 1" style=" width: 187px;
                 height: 32px;" v-model="formLabelAlign.filename">
                                 <el-option v-for="(item, index) in productList" :key="index" :value="index"
                                     :label="item.filename"></el-option>
                             </el-select>
-                            <div v-else style=" width: 280px;height: 32px;">
+                            <div v-else style=" width: 187px;height: 32px;">
                                 该设备没有固件包
                             </div>
                         </el-form-item>
@@ -292,7 +312,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, paramsParamObj, paramCarParamResponseData, paramcalibParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
 import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, pidParamParam_API, getSourceNode_path, updateCar_API, updatePidParm_API, updateCalibParam_API, GetcarProductpackage_API, packageUpgradeCar_API, pidCurveParam_API, updatePidCurveParm_API, pidSlsParam_API, updatepidSlsParam_API } from '@/api/machineryList/remoteAdjust/index'
-import { carNewList_API } from '@/api/machineryList/index'
+import { carNewList_API, logOpen_API } from '@/api/machineryList/index'
 import { pageInfo } from '@/api/machineryList/type'
 import type { TabsPaneContext } from 'element-plus'
 
@@ -326,6 +346,11 @@ const pageInfo = reactive<pageInfo>({
     companyId: '',
     order: '1'
 })
+const switchStatus = ref(false)
+const beforeSwitchChange = () => {
+    switchStatus.value = true;
+    return switchStatus.value;
+}
 // 车辆参数列表
 const paramParamsData = reactive<paramsParamObj>({
     'Vehicle1': "",
@@ -438,6 +463,18 @@ const chaFenlist = ref<chaFenObj>({
 })
 // 源节点列表
 const sourceNode = ref<string[]>([])
+const changeLogStatus = async (val: string, val2: any) => {
+    if (switchStatus) {
+        console.log(val, val2);
+        try {
+            await logOpen_API({ 'sn': val, 'flag': val2 })
+            ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
+        }
+        catch {
+            ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
+        }
+    }
+}
 // 获取车辆参数
 const getCarParams = async (val: string) => {
     paramDescribeList.value.paramType = val
@@ -1009,12 +1046,9 @@ const pidSupLowRules = computed(() => {
     position: relative;
 
     .mktitle {
-        position: absolute;
-        top: 0px;
-        left: 417px;
-        width: 96px;
-        height: 24px;
-        opacity: 1;
+        display: flex;
+       width: 100%;
+       justify-content: center;
         /** 文本1 */
         font-size: 16px;
         font-weight: 400;

@@ -11,9 +11,9 @@
                 <el-tab-pane label="车辆参数" name="1"></el-tab-pane>
                 <el-tab-pane label="校准参数" name="2"></el-tab-pane>
                 <el-tab-pane label="PID参数" name="3"></el-tab-pane>
-                <el-tab-pane label="差分设置" name="5" @click="gotoChafen"></el-tab-pane>
                 <el-tab-pane label="在线升级" name="6"></el-tab-pane>
-                <el-tab-pane label="日志回传" name="7"></el-tab-pane>
+                <el-tab-pane label="远程设置" name="5" @click="gotoChafen"></el-tab-pane>
+                <!-- <el-tab-pane label="日志回传" name="7"></el-tab-pane> -->
             </el-tabs>
         </div>
         <div class="mainContent">
@@ -23,7 +23,7 @@
                 <el-row>
                     <el-col v-if="carParamsData" :span="12" v-for="(value, key, index) in carParamsData" :key="index">
                         <el-form-item class="item" :label="value['name']" :prop="key">
-                            <el-input style=" width: 280px;height: 32px;" v-model="paramParamsData[key as never]" />
+                            <el-input style=" width: 187px;height: 32px;" v-model="paramParamsData[key as never]" />
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
@@ -40,7 +40,7 @@
                 <el-row>
                     <el-col v-if="CalibTitleData" :span="12" v-for="(value, key, index) in CalibTitleData" :key="index">
                         <el-form-item class="item" :label="value['name']" :prop="key">
-                            <el-input style=" width: 280px;height: 32px;" v-model="CalibParamsData[key as never]" />
+                            <el-input style=" width: 187px;height: 32px;" v-model="CalibParamsData[key as never]" />
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
@@ -57,7 +57,7 @@
                 <el-row>
                     <el-col v-if="PidTitleData" :span="12" v-for="(value, key, index) in PidTitleData" :key="index">
                         <el-form-item class="item" :label="(value.name)" :prop="key">
-                            <el-input style=" width: 280px;height: 32px;" v-model="PidParamsData[key]" />
+                            <el-input style=" width: 187px;height: 32px;" v-model="PidParamsData[key]" />
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
@@ -73,23 +73,26 @@
                 :inline="true" :label-position="labelPosition" label-width="160px" :model="chaFenlist"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
-                    <el-col :span="12" :offset="6">
+                    <el-col :span="18" :offset="6">
                         <el-form-item class="item" label="差分设置：" prop="type">
-                            <el-select v-model="workPattern.type" style=" width: 280px;
+                            <el-select v-model="workPattern.type" style=" width: 187px;
                 height: 32px;">
                                 <el-option label="内置网络" :value="'1'" />
                                 <el-option label="罗网" :value="'3'" disabled />
                                 <!-- <el-option label="外置网络" :value="2"></el-option> -->
                             </el-select>
+                            <el-button :disabled="workPattern.type === '3' ? true : false" style="margin-left: 20px;"
+                                type="primary" @click="updateChafenData">设置</el-button>
+                            <el-button v-show="workPattern.type == '1'"  type="primary" text class="btn3" style=""
+                                @click="getExtendSourceNode">获取源节点</el-button>
                         </el-form-item>
                     </el-col>
-
                 </el-row>
                 <div v-show="workPattern.type != '3'">
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="服务器IP:" prop="insideHost">
-                                <el-input style=" width: 280px;
+                                <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideHost" />
                             </el-form-item>
                         </el-col>
@@ -98,7 +101,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="端口：" prop="insidePort">
-                                <el-input style=" width: 280px;
+                                <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insidePort" />
                             </el-form-item>
                         </el-col>
@@ -107,7 +110,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="源节点：" prop="insideSourceNode">
-                                <el-select style=" width: 280px;
+                                <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideSourceNode">
                                     <el-option v-for="(item, index) in sourceNode" :key="index" :label="item"
                                         :value="item" />
@@ -118,7 +121,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="用户名：" prop="insideUsername">
-                                <el-input style=" width: 280px;
+                                <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideUsername" />
                             </el-form-item>
                         </el-col>
@@ -127,22 +130,36 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="密码：" prop="insidePassword">
-                                <el-input type="password" show-password style=" width: 280px;
+                                <el-input type="password" show-password style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insidePassword" />
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <div class="buttonarea">
-                        <el-button class="btn3" style="" @click="getExtendSourceNode">获取源节点</el-button>
-                        <el-button type="primary" @click="updateChafenData">设置</el-button>
-                    </div>
                 </div>
-                <div class="datasave">
-                    数据存储：
-                    <el-switch v-auth='474' :before-change="beforeSwitchChange"
-                        @change="changeLogStatus(props.sn, chaFenlist.isTransfer)" v-model="chaFenlist.isTransfer"
-                        class="ml-2" inline-prompt active-text="开" inactive-text="关" />
-                </div>
+                <el-row style="margin-bottom: 10px;">
+                    <el-col :span="18" :offset="6">
+                        <el-form-item class="item" label="日志回传:">
+                            <el-date-picker style="width: 187px;
+                                height: 32px;" v-model="dateValue" type="daterange" range-separator="-"
+                                @change="changeDate" :disabled-date="disabledDate" start-placeholder="Start date"
+                                end-placeholder="End date" size="large" />
+                            <el-button type="primary" style="margin-left: 20px;">回传</el-button>
+                            <el-button type="primary" text class="btn3" style=""
+                                @click="toFileList">文件查看</el-button>
+                        </el-form-item>
+
+                    </el-col>
+                </el-row>
+                <el-row style="margin-bottom: 10px;">
+                    <el-col :span="12" :offset="6">
+                        <el-form-item class="item" label="数据存储:">
+                            <el-switch v-auth='474' :before-change="beforeSwitchChange"
+                                @change="changeLogStatus(props.sn, chaFenlist.isTransfer)" v-model="chaFenlist.isTransfer"
+                                class="ml-2" inline-prompt active-text="开" inactive-text="关" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
             </el-form>
 
             <el-form ref="formLabelAlignRef" :validate-on-rule-change="false" v-show="activeIndex == '6'" :rules="rules"
@@ -178,7 +195,7 @@
                 <el-row style="margin-bottom: 20px;">
                     <el-col :span="12" :offset="6">
                         <el-form-item class="item" label="版本选择：" prop="filename">
-                            <el-select style=" width: 280px;
+                            <el-select style=" width: 187px;
                 height: 32px;" v-model="formLabelAlign.filename">
                                 <el-option v-for="(item, index) in productList" :key="index" :value="index"
                                     :label="item.filename"></el-option>
@@ -192,7 +209,7 @@
                 </div>
             </el-form>
 
-            <el-form v-show="activeIndex == '7'" :validate-on-rule-change="false" :rules="rules" :inline="true"
+            <!-- <el-form v-show="activeIndex == '7'" :validate-on-rule-change="false" :rules="rules" :inline="true"
                 :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
 
@@ -212,7 +229,7 @@
                 <div class="buttonarea">
                     <el-button type="primary">回传</el-button>
                 </div>
-            </el-form>
+            </el-form> -->
         </div>
     </el-dialog>
 </template>
@@ -225,7 +242,9 @@ import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCa
 import { carNewList_API, logOpen_API } from '@/api/machineryList/index'
 import { pageInfo } from '@/api/machineryList/type'
 import type { TabsPaneContext } from 'element-plus'
+import { useRouter } from 'vue-router'
 
+const router = useRouter();
 const activeName = ref('1')
 const handleClick = (tab: TabsPaneContext) => {
     activeIndex.value = tab.props.name as never
@@ -243,6 +262,7 @@ const carParamsData = ref<any | null>([])
 const CalibTitleData = ref<any | null>([])
 const PidTitleData = ref<any | null>([])
 const productList = ref<GetcarProductpackageObj[]>([])
+
 const pageInfo = reactive<pageInfo>({
     key: '',
     currentPage: 1,
@@ -330,6 +350,15 @@ const formLabelAlign = reactive({
     pid: '11001',
     filename: 0
 })
+// 文件存储
+const toFileList = () => {
+    router.push({
+        path: 'machineryList/file', query: {
+            pid: chaFenlist.value.type == 4 ? 9004 : "",
+            sn: props.sn,
+        }
+    })
+}
 const switchStatus = ref<boolean>(false)
 const paramDescribeList = ref<paramDescribeObj>({
     version: '',
@@ -804,9 +833,11 @@ const formartDate = (val: Date) => {
 </script>
 <style lang="scss" scoped>
 .datasave {
-   width: 100%;
-   
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
+
 .top {
     position: absolute;
     top: 61px;
@@ -840,17 +871,15 @@ const formartDate = (val: Date) => {
     min-height: 336px;
 
     .mktitle {
-        position: absolute;
-        top: 0px;
-        left: 417px;
-        width: 96px;
-        height: 24px;
-        opacity: 1;
+       display: flex;
+       width: 100%;
+       justify-content: center;
         /** 文本1 */
         font-size: 16px;
         font-weight: 400;
         letter-spacing: 0px;
         line-height: 23.17px;
+        
     }
 
     :deep(.item .el-form-item__label) {

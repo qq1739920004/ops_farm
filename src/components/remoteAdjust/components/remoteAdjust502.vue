@@ -12,9 +12,9 @@
                 <el-tab-pane label="校准参数" name="2"></el-tab-pane>
                 <el-tab-pane label="基本参数" name="3"></el-tab-pane>
                 <el-tab-pane label="高级参数1" name="4"></el-tab-pane>
-                <el-tab-pane label="差分设置" name="5" @click="gotoChafen"></el-tab-pane>
                 <el-tab-pane label="在线升级" name="6"></el-tab-pane>
-                <el-tab-pane label="日志回传" name="7"></el-tab-pane>
+                <el-tab-pane label="远程设置" name="5" @click="gotoChafen"></el-tab-pane>
+                <!-- <el-tab-pane label="日志回传" name="7"></el-tab-pane> -->
             </el-tabs>
 
         </div>
@@ -36,9 +36,9 @@
                     <el-button type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
-            <el-form :validate-on-rule-change="false" ref="calibFormRef" v-show="activeName == '2'"
-                :rules="CalibParamRules" :inline="true" :label-position="labelPosition" label-width="160px"
-                :model="CalibParamsData" style="max-width: 1012px;margin-bottom:20px">
+            <el-form :validate-on-rule-change="false" ref="calibFormRef" v-show="activeName == '2'" :rules="CalibParamRules"
+                :inline="true" :label-position="labelPosition" label-width="160px" :model="CalibParamsData"
+                style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col v-if="CalibTitleData" :span="12" v-for="(value, key, index) in CalibTitleData" :key="index">
                         <el-form-item class="item" :label="value.name" :prop="key">
@@ -88,27 +88,30 @@
                     <el-button type="primary" @click="updateAdvanced1Params">确定</el-button>
                 </div>
             </el-form>
-            <el-form :validate-on-rule-change="false" v-show="activeName == '5'" ref="moudleRef" :rules="rules"
+            <el-form ref="moudleRef" :validate-on-rule-change="false" v-show="activeName == '5'" :rules="rules"
                 :inline="true" :label-position="labelPosition" label-width="160px" :model="chaFenlist"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
-                    <el-col :span="12" :offset="6">
-                        <el-form-item class="item" label="工作模式：" prop="type">
-                            <el-select v-model="workPattern.type" style=" width: 280px;
+                    <el-col :span="18" :offset="6">
+                        <el-form-item class="item" label="差分设置：" prop="type">
+                            <el-select v-model="workPattern.type" style=" width: 187px;
                 height: 32px;">
                                 <el-option label="内置网络" :value="'1'" />
                                 <el-option label="罗网" :value="'3'" disabled />
                                 <!-- <el-option label="外置网络" :value="2"></el-option> -->
                             </el-select>
+                            <el-button :disabled="workPattern.type === '3' ? true : false" style="margin-left: 20px;"
+                                type="primary" @click="updateChafenData">设置</el-button>
+                            <el-button v-show="workPattern.type == '1'"  type="primary" text class="btn3" style=""
+                                @click="getExtendSourceNode">获取源节点</el-button>
                         </el-form-item>
                     </el-col>
-
                 </el-row>
                 <div v-show="workPattern.type != '3'">
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="服务器IP:" prop="insideHost">
-                                <el-input style=" width: 280px;
+                                <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideHost" />
                             </el-form-item>
                         </el-col>
@@ -117,7 +120,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="端口：" prop="insidePort">
-                                <el-input style=" width: 280px;
+                                <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insidePort" />
                             </el-form-item>
                         </el-col>
@@ -126,7 +129,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="源节点：" prop="insideSourceNode">
-                                <el-select style=" width: 280px;
+                                <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideSourceNode">
                                     <el-option v-for="(item, index) in sourceNode" :key="index" :label="item"
                                         :value="item" />
@@ -137,7 +140,7 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="用户名：" prop="insideUsername">
-                                <el-input style=" width: 280px;
+                                <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideUsername" />
                             </el-form-item>
                         </el-col>
@@ -146,16 +149,34 @@
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
                             <el-form-item class="item" label="密码：" prop="insidePassword">
-                                <el-input type="password" show-password style=" width: 280px;
+                                <el-input type="password" show-password style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insidePassword" />
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <div class="buttonarea">
-                        <el-button class="btn3" style="" @click="getExtendSourceNode">获取源节点</el-button>
-                        <el-button type="primary" @click="updateChafenData">设置</el-button>
-                    </div>
                 </div>
+                <el-row style="margin-bottom: 10px;">
+                    <el-col :span="18" :offset="6">
+                        <el-form-item class="item" label="日志回传:">
+                            <el-row>
+                                <el-col align="center">
+                                    AG502以及AG502_Android的日志回传功能暂未开放
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+
+                    </el-col>
+                </el-row>
+                <el-row style="margin-bottom: 10px;">
+                    <el-col :span="12" :offset="6">
+                        <el-form-item class="item" label="数据存储:">
+                            <el-switch v-auth='474' :before-change="beforeSwitchChange"
+                                @change="changeLogStatus(props.sn, chaFenlist.isTransfer)" v-model="chaFenlist.isTransfer"
+                                class="ml-2" inline-prompt active-text="开" inactive-text="关" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
             </el-form>
 
             <el-form :validate-on-rule-change="false" ref="formLabelAlignRef" v-show="activeName == '6'" :rules="rules"
@@ -163,19 +184,19 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col align="center">
-                        AG502以及AG302_Android的升级功能暂未开放
+                        AG502以及AG502_Android的升级功能暂未开放
                     </el-col>
                 </el-row>
             </el-form>
-            <el-form :validate-on-rule-change="false" v-show="activeName == '7'" :rules="rules" :inline="true"
+            <!-- <el-form :validate-on-rule-change="false" v-show="activeName == '7'" :rules="rules" :inline="true"
                 :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col align="center">
-                        AG302以及AG302_Android的日志回传功能暂未开放
+                        AG502以及AG502_Android的日志回传功能暂未开放
                     </el-col>
                 </el-row>
-            </el-form>
+            </el-form> -->
         </div>
     </el-dialog>
 </template>
@@ -185,7 +206,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, paramsParamObj, paramCarParamResponseData, paramcalibParamData, paramAdvanced1ParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
 import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, getSourceNode_path, updateCar_API, updateBasicParm_API, updateCalibParam_API, GetcarProductpackage_API, basicParam_API, getAdvanced1Param_API, advanced1ParamUpdate_API } from '@/api/machineryList/remoteAdjust/index'
-import { carNewList_API } from '@/api/machineryList/index'
+import { carNewList_API, logOpen_API } from '@/api/machineryList/index'
 import { pageInfo } from '@/api/machineryList/type'
 import type { TabsPaneContext } from 'element-plus'
 
@@ -339,6 +360,11 @@ const chaFenlist = ref<chaFenObj>({
 })
 // 源节点列表
 const sourceNode = ref<string[]>([])
+const switchStatus = ref(false)
+const beforeSwitchChange = () => {
+    switchStatus.value = true;
+    return switchStatus.value;
+}
 // 获取车辆参数
 const getCarParams = async (val: string) => {
     paramDescribeList.value.paramType = val
@@ -386,7 +412,18 @@ const closeRemoteAdjust = () => {
     formLabelAlignRef.value.resetFields()
     advanceFormRef.value.resetFields()
 }
-
+const changeLogStatus = async (val: string, val2: any) => {
+    if (switchStatus) {
+        console.log(val, val2);
+        try {
+            await logOpen_API({ 'sn': val, 'flag': val2 })
+            ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
+        }
+        catch {
+            ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
+        }
+    }
+}
 const openRemoteAdjust = () => {
     // 强制更改index为1
     activeName.value = '1'
