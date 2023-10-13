@@ -62,6 +62,7 @@ export interface newListObj {
     extendUsername: string,
     extendPassword: string,
     deviceId: number,
+    openRemote?: boolean
 }
 
 export interface carNewListResponseData extends ResponseData {

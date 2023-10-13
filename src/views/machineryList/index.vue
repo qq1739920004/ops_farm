@@ -8,8 +8,8 @@
                         <el-button icon="Search" @click="search" />
                     </template>
                 </el-input>
-                <el-select filterable v-if="dealerList.length > 1" class="m_2" placeholder="公司/经销商" v-model="pageInfo.companyId"
-                    @change="changeBlur">
+                <el-select filterable v-if="dealerList.length > 1" class="m_2" placeholder="公司/经销商"
+                    v-model="pageInfo.companyId" @change="changeBlur">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
                 <el-input v-if="dealerList.length == 1" class="m_2" v-model="dealerList[0].name" @change="changeBlur"
@@ -109,7 +109,14 @@ const getDealerList = async () => {
 // 获取车辆列表
 const getCarList = async () => {
     const res: carNewListResponseData = await carNewList_API(JSON.stringify(pageInfo))
-    carNewList.value = res.data.records
+    carNewList.value = res.data.records.map(item => {
+        return {
+            ...item,
+            openRemote: (item.terminalType === 'AG502' || item.terminalType === 'AG302' || item.terminalType.includes('AG360')) && item.onlineTcp === 0 && (item.driveState !== 1 && item.driveState !== 2) ? false : true,
+        }
+      
+
+    })
     total.value = res.data.total
 }
 const switchTabShow = (val: boolean) => {
