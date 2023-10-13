@@ -20,7 +20,7 @@
         <div>
           <img  src="~@/assets/systemPerceptionImage/top_number2.png" alt="" />
           <div class="word">
-            <p>{{ monitorData.todayArea }}</p>
+            <p>{{ Math.floor(monitorData.todayArea) }}</p>
             <p>今日作业面积</p>
           </div>
         </div>
@@ -117,6 +117,7 @@ defineProps({
     .top_tittle {
       height: 61px;
       display: flex;
+      padding: 0;
       justify-content: start;
       align-items: center;
       margin-bottom: 15px;
@@ -125,13 +126,15 @@ defineProps({
         align-items: center;
       }
       img:nth-child(1){
+        width: 140px;
         position: relative;
-        padding-left: 28px;
         z-index: 9;
 
       }
       img:nth-child(2){
+        width: 382px;
         position: relative;
+        left: -20px;
         z-index: 9;
       }
      

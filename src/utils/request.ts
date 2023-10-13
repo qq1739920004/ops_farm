@@ -41,7 +41,7 @@ service.interceptors.response.use(
     if (response.data instanceof ArrayBuffer || response.data instanceof Blob) {
       return response.data;
     }
-
+    console.log(response)
     // ElMessage.error(msg || '系统出错');
     return Promise.reject(new Error(message || 'Error'));
   },

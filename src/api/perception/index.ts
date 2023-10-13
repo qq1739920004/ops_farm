@@ -67,6 +67,12 @@ function getWeatherData(location: string) {
     }
   })
 }
+export function getUserAuth(){
+  return request<any, any>({
+    url:"/auth/user/getCurrentUser",
+    method:'get',
+  })
+}
 //活跃度查询
 export function getActiveData(params:timeParams) {
   return request<timeParams, CarData>({
