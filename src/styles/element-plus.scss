@@ -1,0 +1,12 @@
+.el-button.is-text:hover {
+    text-decoration: underline;
+}
+
+.el-button.is-disabled {
+    color: var(--el-color-info-light-5);
+
+}
+
+.el-button.is-disabled:hover {
+    color: var(--el-color-info-light-5);
+}

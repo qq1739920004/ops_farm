@@ -75,7 +75,7 @@
                 </div>
             </div> -->
 <template>
-    <el-dialog @open="getNewDetail"  v-model="dialogVisible" title="详情" center height="600px" width="1108px">
+    <el-dialog @open="getNewDetail" v-model="dialogVisible" title="详情" center height="600px" width="1108px">
         <div class="titleArea">
             基本信息
         </div>
@@ -159,20 +159,24 @@
 
         </div>
         <div class="titleArea">
-            时间信息
+            过期时间
         </div>
         <div class="tableData">
 
             <div class="line line3">
-                <div class="tit">创建时间:</div>
-                <div class="data">{{ NewDetail.createTime }}</div>
-                <div class="tit">更新时间:</div>
-                <div class="data">{{ NewDetail.updateTime }}</div>
-                <div class="tit">最近上线时间:</div>
-                <div class="data">{{ NewDetail.lastOnlineTime }}</div>
+                <div class="tit">罗网过期:</div>
+                <div class="data">{{ props.netDate }}</div>
+                <div class="tit">软件过期:</div>
+                <div class="data">{{ props.expirationTime }}</div>
+                <div class="tit">星基过期:</div>
+                <div class="data">{{ props.satelliteDate }}</div>
             </div>
 
 
+            <div class="line line3">
+                <div class="tit">质保过期:</div>
+                <div class="data">{{ props.warrantyDate }}</div>
+            </div>
         </div>
     </el-dialog>
 </template>
@@ -187,7 +191,10 @@ defineExpose({
     dialogVisible
 }
 )
-const props = defineProps(['carId', 'terminalType'])
+const props = defineProps(['carId', 'terminalType', "netDate",
+    "expirationTime",
+    "satelliteDate",
+    "warrantyDate"])
 const NewDetail = reactive<carNewDetailObj>({
     "id": 0,
     "onlineTcp": 0,
@@ -234,7 +241,6 @@ const getNewDetail = async () => {
 </script>
 
 <style lang="scss" scoped>
-
 .titleArea {
     text-align: left;
     font-size: 18px;

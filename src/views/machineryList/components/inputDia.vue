@@ -19,7 +19,7 @@
                                     action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :limit="1"
                                     :auto-upload="false">
                                     <template #trigger>
-                                        <el-button link>浏览</el-button>
+                                        <el-button text>浏览</el-button>
                                     </template>
                                 </el-upload>
                             </template>
@@ -29,7 +29,7 @@
             </div>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button @click="dialogVisible = false" style="color:var(--el-color-primary)" link>下载模版</el-button>
+                    <el-button @click="dialogVisible = false" style="color:var(--el-color-primary)" text>下载模版</el-button>
                     <el-button type="primary"
                         style="background-color:var(--el-color-primary);color:'#fff'; width: 100px;height: 38px;margin-left:50px"
                         @click="dialogVisible = false">
@@ -91,4 +91,5 @@ const getInputList = async () => {
     justify-content: center;
     margin-top: -20px;
 }
+
 </style>

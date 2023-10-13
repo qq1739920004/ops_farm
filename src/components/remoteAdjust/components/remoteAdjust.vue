@@ -1,7 +1,7 @@
 <!--  -->
 <template>
     <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" @close="closeRemoteAdjust" v-model="dialogVisible"
-        title="远程管理" width="1012px" height="516px" center>
+        title="远程管理" width="1012px" height="596px" center>
         <div class="top">
             <span style="margin-right: 20px;">车辆名称：{{ props.name || '/' }}</span>
             <span>车辆类型：{{ props.terminalType }}</span>
@@ -74,7 +74,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="12" :offset="6">
-                        <el-form-item class="item" label="工作模式：" prop="type">
+                        <el-form-item class="item" label="差分设置：" prop="type">
                             <el-select v-model="workPattern.type" style=" width: 280px;
                 height: 32px;">
                                 <el-option label="内置网络" :value="'1'" />
@@ -136,6 +136,12 @@
                         <el-button class="btn3" style="" @click="getExtendSourceNode">获取源节点</el-button>
                         <el-button type="primary" @click="updateChafenData">设置</el-button>
                     </div>
+                </div>
+                <div class="datasave">
+                    数据存储：
+                    <el-switch v-auth='474' :before-change="beforeSwitchChange"
+                        @change="changeLogStatus(props.sn, chaFenlist.isTransfer)" v-model="chaFenlist.isTransfer"
+                        class="ml-2" inline-prompt active-text="开" inactive-text="关" />
                 </div>
             </el-form>
 
@@ -216,7 +222,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, paramsParamObj, paramCarParamResponseData, paramcalibParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
 import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, pidParamParam_API, getSourceNode_path, updateCar_API, updatePidParm_API, updateCalibParam_API, GetcarProductpackage_API, packageUpgradeCar_API } from '@/api/machineryList/remoteAdjust/index'
-import { carNewList_API } from '@/api/machineryList/index'
+import { carNewList_API, logOpen_API } from '@/api/machineryList/index'
 import { pageInfo } from '@/api/machineryList/type'
 import type { TabsPaneContext } from 'element-plus'
 
@@ -324,12 +330,29 @@ const formLabelAlign = reactive({
     pid: '11001',
     filename: 0
 })
-
+const switchStatus = ref<boolean>(false)
 const paramDescribeList = ref<paramDescribeObj>({
     version: '',
     type: '',
     paramType: ''
 })
+// 取消首次触发change钩子
+const beforeSwitchChange = () => {
+    switchStatus.value = true;
+    return switchStatus.value;
+}
+const changeLogStatus = async (val: string, val2: any) => {
+    if (switchStatus) {
+        console.log(val, val2);
+        try {
+            await logOpen_API({ 'sn': val, 'flag': val2 })
+            ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
+        }
+        catch {
+            ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
+        }
+    }
+}
 const chaFenlist = ref<chaFenObj>({
     'codePower': true,
     'companyName': '',
@@ -780,6 +803,10 @@ const formartDate = (val: Date) => {
 }
 </script>
 <style lang="scss" scoped>
+.datasave {
+   width: 100%;
+   
+}
 .top {
     position: absolute;
     top: 61px;
@@ -807,11 +834,10 @@ const formartDate = (val: Date) => {
 }
 
 .mainContent {
-    margin-top: 40px;
+    margin-top: 52px;
     width: 100%;
-    height: 260px;
-    overflow-y: scroll;
     position: relative;
+    min-height: 336px;
 
     .mktitle {
         position: absolute;
