@@ -14,7 +14,7 @@ const useAppStore = defineStore("app", () => {
     const routes: any = ref([])
     const isDark = useDark();
     const layout = useStorage('layout', 'vertical')
-    const themeColor = useStorage('themeColor', '#67ae5b')
+    const themeColor = useStorage('themeColor', '#33B838')
     const device = ref('desktop') // 屏幕类型
     const language = useStorage("language", 'zh-cn');
     const locale = computed(() => {
