@@ -109,7 +109,7 @@ let drawer = ref(false);
 
 // 主题颜色
 const themeColors = ref<string[]>([
-  "#67ae5b",
+  "#33B838",
   "#409EFF",
   "#304156",
   "#11a983",
