@@ -399,10 +399,10 @@ const handleMessageChange = (data: any) => {
       // 	this.optionDifference.series[0].data.shift();
       // }
       // setOption
-      chartOffset.value ? chartOffset.value.setOption(optionOffset) : ''
-      chartSpeed.value ? chartSpeed.value.setOption(optionSpeed) : ''
-      chartDirection.value ? chartDirection.value.setOption(optionDirection) : ''
-      chartDifference.value ? chartDifference.value.setOption(optionDifference) : ''
+      chartOffset ? chartOffset.setOption(optionOffset) : ''
+      chartSpeed ? chartSpeed.setOption(optionSpeed) : ''
+      chartDirection ? chartDirection.setOption(optionDirection) : ''
+      chartDifference ? chartDifference.setOption(optionDifference) : ''
     }
   } catch (error) {
     console.log(error)
@@ -455,14 +455,13 @@ const beforeOpen = () => {
   initCharts()
   loadData()
 }
-
-watch(() => dialogVisible.value, () => {
-  if (dialogVisible.value == true) {
-    setInterval(() => {
-      loadData()
-    }, 6000)
-  }
-})
+watch(
+  () => props.socketData,
+  (socketData) => {
+    listenMessage(socketData)
+  },
+  { deep: true }
+);
 </script>
 
 <style lang="scss" scoped>
