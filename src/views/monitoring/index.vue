@@ -2,8 +2,13 @@
   <div class="map_container">
     <sino-map :markerData="markerData" :mapCenter="mapCenter" />
     <div class="search_box">
-      <el-autocomplete v-model="searchSn" :fetch-suggestions="querySearch" placeholder="SN、铭牌SN、车辆名、公司、电话"
-        @select="handleSelect" clearable>
+      <el-autocomplete
+        v-model="searchSn"
+        :fetch-suggestions="querySearch"
+        placeholder="SN、铭牌SN、车辆名、公司、电话"
+        @select="handleSelect"
+        clearable
+      >
         <template #suffix>
           <el-icon>
             <Search />
@@ -44,35 +49,43 @@
           <span>{{ dataStatistics.workArea?.totalArea.toFixed(2) }}</span>
           <span>累计作业(万亩)</span>
         </li>
+        <li class="bottom_li">
+          <span>{{ dataStatistics.drive?.driving }}</span>
+          <div>
+            <span>工作中</span>
+            <div></div>
+          </div>
+        </li>
+        <li class="bottom_li">
+          <span>{{ dataStatistics.drive?.standbyDevice }}</span>
+          <div>
+            <span>待机</span>
+            <div></div>
+          </div>
+        </li>
       </ul>
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
-            <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange" />
-            <SvgIcon icon="AG302" size="22" />
+            <el-checkbox
+              size="large"
+              v-model="item.checked"
+              @change="markerTypeChange"
+            />
+            <SvgIcon :icon="item.typeName" size="22" />
             <span class="label">{{ item.typeName }}</span>
           </label>
           <span class="value">{{ item.onlineCount }}</span>
         </li>
         <br />
       </ul>
-      <ul class="bottom">
-        <li>
-          <SvgIcon icon="AG302" size="22" />
-          <span class="label">工作中</span>
-          <span class="value">{{ dataStatistics.drive?.driving }}</span>
-        </li>
-        <li>
-          <SvgIcon icon="AG302_warn" size="22" />
-          <span class="label">待机</span>
-          <span class="value">{{ dataStatistics.drive?.standbyDevice }}</span>
-        </li>
-      </ul>
     </div>
-    <div :class="{
-      notice_box: true,
-      notice_box_active: notice_box_isActive,
-    }">
+    <div
+      :class="{
+        notice_box: true,
+        notice_box_active: notice_box_isActive,
+      }"
+    >
       <div class="header" @click="notice_box_isActive = !notice_box_isActive">
         <h3>状态通知</h3>
         <el-icon v-if="!notice_box_isActive" color="#fff">
@@ -84,7 +97,11 @@
       </div>
       <div class="content">
         <el-timeline>
-          <el-timeline-item v-for="(item, index) in carLogList" :key="index" :color="item.color">
+          <el-timeline-item
+            v-for="(item, index) in carLogList"
+            :key="index"
+            :color="item.color"
+          >
             <div class="item">
               <div class="l">
                 <span class="state" :style="{ color: item.color }">{{
@@ -115,10 +132,23 @@
     optionSpeed.series[0].data.push(speed as never)
     optionDirection.series[0].data.push(direction as never)
     optionDifference.series[0].data.push(diffAge as never) -->
-    <realTimeChart ref="realTime" :sn="sn" :optionOffset="optionOffset" :optionSpeed="optionSpeed"
-      :optionDirection="optionDirection" :optionDifference="optionDifference" />
-    <RemoteControl :isChange="isChange" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
-      :sn="sn" :name="name" />
+    <realTimeChart
+      ref="realTime"
+      :sn="sn"
+      :optionOffset="optionOffset"
+      :optionSpeed="optionSpeed"
+      :optionDirection="optionDirection"
+      :optionDifference="optionDifference"
+    />
+    <RemoteControl
+      :isChange="isChange"
+      :terminalType="terminalType"
+      :version="version"
+      :type="type"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    />
   </div>
 </template>
 
@@ -176,85 +206,84 @@ const mapCenter = reactive<any>({
   markerId: "",
 });
 
-
 const optionOffset = {
   grid: {
     top: 30,
     left: 40,
     right: 30,
     bottom: 50,
-    containLabel: true
+    containLabel: true,
   },
   tooltip: {
-    trigger: 'axis',
+    trigger: "axis",
   },
   xAxis: {
-    type: 'category',
+    type: "category",
     splitLine: {
-      show: false
+      show: false,
     },
     axisTick: {
-      inside: true
+      inside: true,
     },
     axisLine: {
-      onZero: true
+      onZero: true,
     },
     data: [],
-    name: '时间s',
-    nameLocation: 'center',
-    nameGap: 30
+    name: "时间s",
+    nameLocation: "center",
+    nameGap: 30,
   },
   yAxis: {
-    type: 'value',
+    type: "value",
     splitLine: {
-      show: false
+      show: false,
     },
     axisTick: {
       show: true,
       inside: true,
-      alignWithLabel: true
+      alignWithLabel: true,
     },
     axisLine: {
       show: true,
     },
 
-    name: '横向偏差(cm)',
-    position: 'left',
+    name: "横向偏差(cm)",
+    position: "left",
     nameTextStyle: {
-      align: 'center'
-    }
+      align: "center",
+    },
   },
   visualMap: {
     show: false,
-    pieces: [{ gte: -3, lte: 3, color: '#25C114' }],
+    pieces: [{ gte: -3, lte: 3, color: "#25C114" }],
     outOfRange: {
-      color: '#F5222D'
-    }
+      color: "#F5222D",
+    },
   },
   series: [
     {
-      name: '横向偏差',
-      type: 'line',
+      name: "横向偏差",
+      type: "line",
       showSymbol: false,
       data: [],
       emphasis: {
-        scale: false
+        scale: false,
       },
       markLine: {
         silent: true,
-        symbol: ['none', 'none'],
+        symbol: ["none", "none"],
         data: [
           {
-            yAxis: 3
+            yAxis: 3,
           },
           {
-            yAxis: -3
-          }
-        ]
-      }
-    }
-  ]
-}
+            yAxis: -3,
+          },
+        ],
+      },
+    },
+  ],
+};
 
 // 速度echarts配置
 const optionSpeed = {
@@ -263,79 +292,79 @@ const optionSpeed = {
     left: 40,
     right: 30,
     bottom: 50,
-    containLabel: true
+    containLabel: true,
   },
   tooltip: {
-    trigger: 'axis',
+    trigger: "axis",
     axisPointer: {
-      type: 'none'
+      type: "none",
     },
     formatter(params: any) {
-      let result = ''
+      let result = "";
       let dotHtml =
-        '<span style="display:flex;align-items:center"><span style="display:inline-block;line-height:8px;margin-right:5px;border-radius:8px;border:2px #fff solid;width:8px;height:8px;background-color:#666666;"></span>'
+        '<span style="display:flex;align-items:center"><span style="display:inline-block;line-height:8px;margin-right:5px;border-radius:8px;border:2px #fff solid;width:8px;height:8px;background-color:#666666;"></span>';
       result +=
         params[0].axisValue +
-        '<br>' +
+        "<br>" +
         dotHtml +
-        '<span>' +
+        "<span>" +
         params[0].seriesName +
-        ':' +
+        ":" +
         params[0].value +
-        '</span></span>'
-      return result
-    }
+        "</span></span>";
+      return result;
+    },
   },
-  color: ['#666666'],
+  color: ["#666666"],
   xAxis: {
-    type: 'category',
+    type: "category",
     splitLine: {
-      show: false
+      show: false,
     },
     axisTick: {
       show: true,
       inside: true,
-      alignWithLabel: true
+      alignWithLabel: true,
     },
     axisLine: {
-      onZero: false
+      onZero: false,
     },
     data: [],
-    name: '时间s',
-    nameLocation: 'center',
-    nameGap: 30
+    name: "时间s",
+    nameLocation: "center",
+    nameGap: 30,
   },
   yAxis: {
-    type: 'value',
+    type: "value",
     splitLine: {
-      show: false
+      show: false,
     },
     axisTick: {
       show: true,
       inside: true,
-      alignWithLabel: true
+      alignWithLabel: true,
     },
     axisLine: {
       show: true,
     },
-    name: '速度(km/h)',
-    position: 'left',
+    name: "速度(km/h)",
+    position: "left",
     nameTextStyle: {
-      align: 'center'
-    }
+      align: "center",
+    },
   },
   series: [
     {
-      name: '速度',
-      type: 'line',
+      name: "速度",
+      type: "line",
       showSymbol: false,
       data: [],
       emphasis: {
-        scale: false
-      }
-    }
-  ]
-}
+        scale: false,
+      },
+    },
+  ],
+};
 
 // 航向角echarts配置
 const optionDirection = {
@@ -344,62 +373,62 @@ const optionDirection = {
     left: 40,
     right: 30,
     bottom: 50,
-    containLabel: true
+    containLabel: true,
   },
   tooltip: {
-    trigger: 'axis',
+    trigger: "axis",
     axisPointer: {
-      type: 'none'
-    }
+      type: "none",
+    },
   },
-  color: ['#409EFF'],
+  color: ["#409EFF"],
   xAxis: {
-    type: 'category',
+    type: "category",
     splitLine: {
-      show: false
+      show: false,
     },
     axisTick: {
-      inside: true
+      inside: true,
     },
     axisLine: {
-      onZero: false
+      onZero: false,
     },
     data: [],
-    name: '时间s',
-    nameLocation: 'center',
-    nameGap: 30
+    name: "时间s",
+    nameLocation: "center",
+    nameGap: 30,
   },
   yAxis: {
-    type: 'value',
+    type: "value",
     splitLine: {
-      show: false
+      show: false,
     },
     axisTick: {
       show: true,
       inside: true,
-      alignWithLabel: true
+      alignWithLabel: true,
     },
     axisLine: {
       show: true,
     },
-    name: '航向角(°)',
-    position: 'left',
+    name: "航向角(°)",
+    position: "left",
     nameTextStyle: {
-      align: 'center'
-    }
+      align: "center",
+    },
   },
   series: [
     {
-      name: '航向角',
-      type: 'line',
+      name: "航向角",
+      type: "line",
       showSymbol: false,
       data: [],
       emphasis: {
-        scale: false
-      }
-    }
-  ]
-}
+        scale: false,
+      },
+    },
+  ],
+};
 
 // 差分龄期echarts配置
 const optionDifference = {
@@ -408,62 +437,62 @@ const optionDifference = {
     left: 40,
     right: 30,
     bottom: 50,
-    containLabel: true
+    containLabel: true,
   },
   tooltip: {
-    trigger: 'axis',
+    trigger: "axis",
     axisPointer: {
-      type: 'none'
-    }
+      type: "none",
+    },
   },
-  color: ['#409EFF'],
+  color: ["#409EFF"],
   xAxis: {
-    type: 'category',
+    type: "category",
     splitLine: {
-      show: false
+      show: false,
     },
     axisTick: {
-      inside: true
+      inside: true,
     },
     axisLine: {
-      onZero: false
+      onZero: false,
     },
     data: [],
-    name: '时间s',
-    nameLocation: 'center',
-    nameGap: 30
+    name: "时间s",
+    nameLocation: "center",
+    nameGap: 30,
   },
   yAxis: {
-    type: 'value',
+    type: "value",
     splitLine: {
-      show: false
+      show: false,
     },
     axisTick: {
       show: true,
       inside: true,
-      alignWithLabel: true
+      alignWithLabel: true,
     },
     axisLine: {
       show: true,
     },
-    name: '差分龄期(s)',
-    position: 'left',
+    name: "差分龄期(s)",
+    position: "left",
     nameTextStyle: {
-      align: 'center'
-    }
+      align: "center",
+    },
   },
   series: [
     {
-      name: '差分龄期',
-      type: 'line',
+      name: "差分龄期",
+      type: "line",
       showSymbol: false,
       data: [],
       emphasis: {
-        scale: false
-      }
-    }
-  ]
-}
+        scale: false,
+      },
+    },
+  ],
+};
 // @ts-ignore
 window.goMachineryList_markerPopup = goMachineryList_markerPopup;
 // @ts-ignore
@@ -530,26 +559,28 @@ function handleSelect(item: any) {
 
 // 处理socketData数据
 function handleSocketData(socketData: any) {
-  if (socketData.type === 'farmPt' &&
-    socketData.module === 'farm' &&
-    socketData.action === 'online') {
+  if (
+    socketData.type === "farmPt" &&
+    socketData.module === "farm" &&
+    socketData.action === "online"
+  ) {
     if (socketData.deviceSn === sn.value) {
       // 过滤非自动驾驶驾驶状态的值；
       if (socketData.data.driveState === 0) {
-        socketData.data.xOffset = null
+        socketData.data.xOffset = null;
         // data.data.speed = null;
         // data.data.heading = null;
       }
-      let time = dateTimeTrans(socketData.data.gnssTime).slice(11)
-      let xOffset = socketData.data.xOffset
-      let speed = socketData.data.speed
-      let direction = socketData.data.heading
-      let diffAge = socketData.data.diffAge
+      let time = dateTimeTrans(socketData.data.gnssTime).slice(11);
+      let xOffset = socketData.data.xOffset;
+      let speed = socketData.data.speed;
+      let direction = socketData.data.heading;
+      let diffAge = socketData.data.diffAge;
       // x轴数据更新
-      optionOffset.xAxis.data.push(time as never)
-      optionSpeed.xAxis.data.push(time as never)
-      optionDirection.xAxis.data.push(time as never)
-      optionDifference.xAxis.data.push(time as never)
+      optionOffset.xAxis.data.push(time as never);
+      optionSpeed.xAxis.data.push(time as never);
+      optionDirection.xAxis.data.push(time as never);
+      optionDifference.xAxis.data.push(time as never);
       // x轴数据
       // if(this.optionOffset.xAxis.data.length >= 30) {
       // 	this.optionOffset.xAxis.data.shift();
@@ -558,10 +589,10 @@ function handleSocketData(socketData: any) {
       // 	this.optionDifference.xAxis.data.shift();
       // }
       // 系列数据
-      optionOffset.series[0].data.push(xOffset as never)
-      optionSpeed.series[0].data.push(speed as never)
-      optionDirection.series[0].data.push(direction as never)
-      optionDifference.series[0].data.push(diffAge as never)
+      optionOffset.series[0].data.push(xOffset as never);
+      optionSpeed.series[0].data.push(speed as never);
+      optionDirection.series[0].data.push(direction as never);
+      optionDifference.series[0].data.push(diffAge as never);
       // 系列数据
       // if(this.optionOffset.series[0].data.length >= 30) {
       // 	this.optionOffset.series[0].data.shift();
@@ -617,7 +648,7 @@ function handleSocketData(socketData: any) {
     dataStatistics.value.device.totalDevice = data.totalDevice;
     dataStatistics.value.device.onlineDevice = data.onlineDevice;
     const typeCounts = data.typeCounts;
-    dataStatistics.type.forEach((item: any, index: number) => {
+    dataStatistics.value.type.forEach((item: any, index: number) => {
       item.onlineCount = typeCounts[index].onlineCount;
     });
   }
@@ -804,8 +835,8 @@ function createMarkerPopup(item: any) {
             <div class="r">
               <div class="label">SN:</div>
               <div class="value"  style="cursor: pointer;text-decoration: underline;" onclick='goMachineryList_markerPopup(${JSON.stringify(
-    item
-  )})'>${item.sn}</div>
+                item
+              )})'>${item.sn}</div>
             </div>
           </li>
           <li>
@@ -844,15 +875,17 @@ function createMarkerPopup(item: any) {
             <div class="l">
               <div class="label">解状态:</div>
               <div class="value">
-                <span class='status ${item.solStat == 4 ? "status_3" : "status_0"
-    }'></span>
+                <span class='status ${
+                  item.solStat == 4 ? "status_3" : "status_0"
+                }'></span>
                 <span>${snTypeReflect[item.solStat] || "未知解"}</span>
               </div>
             </div>
             <div class="r">
               <div class="label">差分链:</div>
-              <div class="value">${diffSource[item.diffSource] || "/"} (${item.diffAge
-    }s)</div>
+              <div class="value">${diffSource[item.diffSource] || "/"} (${
+    item.diffAge
+  }s)</div>
             </div>
           </li>
           <li>
@@ -901,22 +934,24 @@ function createMarkerPopup(item: any) {
         </ul>
         <ul class="btns_container">
           <li>
-            <div class="btn ${!openRemote ? "disabled" : ""
-    }" onclick='openRemote_markerPopup(${JSON.stringify(
-      item
-    )})'>远程管理</div>
+            <div class="btn ${
+              !openRemote ? "disabled" : ""
+            }" onclick='openRemote_markerPopup(${JSON.stringify(
+    item
+  )})'>远程管理</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
-      item
-    )})'>历史轨迹</div>
+              item
+            )})'>历史轨迹</div>
           </li>
           <li>
-            <div class="btn ${item.driveState == 0 ? "disabled" : ""
-    }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
-      item
-    )})'>实时驾驶趋势图</div>
+            <div class="btn ${
+              item.driveState == 0 ? "disabled" : ""
+            }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
+    item
+  )})'>实时驾驶趋势图</div>
             <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
-      item
-    )})'>历史驾驶趋势图</div>
+              item
+            )})'>历史驾驶趋势图</div>
           </li>
         </ul>
       </div>`;
@@ -997,16 +1032,20 @@ function openRemote_markerPopup(arg: any) {
 // 格式除处理
 const dateTimeTrans = (timestamp: number) => {
   try {
-    if (!timestamp) return '/'
+    if (!timestamp) return "/";
     let dateObj = timestamp ? new Date(timestamp) : new Date();
-    let dateString = dateObj.toLocaleDateString().split('/').map(i => i.padStart(2, '0')).join('-');
+    let dateString = dateObj
+      .toLocaleDateString()
+      .split("/")
+      .map((i) => i.padStart(2, "0"))
+      .join("-");
     let timeString = dateObj.toTimeString().slice(0, 8);
-    return dateString + ' ' + timeString;
+    return dateString + " " + timeString;
   } catch (error) {
     console.log(error);
-    return '/';
+    return "/";
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -1069,6 +1108,32 @@ const dateTimeTrans = (timestamp: number) => {
           font-weight: 700;
         }
       }
+      .bottom_li {
+        div {
+          display: flex;
+          align-items: center;
+          span {
+            color: #00baad;
+            font-size: 14px;
+            font-weight: 700;
+            margin-right: 6px;
+          }
+          div {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color:#43CF7C;
+          }
+        }
+      }
+      .bottom_li:last-child {
+        div {
+          div {
+            background-color: #F7C23C;
+          }
+        }
+      }
+      
     }
 
     .center,
