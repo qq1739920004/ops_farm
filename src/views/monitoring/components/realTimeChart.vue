@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { driveStatusPath_API } from '@/api/monitoring/index'
 import { driveStatusPathResponseData } from '@/api/monitoring/type'
 import * as echarts from 'echarts'
@@ -36,18 +36,10 @@ const props = defineProps({
   sn: {
     type: String,
     default: ''
-  },optionOffset:{
-    type:Object,
-    default:{}
-  },optionSpeed:{
-    type:Object,
-    default:{}
-  },optionDirection:{
-    type:Object,
-    default:{}
-  },optionDifference:{
-    type:Object,
-    default:{}
+  },
+  socketData: {
+    type: Object,
+    default: {}
   }
 });
 const dialogVisible = ref<boolean>(false)
@@ -61,293 +53,293 @@ defineExpose({
 }
 )
 
-// const optionOffset = {
-//   grid: {
-//     top: 30,
-//     left: 40,
-//     right: 30,
-//     bottom: 50,
-//     containLabel: true
-//   },
-//   tooltip: {
-//     trigger: 'axis',
-//   },
-//   xAxis: {
-//     type: 'category',
-//     splitLine: {
-//       show: false
-//     },
-//     axisTick: {
-//       inside: true
-//     },
-//     axisLine: {
-//       onZero: true
-//     },
-//     data: [],
-//     name: '时间s',
-//     nameLocation: 'center',
-//     nameGap: 30
-//   },
-//   yAxis: {
-//     type: 'value',
-//     splitLine: {
-//       show: false
-//     },
-//     axisTick: {
-//       show: true,
-//       inside: true,
-//       alignWithLabel: true
-//     },
-//     axisLine: {
-//       show: true,
-//     },
+const optionOffset = {
+  grid: {
+    top: 30,
+    left: 40,
+    right: 30,
+    bottom: 50,
+    containLabel: true
+  },
+  tooltip: {
+    trigger: 'axis',
+  },
+  xAxis: {
+    type: 'category',
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      inside: true
+    },
+    axisLine: {
+      onZero: true
+    },
+    data: [],
+    name: '时间s',
+    nameLocation: 'center',
+    nameGap: 30
+  },
+  yAxis: {
+    type: 'value',
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      show: true,
+      inside: true,
+      alignWithLabel: true
+    },
+    axisLine: {
+      show: true,
+    },
 
-//     name: '横向偏差(cm)',
-//     position: 'left',
-//     nameTextStyle: {
-//       align: 'center'
-//     }
-//   },
-//   visualMap: {
-//     show: false,
-//     pieces: [{ gte: -3, lte: 3, color: '#25C114' }],
-//     outOfRange: {
-//       color: '#F5222D'
-//     }
-//   },
-//   series: [
-//     {
-//       name: '横向偏差',
-//       type: 'line',
-//       showSymbol: false,
-//       data: [],
-//       emphasis: {
-//         scale: false
-//       },
-//       markLine: {
-//         silent: true,
-//         symbol: ['none', 'none'],
-//         data: [
-//           {
-//             yAxis: 3
-//           },
-//           {
-//             yAxis: -3
-//           }
-//         ]
-//       }
-//     }
-//   ]
-// }
+    name: '横向偏差(cm)',
+    position: 'left',
+    nameTextStyle: {
+      align: 'center'
+    }
+  },
+  visualMap: {
+    show: false,
+    pieces: [{ gte: -3, lte: 3, color: '#25C114' }],
+    outOfRange: {
+      color: '#F5222D'
+    }
+  },
+  series: [
+    {
+      name: '横向偏差',
+      type: 'line',
+      showSymbol: false,
+      data: [],
+      emphasis: {
+        scale: false
+      },
+      markLine: {
+        silent: true,
+        symbol: ['none', 'none'],
+        data: [
+          {
+            yAxis: 3
+          },
+          {
+            yAxis: -3
+          }
+        ]
+      }
+    }
+  ]
+}
 
-// // 速度echarts配置
-// const optionSpeed = {
-//   grid: {
-//     top: 30,
-//     left: 40,
-//     right: 30,
-//     bottom: 50,
-//     containLabel: true
-//   },
-//   tooltip: {
-//     trigger: 'axis',
-//     axisPointer: {
-//       type: 'none'
-//     },
-//     formatter(params: any) {
-//       let result = ''
-//       let dotHtml =
-//         '<span style="display:flex;align-items:center"><span style="display:inline-block;line-height:8px;margin-right:5px;border-radius:8px;border:2px #fff solid;width:8px;height:8px;background-color:#666666;"></span>'
-//       result +=
-//         params[0].axisValue +
-//         '<br>' +
-//         dotHtml +
-//         '<span>' +
-//         params[0].seriesName +
-//         ':' +
-//         params[0].value +
-//         '</span></span>'
-//       return result
-//     }
-//   },
-//   color: ['#666666'],
-//   xAxis: {
-//     type: 'category',
-//     splitLine: {
-//       show: false
-//     },
-//     axisTick: {
-//       show: true,
-//       inside: true,
-//       alignWithLabel: true
-//     },
-//     axisLine: {
-//       onZero: false
-//     },
-//     data: [],
-//     name: '时间s',
-//     nameLocation: 'center',
-//     nameGap: 30
-//   },
-//   yAxis: {
-//     type: 'value',
-//     splitLine: {
-//       show: false
-//     },
-//     axisTick: {
-//       show: true,
-//       inside: true,
-//       alignWithLabel: true
-//     },
-//     axisLine: {
-//       show: true,
-//     },
-//     name: '速度(km/h)',
-//     position: 'left',
-//     nameTextStyle: {
-//       align: 'center'
-//     }
-//   },
-//   series: [
-//     {
-//       name: '速度',
-//       type: 'line',
-//       showSymbol: false,
-//       data: [],
-//       emphasis: {
-//         scale: false
-//       }
-//     }
-//   ]
-// }
+// 速度echarts配置
+const optionSpeed = {
+  grid: {
+    top: 30,
+    left: 40,
+    right: 30,
+    bottom: 50,
+    containLabel: true
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'none'
+    },
+    formatter(params: any) {
+      let result = ''
+      let dotHtml =
+        '<span style="display:flex;align-items:center"><span style="display:inline-block;line-height:8px;margin-right:5px;border-radius:8px;border:2px #fff solid;width:8px;height:8px;background-color:#666666;"></span>'
+      result +=
+        params[0].axisValue +
+        '<br>' +
+        dotHtml +
+        '<span>' +
+        params[0].seriesName +
+        ':' +
+        params[0].value +
+        '</span></span>'
+      return result
+    }
+  },
+  color: ['#666666'],
+  xAxis: {
+    type: 'category',
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      show: true,
+      inside: true,
+      alignWithLabel: true
+    },
+    axisLine: {
+      onZero: false
+    },
+    data: [],
+    name: '时间s',
+    nameLocation: 'center',
+    nameGap: 30
+  },
+  yAxis: {
+    type: 'value',
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      show: true,
+      inside: true,
+      alignWithLabel: true
+    },
+    axisLine: {
+      show: true,
+    },
+    name: '速度(km/h)',
+    position: 'left',
+    nameTextStyle: {
+      align: 'center'
+    }
+  },
+  series: [
+    {
+      name: '速度',
+      type: 'line',
+      showSymbol: false,
+      data: [],
+      emphasis: {
+        scale: false
+      }
+    }
+  ]
+}
 
-// // 航向角echarts配置
-// const optionDirection = {
-//   grid: {
-//     top: 30,
-//     left: 40,
-//     right: 30,
-//     bottom: 50,
-//     containLabel: true
-//   },
-//   tooltip: {
-//     trigger: 'axis',
-//     axisPointer: {
-//       type: 'none'
-//     }
-//   },
-//   color: ['#409EFF'],
-//   xAxis: {
-//     type: 'category',
-//     splitLine: {
-//       show: false
-//     },
-//     axisTick: {
-//       inside: true
-//     },
-//     axisLine: {
-//       onZero: false
-//     },
-//     data: [],
-//     name: '时间s',
-//     nameLocation: 'center',
-//     nameGap: 30
-//   },
-//   yAxis: {
-//     type: 'value',
-//     splitLine: {
-//       show: false
-//     },
-//     axisTick: {
-//       show: true,
-//       inside: true,
-//       alignWithLabel: true
-//     },
-//     axisLine: {
-//       show: true,
-//     },
-//     name: '航向角(°)',
-//     position: 'left',
-//     nameTextStyle: {
-//       align: 'center'
-//     }
-//   },
-//   series: [
-//     {
-//       name: '航向角',
-//       type: 'line',
-//       showSymbol: false,
-//       data: [],
-//       emphasis: {
-//         scale: false
-//       }
-//     }
-//   ]
-// }
+// 航向角echarts配置
+const optionDirection = {
+  grid: {
+    top: 30,
+    left: 40,
+    right: 30,
+    bottom: 50,
+    containLabel: true
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'none'
+    }
+  },
+  color: ['#409EFF'],
+  xAxis: {
+    type: 'category',
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      inside: true
+    },
+    axisLine: {
+      onZero: false
+    },
+    data: [],
+    name: '时间s',
+    nameLocation: 'center',
+    nameGap: 30
+  },
+  yAxis: {
+    type: 'value',
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      show: true,
+      inside: true,
+      alignWithLabel: true
+    },
+    axisLine: {
+      show: true,
+    },
+    name: '航向角(°)',
+    position: 'left',
+    nameTextStyle: {
+      align: 'center'
+    }
+  },
+  series: [
+    {
+      name: '航向角',
+      type: 'line',
+      showSymbol: false,
+      data: [],
+      emphasis: {
+        scale: false
+      }
+    }
+  ]
+}
 
-// // 差分龄期echarts配置
-// const optionDifference = {
-//   grid: {
-//     top: 30,
-//     left: 40,
-//     right: 30,
-//     bottom: 50,
-//     containLabel: true
-//   },
-//   tooltip: {
-//     trigger: 'axis',
-//     axisPointer: {
-//       type: 'none'
-//     }
-//   },
-//   color: ['#409EFF'],
-//   xAxis: {
-//     type: 'category',
-//     splitLine: {
-//       show: false
-//     },
-//     axisTick: {
-//       inside: true
-//     },
-//     axisLine: {
-//       onZero: false
-//     },
-//     data: [],
-//     name: '时间s',
-//     nameLocation: 'center',
-//     nameGap: 30
-//   },
-//   yAxis: {
-//     type: 'value',
-//     splitLine: {
-//       show: false
-//     },
-//     axisTick: {
-//       show: true,
-//       inside: true,
-//       alignWithLabel: true
-//     },
-//     axisLine: {
-//       show: true,
-//     },
-//     name: '差分龄期(s)',
-//     position: 'left',
-//     nameTextStyle: {
-//       align: 'center'
-//     }
-//   },
-//   series: [
-//     {
-//       name: '差分龄期',
-//       type: 'line',
-//       showSymbol: false,
-//       data: [],
-//       emphasis: {
-//         scale: false
-//       }
-//     }
-//   ]
-// }
+// 差分龄期echarts配置
+const optionDifference = {
+  grid: {
+    top: 30,
+    left: 40,
+    right: 30,
+    bottom: 50,
+    containLabel: true
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'none'
+    }
+  },
+  color: ['#409EFF'],
+  xAxis: {
+    type: 'category',
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      inside: true
+    },
+    axisLine: {
+      onZero: false
+    },
+    data: [],
+    name: '时间s',
+    nameLocation: 'center',
+    nameGap: 30
+  },
+  yAxis: {
+    type: 'value',
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      show: true,
+      inside: true,
+      alignWithLabel: true
+    },
+    axisLine: {
+      show: true,
+    },
+    name: '差分龄期(s)',
+    position: 'left',
+    nameTextStyle: {
+      align: 'center'
+    }
+  },
+  series: [
+    {
+      name: '差分龄期',
+      type: 'line',
+      showSymbol: false,
+      data: [],
+      emphasis: {
+        scale: false
+      }
+    }
+  ]
+}
 // 初始化echarts实例
 const initCharts = () => {
   chartOffset = echarts.init(document.getElementById('xoffset'))
@@ -368,54 +360,54 @@ const dateTimeTrans = (timestamp: number) => {
     return '/';
   }
 }
-// const handleMessageChange = (data: any) => {
-//   try {
-//     if (data.deviceSn === props.sn) {
-//       // 过滤非自动驾驶驾驶状态的值；
-//       if (data.data.driveState === 0) {
-//         data.data.xOffset = null
-//         // data.data.speed = null;
-//         // data.data.heading = null;
-//       }
-//       let time = dateTimeTrans(data.data.gnssTime).slice(11)
-//       let xOffset = data.data.xOffset
-//       let speed = data.data.speed
-//       let direction = data.data.heading
-//       let diffAge = data.data.diffAge
-//       // x轴数据更新
-//       optionOffset.xAxis.data.push(time as never)
-//       optionSpeed.xAxis.data.push(time as never)
-//       optionDirection.xAxis.data.push(time as never)
-//       optionDifference.xAxis.data.push(time as never)
-//       // x轴数据
-//       // if(this.optionOffset.xAxis.data.length >= 30) {
-//       // 	this.optionOffset.xAxis.data.shift();
-//       // 	this.optionSpeed.xAxis.data.shift();
-//       // 	this.optionDirection.xAxis.data.shift();
-//       // 	this.optionDifference.xAxis.data.shift();
-//       // }
-//       // 系列数据
-//       optionOffset.series[0].data.push(xOffset as never)
-//       optionSpeed.series[0].data.push(speed as never)
-//       optionDirection.series[0].data.push(direction as never)
-//       optionDifference.series[0].data.push(diffAge as never)
-//       // 系列数据
-//       // if(this.optionOffset.series[0].data.length >= 30) {
-//       // 	this.optionOffset.series[0].data.shift();
-//       // 	this.optionSpeed.series[0].data.shift();
-//       // 	this.optionDirection.series[0].data.shift();
-//       // 	this.optionDifference.series[0].data.shift();
-//       // }
-//       // setOption
-//       chartOffset.value ? chartOffset.value.setOption(optionOffset) : ''
-//       chartSpeed.value ? chartSpeed.value.setOption(optionSpeed) : ''
-//       chartDirection.value ? chartDirection.value.setOption(optionDirection) : ''
-//       chartDifference.value ? chartDifference.value.setOption(optionDifference) : ''
-//     }
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
+const handleMessageChange = (data: any) => {
+  try {
+    if (data.deviceSn === props.sn) {
+      // 过滤非自动驾驶驾驶状态的值；
+      if (data.data.driveState === 0) {
+        data.data.xOffset = null
+        // data.data.speed = null;
+        // data.data.heading = null;
+      }
+      let time = dateTimeTrans(data.data.gnssTime).slice(11)
+      let xOffset = data.data.xOffset
+      let speed = data.data.speed
+      let direction = data.data.heading
+      let diffAge = data.data.diffAge
+      // x轴数据更新
+      optionOffset.xAxis.data.push(time as never)
+      optionSpeed.xAxis.data.push(time as never)
+      optionDirection.xAxis.data.push(time as never)
+      optionDifference.xAxis.data.push(time as never)
+      // x轴数据
+      // if(this.optionOffset.xAxis.data.length >= 30) {
+      // 	this.optionOffset.xAxis.data.shift();
+      // 	this.optionSpeed.xAxis.data.shift();
+      // 	this.optionDirection.xAxis.data.shift();
+      // 	this.optionDifference.xAxis.data.shift();
+      // }
+      // 系列数据
+      optionOffset.series[0].data.push(xOffset as never)
+      optionSpeed.series[0].data.push(speed as never)
+      optionDirection.series[0].data.push(direction as never)
+      optionDifference.series[0].data.push(diffAge as never)
+      // 系列数据
+      // if(this.optionOffset.series[0].data.length >= 30) {
+      // 	this.optionOffset.series[0].data.shift();
+      // 	this.optionSpeed.series[0].data.shift();
+      // 	this.optionDirection.series[0].data.shift();
+      // 	this.optionDifference.series[0].data.shift();
+      // }
+      // setOption
+      chartOffset.value ? chartOffset.value.setOption(optionOffset) : ''
+      chartSpeed.value ? chartSpeed.value.setOption(optionSpeed) : ''
+      chartDirection.value ? chartDirection.value.setOption(optionDirection) : ''
+      chartDifference.value ? chartDifference.value.setOption(optionDifference) : ''
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
 // 获取数据
 const loadData = async () => {
   const res: driveStatusPathResponseData = await driveStatusPath_API(props.sn)
@@ -434,37 +426,43 @@ const loadData = async () => {
     diffAge.push(element.diffAge)
   })
 
-  props.optionOffset.xAxis.data = time
-  props.optionSpeed.xAxis.data = time.map((i: any) => i) // 隐匿问题、对象指针引用，需要准备三个不同的对象！！！
-  props.optionDirection.xAxis.data = time.map((i: any) => i)
-  props.optionDifference.xAxis.data = time.map((i: any) => i)
+  optionOffset.xAxis.data = time
+  optionSpeed.xAxis.data = time.map((i: any) => i) // 隐匿问题、对象指针引用，需要准备三个不同的对象！！！
+  optionDirection.xAxis.data = time.map((i: any) => i)
+  optionDifference.xAxis.data = time.map((i: any) => i)
 
-  props.optionOffset.series[0].data = xOffset
-  props.optionSpeed.series[0].data = speed
-  props.optionDirection.series[0].data = direction
-  props.optionDifference.series[0].data = diffAge
-  chartOffset.setOption(props.optionOffset)
-  chartSpeed.setOption(props.optionSpeed)
-  chartDirection.setOption(props.optionDirection)
-  chartDifference.setOption(props.optionDifference)
-  // handleMessageChange({
-  //   'type': 'farmPt',
-  //   'module':'farm',
-  //   'action':'online'
-  // })
+  optionOffset.series[0].data = xOffset
+  optionSpeed.series[0].data = speed
+  optionDirection.series[0].data = direction
+  optionDifference.series[0].data = diffAge
+  chartOffset.setOption(optionOffset)
+  chartSpeed.setOption(optionSpeed)
+  chartDirection.setOption(optionDirection)
+  chartDifference.setOption(optionDifference)
+  listenMessage(props.socketData)
+}
+// 处理websocket数据
+const listenMessage = (data: any) => {
+  if (
+    data.type === 'farmPt' &&
+    data.module === 'farm' &&
+    data.action === 'online'
+  ) {
+    handleMessageChange(data)
+  }
 }
 const beforeOpen = () => {
   initCharts()
   loadData()
 }
 
-// watch(() => dialogVisible.value, () => {
-//   if (dialogVisible.value == true) {
-//     setInterval(() => {
-//       loadData()
-//     }, 6000)
-//   }
-// })
+watch(() => dialogVisible.value, () => {
+  if (dialogVisible.value == true) {
+    setInterval(() => {
+      loadData()
+    }, 6000)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
