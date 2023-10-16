@@ -28,7 +28,10 @@
         <el-table-column label="类型" prop="terminalType">
         </el-table-column> <el-table-column label="软件过期">
             <template #="{ row }">
-                {{ row.expirationTime?.split(' ')[0] }}
+                <el-tooltip style="margin-right: 6px;" :disabled="false" class="box-item" effect="dark"
+                    :content="row.expirationTime" placement="top-start">
+                    {{ row.expirationTime?.split('-')[0] }}-...
+                </el-tooltip>
             </template>
         </el-table-column>
         <!-- <el-table-column label="过期时间" >
@@ -88,7 +91,10 @@
         </el-table-column> -->
         <el-table-column sortable label="最近上线时间" prop="createtime" width="180">
             <template #="{ row }">
-                {{ row.lastOnlineTime?.split(' ')[0] }}
+                <el-tooltip style="margin-right: 6px;" :disabled="false" class="box-item" effect="dark"
+                    :content="row.lastOnlineTime" placement="top-start">
+                    {{ row.lastOnlineTime?.split('-')[0] }}-...
+                </el-tooltip>
             </template>
         </el-table-column>
         <!-- <el-table-column label="公司/经销商" >
