@@ -124,7 +124,11 @@
     </div>
 
     <!-- 实时趋势驾驶图diaLog -->
-    <realTimeChart ref="realTime" :sn="sn" :socketData="socketStore.socketData"/>
+    <realTimeChart
+      ref="realTime"
+      :sn="sn"
+      :socketData="socketStore.socketData"
+    />
     <RemoteControl
       :isChange="isChange"
       :terminalType="terminalType"
@@ -259,7 +263,9 @@ function handleSelect(item: any) {
 function handleSocketData(socketData: any) {
   if (socketData.module == "farm" && socketData.type == "farmPt") {
     let { action, data } = socketData;
+
     if (action == "upline") {
+      console.log(action, data, "---260上线");
       const markerId = data.sn;
       const markerVisible = true;
       const markerLng = data.posX;
@@ -274,13 +280,16 @@ function handleSocketData(socketData: any) {
         markerIcon,
         markerPopup,
       });
+      console.log(markerData, "---279上线");
     }
     if (action == "offline") {
+      console.log(action, data, "---286离线");
       const markerId = data.sn;
       const idx = markerData.findIndex(
         (item: any) => item.markerId == markerId
       );
       markerData.splice(idx, 1);
+      console.log(markerData, "---292离线");
     }
     if (action == "online") {
       const markerId = data.sn;
@@ -300,6 +309,8 @@ function handleSocketData(socketData: any) {
     const { data } = socketData;
     dataStatistics.value.device.totalDevice = data.totalDevice;
     dataStatistics.value.device.onlineDevice = data.onlineDevice;
+    dataStatistics.value.drive.driving = data.driving;
+    dataStatistics.value.drive.standbyDevice = data.standbyDevice;
     const typeCounts = data.typeCounts;
     dataStatistics.value.type.forEach((item: any, index: number) => {
       item.onlineCount = typeCounts[index].onlineCount;
@@ -313,9 +324,8 @@ function handleSocketData(socketData: any) {
   if (socketData.module == "farm" && socketData.type == "monitorCarNum") {
     const { data } = socketData;
     dataStatistics.value.drive.driving = data.driving;
-    dataStatistics.value.workArea.standbyDevice = data.standbyDevice;
+    dataStatistics.value.drive.standbyDevice = data.standbyDevice;
   }
-
   if (socketData.module == "farm" && socketData.type == "notification") {
     const { data } = socketData;
     let list = data.list;
@@ -750,18 +760,17 @@ function openRemote_markerPopup(arg: any) {
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background-color:#43CF7C;
+            background-color: #43cf7c;
           }
         }
       }
       .bottom_li:last-child {
         div {
           div {
-            background-color: #F7C23C;
+            background-color: #f7c23c;
           }
         }
       }
-      
     }
 
     .center,
