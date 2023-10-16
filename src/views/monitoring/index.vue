@@ -124,7 +124,11 @@
     </div>
 
     <!-- 实时趋势驾驶图diaLog -->
-    <realTimeChart ref="realTime" :sn="sn" :socketData="socketStore.socketData"/>
+    <realTimeChart
+      ref="realTime"
+      :sn="sn"
+      :socketData="socketStore.socketData"
+    />
     <RemoteControl
       :isChange="isChange"
       :terminalType="terminalType"
@@ -259,7 +263,9 @@ function handleSelect(item: any) {
 function handleSocketData(socketData: any) {
   if (socketData.module == "farm" && socketData.type == "farmPt") {
     let { action, data } = socketData;
+
     if (action == "upline") {
+      console.log(action, data, "---260上线");
       const markerId = data.sn;
       const markerVisible = true;
       const markerLng = data.posX;
@@ -274,13 +280,16 @@ function handleSocketData(socketData: any) {
         markerIcon,
         markerPopup,
       });
+      console.log(markerData, "---279上线");
     }
     if (action == "offline") {
+      console.log(action, data, "---286离线");
       const markerId = data.sn;
       const idx = markerData.findIndex(
         (item: any) => item.markerId == markerId
       );
       markerData.splice(idx, 1);
+      console.log(markerData, "---292离线");
     }
     if (action == "online") {
       const markerId = data.sn;
