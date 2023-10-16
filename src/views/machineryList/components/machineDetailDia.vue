@@ -110,7 +110,14 @@
                 <div class="tit">向日葵SN:</div>
                 <div class="data">{{ NewDetail.sunFlowerSn }}</div>
             </div>
-
+            <div class="line line3">
+                <div class="tit">创建时间:</div>
+                <div class="data">{{ NewDetail.createTime }}</div>
+                <div class="tit">更新时间:</div>
+                <div class="data">{{ NewDetail.updateTime }}</div>
+                <div class="tit">最近上线时间:</div>
+                <div class="data">{{ NewDetail.lastOnlineTime }}</div>
+            </div>
         </div>
         <div class="titleArea" v-if="props.terminalType != 'AG302'">
             模块信息
@@ -164,18 +171,19 @@
         <div class="tableData">
 
             <div class="line line3">
-                <div class="tit">罗网过期:</div>
-                <div class="data">{{ props.netDate }}</div>
                 <div class="tit">软件过期:</div>
                 <div class="data">{{ props.expirationTime }}</div>
-                <div class="tit">星基过期:</div>
-                <div class="data">{{ props.satelliteDate }}</div>
+                <div class="tit">质保过期:</div>
+                <div class="data">{{ props.warrantyDate }}</div>
+                <div class="tit">罗网过期:</div>
+                <div class="data">{{ props.netDate }}</div>
+
             </div>
 
 
             <div class="line line3">
-                <div class="tit">质保过期:</div>
-                <div class="data">{{ props.warrantyDate }}</div>
+                <div class="tit">星基过期:</div>
+                <div class="data">{{ props.satelliteDate }}</div>
             </div>
         </div>
     </el-dialog>
