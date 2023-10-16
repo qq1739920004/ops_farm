@@ -6,9 +6,10 @@
                     @change="changeBlur1">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
-                <el-select filterable v-model="pageInfo.carId" class="m-2" placeholder="请选择" @change="changeBlur2">
-                    <el-option v-if="CarDealerList.length" v-for="item in CarDealerList" :label="item.sn"
-                        :value="item.id" :key="item.id"></el-option>
+                <el-select filterable v-model="pageInfo.carId" class="m-2" placeholder="请选择"
+                    @change="changeBlur2">
+                    <el-option v-if="CarDealerList.length" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
+                        :key="item.id"></el-option>
                     <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
                 </el-select>
             </div>
@@ -30,8 +31,9 @@
             </div>
             <div class="button_area">
                 <el-button type="primary" @click="openExportDia">导出</el-button>
-                <el-button @click="router.push({ path: '/jobManagement/taskManage',query:{companyId:pageInfo.companyId,carId:pageInfo.carId} })" icon="MapLocation"
-                    class="btn2"></el-button>
+                <el-button
+                    @click="router.push({ path: '/jobManagement/taskManage', query: { companyId: pageInfo.companyId, carId: pageInfo.carId } })"
+                    icon="MapLocation" class="btn2"></el-button>
             </div>
         </div>
         <div class="table_container app_card">
@@ -81,7 +83,7 @@ const pageInfo = reactive<PageObj>({
     st: '',
     et: ''
 })
-const CarDealerList = reactive<dealerCarObj[]>([])
+let CarDealerList = reactive<dealerCarObj[]>([])
 const value1 = ref<Date>()
 const value2 = ref<Date>()
 const isActive = ref<number>(0)
@@ -103,7 +105,7 @@ getDealerList()
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
     const res: dealerCarResponseData = await getCarDealerList_API(pageInfo.companyId)
-    Object.assign(CarDealerList, res.data)
+    Object.assign(CarDealerList, res.data) 
 }
 getDealerCarList()
 // 获取数据
