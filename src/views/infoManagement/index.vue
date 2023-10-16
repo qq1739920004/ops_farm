@@ -2,7 +2,7 @@
     <div class='app_container'>
         <div class="search_container app_card">
             <div class="input_area">
-                <el-input placeholder="请输入SN号" v-model="pageInfo.key" class="input-with-select"
+                <el-input placeholder="请输入SN号、铭牌SN" v-model="pageInfo.key" class="input-with-select"
                     @keyup.enter.native="search">
                     <template #append>
                         <el-button icon="Search" @click="search" />
