@@ -18,10 +18,14 @@ const useSocketStore = defineStore("socket", () => {
             console.log('连接关闭');
         };
     }
+    function close() {
+        ws.close()
+    }
 
     return {
         socketData,
-        connect
+        connect,
+        close
     }
 
 

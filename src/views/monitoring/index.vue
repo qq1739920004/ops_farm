@@ -647,6 +647,8 @@ function handleSocketData(socketData: any) {
     const { data } = socketData;
     dataStatistics.value.device.totalDevice = data.totalDevice;
     dataStatistics.value.device.onlineDevice = data.onlineDevice;
+    dataStatistics.value.drive.driving = data.driving;
+    dataStatistics.value.drive.standbyDevice = data.standbyDevice;
     const typeCounts = data.typeCounts;
     dataStatistics.value.type.forEach((item: any, index: number) => {
       item.onlineCount = typeCounts[index].onlineCount;
@@ -660,9 +662,8 @@ function handleSocketData(socketData: any) {
   if (socketData.module == "farm" && socketData.type == "monitorCarNum") {
     const { data } = socketData;
     dataStatistics.value.drive.driving = data.driving;
-    dataStatistics.value.workArea.standbyDevice = data.standbyDevice;
+    dataStatistics.value.drive.standbyDevice = data.standbyDevice;
   }
-
   if (socketData.module == "farm" && socketData.type == "notification") {
     const { data } = socketData;
     let list = data.list;
@@ -1122,18 +1123,17 @@ const dateTimeTrans = (timestamp: number) => {
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background-color:#43CF7C;
+            background-color: #43cf7c;
           }
         }
       }
       .bottom_li:last-child {
         div {
           div {
-            background-color: #F7C23C;
+            background-color: #f7c23c;
           }
         }
       }
-      
     }
 
     .center,
