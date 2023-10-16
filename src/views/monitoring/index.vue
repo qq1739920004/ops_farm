@@ -265,7 +265,6 @@ function handleSocketData(socketData: any) {
     let { action, data } = socketData;
 
     if (action == "upline") {
-      console.log(action, data, "---260上线");
       const markerId = data.sn;
       const markerVisible = true;
       const markerLng = data.posX;
@@ -280,16 +279,13 @@ function handleSocketData(socketData: any) {
         markerIcon,
         markerPopup,
       });
-      console.log(markerData, "---279上线");
     }
     if (action == "offline") {
-      console.log(action, data, "---286离线");
       const markerId = data.sn;
       const idx = markerData.findIndex(
         (item: any) => item.markerId == markerId
       );
       markerData.splice(idx, 1);
-      console.log(markerData, "---292离线");
     }
     if (action == "online") {
       const markerId = data.sn;
