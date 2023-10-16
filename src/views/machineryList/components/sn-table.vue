@@ -6,7 +6,8 @@
             <template #default="scope">
                 <div style="display: flex; align-items: center">
                     <el-icon>
-                        <MapLocation style="color:var(--el-color-primary); width: 16px; height: 16px;" />
+                        <MapLocation
+                            :style="scope.row.onlineTcp !== 0 ? 'color:var(--el-color-primary); width: 16px;height: 16px;' : 'var(--el-color-info-light-5); width: 16px; height: 16px;'" />
                     </el-icon>
                     <span style="margin-left: 10px">{{ scope.row.npn }}</span>
                 </div>
@@ -264,6 +265,4 @@ const gotoMap = (sn: string, npn: string) => {
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
