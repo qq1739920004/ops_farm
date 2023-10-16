@@ -47,6 +47,20 @@
           <span>{{ dataStatistics.workArea?.totalArea.toFixed(2) }}</span>
           <span>累计作业(万亩)</span>
         </li>
+        <li class="bottom_li">
+          <span>{{ dataStatistics.drive?.driving }}</span>
+          <div>
+            <span>工作中</span>
+            <div></div>
+          </div>
+        </li>
+        <li class="bottom_li">
+          <span>{{ dataStatistics.drive?.standbyDevice }}</span>
+          <div>
+            <span>待机</span>
+            <div></div>
+          </div>
+        </li>
       </ul>
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
@@ -56,24 +70,16 @@
               v-model="item.checked"
               @change="markerTypeChange"
             />
+<<<<<<< HEAD
             <SvgIcon icon="AG302" size="22" />
+=======
+            <SvgIcon :icon="item.typeName" size="22" />
+>>>>>>> 1fd6a958396b6578174fa22fb92ea7df6346ebcc
             <span class="label">{{ item.typeName }}</span>
           </label>
           <span class="value">{{ item.onlineCount }}</span>
         </li>
         <br />
-      </ul>
-      <ul class="bottom">
-        <li>
-          <SvgIcon icon="AG302" size="22" />
-          <span class="label">工作中</span>
-          <span class="value">{{ dataStatistics.drive?.driving }}</span>
-        </li>
-        <li>
-          <SvgIcon icon="AG302_warn" size="22" />
-          <span class="label">待机</span>
-          <span class="value">{{ dataStatistics.drive?.standbyDevice }}</span>
-        </li>
       </ul>
     </div>
     <div
@@ -122,7 +128,22 @@
     </div>
 
     <!-- 实时趋势驾驶图diaLog -->
+<<<<<<< HEAD
     <realTimeChart ref="realTime" :sn="sn" :socketData="socketStore.socketData"/>
+=======
+    <!--  optionOffset.series[0].data.push(xOffset as never)
+    optionSpeed.series[0].data.push(speed as never)
+    optionDirection.series[0].data.push(direction as never)
+    optionDifference.series[0].data.push(diffAge as never) -->
+    <realTimeChart
+      ref="realTime"
+      :sn="sn"
+      :optionOffset="optionOffset"
+      :optionSpeed="optionSpeed"
+      :optionDirection="optionDirection"
+      :optionDifference="optionDifference"
+    />
+>>>>>>> 1fd6a958396b6578174fa22fb92ea7df6346ebcc
     <RemoteControl
       :isChange="isChange"
       :terminalType="terminalType"
@@ -189,6 +210,296 @@ const mapCenter = reactive<any>({
   markerId: "",
 });
 
+<<<<<<< HEAD
+=======
+const optionOffset = {
+  grid: {
+    top: 30,
+    left: 40,
+    right: 30,
+    bottom: 50,
+    containLabel: true,
+  },
+  tooltip: {
+    trigger: "axis",
+  },
+  xAxis: {
+    type: "category",
+    splitLine: {
+      show: false,
+    },
+    axisTick: {
+      inside: true,
+    },
+    axisLine: {
+      onZero: true,
+    },
+    data: [],
+    name: "时间s",
+    nameLocation: "center",
+    nameGap: 30,
+  },
+  yAxis: {
+    type: "value",
+    splitLine: {
+      show: false,
+    },
+    axisTick: {
+      show: true,
+      inside: true,
+      alignWithLabel: true,
+    },
+    axisLine: {
+      show: true,
+    },
+
+    name: "横向偏差(cm)",
+    position: "left",
+    nameTextStyle: {
+      align: "center",
+    },
+  },
+  visualMap: {
+    show: false,
+    pieces: [{ gte: -3, lte: 3, color: "#25C114" }],
+    outOfRange: {
+      color: "#F5222D",
+    },
+  },
+  series: [
+    {
+      name: "横向偏差",
+      type: "line",
+      showSymbol: false,
+      data: [],
+      emphasis: {
+        scale: false,
+      },
+      markLine: {
+        silent: true,
+        symbol: ["none", "none"],
+        data: [
+          {
+            yAxis: 3,
+          },
+          {
+            yAxis: -3,
+          },
+        ],
+      },
+    },
+  ],
+};
+
+// 速度echarts配置
+const optionSpeed = {
+  grid: {
+    top: 30,
+    left: 40,
+    right: 30,
+    bottom: 50,
+    containLabel: true,
+  },
+  tooltip: {
+    trigger: "axis",
+    axisPointer: {
+      type: "none",
+    },
+    formatter(params: any) {
+      let result = "";
+      let dotHtml =
+        '<span style="display:flex;align-items:center"><span style="display:inline-block;line-height:8px;margin-right:5px;border-radius:8px;border:2px #fff solid;width:8px;height:8px;background-color:#666666;"></span>';
+      result +=
+        params[0].axisValue +
+        "<br>" +
+        dotHtml +
+        "<span>" +
+        params[0].seriesName +
+        ":" +
+        params[0].value +
+        "</span></span>";
+      return result;
+    },
+  },
+  color: ["#666666"],
+  xAxis: {
+    type: "category",
+    splitLine: {
+      show: false,
+    },
+    axisTick: {
+      show: true,
+      inside: true,
+      alignWithLabel: true,
+    },
+    axisLine: {
+      onZero: false,
+    },
+    data: [],
+    name: "时间s",
+    nameLocation: "center",
+    nameGap: 30,
+  },
+  yAxis: {
+    type: "value",
+    splitLine: {
+      show: false,
+    },
+    axisTick: {
+      show: true,
+      inside: true,
+      alignWithLabel: true,
+    },
+    axisLine: {
+      show: true,
+    },
+    name: "速度(km/h)",
+    position: "left",
+    nameTextStyle: {
+      align: "center",
+    },
+  },
+  series: [
+    {
+      name: "速度",
+      type: "line",
+      showSymbol: false,
+      data: [],
+      emphasis: {
+        scale: false,
+      },
+    },
+  ],
+};
+
+// 航向角echarts配置
+const optionDirection = {
+  grid: {
+    top: 30,
+    left: 40,
+    right: 30,
+    bottom: 50,
+    containLabel: true,
+  },
+  tooltip: {
+    trigger: "axis",
+    axisPointer: {
+      type: "none",
+    },
+  },
+  color: ["#409EFF"],
+  xAxis: {
+    type: "category",
+    splitLine: {
+      show: false,
+    },
+    axisTick: {
+      inside: true,
+    },
+    axisLine: {
+      onZero: false,
+    },
+    data: [],
+    name: "时间s",
+    nameLocation: "center",
+    nameGap: 30,
+  },
+  yAxis: {
+    type: "value",
+    splitLine: {
+      show: false,
+    },
+    axisTick: {
+      show: true,
+      inside: true,
+      alignWithLabel: true,
+    },
+    axisLine: {
+      show: true,
+    },
+    name: "航向角(°)",
+    position: "left",
+    nameTextStyle: {
+      align: "center",
+    },
+  },
+  series: [
+    {
+      name: "航向角",
+      type: "line",
+      showSymbol: false,
+      data: [],
+      emphasis: {
+        scale: false,
+      },
+    },
+  ],
+};
+
+// 差分龄期echarts配置
+const optionDifference = {
+  grid: {
+    top: 30,
+    left: 40,
+    right: 30,
+    bottom: 50,
+    containLabel: true,
+  },
+  tooltip: {
+    trigger: "axis",
+    axisPointer: {
+      type: "none",
+    },
+  },
+  color: ["#409EFF"],
+  xAxis: {
+    type: "category",
+    splitLine: {
+      show: false,
+    },
+    axisTick: {
+      inside: true,
+    },
+    axisLine: {
+      onZero: false,
+    },
+    data: [],
+    name: "时间s",
+    nameLocation: "center",
+    nameGap: 30,
+  },
+  yAxis: {
+    type: "value",
+    splitLine: {
+      show: false,
+    },
+    axisTick: {
+      show: true,
+      inside: true,
+      alignWithLabel: true,
+    },
+    axisLine: {
+      show: true,
+    },
+    name: "差分龄期(s)",
+    position: "left",
+    nameTextStyle: {
+      align: "center",
+    },
+  },
+  series: [
+    {
+      name: "差分龄期",
+      type: "line",
+      showSymbol: false,
+      data: [],
+      emphasis: {
+        scale: false,
+      },
+    },
+  ],
+};
+>>>>>>> 1fd6a958396b6578174fa22fb92ea7df6346ebcc
 // @ts-ignore
 window.goMachineryList_markerPopup = goMachineryList_markerPopup;
 // @ts-ignore
@@ -255,6 +566,54 @@ function handleSelect(item: any) {
 
 // 处理socketData数据
 function handleSocketData(socketData: any) {
+<<<<<<< HEAD
+=======
+  if (
+    socketData.type === "farmPt" &&
+    socketData.module === "farm" &&
+    socketData.action === "online"
+  ) {
+    if (socketData.deviceSn === sn.value) {
+      // 过滤非自动驾驶驾驶状态的值；
+      if (socketData.data.driveState === 0) {
+        socketData.data.xOffset = null;
+        // data.data.speed = null;
+        // data.data.heading = null;
+      }
+      let time = dateTimeTrans(socketData.data.gnssTime).slice(11);
+      let xOffset = socketData.data.xOffset;
+      let speed = socketData.data.speed;
+      let direction = socketData.data.heading;
+      let diffAge = socketData.data.diffAge;
+      // x轴数据更新
+      optionOffset.xAxis.data.push(time as never);
+      optionSpeed.xAxis.data.push(time as never);
+      optionDirection.xAxis.data.push(time as never);
+      optionDifference.xAxis.data.push(time as never);
+      // x轴数据
+      // if(this.optionOffset.xAxis.data.length >= 30) {
+      // 	this.optionOffset.xAxis.data.shift();
+      // 	this.optionSpeed.xAxis.data.shift();
+      // 	this.optionDirection.xAxis.data.shift();
+      // 	this.optionDifference.xAxis.data.shift();
+      // }
+      // 系列数据
+      optionOffset.series[0].data.push(xOffset as never);
+      optionSpeed.series[0].data.push(speed as never);
+      optionDirection.series[0].data.push(direction as never);
+      optionDifference.series[0].data.push(diffAge as never);
+      // 系列数据
+      // if(this.optionOffset.series[0].data.length >= 30) {
+      // 	this.optionOffset.series[0].data.shift();
+      // 	this.optionSpeed.series[0].data.shift();
+      // 	this.optionDirection.series[0].data.shift();
+      // 	this.optionDifference.series[0].data.shift();
+      // }
+      // setOption
+    }
+  }
+
+>>>>>>> 1fd6a958396b6578174fa22fb92ea7df6346ebcc
   if (socketData.module == "farm" && socketData.type == "farmPt") {
     let { action, data } = socketData;
     if (action == "upline") {
@@ -299,7 +658,7 @@ function handleSocketData(socketData: any) {
     dataStatistics.value.device.totalDevice = data.totalDevice;
     dataStatistics.value.device.onlineDevice = data.onlineDevice;
     const typeCounts = data.typeCounts;
-    dataStatistics.type.forEach((item: any, index: number) => {
+    dataStatistics.value.type.forEach((item: any, index: number) => {
       item.onlineCount = typeCounts[index].onlineCount;
     });
   }
@@ -679,6 +1038,27 @@ function openRemote_markerPopup(arg: any) {
   sn.value = arg.sn;
   name.value = arg.carName;
 }
+<<<<<<< HEAD
+=======
+
+// 格式除处理
+const dateTimeTrans = (timestamp: number) => {
+  try {
+    if (!timestamp) return "/";
+    let dateObj = timestamp ? new Date(timestamp) : new Date();
+    let dateString = dateObj
+      .toLocaleDateString()
+      .split("/")
+      .map((i) => i.padStart(2, "0"))
+      .join("-");
+    let timeString = dateObj.toTimeString().slice(0, 8);
+    return dateString + " " + timeString;
+  } catch (error) {
+    console.log(error);
+    return "/";
+  }
+};
+>>>>>>> 1fd6a958396b6578174fa22fb92ea7df6346ebcc
 </script>
 
 <style lang="scss" scoped>
@@ -734,6 +1114,32 @@ function openRemote_markerPopup(arg: any) {
           font-weight: 700;
         }
       }
+      .bottom_li {
+        div {
+          display: flex;
+          align-items: center;
+          span {
+            color: #00baad;
+            font-size: 14px;
+            font-weight: 700;
+            margin-right: 6px;
+          }
+          div {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color:#43CF7C;
+          }
+        }
+      }
+      .bottom_li:last-child {
+        div {
+          div {
+            background-color: #F7C23C;
+          }
+        }
+      }
+      
     }
 
     .center,
