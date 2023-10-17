@@ -124,7 +124,7 @@
 
                 <el-tooltip style="margin-right: 6px;"
                     :disabled="row.onlineTcp === 1 || row.driveState === 1 || row.driveState === 2 ? true : false"
-                    class="box-item" effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
+                    class="box-item" effect="dark" :content="warn" placement="top-start">
 
                     <el-button style="width: 62px;margin-right: 6px;" :disabled="row.openRemote" type="primary" text
                         @click="gotoRemote(row.terminalType, row.version, row.type, row.id, row.sn, row.carName)">远程管理</el-button>
@@ -158,7 +158,7 @@ import MachineDetailDia from './machineDetailDia.vue'
 import RemoteControl from '@/components/remoteAdjust/index.vue'
 import RegisterDia from './registerDia.vue'
 import { useRouter } from 'vue-router'
-
+const warn = ref('车辆离线或处于自动驾驶状态')
 const router = useRouter();
 const props = defineProps(['carNewList'])
 const emits = defineEmits(['changeSort'])
