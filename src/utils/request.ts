@@ -52,6 +52,7 @@ service.interceptors.response.use(
       ElMessage.error('暂无权限');
 
     } else if (status == 401) {
+      userStore.clearUserInfo()
       // 前往登录页面
       process.env.NODE_ENV !== "development"
         ? (location.href = `${location.origin}/#/login?clientUrl=${location.href}`)

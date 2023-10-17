@@ -139,7 +139,8 @@ function changeLang(value: string) {
 }
 // 退出登录
 function logOut() {
-  userStore.logOut();
+  userStore.clearUserInfo();
+  location.href = "/";
 }
 </script>
 

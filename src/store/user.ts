@@ -4,16 +4,15 @@ import { reactive } from 'vue'
 const useUserStore = defineStore("use", () => {
     let Authorization = useStorage('Authorization', '')
     const userInfo = reactive(JSON.parse(localStorage.getItem('userInfo') || '{}'))
-    function logOut() {
+    function clearUserInfo() {
         Authorization.value = ''
         localStorage.removeItem("userInfo")
-        location.href = '/'
     }
 
     return {
         userInfo,
         Authorization,
-        logOut
+        clearUserInfo
     }
 })
 export default useUserStore
