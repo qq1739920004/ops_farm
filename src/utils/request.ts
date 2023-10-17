@@ -7,7 +7,7 @@ let loadingInstance: any;
 // 创建 axios 实例
 const service = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
-  timeout: 50000,
+  timeout: 6000,
   headers: { 'Content-Type': 'application/json;charset=utf-8' }
 });
 
