@@ -34,10 +34,10 @@
                 <!-- v-if="row.expirationTime && Date.parse(row.expirationTime.toString()) > Date.parse(new Date().toString())"> -->
                 <div style="display: flex;justify-content: center;">
                     <div v-if="row.expirationTime && Date.parse(row.expirationTime.toString()) > Date.parse(new Date().toString())"
-                        style="color:rgba(42, 130, 228, 1);width: 80px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
+                        style=" padding-left: 10px;padding-right: 10px;color:rgb(48, 140, 245);height: 26px;opacity: 1;border-radius: 4px;background: rgb(221, 236, 255);border:1px solid rgb(164, 204, 250)"
                         class="mx-1" effect="dark">{{ row.expirationTime.split(' ')[0] }}</div>
                     <div v-else
-                        style="color:rgba(255, 112, 112, 1);width: 60px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
+                        style="color:rgb(253, 98, 98);padding-left: 10px;padding-right: 10px;;height: 26px;opacity: 1;border-radius: 4px;background: rgb(255, 233, 233);border:1px solid rgb(253, 196, 196)"
                         class="mx-1" type="danger" effect="dark">已过期</div>
                 </div>
             </template>
