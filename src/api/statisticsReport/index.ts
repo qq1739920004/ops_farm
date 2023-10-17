@@ -17,7 +17,7 @@ export function getStatisticsReportcarjobAPI() {
 //  网络状况
 export function getStatisticsReportnetworkAPI() {
     return request<any,getStatisticsReportnetworkAPIResponse>({
-        url: "/farm/device/new/onlineFarmMachinePosition",
+        url: "/farm/device/new/onlineFarmMachineNet",
       method: 'get',
     })
   }
