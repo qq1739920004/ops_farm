@@ -4,9 +4,9 @@ import { reactive } from 'vue'
 const useUserStore = defineStore("use", () => {
     let Authorization = useStorage('Authorization', '')
     const userInfo = reactive(JSON.parse(localStorage.getItem('userInfo') || '{}'))
-
     function logOut() {
         Authorization.value = ''
+        localStorage.removeItem("userInfo")
         location.href = '/'
     }
 
