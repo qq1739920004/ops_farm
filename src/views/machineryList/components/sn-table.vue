@@ -33,8 +33,8 @@
                 <span
                     v-if="row.expirationTime && Date.parse(row.expirationTime.toString()) > Date.parse(new Date().toString())">
                     <el-tag
-                        style=" color:rgba(42, 130, 228, 1);height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
-                        class="mx-1" effect="dark">{{ row.expirationTime?.split(" ")[0] }}</el-tag></span>
+                        style=" color:rgba(42, 130, 228, 1);width:80px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
+                        class="mx-1" effect="dark">{{ row.expirationTime.split(' ')[0] }}</el-tag></span>
                 <span v-else> <el-tag
                         style="color:rgba(255, 112, 112, 1);height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
                         class="mx-1" type="danger" effect="dark">已过期</el-tag></span>
