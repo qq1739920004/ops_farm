@@ -7,7 +7,7 @@ import { defineStore } from 'pinia'
 import { useStorage, useDark, useToggle } from "@vueuse/core";
 import { getLightColor, getDarkColor } from "@/utils/color";
 import { ref, computed } from 'vue'
-import { constantRoutes } from "@/router";
+
 
 
 const useAppStore = defineStore("app", () => {

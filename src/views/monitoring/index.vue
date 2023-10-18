@@ -47,6 +47,20 @@
           <span>{{ dataStatistics.workArea?.totalArea.toFixed(2) }}</span>
           <span>累计作业(万亩)</span>
         </li>
+        <li class="bottom_li">
+          <span>{{ dataStatistics.drive?.driving }}</span>
+          <div>
+            <span>工作中</span>
+            <div></div>
+          </div>
+        </li>
+        <li class="bottom_li">
+          <span>{{ dataStatistics.drive?.standbyDevice }}</span>
+          <div>
+            <span>待机</span>
+            <div></div>
+          </div>
+        </li>
       </ul>
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
@@ -56,24 +70,12 @@
               v-model="item.checked"
               @change="markerTypeChange"
             />
-            <SvgIcon icon="AG302" size="22" />
+            <SvgIcon :icon="item.typeName" size="22" />
             <span class="label">{{ item.typeName }}</span>
           </label>
           <span class="value">{{ item.onlineCount }}</span>
         </li>
         <br />
-      </ul>
-      <ul class="bottom">
-        <li>
-          <SvgIcon icon="AG302" size="22" />
-          <span class="label">工作中</span>
-          <span class="value">{{ dataStatistics.drive?.driving }}</span>
-        </li>
-        <li>
-          <SvgIcon icon="AG302_warn" size="22" />
-          <span class="label">待机</span>
-          <span class="value">{{ dataStatistics.drive?.standbyDevice }}</span>
-        </li>
       </ul>
     </div>
     <div
@@ -122,7 +124,11 @@
     </div>
 
     <!-- 实时趋势驾驶图diaLog -->
-    <realTimeChart ref="realTime" :sn="sn" />
+    <realTimeChart
+      ref="realTime"
+      :sn="sn"
+      :socketData="socketStore.socketData"
+    />
     <RemoteControl
       :isChange="isChange"
       :terminalType="terminalType"
@@ -203,7 +209,7 @@ window.openRemote_markerPopup = openRemote_markerPopup;
 watch(
   () => socketStore.socketData,
   (socketData) => {
-    if (markerData.length <= 0) return;
+    // if (markerData.length <= 0) return;
     handleSocketData(socketData);
   },
   { deep: true }
@@ -298,8 +304,10 @@ function handleSocketData(socketData: any) {
     const { data } = socketData;
     dataStatistics.value.device.totalDevice = data.totalDevice;
     dataStatistics.value.device.onlineDevice = data.onlineDevice;
+    dataStatistics.value.drive.driving = data.driving;
+    dataStatistics.value.drive.standbyDevice = data.standbyDevice;
     const typeCounts = data.typeCounts;
-    dataStatistics.type.forEach((item: any, index: number) => {
+    dataStatistics.value.type.forEach((item: any, index: number) => {
       item.onlineCount = typeCounts[index].onlineCount;
     });
   }
@@ -311,9 +319,8 @@ function handleSocketData(socketData: any) {
   if (socketData.module == "farm" && socketData.type == "monitorCarNum") {
     const { data } = socketData;
     dataStatistics.value.drive.driving = data.driving;
-    dataStatistics.value.workArea.standbyDevice = data.standbyDevice;
+    dataStatistics.value.drive.standbyDevice = data.standbyDevice;
   }
-
   if (socketData.module == "farm" && socketData.type == "notification") {
     const { data } = socketData;
     let list = data.list;
@@ -732,6 +739,31 @@ function openRemote_markerPopup(arg: any) {
           color: #00baad;
           font-size: 14px;
           font-weight: 700;
+        }
+      }
+      .bottom_li {
+        div {
+          display: flex;
+          align-items: center;
+          span {
+            color: #00baad;
+            font-size: 14px;
+            font-weight: 700;
+            margin-right: 6px;
+          }
+          div {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: #43cf7c;
+          }
+        }
+      }
+      .bottom_li:last-child {
+        div {
+          div {
+            background-color: #f7c23c;
+          }
         }
       }
     }

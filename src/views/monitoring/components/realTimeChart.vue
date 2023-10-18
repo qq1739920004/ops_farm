@@ -36,6 +36,10 @@ const props = defineProps({
   sn: {
     type: String,
     default: ''
+  },
+  socketData: {
+    type: Object,
+    default: {}
   }
 });
 const dialogVisible = ref<boolean>(false)
@@ -395,10 +399,10 @@ const handleMessageChange = (data: any) => {
       // 	this.optionDifference.series[0].data.shift();
       // }
       // setOption
-      chartOffset.value ? chartOffset.value.setOption(optionOffset) : ''
-      chartSpeed.value ? chartSpeed.value.setOption(optionSpeed) : ''
-      chartDirection.value ? chartDirection.value.setOption(optionDirection) : ''
-      chartDifference.value ? chartDifference.value.setOption(optionDifference) : ''
+      chartOffset ? chartOffset.setOption(optionOffset) : ''
+      chartSpeed ? chartSpeed.setOption(optionSpeed) : ''
+      chartDirection ? chartDirection.setOption(optionDirection) : ''
+      chartDifference ? chartDifference.setOption(optionDifference) : ''
     }
   } catch (error) {
     console.log(error)
@@ -435,24 +439,29 @@ const loadData = async () => {
   chartSpeed.setOption(optionSpeed)
   chartDirection.setOption(optionDirection)
   chartDifference.setOption(optionDifference)
-  handleMessageChange({
-    'type': 'farmPt',
-    'module':'farm',
-    'action':'online'
-  })
+  listenMessage(props.socketData)
+}
+// 处理websocket数据
+const listenMessage = (data: any) => {
+  if (
+    data.type === 'farmPt' &&
+    data.module === 'farm' &&
+    data.action === 'online'
+  ) {
+    handleMessageChange(data)
+  }
 }
 const beforeOpen = () => {
   initCharts()
   loadData()
 }
-
-watch(() => dialogVisible.value, () => {
-  if (dialogVisible.value == true) {
-    setInterval(() => {
-      loadData()
-    }, 6000)
-  }
-})
+watch(
+  () => props.socketData,
+  (socketData) => {
+    listenMessage(socketData)
+  },
+  { deep: true }
+);
 </script>
 
 <style lang="scss" scoped>

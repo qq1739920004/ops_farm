@@ -2,8 +2,8 @@
     <div class="app_container">
         <div class="search_container app_card">
             <div class="input_area">
-                <el-input placeholder="请输入SN号" v-model="pageInfo.key" class="input-with-select" @keyup.enter.native="search"
-                    clearable>
+                <el-input placeholder="请输入SN号、铭牌SN" v-model="pageInfo.key" class="input-with-select" @keyup.enter.native="search"
+                    clearable @clear="clearAll">
                     <template #append>
                         <el-button icon="Search" @click="search" />
                     </template>
@@ -105,7 +105,10 @@ const getDealerList = async () => {
         getCarList()
     }
 }
-
+const clearAll = () => {
+    tableShow.value = true
+    getCarList()
+}
 // 获取车辆列表
 const getCarList = async () => {
     const res: carNewListResponseData = await carNewList_API(JSON.stringify(pageInfo))
@@ -114,7 +117,7 @@ const getCarList = async () => {
             ...item,
             openRemote: (item.terminalType === 'AG502' || item.terminalType === 'AG302' || item.terminalType.includes('AG360')) && item.onlineTcp === 1 && (item.driveState !== 1 && item.driveState !== 2) ? false : true,
         }
-      
+
 
     })
     total.value = res.data.total
