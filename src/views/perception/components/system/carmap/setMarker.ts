@@ -122,7 +122,7 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"]){
                 },
                 stack: "total",
                 emphasis: {
-                  focus: "series",
+                  focus: "none",
                 },
                 label: {
                   show: true,
