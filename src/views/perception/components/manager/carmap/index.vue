@@ -53,8 +53,8 @@ let maskPoly: any = [];
 //开始画出来
 function startDraw(AMap: any,cityArr: string[]) {
   map.value = new AMap.Map("container", {
-    center: [126.968714, 46.654147], // 中国的大致中心点
-    zoom: 8, // 设置一个合适的缩放级别以显示多个城市
+    center: [104.137, 36.544], // 中国的大致中心点
+    zoom: 5, // 设置一个合适的缩放级别以显示多个城市
     backgroundColor: "transparent",
     mask: mask, // 设置遮罩层
     disableSocket: true,
@@ -94,7 +94,6 @@ function initMap(cityArr: string[]) {
 }
 // 使用百度地图API服务获取边界数据
 async function drawingCity(AMap: any, cityArr: string[]) {
-  console.log(JSON.stringify(cityArr));
   const response = await getGeojson(cityArr.join(','))
   let length = response.data.length;
   for (let i = 0; i < length; i++) {

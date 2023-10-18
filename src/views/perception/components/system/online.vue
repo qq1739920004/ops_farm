@@ -43,10 +43,12 @@ dataList.forEach((r) => {
 });
 
 const option = {
-  backgroundColor: "",
   tooltip: {
-    show: false,
-  },
+            show: true, // 显示提示框,
+            trigger: 'axis', // 'axis' 表示与坐标轴触发，适用于柱状图、折线图等
+            boxWidth: 400,
+        },
+  backgroundColor: "",
   grid: {
     containLabel: true,
     bottom: "5%",
@@ -72,30 +74,30 @@ const option = {
   yAxis: [
     {
       type: "category",
-      axisLabel: {
+      axisLabel: {  
         interval: 0, //强制显示所有标签
         formatter: function (value: any) {
           // 动态计算 rank 标签的 left 位置，确保不与 title 冲突
+          if (value.length > 6) {
+            value = value.substring(0, 5) + "...";
+          }
           return "{rank|<}{title|"+value+"}{rank2|>}";
         },
         rich: {
           rank: {
             color: "#ffffff",
-          },
-          block1:{
-            color:'#ffffff',
-          },
-          block2:{
-            color:'#ffffff'
+            align: "left",
           },
           rank2: {
             color: "#ffffff",
             //右边距
-            padding: [0, 10, 0, 0],
+            padding: [0, 15, 0, 0],
           },
           title: {
             color: "#43cf7c",
             fontSize: 24,
+            align: "left",
+            width: 95,
           },
         },
       },
@@ -132,20 +134,11 @@ const option = {
       symbol: "path://M1 1,L140 1,L140 15,L1 15,Z",
       symbolKeepAspect: false,
       stack: "triangle",
-
+      name:'在线数',
       barWidth: 5,
       itemStyle: {
         borderWidth: 0,
-        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-          {
-            offset: 0,
-            color: "rgba(99, 229, 255, 0.07)",
-          },
-          {
-            offset: 1,
-            color: "rgba(94, 255, 0, 1)",
-          },
-        ]),
+        color: "#43cf7c",
       },
       label: {
         show: true,
