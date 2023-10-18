@@ -81,7 +81,7 @@ const option = {
           if (value.length > 6) {
             value = value.substring(0, 5) + "...";
           }
-          return "{rank|<}{title|"+value+"}{rank2|>}";
+          return "{title|"+value+"}";
         },
         rich: {
           rank: {
@@ -97,7 +97,7 @@ const option = {
             color: "#43cf7c",
             fontSize: 24,
             align: "left",
-            width: 95,
+            width: 100,
           },
         },
       },
