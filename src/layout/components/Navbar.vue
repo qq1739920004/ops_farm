@@ -34,7 +34,7 @@
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>用户中心</el-dropdown-item>
+          <el-dropdown-item @click="goUserCenter">用户中心</el-dropdown-item>
           <el-dropdown-item divided @click="drawer = true"
             >主题设置</el-dropdown-item
           >
@@ -141,6 +141,10 @@ function changeLang(value: string) {
 function logOut() {
   userStore.clearUserInfo();
   location.href = "/";
+}
+// 前往用户中心
+function goUserCenter() {
+  window.open('/ucFrontEnd')
 }
 </script>
 
