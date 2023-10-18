@@ -18,7 +18,7 @@ let isManager=ref(false)
 let startUpdata=ref(false)
 let companyName=ref('xxxxxx')
 getUserAuth().then(res=>{
-  isManager.value=!res.data.isCompanyUser
+  isManager.value=res.data.isCompanyUser
   companyName.value=res.data.userCompanyName
   startUpdata.value=true
 })
