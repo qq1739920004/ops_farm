@@ -23,7 +23,7 @@ function updateChart(dataList:MonitorObj["provinceCars"]){
 }
 
 function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:number){
-  for(let i=1;i<length;i++){
+  for(let i=0;i<length;i++){
         const markerContent = document.createElement('div');
         const chartContainer = document.createElement('div');
         chartContainer.style.width = `${width.value}px`;

@@ -97,9 +97,6 @@ async function drawingCity(AMap: any, cityArr: string[]) {
   const response = await getGeojson(cityArr.join(','))
   let length = response.data.length;
   for (let i = 0; i < length; i++) {
-    // const response = await fetch(
-    //   `/api-baidu/api_region_search/v1/?keyword=${cityName}&boundary=1&sub_admin=2&ak=TDKpTiQ7PNoT08EjLD41MTLbVdHp4Z1P`
-    // );
     const data = JSON.parse(response.data[i])
     if (data.status == 0 && data.districts.length > 0) {
       //数据处理

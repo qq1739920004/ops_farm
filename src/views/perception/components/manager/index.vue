@@ -73,7 +73,6 @@ const typeCounts = ref<Array<object>>([]);
 const provinceCars = ref<MonitorObj["provinceCars"]>();
 const getMonitor = async () => {
   const res = await getMonitorAPI();
-  console.log(res)
   monitorData.value = res.data;
   carAreas.value = res.data.carAreas;
   todayArea.value = res.data.todayArea;
