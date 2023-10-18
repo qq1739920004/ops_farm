@@ -15,7 +15,6 @@ import { ref, watch, onMounted, onUnmounted } from "vue";
 
 let bar = ref();
 var mycharts: any;
-let titleWidth = ref(80);
 const props = defineProps({
   typeCounts: {
     type: Object,
@@ -59,6 +58,7 @@ const option = {
     type: "value",
     axisLabel: {
       color: "#fff",
+      show: false,
     },
     splitLine: {
       show: true,
@@ -76,11 +76,6 @@ const option = {
         interval: 0, //强制显示所有标签
         formatter: function (value: any) {
           // 动态计算 rank 标签的 left 位置，确保不与 title 冲突
-          // 如果 leftPosition 与 title 冲突，向右偏移
-          // if (leftPosition.value < titleWidth.value) {
-          //   leftPosition.value = titleWidth.value + 5; // 在 title 宽度的右侧再添加 5 像素的间距
-          // }
-          // console.log(value);
           return "{rank|<}{title|"+value+"}{rank2|>}";
         },
         rich: {
@@ -100,7 +95,6 @@ const option = {
           },
           title: {
             color: "#43cf7c",
-            width: titleWidth.value,
             fontSize: 24,
           },
         },

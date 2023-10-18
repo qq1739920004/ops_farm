@@ -94,20 +94,21 @@ function initMap(cityArr: string[]) {
 }
 // 使用百度地图API服务获取边界数据
 async function drawingCity(AMap: any, cityArr: string[]) {
-  for (let i = 0; i < cityArr.length; i++) {
-    const cityName = cityArr[i];
-    const response = await getGeojson(cityName)
+  console.log(JSON.stringify(cityArr));
+  const response = await getGeojson(cityArr.join(','))
+  let length = response.data.length;
+  for (let i = 0; i < length; i++) {
     // const response = await fetch(
     //   `/api-baidu/api_region_search/v1/?keyword=${cityName}&boundary=1&sub_admin=2&ak=TDKpTiQ7PNoT08EjLD41MTLbVdHp4Z1P`
     // );
-    const data = JSON.parse(response.data)
+    const data = JSON.parse(response.data[i])
     if (data.status == 0 && data.districts.length > 0) {
       //数据处理
-      let [maskTemp, maskPolyTemp] = purifyBaiduData(AMap, data, cityName)
+      let [maskTemp, maskPolyTemp] = purifyBaiduData(AMap, data, cityArr[i])
       mask = maskTemp;
       maskPoly = maskPolyTemp;
     }
-    if (i === cityArr.length - 1) {
+    if (i === length - 1) {
       startDraw(AMap,cityArr);
     }
   }

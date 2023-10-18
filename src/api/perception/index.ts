@@ -12,9 +12,10 @@ export function getGeojson(keyWord:string) {
   return request<any, geojsonObj>({
     url: "/farm/monitor/geo",
     method: 'get',
-    params:{
-      keyWord
+    params: {
+      addrCodes:keyWord
     }
+    
   })
 }
 export function getState(params:StateObj) {
