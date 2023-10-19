@@ -238,14 +238,14 @@ function formatRoute(menuPermissions) {
         component: () => import("@/components/noPermission/index.vue"),
       });
     }
-    // serializeRoutes.push(
-    //   {
-    //     path: "/404",
-    //     component: () => import("@/components/404/index.vue"),
-    //     meta: { hidden: true },
-    //   },
-    //   { path: "/:catchAll(.*)", redirect: "/404", meta: { hidden: true } }
-    // );
+    serializeRoutes.push(
+      {
+        path: "/404",
+        component: () => import("@/components/404/index.vue"),
+        meta: { hidden: true },
+      },
+      { path: "/:catchAll(.*)", redirect: "/404", meta: { hidden: true } }
+    );
   }
 }
 
