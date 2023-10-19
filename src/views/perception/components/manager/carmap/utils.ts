@@ -8,22 +8,21 @@ interface locationType{
 let mask: any = [];
 let maskPoly: any = [];
 
-function purifyBaiduData(AMap:any,data: any, _cityName: string){
+function purifyBaiduData(AMap: any, data: any, _cityName: string) {
   let poly = wktToMask(AMap, data.districts[0].polyline);
-      if (poly.length) {
-        if (poly[0].length > 1) {
-          let tempPoly: any = [];
-          poly[0].forEach((item: any) => {
-            tempPoly.push(...item);
-          });
-          mask = mask.concat([[tempPoly]]);
-        } else {
-          mask = mask.concat(poly);
-        }
-        maskPoly = maskPoly.concat(poly);
-      } else {
-      }
-    return [mask,maskPoly]
+  if (poly.length) {
+    if (poly[0].length > 1) {
+      let tempPoly: any = [];
+      poly[0].forEach((item: any) => {
+        tempPoly.push(...item);
+      });
+      mask = [...mask, [tempPoly]];
+    } else {
+      mask = [...mask, ...poly];
+    }
+    maskPoly = [...maskPoly, ...poly];
+  }
+  return [mask, maskPoly];
 }
 
 function purifyCityArr(data: MonitorObj["provinceCars"]) {

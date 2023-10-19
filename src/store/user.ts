@@ -1,17 +1,18 @@
 import { defineStore } from 'pinia'
 import { useStorage } from "@vueuse/core";
+import { reactive } from 'vue'
 const useUserStore = defineStore("use", () => {
     let Authorization = useStorage('Authorization', '')
-
-
-    function logOut() {
+    const userInfo = reactive(JSON.parse(localStorage.getItem('userInfo') || '{}'))
+    function clearUserInfo() {
         Authorization.value = ''
-        location.href = '/'
+        localStorage.removeItem("userInfo")
     }
 
     return {
+        userInfo,
         Authorization,
-        logOut
+        clearUserInfo
     }
 })
 export default useUserStore

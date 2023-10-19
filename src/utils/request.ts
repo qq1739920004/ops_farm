@@ -7,7 +7,7 @@ let loadingInstance: any;
 // 创建 axios 实例
 const service = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
-  timeout: 50000,
+  timeout: 8000,
   headers: { 'Content-Type': 'application/json;charset=utf-8' }
 });
 
@@ -52,6 +52,7 @@ service.interceptors.response.use(
       ElMessage.error('暂无权限');
 
     } else if (status == 401) {
+      userStore.clearUserInfo()
       // 前往登录页面
       process.env.NODE_ENV !== "development"
         ? (location.href = `${location.origin}/#/login?clientUrl=${location.href}`)

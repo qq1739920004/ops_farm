@@ -104,7 +104,6 @@ const option = {
             fontFamily: "perceptionFont",
             color: "#43cf7c",
             fontSize: 24,
-            width: 95,
             align: "left",
           },
         },

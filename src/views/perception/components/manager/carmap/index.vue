@@ -53,8 +53,8 @@ let maskPoly: any = [];
 //开始画出来
 function startDraw(AMap: any,cityArr: string[]) {
   map.value = new AMap.Map("container", {
-    center: [126.968714, 46.654147], // 中国的大致中心点
-    zoom: 8, // 设置一个合适的缩放级别以显示多个城市
+    center: [104.137, 36.544], // 中国的大致中心点
+    zoom: 5, // 设置一个合适的缩放级别以显示多个城市
     backgroundColor: "transparent",
     mask: mask, // 设置遮罩层
     disableSocket: true,
@@ -94,20 +94,17 @@ function initMap(cityArr: string[]) {
 }
 // 使用百度地图API服务获取边界数据
 async function drawingCity(AMap: any, cityArr: string[]) {
-  for (let i = 0; i < cityArr.length; i++) {
-    const cityName = cityArr[i];
-    const response = await getGeojson(cityName)
-    // const response = await fetch(
-    //   `/api-baidu/api_region_search/v1/?keyword=${cityName}&boundary=1&sub_admin=2&ak=TDKpTiQ7PNoT08EjLD41MTLbVdHp4Z1P`
-    // );
-    const data = JSON.parse(response.data)
+  const response = await getGeojson(cityArr.join(','))
+  let length = response.data.length;
+  for (let i = 0; i < length; i++) {
+    const data = JSON.parse(response.data[i])
     if (data.status == 0 && data.districts.length > 0) {
       //数据处理
-      let [maskTemp, maskPolyTemp] = purifyBaiduData(AMap, data, cityName)
+      let [maskTemp, maskPolyTemp] = purifyBaiduData(AMap, data, cityArr[i])
       mask = maskTemp;
       maskPoly = maskPolyTemp;
     }
-    if (i === cityArr.length - 1) {
+    if (i === length - 1) {
       startDraw(AMap,cityArr);
     }
   }

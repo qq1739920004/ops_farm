@@ -209,7 +209,7 @@ window.openRemote_markerPopup = openRemote_markerPopup;
 watch(
   () => socketStore.socketData,
   (socketData) => {
-    if (markerData.length <= 0) return;
+    // if (markerData.length <= 0) return;
     handleSocketData(socketData);
   },
   { deep: true }
@@ -263,7 +263,6 @@ function handleSelect(item: any) {
 function handleSocketData(socketData: any) {
   if (socketData.module == "farm" && socketData.type == "farmPt") {
     let { action, data } = socketData;
-
     if (action == "upline") {
       const markerId = data.sn;
       const markerVisible = true;

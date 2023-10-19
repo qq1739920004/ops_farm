@@ -22,6 +22,8 @@
       <img src="@/assets/perceptionImage/corporation-logo.png" alt="">
     </div>
     <div class="logo-text">
+      <img @click="screenChange(false)" class="zoom" v-if="isZoom" src="@/assets/perceptionImage/zoom.svg" alt="">
+      <img @click="screenChange(true)" class="zoom" v-else src="@/assets/perceptionImage/out.svg" alt="">
       <span>北斗农机智能监管平台</span>
     </div>
   </div>
@@ -30,8 +32,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { getCurrentDateTime } from "@/utils/getTimeInfo";
+import {fullScreen} from '@/utils/fullScreen.ts';
 // import { getWeather } from "@/api/perception/index.ts";
 // import {getWeatherAPI} from '@/api/perception/index.ts';
+let isZoom=ref(false)
+function screenChange(zValue:boolean){
+  isZoom.value=zValue
+  fullScreen()
+}
 const time = ref(getCurrentDateTime());
 // let weather: any = ref(null);
 setInterval(() => {
@@ -44,6 +52,7 @@ async function weatherService() {
   // let res: any = await getWeather();
   // weather = JSON.parse(res.data);
 }
+
 weatherService();
 </script>
 
@@ -82,6 +91,13 @@ weatherService();
   }
   .logo-text{
       font-size: 22px;
+      display: flex;
+      align-items: center;
+      .zoom{
+        width: 20px;
+        height: 20px;
+        margin-right: 16px;
+      }
     }
 }
 </style>

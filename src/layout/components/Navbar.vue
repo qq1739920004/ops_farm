@@ -27,11 +27,14 @@
     <el-dropdown class="avatar-dropdown">
       <div>
         <img src="@/assets/header.png" alt="" />
-        <el-icon><arrow-down /></el-icon>
+        <span>
+          <span>{{ userStore.userInfo.nickName }}</span>
+          <el-icon><arrow-down /></el-icon>
+        </span>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>用户中心</el-dropdown-item>
+          <el-dropdown-item @click="goUserCenter">用户中心</el-dropdown-item>
           <el-dropdown-item divided @click="drawer = true"
             >主题设置</el-dropdown-item
           >
@@ -98,12 +101,12 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import useAppStore from "@/store/app";
-import useUserStore from '@/store/user'
+import useUserStore from "@/store/user";
 import { useFullscreen } from "@vueuse/core";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 const { locale } = useI18n();
 const appStore = useAppStore();
-const userStore = useUserStore()
+const userStore = useUserStore();
 const { isFullscreen, toggle } = useFullscreen();
 let drawer = ref(false);
 
@@ -136,7 +139,12 @@ function changeLang(value: string) {
 }
 // 退出登录
 function logOut() {
-  userStore.logOut()
+  userStore.clearUserInfo();
+  location.href = "/";
+}
+// 前往用户中心
+function goUserCenter() {
+  window.open('/ucFrontEnd')
 }
 </script>
 
@@ -156,8 +164,18 @@ function logOut() {
   .avatar-dropdown {
     color: #fff;
     cursor: pointer;
-    img {
-      width: 25px;
+    div {
+      display: flex;
+      img {
+        width: 25px;
+      }
+      span {
+        display: flex;
+        align-items: flex-end;
+        span {
+          margin: 0 3px;
+        }
+      }
     }
   }
 }

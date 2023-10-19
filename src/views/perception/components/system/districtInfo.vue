@@ -12,6 +12,8 @@
       <img v-else class="top_time_pic" src="~@/assets/perceptionImage/weatherElse.png" alt="" />
     </div>
     <div class="time">
+      <img @click="screenChange(false)" class="zoom" v-if="isZoom" src="@/assets/perceptionImage/zoom.svg" alt="">
+      <img @click="screenChange(true)" class="zoom" v-else src="@/assets/perceptionImage/out.svg" alt="">
       <span>{{ time.week }}</span>
       <span>{{ time.time }}</span>
       <span>{{ time.date }}</span>
@@ -23,7 +25,14 @@
 import { ref } from "vue";
 import { getCurrentDateTime } from "@/utils/getTimeInfo";
 import { getWeather } from "@/api/perception/index.ts";
+import {fullScreen} from '@/utils/fullScreen.ts';
+
 // import {getWeatherAPI} from '@/api/perception/index.ts';
+let isZoom=ref(true)
+function screenChange(zValue:boolean){
+  isZoom.value=zValue
+  fullScreen()
+}
 const time = ref(getCurrentDateTime());
 let weather: any = ref(null);
 setInterval(() => {
@@ -68,7 +77,14 @@ weatherService();
   }
 
   .time {
-    :nth-child(2) {
+
+    .zoom{
+        width: 24px;
+        height: 24px;
+        margin-right: 16px;
+        vertical-align: middle;
+      }
+    :nth-child(3) {
       font-size: 34.87px;
     }
   }
