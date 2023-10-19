@@ -57,9 +57,6 @@
                                 </el-checkbox>
                             </el-checkbox-group>
                         </li>
-                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: var(--el-text-color);">
-                            作业已全部加载
-                            </span>
                     </ul>
                 </div>
             </div>
@@ -105,7 +102,7 @@ const pageInfo = reactive<PageObj>({
     et: ''
 })
 const total = ref<number>(0)
-const CarDealerList = reactive<dealerCarObj[]>([])
+const CarDealerList = ref<dealerCarObj[]>([])
 const dealerList = ref<carDealerObj[]>([])
 const paddyWorkList = ref<paddyWorkObj[]>([])
 
@@ -505,7 +502,14 @@ getDealerList()
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
     const res: dealerCarResponseData = await getCarDealerList_API(pageInfo.companyId)
-    Object.assign(CarDealerList, res.data)
+    if (res.data == null) {
+        CarDealerList.value = []
+    }
+   else {
+    CarDealerList.value = res.data
+    pageInfo.carId = res.data[0].id
+    getPaddyWorkList(true)
+   }
 }
 getDealerCarList()
 const getPaddyWorkList = async (flag: Boolean) => {
@@ -525,7 +529,6 @@ const getPaddyWorkList = async (flag: Boolean) => {
     }
 
 }
-getPaddyWorkList(true)
 const changeBlur1 = () => {
     getDealerCarList()
     clearAllMarkers()
