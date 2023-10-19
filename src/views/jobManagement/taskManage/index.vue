@@ -538,7 +538,7 @@ const changeBlur1 = () => {
     pageInfo.currentPage = 1
     pageInfo.pageSize = 7
     pageInfo.carId = '请选择'
-    initMap()
+    // initMap()
 
 }
 const changeBlur2 = () => {
