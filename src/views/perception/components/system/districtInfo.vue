@@ -77,7 +77,6 @@ weatherService();
   }
 
   .time {
-
     .zoom{
         width: 24px;
         height: 24px;

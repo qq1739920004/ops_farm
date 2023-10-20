@@ -56,7 +56,7 @@ const option = {
     containLabel: true,
     bottom: "5%",
     top: "5%",
-    left: "0%", // 增加这个值，从而减少第二个yAxis的宽度
+    left: "5%", // 增加这个值，从而减少第二个yAxis的宽度
     right: "5%",
   },
   xAxis: {

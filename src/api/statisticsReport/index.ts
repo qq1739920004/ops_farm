@@ -38,6 +38,8 @@ export function getStatisticsReportnetworkAPI() {
   }
 // 远程校准次数、设置数据链次数、注册次数，小程序合并接口
   export function getStatisticsRemoteAPI(params: timeParams) {
+    console.log(111);
+    console.log(params)
     return request<timeParams, getStatisticsRemoteAPIResponse>({
         url: "/farm/stat/remote",
       method: 'get',

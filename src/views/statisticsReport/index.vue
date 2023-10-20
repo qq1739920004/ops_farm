@@ -113,6 +113,7 @@ const getStatisticsWx=async(time:timeType)=>{
       })
       fnOption(res.data,optionfnStatistics)
    }catch(err){
+    optionfnStatistics.value={}
     console.log(err)
    }
 }
@@ -123,8 +124,10 @@ const getStatisticsRemote=async(time:timeType)=>{
         st:time.st,
         et:time.et
       })
+
       transportOption(res.data,optionTransportStatistics)
    }catch(err){
+    optionTransportStatistics.value={}
     console.log(err)
    }
 }
@@ -137,6 +140,7 @@ const getStatisticsStat=async(time:timeType)=>{
       })
       visitOption(res.data,optionVisitStatistics)
    }catch(err){
+    optionVisitStatistics.value={}
     console.log(err)
    }
 }
@@ -155,6 +159,7 @@ const getStatisticsReportcarjob=async()=>{
       let res= await getStatisticsReportcarjobAPI()
       carjobOption(res.data,optionCarjobStatistics)
    }catch(err){
+    optionCarjobStatistics.value={}
     console.log(err)
    }
 }

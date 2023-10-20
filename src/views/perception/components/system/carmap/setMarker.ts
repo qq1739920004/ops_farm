@@ -1,6 +1,9 @@
 import type { MonitorObj } from "@/api/perception/type";
 import { ref, shallowRef } from "vue";
 import * as echarts from "echarts";
+type EChartsParams = {
+  value: number;
+};
 let width = ref(40);
 let height = ref(160);
 let marginTop = ref(80);
@@ -139,7 +142,13 @@ function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"]) {
             show: true,
             color: "white",
             position: "top",
-            formatter: "{c}",
+            formatter: function(params:EChartsParams) {
+              // 如果在线数为0，则不显示
+              if (params.value === 0) {
+                  return '';
+              }
+              return params.value;
+          },
           },
         },
         {

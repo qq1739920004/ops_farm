@@ -4,9 +4,10 @@ import * as echarts from 'echarts';
 type EChartsParams = {
   value: number;
 };
-let width=ref(50);
-let height=ref(160);
-let marginTop=ref(80);
+let width=ref(60);
+let height=ref(280);
+let fontSize=ref(15);
+let marginTop=ref(140);
 let numCurent=ref(0)
 let chartList=shallowRef<any>([]);
 let chartContainerList=ref<any>([]);
@@ -106,11 +107,11 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
                     return result.trim();
                 },
                 rich: {
-                    line1: { align: 'left', width: '100%' },
-                    line2: { align: 'left', width: '100%' },
-                    line3: { align: 'left', width: '100%' },
-                    line4: { align: 'left', width: '100%' },
-                    line5: { align: 'left', width: '100%' }
+                    line1: { align: 'left', width: '100%' ,fontSize:fontSize.value},
+                    line2: { align: 'left', width: '100%' ,fontSize: fontSize.value},
+                    line3: { align: 'left', width: '100%' ,fontSize: fontSize.value},
+                    line4: { align: 'left', width: '100%' ,fontSize: fontSize.value},
+                    line5: { align: 'left', width: '100%' ,fontSize: fontSize.value}
                 }
               },
               axisLine: {
@@ -189,4 +190,4 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
       }
       isUpdata.value=true;
 }
-export {setMarker,updateChart,width,height,marginTop,chartContainerList,chartList}
+export {setMarker,updateChart,width,height,fontSize,marginTop,chartContainerList,chartList}
