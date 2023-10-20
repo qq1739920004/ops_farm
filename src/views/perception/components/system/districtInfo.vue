@@ -83,6 +83,8 @@ weatherService();
         height: 24px;
         margin-right: 16px;
         vertical-align: middle;
+        cursor: pointer;
+
       }
     :nth-child(3) {
       font-size: 34.87px;

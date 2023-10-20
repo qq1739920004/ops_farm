@@ -85,8 +85,8 @@ const option = {
           //   leftPosition.value = titleWidth.value + 5; // 在 title 宽度的右侧再添加 5 像素的间距
           // }
           //如果value大于6，截取前6个字符，后面加...
-          if (value.length > 6) {
-            value = value.substring(0, 6) + "...";
+          if (value.length > 5) {
+            value = value.substring(0, 5) + "...";
           }
           return "{rank|}{title|" + value + "}";
         },
@@ -105,6 +105,7 @@ const option = {
             color: "#43cf7c",
             fontSize: 24,
             align: "left",
+            width:80
           },
         },
       },
