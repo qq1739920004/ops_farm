@@ -13,19 +13,22 @@
           <el-icon><Search /></el-icon>
         </template>
         <template #default="{ item }">
-          <div v-if="item.markerId">
-            <span>{{ item.carName }}</span>
-            |
-            <span>{{ item.sn }}</span>
-            |
-            <span>{{ item.npn }}</span>
+          <div :class="{'bt_1': item.border && item.markerId }" >
+            <div v-if="item.markerId" >  
+              <span>{{ item.sn }}</span>
+    
+              <span v-if="item.carName"> | {{ item.carName }}</span>
+
+              <span v-if="item.npn"> | {{ item.npn }}</span>
+            </div>
+            <div v-if="item.markerId">
+              <span>{{ item.companyName }}</span>
+
+              <span v-if="item.tel"> | {{ item.tel }}</span>
+            </div>
+            <div v-if="!item.markerId">{{ item }}</div>
           </div>
-          <div v-if="item.markerId">
-            <span>{{ item.companyName }}</span>
-            |
-            <span>{{ item.tel }}</span>
-          </div>
-          <div v-if="!item.markerId">{{ item }}</div>
+
         </template>
       </el-autocomplete>
     </div>
@@ -250,6 +253,10 @@ function querySearch(queryString: string, cb: any) {
     return;
   }
   if (filterData.length > 3) filterData.length = 3;
+  filterData.forEach((item:any) => {
+    item.border = true 
+  })
+  filterData[filterData.length-1].border = false
   cb(filterData);
   return;
 }
@@ -696,6 +703,10 @@ function openRemote_markerPopup(arg: any) {
   transition-property: opacity, background-color !important; /* 仅过渡opacity和background-color属性 */
   /* 其他样式 */
 }
+
+:deep(.autocomplete_item) {
+  background-color: pink !important;
+}
 .map_container {
   height: 100%;
   position: relative;
@@ -972,5 +983,8 @@ function openRemote_markerPopup(arg: any) {
       }
     }
   }
+}
+.bt_1 {
+  border-bottom: 1px solid var(--el-color-info-light-7);
 }
 </style>
