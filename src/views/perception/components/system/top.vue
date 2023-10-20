@@ -6,7 +6,6 @@
         <router-link to='/monitoring'>
           <img src="~@/assets/perceptionImage/top_title_logo.png" key=""  alt="" />
           <h1>司南耕耘感知平台</h1>
-
         </router-link>
 
       </div>
@@ -128,6 +127,9 @@ defineProps({
         font-weight: 400;
         letter-spacing: 5px;
         font-family: 'perceptionTitle';
+        cursor: pointer;
+        z-index: 9;
+        color: rgba(255, 255, 255, 1);
       }
       a{
         display: flex;
