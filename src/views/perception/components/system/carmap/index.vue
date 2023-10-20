@@ -117,7 +117,11 @@ watch(() =>props.provinceCars, () => {
 </script>
 
 <style scoped lang="scss">
+ :deep(.echarts-container) {
+    transition: opacity .3s;  /* 0.3秒的淡入淡出效果 */
+}
 .carmap {
+ 
   position: relative;
   width: 100%;
   height: 100%;

@@ -124,6 +124,9 @@ function handleSocketData(data: any) {
 </script>
 
 <style lang="scss" scoped>
+ :deep(.echarts-container) {
+    transition: opacity .3s;  /* 0.3秒的淡入淡出效果 */
+}
 .container {
   width: 100%;
   height: 100%;

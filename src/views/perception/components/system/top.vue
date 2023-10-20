@@ -5,7 +5,8 @@
       <div class="top_tittle">
         <router-link to='/monitoring'>
           <img src="~@/assets/perceptionImage/top_title_logo.png" key=""  alt="" />
-          <img src="~@/assets/perceptionImage/top_title_word.png" alt="" />
+          <h1>司南耕耘感知平台</h1>
+
         </router-link>
 
       </div>
@@ -121,21 +122,23 @@ defineProps({
       justify-content: start;
       align-items: center;
       margin-bottom: 15px;
+      h1 {
+        text-shadow: 0px 2px 32px  rgba(255, 255, 255, 0.8);
+        font-size: 42px;
+        font-weight: 400;
+        letter-spacing: 5px;
+        font-family: 'perceptionTitle';
+      }
       a{
         display: flex;
         align-items: center;
       }
       img:nth-child(1){
-        width: 140px;
+        width: 60px;
         position: relative;
+        margin:0 28px 0 40px ;
         z-index: 9;
 
-      }
-      img:nth-child(2){
-        width: 382px;
-        position: relative;
-        left: -20px;
-        z-index: 9;
       }
      
     }

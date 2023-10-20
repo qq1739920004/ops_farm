@@ -65,7 +65,7 @@ weatherService();
   }
 
   .temp {
-    transform: translate(10px,-44px);
+    transform: translate(26px,-44px);
     display: flex;
     justify-content: center;
     align-items: center;

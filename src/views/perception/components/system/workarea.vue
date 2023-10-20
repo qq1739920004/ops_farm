@@ -235,7 +235,7 @@ onUnmounted(() => {
 .box {
   background: url(@/assets/systemPerceptionImage/border_green_state.png) no-repeat;
   background-size: 100% 100%;
-  margin: 0px 10px 10px 15px;
+  margin: 20px 10px 34px 15px;
   padding:10px 0 0 10px ;
   .title {
     height: 40px;

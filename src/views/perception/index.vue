@@ -30,6 +30,5 @@ getUserAuth().then(res=>{
 .perception {
   width: 100%;
   height: 100%;
-  
 }
 </style>
