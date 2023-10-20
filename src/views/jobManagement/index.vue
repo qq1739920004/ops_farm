@@ -6,10 +6,9 @@
                     @change="changeBlur1">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
-                <el-select filterable v-model="pageInfo.carId" class="m-2" placeholder="请选择"
-                    @change="changeBlur2">
-                    <el-option v-if="CarDealerList.length" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
-                        :key="item.id"></el-option>
+                <el-select filterable v-model="pageInfo.carId" class="m-2" placeholder="请选择" @change="changeBlur2">
+                    <el-option v-if="CarDealerList" v-for="item in CarDealerList" :label="item.nameNpn"
+                        :value="item.id" :key="item.id"></el-option>
                     <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
                 </el-select>
             </div>
@@ -83,7 +82,7 @@ const pageInfo = reactive<PageObj>({
     st: '',
     et: ''
 })
-let CarDealerList = reactive<dealerCarObj[]>([])
+let CarDealerList = ref<dealerCarObj[]>([])
 const value1 = ref<Date>()
 const value2 = ref<Date>()
 const isActive = ref<number>(0)
@@ -105,7 +104,14 @@ getDealerList()
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
     const res: dealerCarResponseData = await getCarDealerList_API(pageInfo.companyId)
-    Object.assign(CarDealerList, res.data) 
+    if (res.data == null) {
+        CarDealerList.value = []
+    }
+   else {
+    CarDealerList.value = res.data
+    pageInfo.carId = res.data[0].id
+    getPaddyWorkList()
+   }
 }
 getDealerCarList()
 // 获取数据
@@ -114,7 +120,6 @@ const getPaddyWorkList = async () => {
     total.value = res.data.total
     paddyWorkList.value = res.data.records
 }
-getPaddyWorkList()
 // 监视日期，起始日期大于末尾日期则交换
 watch(() => [value1.value, value2.value], () => {
     if (value2.value && value1.value && value2.value.getTime() < value1.value.getTime()) {

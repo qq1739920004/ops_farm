@@ -57,9 +57,6 @@
                                 </el-checkbox>
                             </el-checkbox-group>
                         </li>
-                        <span v-if="pageInfo.pageSize >= total" style="margin-bottom: 5px;color: var(--el-text-color);">
-                            作业已全部加载
-                            </span>
                     </ul>
                 </div>
             </div>
@@ -96,21 +93,20 @@ console.log($route.query);
 
 // 提交数据 3274
 const pageInfo = reactive<PageObj>({
-    carId: parseInt($route.query.carId as string ),
+    carId: parseInt($route.query.carId as string),
     name: '',
-    companyId: parseInt($route.query.companyId as string ),
+    companyId: parseInt($route.query.companyId as string),
     currentPage: 1,
     pageSize: 7,
     st: '',
     et: ''
 })
 const total = ref<number>(0)
-const CarDealerList = reactive<dealerCarObj[]>([])
+const CarDealerList = ref<dealerCarObj[]>([])
 const dealerList = ref<carDealerObj[]>([])
 const paddyWorkList = ref<paddyWorkObj[]>([])
 
 onMounted(() => {
-
     initMap()
 })
 
@@ -278,15 +274,18 @@ const workTypeReflect = reactive<any>({
 const middlePoint = ref<any>([0, 0])
 const middleKey = ref<number>(0)
 const tranpatrnt = ref<any>([])
+const emptyIds = ref(false)
 const loadWorkData = async (workId: any) => {
     const res = await historyList_path(workId)
     let key = Object.keys(res.data)
     getMachineInfo()
     key.map((item) => {
         if (!item.length || res.data[item] === null || !res.data[item].length) {
+            emptyIds.value = true
             ElMessage.warning(`${item}暂无作业数据`);
             return
         } else {
+            emptyIds.value = false
             let PointListTransed = res.data[item].map((item2: any) => {
                 return coorTransform([item2.posX as never, item2.posY as never], mapId.value) // 转换坐标
             })
@@ -311,6 +310,7 @@ const loadWorkData = async (workId: any) => {
                 className: 'iconImage'
             })
             let marker = L.marker(middlePoint.value, { icon: icon }).addTo(map)
+            map.setView(middlePoint.value, 5)
             line.bindPopup(`<div class="popup_outsiders"> 
             <div class="popupTitle"> 
                     ${machine[workId].name}
@@ -339,7 +339,9 @@ const loadWorkData = async (workId: any) => {
             saveMarker(workId, [{ markerObj: line, name: 'lines', markerObj2: marker, name2: 'picture' }])
         }
     })
-    map.fitBounds(tranpatrnt.value)
+    if (ids.value.length >= 2 || emptyIds.value === true) {
+        map.fitBounds(tranpatrnt.value)
+    }
 }
 //坐标转换
 const coorTransform = (point = [], mapType = 1) => {
@@ -501,11 +503,22 @@ const getDealerList = async () => {
 const changeisShow = (val: boolean) => {
     isShow.value = val
 }
+const firRes = ref(true)
 getDealerList()
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
     const res: dealerCarResponseData = await getCarDealerList_API(pageInfo.companyId)
-    Object.assign(CarDealerList, res.data)
+    if (res.data == null) {
+        CarDealerList.value = []
+    }
+    else {
+        CarDealerList.value = res.data
+        if (firRes.value === false) {
+            pageInfo.carId = res.data[0].id
+        }
+        getPaddyWorkList(true)
+        firRes.value = false
+    }
 }
 getDealerCarList()
 const getPaddyWorkList = async (flag: Boolean) => {
@@ -525,7 +538,6 @@ const getPaddyWorkList = async (flag: Boolean) => {
     }
 
 }
-getPaddyWorkList(true)
 const changeBlur1 = () => {
     getDealerCarList()
     clearAllMarkers()
@@ -535,7 +547,6 @@ const changeBlur1 = () => {
     pageInfo.currentPage = 1
     pageInfo.pageSize = 7
     pageInfo.carId = '请选择'
-    initMap()
 
 }
 const changeBlur2 = () => {
@@ -802,7 +813,7 @@ watch(() => paddyWorkList.value,
                 background-color: var(--el-bg-color);
 
                 .li_title {
-                    cursor:default;
+                    cursor: default;
                     padding: 3px 5px;
                     margin-left: 10px;
                     width: 75px;
