@@ -37,14 +37,14 @@
 </template>
 
 <script setup lang="ts">
-import { PageInfoObj, singleCarTrackResponseData } from '@/api/machineryList/type'
-import { getSingleCarTrick_API } from '@/api/machineryList/index'
-import { ref, reactive, watch, onMounted } from 'vue'
-import router from '@/router'
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.pm";
 import "leaflet.pm/dist/leaflet.pm.css";
+import { PageInfoObj, singleCarTrackResponseData } from '@/api/machineryList/type'
+import { getSingleCarTrick_API } from '@/api/machineryList/index'
+import { ref, reactive, watch, onMounted } from 'vue'
+import router from '@/router'
 import { ElMessage } from 'element-plus'
 import gcoord from 'gcoord'
 import { useRoute } from "vue-router";
@@ -72,8 +72,10 @@ onMounted(() => {
     value1.value = start
     pageInfoData.st = formartDate(value1.value)
     pageInfoData.et = formartDate(value2.value)
+
     initMap()
     getSingleCarTrick()
+
 })
 // 时间格式转换
 function add0(m: any) {
@@ -137,7 +139,7 @@ const mapOptions = reactive([
 const markerCollect = reactive<any>({
     'marker': []
 })
-const initMap = () => {
+function initMap() {
     map = L.map('child6_map',
         {
             attributionControl: false,

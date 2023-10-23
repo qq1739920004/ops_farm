@@ -65,7 +65,14 @@
 </template>
 
 <script setup lang="ts">
-
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "leaflet.pm";
+import "leaflet.pm/dist/leaflet.pm.css";
+import "leaflet/dist/leaflet.css";
+import "leaflet.markercluster";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { ref, reactive, watch, onMounted } from 'vue'
 import { PageObj, dealerCarObj, dealerCarResponseData, paddyWorkObj, paddyWorkListResponsenumber } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
@@ -74,10 +81,6 @@ import { getCarDealerList_API, paddyWorkList_API } from '@/api/jobManagement/ind
 import { carDealer_API } from '@/api/machineryList/index'
 import { historyList_path } from '@/api/jobManagement/taskManage/index'
 import router from '@/router'
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import "leaflet.pm";
-import "leaflet.pm/dist/leaflet.pm.css";
 import { ElMessage } from 'element-plus'
 import gcoord from 'gcoord'
 import { mapTitleLayers } from "./mapTitleLayers";
@@ -107,7 +110,9 @@ const dealerList = ref<carDealerObj[]>([])
 const paddyWorkList = ref<paddyWorkObj[]>([])
 
 onMounted(() => {
-    initMap()
+    setTimeout(() => {
+        initMap()
+    }, 1000);
 })
 
 // 地图相关
@@ -140,7 +145,7 @@ const mapOptions = reactive([
     }
 ])
 const markerCollect = <any>({})
-const initMap = () => {
+function initMap() {
     map = L.map('child6_map',
         {
             attributionControl: false,
