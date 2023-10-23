@@ -104,7 +104,7 @@ watch(() => [value1.value, value2.value], () => {
         value2.value = a.value
     }
 })
-// 更改实际time
+// 更改实际time1
 const changeA = () => {
     if (value1.value && value2.value) {
         pageInfoData.st = formartDate(value1.value)
