@@ -65,7 +65,7 @@ weatherService();
   }
 
   .temp {
-    transform: translate(10px,-44px);
+    transform: translate(26px,-44px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -77,12 +77,13 @@ weatherService();
   }
 
   .time {
-
     .zoom{
         width: 24px;
         height: 24px;
         margin-right: 16px;
         vertical-align: middle;
+        cursor: pointer;
+
       }
     :nth-child(3) {
       font-size: 34.87px;

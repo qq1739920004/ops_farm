@@ -144,7 +144,9 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
       align-items: center;
 
       img {
-        width: 140px;
+        width: 60px;
+        margin:0 20px 0 15px;
+
       }
 
       h1 {

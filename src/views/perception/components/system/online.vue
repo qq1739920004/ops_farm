@@ -28,6 +28,14 @@ let dataList = [
     totalCount: 0,
   },
 ];
+type DataZoomMove = {
+  start: number;
+  end: number;
+};
+const dataZoomMove: DataZoomMove = {
+  start: 0,
+  end: 3,
+};
 dataList = JSON.parse(JSON.stringify(props.typeCounts));
 let yAxisData: string[] = [];
 let xAxisData: number[] = [];
@@ -56,6 +64,25 @@ const option = {
     left: "3%", // 增加这个值，从而减少第二个yAxis的宽度
     right: "5%",
   },
+  dataZoom: [
+    {
+      show: true, // 为true 滚动条出现
+      realtime: true,
+      type: "inside", // 内部数据区域缩放和选择
+      disabled: true, // 禁用数据区域缩放和选择功能
+      startValue: dataZoomMove.start,
+      endValue: dataZoomMove.end,
+      yAxisIndex: [0, 1], //这个字段的作用是指定哪个轴可以进行缩放操作，这里的0表示x轴，1表示y轴
+    },
+    {
+      //没有下面这块的话，只能拖动滚动条，鼠标滚轮在区域内不能控制外部滚动条
+      type: "inside",
+      yAxisIndex: 0,
+      zoomOnMouseWheel: false, //滚轮是否触发缩放
+      moveOnMouseMove: false, //鼠标移动时触发
+      moveOnMouseWheel: true, //鼠标滚轮触发移动
+    },
+  ],
   xAxis: {
     type: "value",
     axisLabel: {
@@ -186,9 +213,54 @@ const initEcharts = () => {
   mycharts = echarts.init(bar.value);
   mycharts.setOption(option);
 };
+let isDataUpdated = ref(false);
 
+//设置为定时器类型
+let dataZoomMoveTimer:any
+const startMoveDataZoom = (
+  myChart: echarts.ECharts,
+  dataZoomMove: DataZoomMove
+) => {
+  dataZoomMoveTimer = setInterval(() => {
+    if (isDataUpdated.value) {
+      // 如果数据已更新，重置标志并跳过此次移动
+      isDataUpdated.value = false;
+      return;
+    }
+    dataZoomMove.start += 1;
+    dataZoomMove.end += 1;
+    if (dataZoomMove.end > yAxisData.length - 1) {
+      dataZoomMove.start = 0;
+      dataZoomMove.end = 3;
+    }
+    myChart.setOption({
+      dataZoom: [
+        {
+          type: "inside", // 内部数据区域缩放和选择
+          startValue: dataZoomMove.start,
+          endValue: dataZoomMove.end,
+        },
+      ],
+    });
+  }, 2000);
+};
 onMounted(() => {
   initEcharts();
+  startMoveDataZoom(mycharts, dataZoomMove);
+  let chartDom = mycharts.getDom();
+  chartDom.addEventListener("mouseout", () => {
+    if (dataZoomMoveTimer) return;
+    let dataZoomMove_get = (mycharts.getOption() as any).dataZoom[0];
+    dataZoomMove.start = dataZoomMove_get.startValue;
+    dataZoomMove.end = dataZoomMove_get.endValue;
+    startMoveDataZoom(mycharts, dataZoomMove);
+  });
+  // 移入
+  // myChart.on
+  chartDom.addEventListener("mouseover", () => {
+    clearInterval(dataZoomMoveTimer);
+    dataZoomMoveTimer = undefined;
+  });
 });
 
 watch(props, (newValue) => {
@@ -210,6 +282,9 @@ watch(props, (newValue) => {
   option.xAxis.data = xAxisData;
   option.series[0].data = seriesDataO;
   option.series[1].data = seriesData.map(() => maxV);
+     // 设置新数据后，保持当前的滚动位置
+     option.dataZoom[0].startValue = dataZoomMove.start;
+  option.dataZoom[0].endValue = dataZoomMove.end;
   mycharts.setOption(option);
 });
 

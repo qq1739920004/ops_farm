@@ -1,10 +1,12 @@
 <template>
   <div class="navbar_component">
-    <div class="setting-item" @click="toggle">
+    <div class="setting-item">
       <SvgIcon
+        @click="toggle"
         color="#fff"
         :icon="isFullscreen ? 'exit-fullscreen' : 'fullscreen'"
       />
+      <SvgIcon icon="theme" size="20" @click="drawer = true" />
     </div>
     <el-dropdown class="lang-dropdown">
       <SvgIcon icon="language" size="22" />
@@ -35,9 +37,6 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item @click="goUserCenter">用户中心</el-dropdown-item>
-          <el-dropdown-item divided @click="drawer = true"
-            >主题设置</el-dropdown-item
-          >
           <el-dropdown-item @click="logOut" divided>退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -59,7 +58,12 @@
         />
       </div>
     </div>
-
+    <div class="item themeColor_item">
+      <el-divider>自定义颜色</el-divider>
+      <div style="display:flex;justify-content: center;">
+        <el-color-picker @change="changeThemeColor(appStore.themeColor)" v-model="appStore.themeColor" />
+      </div>
+    </div>
     <div class="item themeColor_item">
       <el-divider>主题颜色</el-divider>
       <ul>
@@ -153,8 +157,13 @@ function goUserCenter() {
   display: flex;
   align-items: center;
   .setting-item {
-    margin-right: 8px;
+    margin-right: 10px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    .svg-icon {
+      margin-left: 10px;
+    }
   }
   .lang-dropdown {
     color: #fff;

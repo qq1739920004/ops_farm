@@ -22,8 +22,8 @@
       <img src="@/assets/perceptionImage/corporation-logo.png" alt="">
     </div>
     <div class="logo-text">
-      <img @click="screenChange(false)" class="zoom" v-if="isZoom" src="@/assets/perceptionImage/zoom.svg" alt="">
-      <img @click="screenChange(true)" class="zoom" v-else src="@/assets/perceptionImage/out.svg" alt="">
+      <img @click="screenChange(false)" class="zoom" v-if="isZoom" src="@/assets/perceptionImage/out.svg" alt="">
+      <img @click="screenChange(true)" class="zoom" v-else src="@/assets/perceptionImage/zoom.svg" alt="">
       <span>北斗农机智能监管平台</span>
     </div>
   </div>
@@ -97,6 +97,7 @@ weatherService();
         width: 20px;
         height: 20px;
         margin-right: 16px;
+        cursor: pointer;
       }
     }
 }

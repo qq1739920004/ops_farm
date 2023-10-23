@@ -34,6 +34,9 @@ function setOption(){
   myChart.setOption(props.options);
   myChart.hideLoading();
 }
+function hideLd(){
+  myChart.hideLoading();
+}
 function timeSelect(data:any){
   emits('timeSelect',data)
   myChart.showLoading();
@@ -43,8 +46,14 @@ onMounted(
     init()
   }
 )
+
 watch(() => props.options, () => {
-  setOption()
+  console.log(props.options);
+  if(Object.keys(props.options).length===0){
+    hideLd()
+  }else{
+    setOption()
+  }
 }, { deep: true })
 </script>
 

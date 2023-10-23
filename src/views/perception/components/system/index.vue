@@ -151,6 +151,7 @@ function getScale(w = 1920, h = 937) {
   .screen {
     .top-img {
       position: fixed;
+      min-width: 1920px;
       top: 0;
     }
     width: 1920px;
@@ -194,6 +195,7 @@ function getScale(w = 1920, h = 937) {
       }
 
       .right {
+        margin-top: 40px;
         flex: 1;
         height: 100%;
         transform: translateY(-50px);
