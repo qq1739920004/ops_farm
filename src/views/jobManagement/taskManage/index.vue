@@ -3,7 +3,7 @@
     <div class="page7_child6_container">
         <div id="child6_map" class=""></div>
         <div class="map_selector">
-            <el-select style="width: 99px;height: 32px;opacity: 1;border-radius: 4px;" v-model="mapId" placeholder=""
+            <el-select  style="width: 99px;height: 32px;opacity: 1;border-radius: 4px;" v-model="mapId" placeholder=""
                 @change="hangleSelectChange">
                 <el-option v-for="(item, index) in mapOptions" :key="index" :label="item.mapName" :value="item.mapId" />
             </el-select>
@@ -27,7 +27,7 @@
                     <el-option style="width: 230px;" v-for="item in dealerList" :label="item.name" :value="item.id"
                         :key="item.id"></el-option>
                 </el-select>
-                <el-select style="width: 230px;" v-model="pageInfo.carId" placeholder="请选择" @change="changeBlur2">
+                <el-select filterable style="width: 230px;" v-model="pageInfo.carId" placeholder="请选择" @change="changeBlur2">
                     <template #prefix>
                         <span class="select_title2">当前车辆：</span>
                     </template>
@@ -67,8 +67,6 @@
 <script setup lang="ts">
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "leaflet.pm";
-import "leaflet.pm/dist/leaflet.pm.css";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
@@ -92,7 +90,7 @@ import SvgIcon from "@/components/SvgIcon/index.vue";
 const ids = ref<any>([])
 const isShow = ref<boolean>(true)
 const $route = useRoute()
-console.log($route.query);
+
 
 // 提交数据 3274
 const pageInfo = reactive<PageObj>({
