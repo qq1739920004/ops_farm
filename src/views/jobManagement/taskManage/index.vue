@@ -92,7 +92,7 @@ const isShow = ref<boolean>(true)
 const $route = useRoute()
 
 
-// 提交数据 3274
+// 提交数据
 const pageInfo = reactive<PageObj>({
     carId: parseInt($route.query.carId as string),
     name: '',

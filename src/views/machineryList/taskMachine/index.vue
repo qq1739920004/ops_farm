@@ -96,7 +96,7 @@ const formartDate = (val: Date) => {
 const disabledDate = (time: Date) => {
     return time.getTime() > Date.now()
 }
-// 监视日期，起始日期大于末尾日期则交换
+// 监视日期，起始日期大于末尾日期则交换1
 watch(() => [value1.value, value2.value], () => {
     if (value2.value && value1.value && value2.value.getTime() < value1.value.getTime()) {
         a.value = value1.value
