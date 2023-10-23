@@ -3,7 +3,7 @@
     <div class="page7_child6_container">
         <div id="child6_map" class=""></div>
         <div class="map_selector">
-            <el-select  style="width: 99px;height: 32px;opacity: 1;border-radius: 4px;" v-model="mapId" placeholder=""
+            <el-select style="width: 99px;height: 32px;opacity: 1;border-radius: 4px;" v-model="mapId" placeholder=""
                 @change="hangleSelectChange">
                 <el-option v-for="(item, index) in mapOptions" :key="index" :label="item.mapName" :value="item.mapId" />
             </el-select>
@@ -27,7 +27,8 @@
                     <el-option style="width: 230px;" v-for="item in dealerList" :label="item.name" :value="item.id"
                         :key="item.id"></el-option>
                 </el-select>
-                <el-select filterable style="width: 230px;" v-model="pageInfo.carId" placeholder="请选择" @change="changeBlur2">
+                <el-select filterable style="width: 230px;" v-model="pageInfo.carId" placeholder="请选择"
+                    @change="changeBlur2">
                     <template #prefix>
                         <span class="select_title2">当前车辆：</span>
                     </template>
@@ -108,9 +109,7 @@ const dealerList = ref<carDealerObj[]>([])
 const paddyWorkList = ref<paddyWorkObj[]>([])
 
 onMounted(() => {
-    setTimeout(() => {
-        initMap()
-    }, 1000);
+    initMap()
 })
 
 // 地图相关
@@ -143,6 +142,8 @@ const mapOptions = reactive([
     }
 ])
 const markerCollect = <any>({})
+
+const markerCollect2 = <any>({})
 function initMap() {
     map = L.map('child6_map',
         {
@@ -264,6 +265,13 @@ const saveMarker = (workId: any, markerObj: any) => {
         console.log(err)
     }
 }
+const saveMarker2 = (workId: any, markerObj: any) => {
+    try {
+        markerCollect2[workId]['marker'] = markerObj
+    } catch (err) {
+        console.log(err)
+    }
+}
 // 农业分类
 const workTypeReflect = reactive<any>({
     1: '播种',
@@ -375,11 +383,11 @@ const coorTransform = (point = [], mapType = 1) => {
 const addPathAB = (item: any) => {
     try {
         let pointA = coorTransform(
-            [item.lineptax as never, item.lineptay as never],
+            [item.lineptay as never, item.lineptax as never],
             mapId.value
         )
         let pointB = coorTransform(
-            [item.lineptbx as never, item.lineptby as never],
+            [item.lineptby as never, item.lineptbx as never],
             mapId.value
         )
         let l1 = L.latLng(item.lineptax, item.lineptay)
@@ -418,7 +426,7 @@ const addPathAB = (item: any) => {
                 name: 'lineAB',
             },
         ]
-        saveMarker(item.id, temMarkers)
+        saveMarker2(item.id, temMarkers)
 
         //绘制田块边界(全部上传GCJ02坐标，对应全部GCJ02地图，无需相互转换！！！)
         // if (item.borderpoints) {
@@ -449,7 +457,16 @@ const removeMarker = (workId: any) => {
                 }
             })
             markerCollect[workId]['marker'] = []
-        } else {
+        }
+        if (markerCollect2[workId]['marker'].length) {
+            let a = markerCollect2[workId]['marker']
+            a.forEach((item: any) => {
+                if (item.markerObj) {
+                    map.removeLayer(item.markerObj)
+                    // map.removeLayer(item.markerObj2)
+                }
+            })
+            markerCollect2[workId]['marker'] = []
         }
     } catch (err) {
         console.log(err)
@@ -493,6 +510,17 @@ const clearAllMarkers = () => {
                 }
             }
         }
+        for (let key in markerCollect2) {
+            if (Object.keys(markerCollect2).length) {
+                if (markerCollect2[key]['marker'].length) {
+                    markerCollect2[key]['marker'].forEach((item: any) => {
+                        if (item) {
+                            map.removeLayer(item)
+                        }
+                    })
+                }
+            }
+        }
         clearDistance()
     } catch (err) {
         console.log(err)
@@ -530,6 +558,7 @@ const getPaddyWorkList = async (flag: Boolean) => {
     let tem = res.data.records
     tem.forEach((element) => {
         markerCollect[element.id] = { marker: [] }
+        markerCollect2[element.id] = { marker: [] }
         element.checked = false
     })
     if (paddyWorkList.value.length) {
@@ -545,6 +574,7 @@ const changeBlur1 = () => {
     getDealerCarList()
     clearAllMarkers()
     Object.assign(markerCollect, {})
+    Object.assign(markerCollect2, {})
     ids.value = []
     paddyWorkList.value = []
     pageInfo.currentPage = 1
@@ -555,6 +585,7 @@ const changeBlur1 = () => {
 const changeBlur2 = () => {
     clearAllMarkers()
     Object.assign(markerCollect, {})
+    Object.assign(markerCollect2, {})
     pageInfo.currentPage = 1
     pageInfo.pageSize = 7
     ids.value = []
@@ -600,6 +631,7 @@ watch(() => paddyWorkList.value,
                 if (subItem.checked) {
                     if (!hasMarker(subItem.id)) {
                         addPathAB(subItem)
+                        console.log(markerCollect2)
                     } if (!hasMarkerField(subItem.id, 'lines')) {
                         loadWorkData(subItem.id)
                     }
