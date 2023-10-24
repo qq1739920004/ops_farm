@@ -37,14 +37,16 @@
 </template>
 
 <script setup lang="ts">
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "leaflet/dist/leaflet.css";
+import "leaflet.markercluster";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { PageInfoObj, singleCarTrackResponseData } from '@/api/machineryList/type'
 import { getSingleCarTrick_API } from '@/api/machineryList/index'
 import { ref, reactive, watch, onMounted } from 'vue'
 import router from '@/router'
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import "leaflet.pm";
-import "leaflet.pm/dist/leaflet.pm.css";
 import { ElMessage } from 'element-plus'
 import gcoord from 'gcoord'
 import { useRoute } from "vue-router";
@@ -72,8 +74,10 @@ onMounted(() => {
     value1.value = start
     pageInfoData.st = formartDate(value1.value)
     pageInfoData.et = formartDate(value2.value)
+
     initMap()
     getSingleCarTrick()
+
 })
 // 时间格式转换
 function add0(m: any) {
@@ -92,7 +96,7 @@ const formartDate = (val: Date) => {
 const disabledDate = (time: Date) => {
     return time.getTime() > Date.now()
 }
-// 监视日期，起始日期大于末尾日期则交换
+// 监视日期，起始日期大于末尾日期则交换1
 watch(() => [value1.value, value2.value], () => {
     if (value2.value && value1.value && value2.value.getTime() < value1.value.getTime()) {
         a.value = value1.value
@@ -100,7 +104,7 @@ watch(() => [value1.value, value2.value], () => {
         value2.value = a.value
     }
 })
-// 更改实际time
+// 更改实际time1
 const changeA = () => {
     if (value1.value && value2.value) {
         pageInfoData.st = formartDate(value1.value)
@@ -109,7 +113,7 @@ const changeA = () => {
 }
 
 // 地图相关
-const map = ref<any>(null)
+let map = <any>null
 const originPoint = ref<any>([31.172800343248, 121.406021546488])
 const originZoom = ref<any>(5)
 const tileLayer = reactive<any>([])
@@ -137,8 +141,8 @@ const mapOptions = reactive([
 const markerCollect = reactive<any>({
     'marker': []
 })
-const initMap = () => {
-    map.value = L.map('child6_map',
+function initMap() {
+    map = L.map('child6_map',
         {
             attributionControl: false,
             closePopupOnClick: false,
@@ -165,7 +169,7 @@ const handleMapChange = (mapId: any) => {
 }
 const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
     try {
-        if (!map.value) {
+        if (!map) {
             console.warn('未初始化底图实例')
             return
         }
@@ -183,7 +187,7 @@ const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
             options.key = tileUrl[mapName]['key']
         }
         for (let key in mapUrl) {
-            let layer = L.tileLayer(mapUrl[key], options).addTo(map.value)
+            let layer = L.tileLayer(mapUrl[key], options).addTo(map)
             tileLayer.push(layer as never)
         }
     } catch (error) {
@@ -217,9 +221,9 @@ const getSingleCarTrick = async () => {
         })
         // 取中间点
         ElMessage.success(`${route.query.sn}轨迹获取成功！`);
-        let line = L.polyline(PointListTransed, { color: '#00ff00' }).addTo(map.value)
+        let line = L.polyline(PointListTransed, { color: '#00ff00' }).addTo(map)
         saveMarker([{ markerObj: line, name: 'lines' }])
-        map.value.fitBounds(PointListTransed)
+        map.fitBounds(PointListTransed)
     }
     loading.value = false
 }
@@ -255,7 +259,7 @@ const removeMarker = () => {
             let a = markerCollect['marker']
             a.forEach((item: any) => {
                 if (item.markerObj) {
-                    map.value.removeLayer(item.markerObj)
+                    map.removeLayer(item.markerObj)
                 }
             })
             markerCollect['marker'] = []
@@ -350,4 +354,4 @@ const removeMarker = () => {
         }
     }
 }
-</style>./utils/mapTitleLayers
+</style>

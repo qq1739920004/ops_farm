@@ -39,8 +39,10 @@
 <script setup lang="ts">
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "leaflet.pm";
-import "leaflet.pm/dist/leaflet.pm.css";
+import "leaflet/dist/leaflet.css";
+import "leaflet.markercluster";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { PageInfoObj, singleCarTrackResponseData } from '@/api/machineryList/type'
 import { getSingleCarTrick_API } from '@/api/machineryList/index'
 import { ref, reactive, watch, onMounted } from 'vue'
@@ -94,7 +96,7 @@ const formartDate = (val: Date) => {
 const disabledDate = (time: Date) => {
     return time.getTime() > Date.now()
 }
-// 监视日期，起始日期大于末尾日期则交换
+// 监视日期，起始日期大于末尾日期则交换1
 watch(() => [value1.value, value2.value], () => {
     if (value2.value && value1.value && value2.value.getTime() < value1.value.getTime()) {
         a.value = value1.value
@@ -102,7 +104,7 @@ watch(() => [value1.value, value2.value], () => {
         value2.value = a.value
     }
 })
-// 更改实际time
+// 更改实际time1
 const changeA = () => {
     if (value1.value && value2.value) {
         pageInfoData.st = formartDate(value1.value)

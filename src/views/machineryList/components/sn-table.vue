@@ -200,7 +200,7 @@
         >
           <el-button
             style="width: 52px"
-
+            :disabled="row.openRemote"
             type="primary"
             text
             @click="
