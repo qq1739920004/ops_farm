@@ -3,7 +3,7 @@
     <div class="title">
       <span>|</span>&nbsp
       <span class="arrows-shadow">▸</span>
-      各车辆作业面积 亩
+      各车辆作业面积/亩
       <span class="arrows-shadow">◂</span>
     </div>
     <div class="charts-box">

@@ -13,8 +13,8 @@
             <span v-if="!item.onlineTcp" class="circle-out">●</span>
             <span v-else class="circle-login">●</span>
             <div :class="['state_bar',item.onlineTcp?'state_bar_login':'state_bar_out']">
-              <span>{{ item.sn }}</span>
-              <span>{{ item.name }}</span>
+              <span>{{ item.sn||item.deviceSn }}</span>
+              <span>{{ item.name||item.position  }}</span>
               <span>
                 <el-tag v-if="!item.onlineTcp" type="danger" size="small" effect="dark"
                   >离线</el-tag>

@@ -18,10 +18,10 @@
         </div>
         <div class="charts_title">
             <div>
-                今日作业面积
+                今日作业面积/亩
             </div>
             <div>
-                当年累计作业面积
+                当年累计作业面积/亩
             </div>
         </div>
 

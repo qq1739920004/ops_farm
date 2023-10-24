@@ -18,8 +18,8 @@
             <span v-if="!item.onlineTcp" class="circle-out">●</span>
             <span v-else class="circle-login">●</span>
             <div :class="['state_bar',item.onlineTcp?'state_bar_login':'state_bar_out']">
-              <span>{{ item.sn }}</span>
-              <span>{{ item.name }}</span>
+              <span>{{ item.sn||item.deviceSn }}</span>
+              <span>{{ item.name||item.position  }}</span>
               <span class="state-tips">
                   <img v-if="!item.onlineTcp" src="@/assets/perceptionImage/stateOut.png" alt="">
                   <img v-else src="@/assets/perceptionImage/stateIn.png" alt="">

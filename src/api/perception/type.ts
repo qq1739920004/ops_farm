@@ -60,7 +60,9 @@ export interface recordsType
     sn: string,
     onlineTcp:number,
     time?:string,
-    carId: number
+    carId: number,
+    deviceSn:string,
+    position:string,
 }
 // 定义一个车辆数量的类型
 interface CarCount {

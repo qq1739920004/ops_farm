@@ -64,6 +64,7 @@ import socket from "@/store/socket";
 import type { ChartData } from "@/api/perception/type.ts";
 
 const realTime = socket();
+realTime.connect();
 
 // 监测数据
 const monitorData = ref<MonitorObj>();
@@ -121,7 +122,9 @@ function handleSocketData(data: any) {
       monitorData.value!.todayAcDevice = data.data.todayAcDevice;
       dataNow.value = data.data.chart[0];
     }
-  }
+  }else if (data.type == "notification") {
+    stateObj.value = data.data.list[0]
+  } 
 }
 onMounted(() => {
   getMonitor();
