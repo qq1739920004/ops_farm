@@ -52,16 +52,20 @@ const props = defineProps({
     type: Array,
     default: [0, 1, 2],
   },
-  markerData: {
-    type: Array,
-    default: [],
-  },
   mapCenter: {
     type: Object,
     default: {
       center: [[31.086444, 121.734942]],
       zoom: 4,
     },
+  },
+  mapRenderMode:{
+    type:String,
+    default:'dom' // 原生dom渲染， 或者 polymer 聚合引擎；
+  },
+  markerData: {
+    type: Array,
+    default: [],
   },
 });
 let lastMarkerData: any = []; // 上一次markerData数据
@@ -76,6 +80,13 @@ watch(
   (markerData) => {
     diffArray(lastMarkerData, markerData);
     lastMarkerData = JSON.parse(JSON.stringify(markerData));
+    if(markerData.length >  mapRenderModeLength && mapRenderMode == 'dom') {
+      markerClusterGroup.clearLayers()
+      markerGroup.clearLayers()
+      mapRenderMode = 'polymer'
+      updateMarkerVisible(markerData)
+    }
+
   },
   { deep: true }
 );
@@ -87,8 +98,10 @@ watch(
   { deep: true }
 );
 
+
 let map: any = null; // map实例对象
-let renderMode = "dom"; // 原生dom渲染， 或者 polymer 聚合引擎；
+let mapRenderMode = props.mapRenderMode; 
+let mapRenderModeLength = 1000 //数量超过1000，强制转为 polymer 聚合引擎
 let markerArr: any = []; // marker坐标点数字
 
 //@ts-ignore
@@ -190,10 +203,10 @@ function createMarker(list: any) {
     marker.bindPopup(item.markerPopup);
     marker.markerId = item.markerId; // marker对象上设置唯一标识
     markerArr.push(marker);
-    if (renderMode == "dom") {
+    if (mapRenderMode == "dom") {
       item.markerVisible ? markerGroup.addLayer(marker) : "";
     }
-    if (renderMode == "polymer") {
+    if (mapRenderMode == "polymer") {
       item.markerVisible ? markerClusterGroup.addLayers(marker) : "";
     }
   });
@@ -214,10 +227,10 @@ function removeMarker(list: any) {
   list.forEach((item: any) => {
     markerArr.forEach((v: any, i: number) => {
       if (item.markerId == v.markerId) {
-        if (renderMode == "dom") {
+        if (mapRenderMode == "dom") {
           markerGroup.removeLayer(v);
         }
-        if (renderMode == "polymer") {
+        if (mapRenderMode == "polymer") {
           markerClusterGroup.removeLayer(v);
         }
         markerArr.splice(i, 1);
@@ -247,12 +260,12 @@ function updateMarkerVisible(list: any) {
   list.forEach((item: any) => {
     markerArr.forEach((v: any) => {
       if (item.markerId == v.markerId) {
-        if (renderMode == "dom") {
+        if (mapRenderMode == "dom") {
           item.markerVisible
             ? markerGroup.addLayer(v)
             : markerGroup.removeLayer(v);
         }
-        if (renderMode == "polymer") {
+        if (mapRenderMode == "polymer") {
           item.markerVisible
             ? markerClusterGroup.addLayers(v)
             : markerClusterGroup.removeLayer(v);
@@ -303,7 +316,7 @@ function handleMapCenter(data: any) {
     // map.setZoom(zoom);
     // return;
     map.setView(center, zoom);
-    return
+    return;
   }
   const { markerId } = data;
   const findMarker = markerArr.find((item: any) => item.markerId == markerId);

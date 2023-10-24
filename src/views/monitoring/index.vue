@@ -13,10 +13,10 @@
           <el-icon><Search /></el-icon>
         </template>
         <template #default="{ item }">
-          <div :class="{'bt_1': item.border && item.markerId }" >
-            <div v-if="item.markerId" >  
+          <div :class="{ bt_1: item.border && item.markerId }">
+            <div v-if="item.markerId">
               <span>{{ item.sn }}</span>
-    
+
               <span v-if="item.carName"> | {{ item.carName }}</span>
 
               <span v-if="item.npn"> | {{ item.npn }}</span>
@@ -28,7 +28,6 @@
             </div>
             <div v-if="!item.markerId">{{ item }}</div>
           </div>
-
         </template>
       </el-autocomplete>
     </div>
@@ -253,16 +252,18 @@ function querySearch(queryString: string, cb: any) {
     return;
   }
   if (filterData.length > 3) filterData.length = 3;
-  filterData.forEach((item:any) => {
-    item.border = true 
-  })
-  filterData[filterData.length-1].border = false
+  filterData.forEach((item: any) => {
+    item.border = true;
+    item.value = item.sn;
+  });
+  filterData[filterData.length - 1].border = false;
   cb(filterData);
   return;
 }
 // 搜索框确认选择
 function handleSelect(item: any) {
   if (!item.markerId) return;
+  mapCenter.markerId = "";
   mapCenter.markerId = item.markerId;
 }
 
@@ -346,7 +347,7 @@ function handleSocketData(socketData: any) {
         item.color = "#58c15e";
       }
     });
-    carLogList.value.unshift(...list);
+    carLogList.value.splice(0, list.length, ...list);
   }
 }
 
