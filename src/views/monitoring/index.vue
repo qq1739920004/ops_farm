@@ -167,7 +167,7 @@ import SinoMap from "@/components/SinoMap/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import realTimeChart from "./components/realTimeChart.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
-import { reactive, ref, watch } from "vue";
+import { reactive, ref, watch,onUnmounted } from "vue";
 import useSocketStore from "@/store/socket";
 import { useRouter } from "vue-router";
 import {
@@ -216,6 +216,9 @@ watch(
   },
   { deep: true }
 );
+onUnmounted(() => {
+  socketStore.close()
+})
 
 getFaromDataStatistics();
 getOnlineFarmPosition();
