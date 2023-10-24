@@ -347,7 +347,7 @@ function handleSocketData(socketData: any) {
         item.color = "#58c15e";
       }
     });
-    carLogList.value.unshift(...list);
+    carLogList.value.splice(0, list.length, ...list);
   }
 }
 
