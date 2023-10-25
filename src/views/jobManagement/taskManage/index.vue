@@ -95,7 +95,7 @@ const $route = useRoute()
 
 // 提交数据
 const pageInfo = reactive<PageObj>({
-    carId: parseInt($route.query.carId as string),
+    carId: '',
     name: '',
     companyId: parseInt($route.query.companyId as string),
     currentPage: 1,
@@ -555,6 +555,7 @@ getDealerCarList()
 const getPaddyWorkList = async (flag: Boolean) => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
     paddyWorkList.value = res.data.records
+    pageInfo.carId =  parseInt($route.query.carId as string) 
     let tem = res.data.records
     tem.forEach((element) => {
         markerCollect[element.id] = { marker: [] }

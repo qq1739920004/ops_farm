@@ -2,21 +2,18 @@
   <div class="map_container">
     <sino-map :markerData="markerData" :mapCenter="mapCenter" />
     <div class="search_box">
-      <el-autocomplete
-        v-model="searchSn"
-        :fetch-suggestions="querySearch"
-        placeholder="SN、铭牌SN、车辆名、公司、电话"
-        @select="handleSelect"
-        clearable
-      >
+      <el-autocomplete v-model="searchSn" :fetch-suggestions="querySearch" placeholder="SN、铭牌SN、车辆名、公司、电话"
+        @select="handleSelect" clearable>
         <template #suffix>
-          <el-icon><Search /></el-icon>
+          <el-icon>
+            <Search />
+          </el-icon>
         </template>
         <template #default="{ item }">
-          <div :class="{'bt_1': item.border && item.markerId }" >
-            <div v-if="item.markerId" >  
+          <div :class="{ 'bt_1': item.border && item.markerId }">
+            <div v-if="item.markerId">
               <span>{{ item.sn }}</span>
-    
+
               <span v-if="item.carName"> | {{ item.carName }}</span>
 
               <span v-if="item.npn"> | {{ item.npn }}</span>
@@ -68,11 +65,7 @@
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
-            <el-checkbox
-              size="large"
-              v-model="item.checked"
-              @change="markerTypeChange"
-            />
+            <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange" />
             <SvgIcon :icon="item.typeName" size="22" />
             <span class="label">{{ item.typeName }}</span>
           </label>
@@ -81,26 +74,22 @@
         <br />
       </ul>
     </div>
-    <div
-      :class="{
-        notice_box: true,
-        notice_box_active: notice_box_isActive,
-      }"
-    >
+    <div :class="{
+      notice_box: true,
+      notice_box_active: notice_box_isActive,
+    }">
       <div class="header" @click="notice_box_isActive = !notice_box_isActive">
         <h3>状态通知</h3>
-        <el-icon v-if="!notice_box_isActive" color="#fff"
-          ><ArrowDownBold
-        /></el-icon>
-        <el-icon v-else color="#fff"><ArrowUpBold /></el-icon>
+        <el-icon v-if="!notice_box_isActive" color="#fff">
+          <ArrowDownBold />
+        </el-icon>
+        <el-icon v-else color="#fff">
+          <ArrowUpBold />
+        </el-icon>
       </div>
       <div class="content">
         <el-timeline>
-          <el-timeline-item
-            v-for="(item, index) in carLogList"
-            :key="index"
-            :color="item.color"
-          >
+          <el-timeline-item v-for="(item, index) in carLogList" :key="index" :color="item.color">
             <div class="item">
               <div class="l">
                 <span class="state" :style="{ color: item.color }">{{
@@ -127,20 +116,9 @@
     </div>
 
     <!-- 实时趋势驾驶图diaLog -->
-    <realTimeChart
-      ref="realTime"
-      :sn="sn"
-      :socketData="socketStore.socketData"
-    />
-    <RemoteControl
-      :isChange="isChange"
-      :terminalType="terminalType"
-      :version="version"
-      :type="type"
-      :carId="carId"
-      :sn="sn"
-      :name="name"
-    />
+    <realTimeChart ref="realTime" :sn="sn" :socketData="socketStore.socketData" />
+    <RemoteControl :isChange="isChange" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
+      :sn="sn" :name="name" />
   </div>
 </template>
 
@@ -253,10 +231,10 @@ function querySearch(queryString: string, cb: any) {
     return;
   }
   if (filterData.length > 3) filterData.length = 3;
-  filterData.forEach((item:any) => {
-    item.border = true 
+  filterData.forEach((item: any) => {
+    item.border = true
   })
-  filterData[filterData.length-1].border = false
+  filterData[filterData.length - 1].border = false
   cb(filterData);
   return;
 }
@@ -488,8 +466,7 @@ function createMarkerPopup(item: any) {
     }
   }
 
-  const cardUsage =
-    item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
+  const cardUsage = item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
   const popup = `<div class="map_popup">
         <ul class="popup_container">
           <li>
@@ -500,8 +477,8 @@ function createMarkerPopup(item: any) {
             <div class="r">
               <div class="label">SN:</div>
               <div class="value"  style="cursor: pointer;text-decoration: underline;" onclick='goMachineryList_markerPopup(${JSON.stringify(
-                item
-              )})'>${item.sn}</div>
+    item
+  )})'>${item.sn}</div>
             </div>
           </li>
           <li>
@@ -540,17 +517,15 @@ function createMarkerPopup(item: any) {
             <div class="l">
               <div class="label">解状态:</div>
               <div class="value">
-                <span class='status ${
-                  item.solStat == 4 ? "status_3" : "status_0"
-                }'></span>
+                <span class='status ${item.solStat == 4 ? "status_3" : "status_0"
+    }'></span>
                 <span>${snTypeReflect[item.solStat] || "未知解"}</span>
               </div>
             </div>
             <div class="r">
               <div class="label">差分链:</div>
-              <div class="value">${diffSource[item.diffSource] || "/"} (${
-    item.diffAge
-  }s)</div>
+              <div class="value">${diffSource[item.diffSource] || "/"} (${item.diffAge
+    }s)</div>
             </div>
           </li>
           <li>
@@ -599,24 +574,22 @@ function createMarkerPopup(item: any) {
         </ul>
         <ul class="btns_container">
           <li>
-            <div class="btn ${
-              !openRemote ? "disabled" : ""
-            }" onclick='openRemote_markerPopup(${JSON.stringify(
-    item
-  )})'>远程管理</div>
+            <div class="btn ${!openRemote ? "disabled" : ""
+    }" onclick='openRemote_markerPopup(${JSON.stringify(
+      item
+    )})'>远程管理</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
-              item
-            )})'>历史轨迹</div>
+      item
+    )})'>历史轨迹</div>
           </li>
           <li>
-            <div class="btn ${
-              item.driveState == 0 ? "disabled" : ""
-            }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
-    item
-  )})'>实时驾驶趋势图</div>
+            <div class="btn ${item.driveState == 0 ? "disabled" : ""
+    }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
+      item
+    )})'>实时驾驶趋势图</div>
             <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
-              item
-            )})'>历史驾驶趋势图</div>
+      item
+    )})'>历史驾驶趋势图</div>
           </li>
         </ul>
       </div>`;
@@ -699,26 +672,32 @@ function openRemote_markerPopup(arg: any) {
 .el-timeline {
   --el-timeline-node-color: #63d7a8;
 }
+
 :deep(.el-autocomplete) {
-  transition-property: opacity, background-color !important; /* 仅过渡opacity和background-color属性 */
+  transition-property: opacity, background-color !important;
+  /* 仅过渡opacity和background-color属性 */
   /* 其他样式 */
 }
 
 :deep(.autocomplete_item) {
   background-color: pink !important;
 }
+
 .map_container {
   height: 100%;
   position: relative;
+
   .search_box {
     left: 10px;
     top: 10px;
     position: absolute;
     z-index: 999;
+
     :deep(.el-autocomplete) {
       width: 280px;
     }
   }
+
   .statistics_box {
     padding: 10px;
     right: 10px;
@@ -741,6 +720,7 @@ function openRemote_markerPopup(arg: any) {
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
+
         span:first-child {
           color: #fff;
           font-size: 24px;
@@ -752,16 +732,19 @@ function openRemote_markerPopup(arg: any) {
           font-weight: 700;
         }
       }
+
       .bottom_li {
         div {
           display: flex;
           align-items: center;
+
           span {
             color: #00baad;
             font-size: 14px;
             font-weight: 700;
             margin-right: 6px;
           }
+
           div {
             width: 14px;
             height: 14px;
@@ -770,6 +753,7 @@ function openRemote_markerPopup(arg: any) {
           }
         }
       }
+
       .bottom_li:last-child {
         div {
           div {
@@ -790,6 +774,7 @@ function openRemote_markerPopup(arg: any) {
         display: flex;
         align-items: center;
         height: 35px;
+
         :deep(.el-checkbox) {
           margin-right: 8px;
 
@@ -818,6 +803,7 @@ function openRemote_markerPopup(arg: any) {
       }
     }
   }
+
   .notice_box {
     position: absolute;
     z-index: 999;
@@ -828,6 +814,7 @@ function openRemote_markerPopup(arg: any) {
     transition: all 0.3s;
     background: url("@/assets/monitoring/bg_2.png") no-repeat center center;
     background-size: cover;
+
     .header {
       cursor: pointer;
       display: flex;
@@ -835,48 +822,59 @@ function openRemote_markerPopup(arg: any) {
       align-items: center;
       height: 40px;
       padding: 0 12px;
+
       h3 {
         color: #fff;
         margin: 0;
         font-size: 16px;
       }
     }
+
     .content {
       // background-color: red;
       overflow: scroll;
       height: calc(100% - 40px);
       padding: 12px 12px 0px 12px;
+
       :deep(.el-timeline-item) {
         .item {
           display: flex;
+
           .l {
             .state {
               font-size: 14px;
               margin-right: 10px;
             }
+
             .state_0 {
               color: #232c1e;
             }
+
             .state_1 {
               color: #58c15e;
             }
+
             .state_2 {
               color: #e9c65d;
             }
           }
+
           .r {
             flex: 1;
+
             .title {
               color: #fff;
               font-size: 14px;
               display: flex;
               justify-content: space-between;
+
               span:last-child {
                 text-decoration: underline;
                 font-size: 12px;
                 cursor: pointer;
               }
             }
+
             p {
               margin: 0;
               font-size: 12px;
@@ -887,15 +885,19 @@ function openRemote_markerPopup(arg: any) {
       }
     }
   }
+
   .notice_box_active {
     height: 40px;
     overflow: hidden;
   }
 }
+
 :deep(.map_popup) {
   width: 360px;
+
   .popup_container {
     font-size: 14px;
+
     li {
       display: flex;
       line-height: 22px;
@@ -977,6 +979,7 @@ function openRemote_markerPopup(arg: any) {
           opacity: 0.8;
         }
       }
+
       .disabled {
         cursor: not-allowed !important;
         color: #8f8f8f !important;
@@ -984,6 +987,7 @@ function openRemote_markerPopup(arg: any) {
     }
   }
 }
+
 .bt_1 {
   border-bottom: 1px solid var(--el-color-info-light-7);
 }

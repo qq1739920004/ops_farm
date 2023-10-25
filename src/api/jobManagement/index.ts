@@ -10,7 +10,7 @@ export function paddyWorkList_API(data: PageObj) {
     })
 }
 
-export function getCarDealerList_API(companyId: number) {
+export function getCarDealerList_API(companyId: any ) {
     return request<any, dealerCarResponseData>({
         url: `/farm/car/dealer/car?companyId=${companyId}`,
         method: 'get'
