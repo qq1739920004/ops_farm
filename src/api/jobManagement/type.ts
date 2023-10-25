@@ -4,7 +4,7 @@ export interface ResponseData {
 }
 
 export interface PageObj {
-    companyId: number,
+    companyId: number | string,
     carId: number | string,
     currentPage: number,
     pageSize: number,

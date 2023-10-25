@@ -6,13 +6,10 @@
       <template #default="scope">
         <div style="display: flex; align-items: center">
           <el-icon>
-            <MapLocation
-              :style="
-                scope.row.onlineTcp !== 0
-                  ? 'color:var(--el-color-primary); width: 16px;height: 16px;'
-                  : 'var(--el-color-info-light-5); width: 16px; height: 16px;'
-              "
-            />
+            <MapLocation :style="scope.row.onlineTcp !== 0
+                ? 'color:var(--el-color-primary); width: 16px;height: 16px;'
+                : 'color:var(--el-color-info-light-5); width: 16px; height: 16px;'
+              " />
           </el-icon>
           <span style="margin-left: 10px">{{ scope.row.npn }}</span>
         </div>
@@ -35,13 +32,10 @@
       <template #="{ row }">
         <!-- v-if="row.expirationTime && Date.parse(row.expirationTime.toString()) > Date.parse(new Date().toString())"> -->
         <div style="display: flex; justify-content: center">
-          <el-tag
-            v-if="
-              row.expirationTime &&
-              Date.parse(row.expirationTime.toString()) >
-                Date.parse(new Date().toString())
-            "
-            style="
+          <el-tag v-if="row.expirationTime &&
+            Date.parse(row.expirationTime.toString()) >
+            Date.parse(new Date().toString())
+            " style="
               color: rgba(42, 130, 228, 1);
               width: 80px;
               height: 26px;
@@ -49,13 +43,9 @@
               border-radius: 4px;
               background: rgba(171, 210, 255, 1);
               border: 1px solid rgba(171, 210, 255, 1);
-            "
-          >
-            {{ row.expirationTime.split(" ")[0] }}</el-tag
-          >
-          <el-tag
-            v-else
-            style="
+            ">
+            {{ row.expirationTime.split(" ")[0] }}</el-tag>
+          <el-tag v-else style="
               color: rgba(255, 112, 112, 1);
               width: 60px;
               height: 26px;
@@ -63,12 +53,7 @@
               border-radius: 4px;
               background: rgba(255, 212, 212, 1);
               border: 1px solid rgba(255, 212, 212, 1);
-            "
-            class="mx-1"
-            type="danger"
-            effect="dark"
-            >已过期</el-tag
-          >
+            " class="mx-1" type="danger" effect="dark">已过期</el-tag>
         </div>
       </template>
     </el-table-column>
@@ -127,12 +112,7 @@
                 </el-popover>
             </template>
         </el-table-column> -->
-    <el-table-column
-      sortable
-      label="最近上线时间"
-      prop="createtime"
-      align="center"
-    >
+    <el-table-column sortable label="最近上线时间" prop="createtime" align="center">
       <template #="{ row }">
         <!-- <el-tooltip
           style="margin-right: 6px"
@@ -168,101 +148,46 @@
     <!-- 说明  离线和自动驾驶状态不可编辑 -->
     <el-table-column label="操作" width="290" align="center">
       <template #="{ row }">
-        <el-button
-          v-auth="458"
-          style="width: 22px"
-          type="primary"
-          text
-          @click="
-            gotoMachineDetail(
-              row.id,
-              row.terminalType,
-              row.netDate?.split(' ')[0],
-              row.expirationTime?.split(' ')[0],
-              row.satelliteDate?.split(' ')[0],
-              row.warrantyDate?.split(' ')[0]
-            )
-          "
-          >详情</el-button
-        >
+        <el-button v-auth="458" style="width: 22px" type="primary" text @click="
+          gotoMachineDetail(
+            row.id,
+            row.terminalType,
+            row.netDate?.split(' ')[0],
+            row.expirationTime?.split(' ')[0],
+            row.satelliteDate?.split(' ')[0],
+            row.warrantyDate?.split(' ')[0]
+          )
+          ">详情</el-button>
 
-        <el-tooltip
-          style="margin-right: 6px"
-          :disabled="
-            row.onlineTcp === 1 || row.driveState === 1 || row.driveState === 2
-              ? true
-              : false
-          "
-          class="box-item"
-          effect="dark"
-          content="车辆离线或处于自动驾驶状态"
-          placement="top-start"
-        >
-          <el-button
-            style="width: 52px"
-            :disabled="row.openRemote"
-            type="primary"
-            text
-            @click="
-              gotoRemote(
-                row.terminalType,
-                row.version,
-                row.type,
-                row.id,
-                row.sn,
-                row.carName
-              )
-            "
-            >远程管理</el-button
-          >
+        <el-tooltip style="margin-right: 6px" :disabled="row.onlineTcp === 1 || row.driveState === 1 || row.driveState === 2
+            ? true
+            : false
+          " class="box-item" effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
+          <el-button style="width: 52px" :disabled="row.openRemote" type="primary" text @click="
+            gotoRemote(
+              row.terminalType,
+              row.version,
+              row.type,
+              row.id,
+              row.sn,
+              row.carName
+            )
+            ">远程管理</el-button>
         </el-tooltip>
         <!-- <el-button v-auth="531" style="width: 62px;margin-right: 6px;" type="primary" text
                     @click="toFileList(row)">文件存储</el-button> -->
-        <el-button
-          :disabled="row.onlineTcp === 0 ? true : false"
-          v-auth="476"
-          style="width: 22px"
-          type="primary"
-          text
-          @click="gotoRegister(row.id, row.sn, row.deviceId)"
-          >注册</el-button
-        >
-        <el-button
-          v-auth="503"
-          style="width: 52px"
-          type="primary"
-          text
-          @click="gotoMap(row.sn, row.npn)"
-          >历史轨迹</el-button
-        >
+        <el-button :disabled="row.onlineTcp === 0 ? true : false" v-auth="476" style="width: 22px" type="primary" text
+          @click="gotoRegister(row.id, row.sn, row.deviceId)">注册</el-button>
+        <el-button v-auth="503" style="width: 52px" type="primary" text @click="gotoMap(row.sn, row.npn)">历史轨迹</el-button>
       </template>
     </el-table-column>
   </el-table>
   <slot></slot>
-  <MachineDetailDia
-    ref="MachineD"
-    :carId="carId"
-    :terminalType="terminalType2"
-    :netDate="netDate"
-    :expirationTime="expirationTime"
-    :satelliteDate="satelliteDate"
-    :warrantyDate="warrantyDate"
-  ></MachineDetailDia>
-  <RemoteControl
-    :isChange="isChange"
-    :terminalType="terminalType"
-    :version="version"
-    :type="type"
-    :carId="carId"
-    :sn="sn"
-    :name="name"
-  />
-  <RegisterDia
-    ref="RegisterD"
-    :sn="sn"
-    :carId="carId"
-    :deviceId="deviceId"
-  ></RegisterDia>
+  <MachineDetailDia ref="MachineD" :carId="carId" :terminalType="terminalType2" :netDate="netDate"
+    :expirationTime="expirationTime" :satelliteDate="satelliteDate" :warrantyDate="warrantyDate"></MachineDetailDia>
+  <RemoteControl :isChange="isChange" :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn"
+    :name="name" />
+  <RegisterDia ref="RegisterD" :sn="sn" :carId="carId" :deviceId="deviceId"></RegisterDia>
 </template>
 
 <script setup lang="ts">

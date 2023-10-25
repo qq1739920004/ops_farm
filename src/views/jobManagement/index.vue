@@ -6,9 +6,10 @@
                     @change="changeBlur1">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
-                <el-select filterable v-model="pageInfo.carId" class="m-2" placeholder="请选择" @change="changeBlur2">
-                    <el-option v-if="CarDealerList" v-for="item in CarDealerList" :label="item.nameNpn"
-                        :value="item.id" :key="item.id"></el-option>
+                <el-select filterable v-model="pageInfo.carId" class="m-2" placeholder="请选择" suffix-icon="search"
+                    @change="changeBlur2">
+                    <el-option v-if="CarDealerList" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
+                        :key="item.id"></el-option>
                     <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
                 </el-select>
             </div>
@@ -74,9 +75,9 @@ const formartDate = (val: Date) => {
 const paddyWorkList = ref<paddyWorkObj[]>([])
 // 提交数据
 const pageInfo = reactive<PageObj>({
-    carId: 10005,
+    carId: '',
     name: '',
-    companyId: 3,
+    companyId: '',
     currentPage: 1,
     pageSize: 10,
     st: '',
@@ -98,7 +99,9 @@ const currentChange = (val: any) => {
 const dealerList = ref<carDealerObj[]>([])
 const getDealerList = async () => {
     const res: carDealerResponseData = await carDealer_API()
+    pageInfo.companyId = res.data[0].id
     dealerList.value = res.data
+    getDealerCarList()
 }
 getDealerList()
 // 获取经销商下车辆列表
@@ -107,13 +110,13 @@ const getDealerCarList = async () => {
     if (res.data == null) {
         CarDealerList.value = []
     }
-   else {
-    CarDealerList.value = res.data
-    pageInfo.carId = res.data[0].id
-    getPaddyWorkList()
-   }
+    else {
+        CarDealerList.value = res.data
+        pageInfo.carId = res.data[0].id
+        getPaddyWorkList()
+    }
 }
-getDealerCarList()
+
 // 获取数据
 const getPaddyWorkList = async () => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
