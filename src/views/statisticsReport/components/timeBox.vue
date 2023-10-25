@@ -70,8 +70,9 @@ onMounted(()=>{
   justify-content: space-between;
   font-size: 14px;
   cursor: pointer;
-}
-.active {
+  .active {
   color: #0080ff;
 }
+}
+
 </style>
