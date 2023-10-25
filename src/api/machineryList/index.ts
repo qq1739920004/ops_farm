@@ -47,7 +47,7 @@ export function logOpen_API(data: { sn: string, flag: string }) {
 // 注册时长
 export function activationCodeAdd_API(params: activationCodeObj) {
     return request<any, any>({
-        url: '/farm/activationCode/add',
+        url: '/farm/activationCode/new/add',
         method: 'post',
         params
     })

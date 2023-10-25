@@ -58,21 +58,21 @@ export function getHelpHandlingAlarmRecordAPI(carId: number) {
 // 车辆参数
 export function getHelpHandlingCarParamAPI(carId: number) {
     return request<any, HelpHandlingParamData>({
-        url: `/farm/param/carParam/get?carId=${carId}`,
+        url: `/farm/param/new/carParam/get?carId=${carId}`,
         method: 'get',
     })
 }
 // 校准参数
 export function getHelpHandlingCalibParamAPI(carId: number) {
     return request<any, HelpHandlingParamData>({
-        url: `/farm/param/calibParam/get?carId=${carId}`,
+        url: `/farm/param/new/calibParam/get?carId=${carId}`,
         method: 'get',
     })
 }
 // PID参数
 export function getHelpHandlinPIDParamAPI(carId: number) {
     return request<any, HelpHandlingParamData>({
-        url: `/farm/param/pidParam/get?carId=${carId}`,
+        url: `/farm/param/new/pidParam/get?carId=${carId}`,
         method: 'get',
     })
 }
@@ -80,14 +80,14 @@ export function getHelpHandlinPIDParamAPI(carId: number) {
 // PID曲线参数更新
 export function getPidCurveParmAPI(carId: number) {
     return request<any, HelpHandlingParamData>({
-        url: `/farm/param/pidCurveParam/get?carId=${carId}`,
+        url: `/farm/param/new/pidCurveParam/get?carId=${carId}`,
         method: 'get',
     })
 }
 // PID超低速参数
 export function getPidSlsParamAPI(carId: number) {
     return request<any, HelpHandlingParamData>({
-        url: `/farm/param/pidSlsParam/get?carId=${carId}`,
+        url: `/farm/param/new/pidSlsParam/get?carId=${carId}`,
         method: 'get',
     })
 }
