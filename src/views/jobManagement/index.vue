@@ -2,10 +2,11 @@
     <div class='app_container'>
         <div class="search_container app_card">
             <div class="input_area">
-                <el-select filterable v-model="pageInfo.companyId" class="input-with-select" placeholder="请选择"
-                    @change="changeBlur1">
+                <el-select v-if="dealerList.length > 1" filterable v-model="pageInfo.companyId" class="input-with-select"
+                    placeholder="请选择" @change="changeBlur1">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
+                <el-input style="width:179px;margin-right: 20px;" v-else v-model="dealerList[0].name" disabled />
                 <el-select filterable v-model="pageInfo.carId" class="m-2" placeholder="请选择" suffix-icon="search"
                     @change="changeBlur2">
                     <el-option v-if="CarDealerList" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
@@ -99,8 +100,14 @@ const currentChange = (val: any) => {
 const dealerList = ref<carDealerObj[]>([])
 const getDealerList = async () => {
     const res: carDealerResponseData = await carDealer_API()
-    pageInfo.companyId = res.data[0].id
-    dealerList.value = res.data
+
+    if (res.data.length > 1) {
+        dealerList.value = [{ 'id': '', 'name': '全部经销商' }, ...res.data]
+        pageInfo.companyId = ''
+    } else {
+        dealerList.value = res.data
+        pageInfo.companyId = dealerList.value[0].id
+    }
     getDealerCarList()
 }
 getDealerList()
