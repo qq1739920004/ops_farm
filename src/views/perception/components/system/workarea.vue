@@ -19,6 +19,7 @@ let chartIcon = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAYAAADgK
 let plist=props.carAreas
 const listy = plist.map((item: any) => item.onlineNum);
 const listyTotal = plist.map((item: any) => item.totalNum);
+
 const listx = plist.map((item: any) => item.name);
 // 获取图表节点
 let bar = ref();
@@ -118,10 +119,11 @@ const option = {
             //取小数点2位
             return `{a|} ${params.value} / {b|${listyTotal[params.dataIndex]}}`;
           } else {
-            return `   0`;
+            return `     ${params.value} / {b|${listyTotal[params.dataIndex]}}`;
           }
+
         },
-        distance: -12,
+        distance: -12,//
         rich: {
           a: {
             widht: 22,
@@ -129,6 +131,10 @@ const option = {
             backgroundColor: {
               image: chartIcon,
             },
+          },
+          ano:{
+            widht: 22,
+            height:22,
           },
           b:{
             color:'#34abad',
@@ -231,7 +237,7 @@ onUnmounted(() => {
 .box {
   background: url(@/assets/systemPerceptionImage/border_green_state.png) no-repeat;
   background-size: 100% 100%;
-  margin: 20px 10px 34px 15px;
+  margin: 0px 10px 34px 15px;
   padding:10px 0 0 10px ;
   .title {
     height: 40px;

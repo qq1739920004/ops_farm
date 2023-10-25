@@ -15,7 +15,7 @@ const useSocketStore = defineStore("socket", () => {
             socketData.value = data
         };
         ws.onclose = () => {
-            console.log('连接关闭');
+            console.log('socket连接关闭');
         };
     }
     function close() {

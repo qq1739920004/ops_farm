@@ -10,7 +10,7 @@
           </el-icon>
         </template>
         <template #default="{ item }">
-          <div :class="{ 'bt_1': item.border && item.markerId }">
+          <div :class="{ bt_1: item.border && item.markerId }">
             <div v-if="item.markerId">
               <span>{{ item.sn }}</span>
 
@@ -25,7 +25,6 @@
             </div>
             <div v-if="!item.markerId">{{ item }}</div>
           </div>
-
         </template>
       </el-autocomplete>
     </div>
@@ -146,7 +145,7 @@ import SinoMap from "@/components/SinoMap/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import realTimeChart from "./components/realTimeChart.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
-import { reactive, ref, watch } from "vue";
+import { reactive, ref, watch,onUnmounted } from "vue";
 import useSocketStore from "@/store/socket";
 import { useRouter } from "vue-router";
 import {
@@ -195,6 +194,9 @@ watch(
   },
   { deep: true }
 );
+onUnmounted(() => {
+  socketStore.close()
+})
 
 getFaromDataStatistics();
 getOnlineFarmPosition();
@@ -232,15 +234,17 @@ function querySearch(queryString: string, cb: any) {
   }
   if (filterData.length > 3) filterData.length = 3;
   filterData.forEach((item: any) => {
-    item.border = true
-  })
-  filterData[filterData.length - 1].border = false
+    item.border = true;
+    item.value = item.sn;
+  });
+  filterData[filterData.length - 1].border = false;
   cb(filterData);
   return;
 }
 // 搜索框确认选择
 function handleSelect(item: any) {
   if (!item.markerId) return;
+  mapCenter.markerId = "";
   mapCenter.markerId = item.markerId;
 }
 
@@ -324,7 +328,7 @@ function handleSocketData(socketData: any) {
         item.color = "#58c15e";
       }
     });
-    carLogList.value.unshift(...list);
+    carLogList.value.splice(0, list.length, ...list);
   }
 }
 
