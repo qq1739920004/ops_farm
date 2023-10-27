@@ -16,7 +16,7 @@ import { ref, watch, onUnmounted, onMounted } from "vue";
 
 const props = defineProps(["carAreas"]);
 let chartIcon = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAYAAADgKtSgAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAALuSURBVEiJ1ZTNaxNBGMbfmd24Jn6VxWbKZLYs6VJxqQhGUBbBXvTg0T/CXsTiScWrBw8eRCl6t4eAtLdaPbcXpSrx0ChtpaVtqBs2mGCqM+zMeGi2hJK09eOgDwwLw+zveeZ9hxfgHxECACSEOPu3oRgAsJTymtb6tdb6SWv/j6EGAKSiKDqvlHoTRdF5IcSIlPLa7xokYNPzPIsQcsi27aPlcvki5/z+wsKC7/v+gZbxLxkgAMCFQiHFGEu7rttDCMnmcjnWaDQe6C2VS6XSkOd5FgCY+zXYBlNKM4wxO5fLMUrpiSiKHuo2KaU+zs3NnXJd9+B+DTAAmIyxNGPMppT2E0KGwjB8pDsoMWjdYNcSIQAwPM+zwjAc5Zy/J4QMbWxsPO4EbjcolUpD9Xr9nJTyaTcDDACper1+nXP+rlgsXu2WuIPKy8vLJ4UQI61nug1MUoPv+2h9ff0DAKDBwcHTq6urX/bTKCnlUhAEKxjjM0qp951Kgn3fP5DP549NT09fWVtbe04pvTwzM3Nvt8ic8xfZbJYsLS1dEEKMtJcFtX2R7/tmGIZWOp0+IoSwTdPsBYDj4+PjZ4aHh2/vTCSEeDkwMHAjjuOvGONmpVIRACABQANsdXhb1WoV9fT0YK01TqVSRhzHBgAYk5OT9UKhsOi67oXkLOf8led5t5RS3yzL+m5ZlqjVaioB74QjAADHcaDRaICUEkzTRIZhgFIKJiYmwiAIPjmOc5Fz/iqfz9+J47iBMW5KKX+srKzELXBHeJIeKKV6c3NTp9NprZRSWmuJEBKO41iWZb0OgmBsbGysf2pq6rNS6rtt23G1WpXt4G5CAGC6rnvQtu2j2WyW9PX1ucVi8Wqz2fwwPz9/t1arPatUKjcJIYd+Z8YgaA2t3t7ew4wxmxCSnZ2dvSSEeBuG4SilNLMXeDe3ZM7gKIoMIQSWUiLDMHQmk5GLi4sSAJIGdizHXldBO1YivWN1/XkvdTuzZ/P+X/0ED5XU2wnYGsEAAAAASUVORK5CYII=`;
-let plist=props.carAreas
+let plist=props.carAreas.filter((item:any)=>item.code)
 const listy = plist.map((item: any) => item.onlineNum);
 const listyTotal = plist.map((item: any) => item.totalNum);
 
@@ -222,7 +222,7 @@ onMounted(() => {
 
 watch(props, (newValue) => {
   isDataUpdated.value = true;
-  let plist=newValue.carAreas
+  let plist=newValue.carAreas.filter((item:any)=>item.code)
   option.yAxis.data = plist.map((item: any) => item.name);
   option.series[0].data = plist.map((item: any) => item.totalNum);
    // 设置新数据后，保持当前的滚动位置
