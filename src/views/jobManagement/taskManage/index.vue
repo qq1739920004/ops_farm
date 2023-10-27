@@ -22,19 +22,23 @@
                 <el-select style="width: 270px; margin-right: 10px;" v-model="pageInfo.companyId" placeholder="请选择"
                     @change="changeBlur1">
                     <template #prefix>
-                        <span class="select_title">单位：</span>
+                        <span class="select_title">单位:</span>
                     </template>
                     <el-option style="width: 230px;" v-for="item in dealerList" :label="item.name" :value="item.id"
                         :key="item.id"></el-option>
                 </el-select>
-                <el-select filterable style="width: 230px;" v-model="pageInfo.carId" placeholder="请选择"
+
+                <!-- <el-select filterable style="width: 230px;" v-model="pageInfo.carId" placeholder="请选择"
                     @change="changeBlur2">
                     <template #prefix>
                         <span class="select_title2">当前车辆：</span>
                     </template>
                     <el-option style="width: 200px;" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
                         :key="item.id"></el-option>
-                </el-select>
+                </el-select> -->
+                <el-select-v2 style="width: 230px;" filterable v-model="pageInfo.carId" :options="optionsList"
+                    placeholder="请选择" @change="changeBlur2">
+                </el-select-v2>
                 <div :class="isShow ? 'infiniteMenu' : 'infiniteMenu2'">
                     <div class="el_icon" v-show="isShow" @click="changeisShow(false)">
                         <SvgIcon icon="plus-square" size="16" />
@@ -95,9 +99,9 @@ const $route = useRoute()
 
 // 提交数据
 const pageInfo = reactive<PageObj>({
-    carId:  parseInt($route.query.carId as string)||'',
+    carId: '',
     name: '',
-    companyId: parseInt($route.query.companyId as string)||'',
+    companyId: parseInt($route.query.companyId as string) || '',
     currentPage: 1,
     pageSize: 7,
     st: '',
@@ -542,6 +546,7 @@ const changeisShow = (val: boolean) => {
 }
 const firRes = ref(true)
 getDealerList()
+let optionsList = <any>[]
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
     const res: dealerCarResponseData = await getCarDealerList_API(pageInfo.companyId)
@@ -550,8 +555,14 @@ const getDealerCarList = async () => {
     }
     else {
         CarDealerList.value = res.data
+        optionsList = CarDealerList.value.map((item: any, _idx) => ({
+            value: item.id,
+            label: `${item.nameNpn}`,
+        }))
         if (firRes.value === false) {
             pageInfo.carId = res.data[0].id
+        } else {
+            pageInfo.carId = parseInt($route.query.carId as string)
         }
         getPaddyWorkList(true)
         firRes.value = false
@@ -560,7 +571,7 @@ const getDealerCarList = async () => {
 const getPaddyWorkList = async (flag: Boolean) => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
     paddyWorkList.value = res.data.records
-    pageInfo.carId =  parseInt($route.query.carId as string) 
+
     let tem = res.data.records
     tem.forEach((element) => {
         markerCollect[element.id] = { marker: [] }
@@ -589,6 +600,7 @@ const changeBlur1 = () => {
 
 }
 const changeBlur2 = () => {
+
     clearAllMarkers()
     Object.assign(markerCollect, {})
     Object.assign(markerCollect2, {})
@@ -652,6 +664,17 @@ watch(() => paddyWorkList.value,
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-select-v2__placeholder::before) {
+    content: '当前车辆：';
+    margin-right: 2px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 23.17px;
+    color: rgba(115, 121, 133, 1);
+}
+
+
 .page7_child6_container {
     width: 100%;
     height: 100%;

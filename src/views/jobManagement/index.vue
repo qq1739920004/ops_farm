@@ -8,12 +8,16 @@
                 </el-select>
                 <el-input style="width:179px;margin-right: 20px;" v-if="dealerList.length === 1"
                     v-model="dealerList[0].name" disabled />
-                <el-select v-load-more="loadmore"  filterable v-model="pageInfo.carId"
-                    class="m-2" placeholder="请选择" suffix-icon="search" @change="changeBlur2">
+                <el-select-v2 style="width: 230px;" filterable v-model="pageInfo.carId" :options="options" placeholder="请选择"
+                    @change="changeBlur2">
+                </el-select-v2>
+                <!-- <el-select v-load-more="loadmore" filterable  v-model="pageInfo.carId"
+                    class="m-2" placeholder="请选择" remote-show-suffix @change="changeBlur2">
                     <el-option v-if="CarDealerList" v-for="item in dataItems" :label="item.nameNpn" :value="item.id"
                         :key="item.id"></el-option>
                     <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
-                </el-select>
+                </el-select> -->
+
             </div>
             <div class="time">
                 <p :class="isActive == 1 ? 'active' : ''" @click="onDayClick">今日</p>
@@ -52,8 +56,8 @@
 
 <script setup lang='ts'>
 import snTable from './components/sn-table.vue'
-import vLoadMore from '@/utils/loadData'
-import {  reactive, ref, watch } from 'vue'
+// import vLoadMore from '@/utils/loadData'
+import { reactive, ref, watch } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { paddyWorkList_API, getCarDealerList_API, getPaddyWorkExport_API } from '@/api/jobManagement/index'
 import { carDealer_API } from '@/api/machineryList/index'
@@ -89,24 +93,25 @@ const pageInfo = reactive<PageObj>({
     st: '',
     et: ''
 })
+
 let CarDealerList = ref<dealerCarObj[]>([])
-const dataItems = ref<dealerCarObj[]>([])
+// const dataItems = ref<dealerCarObj[]>([])
 const value1 = ref<Date>()
 const value2 = ref<Date>()
 const isActive = ref<number>(0)
 const a = ref<Date>()
 const total = ref<number>(10)
-const pageData = ref({
-    pageIndex: 1, pageSize: 50
-})
+// const pageData = ref({
+//     pageIndex: 1, pageSize: 50
+// })
 // 数据懒加载
-const loadmore = () => {
-    pageData.value.pageIndex++
-    let num = pageData.value.pageIndex * pageData.value.pageSize;
-    dataItems.value = CarDealerList.value.filter((_item, index) => {
-        return index < num
-    })
-}
+// const loadmore = () => {
+//     pageData.value.pageIndex++
+//     let num = pageData.value.pageIndex * pageData.value.pageSize;
+//     dataItems.value = CarDealerList.value.filter((_item, index) => {
+//         return index < num
+//     })
+// }
 
 // 页码变化
 const currentChange = (val: any) => {
@@ -128,19 +133,24 @@ const getDealerList = async () => {
     getDealerCarList()
 }
 getDealerList()
+let options = <any>[]
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
     const res: dealerCarResponseData = await getCarDealerList_API(pageInfo.companyId)
-    dataItems.value = []
-    pageData.value.pageIndex = 1
+    // dataItems.value = []
+    // pageData.value.pageIndex = 1
     if (res.data == null) {
         CarDealerList.value = []
     }
     else {
         CarDealerList.value = res.data
-        dataItems.value = CarDealerList.value.filter((_item, index) => {
-            return index < 50
-        })
+        options = CarDealerList.value.map((item: any, _idx) => ({
+            value: item.id,
+            label: `${item.nameNpn}`,
+        }))
+        // dataItems.value = CarDealerList.value.filter((_item, index) => {
+        //     return index < 50
+        // })
         pageInfo.carId = res.data[0].id
         getPaddyWorkList()
     }
@@ -233,7 +243,6 @@ const changeA = () => {
 </script>
 
 <style lang="scss" scoped>
-
 .search_container {
     display: flex;
     justify-content: space-between;
@@ -323,4 +332,5 @@ const changeA = () => {
 
     }
 
-}</style>
+}
+</style>

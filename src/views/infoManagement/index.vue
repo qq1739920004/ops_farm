@@ -11,7 +11,7 @@
                 <div class="kind">
                     设备类型：
                 </div>
-                <el-select v-model="pageInfo.terminalType" class="m-2" placeholder="请选择设备类型" @change="changeBlur">
+                <el-select  v-model="pageInfo.terminalType" class="m-2" placeholder="请选择设备类型" @change="changeBlur">
                     <el-option value="AG360" label="AG360" />
                     <el-option value="AG502" label="AG502" />
                     <el-option value="AG501" label="AG501" />

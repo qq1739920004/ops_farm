@@ -31,7 +31,7 @@ export function carModuleInfoGet_API(id: Number) {
 }
 export function carModuleInfoOperationLog_API(id: number) {
   return request<any, carModuleInfoOperationLogResponseData>({
-    url: `/farm/carModuleInfo/operationLog/${id}`,
+    url: `/farm/carModuleInfo/operationLog?id=${id}`,
     method: 'get',
   })
 }
