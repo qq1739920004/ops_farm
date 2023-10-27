@@ -95,9 +95,9 @@ const $route = useRoute()
 
 // 提交数据
 const pageInfo = reactive<PageObj>({
-    carId: '',
+    carId:  parseInt($route.query.carId as string)||'',
     name: '',
-    companyId: parseInt($route.query.companyId as string),
+    companyId: parseInt($route.query.companyId as string)||'',
     currentPage: 1,
     pageSize: 7,
     st: '',
@@ -529,7 +529,13 @@ const clearAllMarkers = () => {
 // 数据相关
 const getDealerList = async () => {
     const res: carDealerResponseData = await carDealer_API()
-    dealerList.value = res.data
+    if (res.data.length > 1) {
+        dealerList.value = [{ 'id': '', 'name': '全部经销商' }, ...res.data]
+        pageInfo.companyId = ''
+    } else {
+        dealerList.value = res.data
+    }
+    getDealerCarList()
 }
 const changeisShow = (val: boolean) => {
     isShow.value = val
@@ -551,7 +557,6 @@ const getDealerCarList = async () => {
         firRes.value = false
     }
 }
-getDealerCarList()
 const getPaddyWorkList = async (flag: Boolean) => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
     paddyWorkList.value = res.data.records
