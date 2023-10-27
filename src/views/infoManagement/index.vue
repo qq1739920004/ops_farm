@@ -417,7 +417,7 @@ const addInfo = async () => {
         await carModuleInfoSave_API(newRecords)
         ElMessage({ type: 'success', message: '添加成功' })
     } catch {
-        ElMessage({ type: 'error', message: '添加失败' })
+        // ElMessage({ type: 'error', message: '添加失败' })
     }
 }
 const editInfo = async () => {
@@ -425,7 +425,7 @@ const editInfo = async () => {
         await carModuleInfoUpdate_API(newRecords)
         ElMessage({ type: 'success', message: '添加成功' })
     } catch {
-        ElMessage({ type: 'error', message: '添加失败' })
+        // ElMessage({ type: 'error', message: '添加失败' })
     }
 
 }
@@ -519,7 +519,7 @@ const removeTradeMark = (id: any) => {
             getInfoMangementInfo()
         }
         catch {
-            ElMessage({ type: 'error', message: '删除失败' })
+            // ElMessage({ type: 'error', message: '删除失败' })
         }
     }).catch(() => {
         ElMessage({

@@ -378,7 +378,7 @@ const changeLogStatus = async (val: string, val2: any) => {
             ElMessage({ type: 'success', message: '修改成功', duration: 1000 })
         }
         catch {
-            ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
+            // ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
         }
     }
 }
@@ -508,7 +508,7 @@ const updateCarParams = async () => {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 catch {
-                    ElMessage({ type: 'error', message: '修改失败' })
+                    // ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
         })
@@ -536,7 +536,7 @@ const updatePidParams = async () => {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 catch {
-                    ElMessage({ type: 'error', message: '修改失败' })
+                    // ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
         })
@@ -565,7 +565,7 @@ const updateCalibParams = async () => {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 catch {
-                    ElMessage({ type: 'error', message: '修改失败' })
+                    // ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
         })
@@ -612,7 +612,7 @@ const getExtendSourceNode = () => {
                 ElMessage({ type: 'error', message: '获取源节点数据失败' })
             }
         } catch (err) {
-            ElMessage({ type: 'error', message: '获取源节点数据失败' })
+            // ElMessage({ type: 'error', message: '获取源节点数据失败' })
         }
     });
 }
@@ -641,7 +641,7 @@ const updateChafenData = async () => {
                     ElMessage({ type: 'success', message: '修改成功' })
                 }
                 catch {
-                    ElMessage({ type: 'error', message: '修改失败' })
+                    // ElMessage({ type: 'error', message: '修改失败' })
                 }
             })
         })
@@ -668,7 +668,7 @@ const updateProductList = async () => {
         ElMessage({ type: 'success', message: '修改成功' })
     }
     catch {
-        ElMessage({ type: 'error', message: '修改失败' })
+        // ElMessage({ type: 'error', message: '修改失败' })
     }
 }
 const updateProductListBtn = () => {
