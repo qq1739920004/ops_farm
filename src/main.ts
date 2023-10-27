@@ -26,6 +26,11 @@ app.use(router)
 app.use(ElementPlus)
 app.use(i18n)
 app.mount('#app')
+app.directive('focus',{
+    mounted(el){
+        el.focus()
+    }
+})
 
 
 

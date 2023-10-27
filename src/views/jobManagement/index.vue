@@ -6,12 +6,15 @@
                     placeholder="请选择" @change="changeBlur1">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
-                <el-input style="width:179px;margin-right: 20px;" v-else v-model="dealerList[0].name" disabled />
-                <el-select filterable v-model="pageInfo.carId" class="m-2" placeholder="请选择" suffix-icon="search"
-                    @change="changeBlur2">
-                    <el-option v-if="CarDealerList" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
-                        :key="item.id"></el-option>
-                    <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
+                <el-input style="width:179px;margin-right: 20px;" v-if="dealerList.length === 1"
+                    v-model="dealerList[0].name" disabled />
+                <el-select :popper-append-to-body="false" @click="changeScrollTop" filterable v-model="pageInfo.carId"
+                    class="m-2" placeholder="请选择" suffix-icon="search" @change="changeBlur2">
+                    <div class="lazy_area" ref="containerRef" @scroll="handleScroll">
+                        <el-option v-if="CarDealerList" v-for="item in dataItems" :label="item.nameNpn" :value="item.id"
+                            :key="item.id"></el-option>
+                        <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
+                    </div>
                 </el-select>
             </div>
             <div class="time">
@@ -51,17 +54,35 @@
 
 <script setup lang='ts'>
 import snTable from './components/sn-table.vue'
-import { reactive, ref, watch } from 'vue'
+import { nextTick, reactive, ref, watch } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { paddyWorkList_API, getCarDealerList_API, getPaddyWorkExport_API } from '@/api/jobManagement/index'
 import { carDealer_API } from '@/api/machineryList/index'
 import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, dealerCarResponseData } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 import router from '@/router'
+import '@/utils/directives.js'
 // 控制table显示与否
 // 时间格式转换
 function add0(m: any) {
     return m < 10 ? '0' + m : m;
+}
+// 数据懒加载
+const handleScroll = () => {
+    const container = containerRef.value
+    if (containerRef.value.scrollTop + container.clientHeight >= container.scrollHeight) {
+        loadmore()
+    }
+}
+const changeScrollTop = () => {
+    if (firstOpen.value) {
+        nextTick(() => {
+            containerRef.value.scrollTop = 0
+            firstOpen.value = false
+        })
+
+    }
+
 }
 const formartDate = (val: Date) => {
     var y = val.getFullYear();
@@ -84,12 +105,26 @@ const pageInfo = reactive<PageObj>({
     st: '',
     et: ''
 })
+const containerRef = ref<any>(null)
 let CarDealerList = ref<dealerCarObj[]>([])
+const dataItems = ref<dealerCarObj[]>([])
 const value1 = ref<Date>()
 const value2 = ref<Date>()
 const isActive = ref<number>(0)
 const a = ref<Date>()
 const total = ref<number>(10)
+const pageData = ref({
+    pageIndex: 1, pageSize: 50
+})
+// 数据懒加载
+const loadmore = () => {
+    pageData.value.pageIndex++
+    let num = pageData.value.pageIndex * pageData.value.pageSize;
+    dataItems.value = CarDealerList.value.filter((_item, index) => {
+        return index < num
+    })
+}
+
 // 页码变化
 const currentChange = (val: any) => {
     pageInfo.currentPage = val.currentPage
@@ -100,25 +135,30 @@ const currentChange = (val: any) => {
 const dealerList = ref<carDealerObj[]>([])
 const getDealerList = async () => {
     const res: carDealerResponseData = await carDealer_API()
-
     if (res.data.length > 1) {
         dealerList.value = [{ 'id': '', 'name': '全部经销商' }, ...res.data]
         pageInfo.companyId = ''
     } else {
         dealerList.value = res.data
-        pageInfo.companyId = dealerList.value[0].id
+        pageInfo.companyId = res.data[0].id
     }
     getDealerCarList()
 }
+const firstOpen = ref(false)
 getDealerList()
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
     const res: dealerCarResponseData = await getCarDealerList_API(pageInfo.companyId)
+    dataItems.value = []
+    pageData.value.pageIndex = 1
     if (res.data == null) {
         CarDealerList.value = []
     }
     else {
         CarDealerList.value = res.data
+        dataItems.value = CarDealerList.value.filter((_item, index) => {
+            return index < 50
+        })
         pageInfo.carId = res.data[0].id
         getPaddyWorkList()
     }
@@ -138,6 +178,7 @@ watch(() => [value1.value, value2.value], () => {
         value2.value = a.value
     }
 })
+
 // 禁止选择今日以后的日期
 const disabledDate = (time: Date) => {
     return time.getTime() > Date.now()
@@ -146,6 +187,7 @@ const changeBlur1 = () => {
     getDealerCarList()
     pageInfo.carId = '请选择'
     paddyWorkList.value = []
+    firstOpen.value = true
 }
 const changeBlur2 = () => {
     getPaddyWorkList()
@@ -210,6 +252,28 @@ const changeA = () => {
 </script>
 
 <style lang="scss" scoped>
+.lazy_area {
+    overflow: hidden;
+    width: 274px;
+    max-height: 240px;
+}
+.lazy_area:hover{
+    overflow: auto;
+}
+.lazy_area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lazy_area::-webkit-scrollbar-thumb {
+    background-color: var(--el-color-info-light-3);
+}
+
+.lazy_area::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, .3);
+    border-radius: 6px;
+    display: none;
+}
+
 .search_container {
     display: flex;
     justify-content: space-between;
@@ -299,5 +363,4 @@ const changeA = () => {
 
     }
 
-}
-</style>
+}</style>
