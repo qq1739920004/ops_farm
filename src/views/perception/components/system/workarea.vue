@@ -197,7 +197,10 @@ const startMoveDataZoom = (
     });
   }, 2000);
 };
-
+window.addEventListener('resize', () => {
+    // 当浏览器大小改变时，重绘ECharts图表
+    mycharts.resize();
+});
 onMounted(() => {
   initEcharts();
   startMoveDataZoom(mycharts, dataZoomMove);
@@ -237,27 +240,32 @@ onUnmounted(() => {
 .box {
   background: url(@/assets/systemPerceptionImage/border_green_state.png) no-repeat;
   background-size: 100% 100%;
-  margin: 0px 10px 34px 15px;
-  padding:10px 0 0 10px ;
+  margin: 0rem 0.625rem 2.125rem 0.9375rem; /* 0px 10px 34px 15px */
+  padding: 0.625rem 0 0 0.625rem; /* 10px 0 0 10px */
+  
   .title {
-    height: 40px;
+    height: 2.1vh; /* 40px */
     display: flex;
     align-items: center;
-    >img{
-      margin-top: -10px;
+    padding-top: 0.4375rem;
+
+    > img {
+      margin-top: -0.625rem; /* -10px */
     }
+    
     border-left-style: none;
     border-right-style: none;
 
     span {
-      font-size:16px ;
+      font-size: 1rem; /* 16px */
     }
   }
 
   .charts-box {
     position: relative;
     width: 100%;
-    height: calc(100% - 40px);
+    height: calc(100% - 2.1vh); /* 100% - 40px */
+    
     .charts {
       width: 100%;
       height: 100%;
