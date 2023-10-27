@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { useStorage } from "@vueuse/core";
 import { reactive } from 'vue'
 const useUserStore = defineStore("use", () => {
-
+    const userInfo = reactive(JSON.parse(localStorage.getItem('userInfo') || '{}'))
     let locationHrefAuthorization = location.href.split('?Authorization=')[1] || ''
     if (locationHrefAuthorization) {
         locationHrefAuthorization = locationHrefAuthorization.replace('%20', ' ')
@@ -10,7 +10,7 @@ const useUserStore = defineStore("use", () => {
     }
 
     let Authorization = useStorage('Authorization', locationHrefAuthorization)
-    const userInfo = reactive(JSON.parse(localStorage.getItem('userInfo') || '{}'))
+
     function clearUserInfo() {
         Authorization.value = ''
         localStorage.removeItem("userInfo")

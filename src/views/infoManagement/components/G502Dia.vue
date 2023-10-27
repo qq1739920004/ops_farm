@@ -82,7 +82,7 @@ const editInfo = async () => {
         emits('push', '')
     }
     catch {
-        ElMessage({ type: 'error', message: '编辑失败' })
+       // ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 const addInfo = async () => {
@@ -92,7 +92,7 @@ const addInfo = async () => {
         emits('push', '')
     }
     catch {
-        ElMessage({ type: 'error', message: '添加失败' })
+        //ElMessage({ type: 'error', message: '添加失败' })
     }
 }
 const submit = async () => {

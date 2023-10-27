@@ -245,7 +245,7 @@ const changeSnBtn = async (val: string) => {
         getTopInfo()
     }
     catch {
-        ElMessage({ type: 'error', message: '编辑失败' })
+        // ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 const changeMotorSnBtn = async (val: string) => {
@@ -256,7 +256,7 @@ const changeMotorSnBtn = async (val: string) => {
         getTopInfo()
     }
     catch {
-        ElMessage({ type: 'error', message: '编辑失败' })
+        // ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 
@@ -268,7 +268,7 @@ const changeCarImuSnBtn = async (val: string) => {
         getTopInfo()
     }
     catch {
-        ElMessage({ type: 'error', message: '编辑失败' })
+        // ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 const changeWheelImuSnBtn = async (val: string) => {
@@ -279,7 +279,7 @@ const changeWheelImuSnBtn = async (val: string) => {
         getTopInfo()
     }
     catch {
-        ElMessage({ type: 'error', message: '编辑失败' })
+        // ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 
@@ -291,7 +291,7 @@ const changeAntennaOneBtn = async (val: string) => {
         getTopInfo()
     }
     catch {
-        ElMessage({ type: 'error', message: '编辑失败' })
+       // ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 const changeAntennaTwoBtn = async (val: string) => {
@@ -313,7 +313,7 @@ const changeHubSnBtn = async (val: string) => {
         getTopInfo
     }
     catch {
-        ElMessage({ type: 'error', message: '编辑失败' })
+       // ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 
