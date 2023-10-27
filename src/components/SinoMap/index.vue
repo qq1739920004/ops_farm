@@ -59,13 +59,24 @@ const props = defineProps({
       zoom: 4,
     },
   },
-  mapRenderMode:{
-    type:String,
-    default:'dom' // 原生dom渲染， 或者 polymer 聚合引擎；
+  mapRenderMode: {
+    type: String,
+    default: "dom", // 原生dom渲染， 或者 polymer 聚合引擎；
   },
   markerData: {
     type: Array,
     default: [],
+  },
+  lineData: {
+    type: Array,
+    default: [],
+  },
+  lineStyle: {
+    type: Object,
+    default: {
+      color: "#8dfc96",
+      weight: 2,
+    },
   },
 });
 let lastMarkerData: any = []; // 上一次markerData数据
@@ -80,13 +91,19 @@ watch(
   (markerData) => {
     diffArray(lastMarkerData, markerData);
     lastMarkerData = JSON.parse(JSON.stringify(markerData));
-    if(markerData.length >  mapRenderModeLength && mapRenderMode == 'dom') {
-      markerClusterGroup.clearLayers()
-      markerGroup.clearLayers()
-      mapRenderMode = 'polymer'
-      updateMarkerVisible(markerData)
+    if (markerData.length > mapRenderModeLength && mapRenderMode == "dom") {
+      markerClusterGroup.clearLayers();
+      markerGroup.clearLayers();
+      mapRenderMode = "polymer";
+      updateMarkerVisible(markerData);
     }
-
+  },
+  { deep: true }
+);
+watch(
+  () => props.lineData,
+  (lineData) => {
+    createLine(lineData);
   },
   { deep: true }
 );
@@ -98,10 +115,10 @@ watch(
   { deep: true }
 );
 
-
 let map: any = null; // map实例对象
-let mapRenderMode = props.mapRenderMode; 
-let mapRenderModeLength = 1000 //数量超过1000，强制转为 polymer 聚合引擎
+let polyline: any = null;
+let mapRenderMode = props.mapRenderMode;
+let mapRenderModeLength = 1000; //数量超过1000，强制转为 polymer 聚合引擎
 let markerArr: any = []; // marker坐标点数字
 
 //@ts-ignore
@@ -125,6 +142,7 @@ mapTileOptions.list = mapTileOptions.list.filter((item: any) =>
 onMounted(() => {
   initMap();
   createMarker(props.markerData);
+  createLine(props.lineData);
 });
 
 // 处理markerId后扁平化数组
@@ -196,11 +214,12 @@ function createMarker(list: any) {
     const [markerLng, markerLat] = gcoordLngLat(item.markerLng, item.markerLat);
     const icon = createIcon(item);
     if (icon) {
-      marker = L.marker([markerLng, markerLat], { icon });
+      marker = L.marker([markerLat, markerLng], { icon });
     } else {
-      marker = L.marker([markerLng, markerLat]);
+      marker = L.marker([markerLat, markerLng]);
     }
     marker.bindPopup(item.markerPopup);
+
     marker.markerId = item.markerId; // marker对象上设置唯一标识
     markerArr.push(marker);
     if (mapRenderMode == "dom") {
@@ -249,7 +268,7 @@ function updateMarker(list: any) {
           item.markerLat
         );
         if (icon) v.setIcon(icon);
-        v.setLatLng([markerLng, markerLat]);
+        v.setLatLng([markerLat, markerLng]);
         v.getPopup().setContent(item.markerPopup);
       }
     });
@@ -300,6 +319,29 @@ function initMap() {
   markerClusterGroup.addTo(map);
   mapTileChange();
   initRanging();
+}
+// 创建线
+function createLine(list: any) {
+  if (polyline) {
+    polyline.remove();
+  }
+
+  const polylineLngLat: any = [];
+  list.forEach((item: any) => {
+    let arr: any = [];
+    item.forEach((v: any) => {
+      arr.push(gcoordLngLat(v[1], v[0]));
+    });
+    polylineLngLat.push(arr);
+  });
+
+
+  const { color, weight } = props.lineStyle;
+
+  polyline = L.polyline(polylineLngLat, {
+    color,
+    weight,
+  }).addTo(map);
 }
 
 // 图商发生变化

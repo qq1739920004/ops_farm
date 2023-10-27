@@ -255,8 +255,8 @@ function handleSocketData(socketData: any) {
     if (action == "upline") {
       const markerId = data.sn;
       const markerVisible = true;
-      const markerLng = data.posX;
-      const markerLat = data.posY;
+      const markerLng = data.posY;
+      const markerLat = data.posX;
       const markerIcon = createMarkerIcon(data);
       const markerPopup = createMarkerPopup(data);
       markerData.push({
@@ -277,8 +277,8 @@ function handleSocketData(socketData: any) {
     }
     if (action == "online") {
       const markerId = data.sn;
-      const markerLng = data.posX;
-      const markerLat = data.posY;
+      const markerLng = data.posY;
+      const markerLat = data.posX;
       const markerIcon = createMarkerIcon(data);
       const markerPopup = createMarkerPopup(data);
       const find = markerData.find((item: any) => item.markerId == markerId);
@@ -370,8 +370,8 @@ async function getOnlineFarmPosition() {
   let onlineFarmMachines = data.onlineFarmMachines;
   onlineFarmMachines.forEach((item: any) => {
     item.markerId = item.sn;
-    item.markerLng = item.posX;
-    item.markerLat = item.posY;
+    item.markerLng = item.posY;
+    item.markerLat = item.posX;
     item.markerIcon = createMarkerIcon(item);
     item.markerPopup = createMarkerPopup(item);
     item.markerVisible = true;
@@ -558,7 +558,7 @@ function createMarkerPopup(item: any) {
           <li>
             <div class="l">
               <div class="label">经度:</div>
-              <div class="value">${dmsTrans(item.posX)}</div>
+              <div class="value">${dmsTrans(item.posY)}</div>
             </div>
             <div class="r">
               <div class="label">卡状态:</div>
@@ -568,7 +568,7 @@ function createMarkerPopup(item: any) {
           <li>
             <div class="l">
               <div class="label">纬度:</div>
-              <div class="value">${dmsTrans(item.posY)}</div>
+              <div class="value">${dmsTrans(item.posX)}</div>
             </div>
             <div class="r">
               <div class="label"></div>

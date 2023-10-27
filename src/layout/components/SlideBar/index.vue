@@ -60,7 +60,7 @@ function elMenuSelect() {
   font-size: 18px;
   transition: all 1s;
   img {
-    width: 45px;
+    width: 48px;
   }
   span {
     margin-left: 12px;

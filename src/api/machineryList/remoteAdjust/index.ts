@@ -3,21 +3,21 @@ import { paramDescribeObj, paramDescribeResponseData, paramCarParamResponseData,
 // 获取远程参数列表
 export function paramParamDescribe_API(data: paramDescribeObj) {
     return request<any, paramDescribeResponseData>({
-        url: `/farm/param/paramDescribe?version=${data.version}&type=${data.type}&paramType=${data.paramType}`,
+        url: `/farm/param/new/paramDescribe?version=${data.version}&type=${data.type}&paramType=${data.paramType}`,
         method: 'get',
     })
 }
 // 车辆参数
 export function paramCarParam_API(carId: Number) {
     return request<any, paramCarParamResponseData>({
-        url: `/farm/param/carParam/get?carId=${carId}`,
+        url: `/farm/param/new/carParam/get?carId=${carId}`,
         method: 'get',
     })
 }
 // 车辆参数更新
 export function paramCarParamUpdate_API(updateInfo: updateInfoObj) {
     return request<any, any>({
-        url: `/farm/param/carParam/update`,
+        url: `/farm/param/new/carParam/update`,
         method: 'post',
         params: updateInfo
     })
@@ -25,14 +25,14 @@ export function paramCarParamUpdate_API(updateInfo: updateInfoObj) {
 // 校准参数
 export function paramCalibParam_API(carId: Number) {
     return request<any, paramcalibParamData>({
-        url: `/farm/param/calibParam/get?carId=${carId}`,
+        url: `/farm/param/new/calibParam/get?carId=${carId}`,
         method: 'get',
     })
 }
 // 校准参数更新
 export function updateCalibParam_API(params: updateInfoObj) {
     return request<any, any>({
-        url: '/farm/param/calibParam/update',
+        url: '/farm/param/new/calibParam/update',
         method: 'post',
         params
     })
@@ -40,14 +40,14 @@ export function updateCalibParam_API(params: updateInfoObj) {
 // PID参数
 export function pidParamParam_API(carId: Number) {
     return request<any, paramcalibParamData>({
-        url: `/farm/param/pidParam/get?carId=${carId}`,
+        url: `/farm/param/new/pidParam/get?carId=${carId}`,
         method: 'get',
     })
 }
 // PID参数更新
 export function updatePidParm_API(params: updateInfoObj) {
     return request<any, any>({
-        url: '/farm/param/pidParam/update',
+        url: '/farm/param/new/pidParam/update',
         method: 'post',
         params
     })
@@ -55,21 +55,21 @@ export function updatePidParm_API(params: updateInfoObj) {
 // 基本参数basicParamParam_API
 export function basicParam_API(carId: Number) {
     return request<any, paramcalibParamData>({
-        url: `/farm/param/basicParam/get?carId=${carId}`,
+        url: `/farm/param/new/basicParam/get?carId=${carId}`,
         method: 'get',
     })
 }
 // PID曲线参数
 export function pidCurveParam_API(carId: Number) {
     return request<any, paramcalibParamData>({
-        url: `/farm/param/pidCurveParam/get?carId=${carId}`,
+        url: `/farm/param/new/pidCurveParam/get?carId=${carId}`,
         method: 'get',
     })
 }
 // PID曲线参数更新
 export function updatePidCurveParm_API(params: updateInfoObj) {
     return request<any, any>({
-        url: '/farm/param/pidCurveParam/update',
+        url: '/farm/param/new/pidCurveParam/update',
         method: 'post',
         params
     })
@@ -77,7 +77,7 @@ export function updatePidCurveParm_API(params: updateInfoObj) {
 // 更新基本参数
 export function updateBasicParm_API(params: updateInfoObj) {
     return request<any, any>({
-        url: '/farm/param/basicParam/update',
+        url: '/farm/param/new/basicParam/update',
         method: 'post',
         params
     })
@@ -85,14 +85,14 @@ export function updateBasicParm_API(params: updateInfoObj) {
 // PID超低速曲线参数/param/pidSlsParam/get
 export function pidSlsParam_API(carId: Number) {
     return request<any, paramcalibParamData>({
-        url: `/farm/param/pidSlsParam/get?carId=${carId}`,
+        url: `/farm/param/new/pidSlsParam/get?carId=${carId}`,
         method: 'get',
     })
 }
 // PID超低速曲线参数更新/param/pidSlsParam/update
 export function updatepidSlsParam_API(params: updateInfoObj) {
     return request<any, any>({
-        url: '/farm/param/pidSlsParam/update',
+        url: '/farm/param/new/pidSlsParam/update',
         method: 'post',
         params
     })
@@ -100,7 +100,7 @@ export function updatepidSlsParam_API(params: updateInfoObj) {
 // 差分设置获取源节点
 export function getSourceNode_path(params: SourceObj) {
     return request<any, paramSourceNodeREsponseData>({
-        url: '/farm/param/getSourceNode',
+        url: '/farm/param/new/getSourceNode',
         method: 'post',
         params
     })
@@ -116,7 +116,7 @@ export function updateCar_API(params: updateCarObj) {
 // 在线升级/版本选择/car/productPackage
 export function GetcarProductpackage_API(params: carProductpackageObj) {
     return request<any, GetcarProductpackageResponseData>({
-        url: '/farm/car/productPackage',
+        url: '/farm/car/new/productPackage',
         method: 'get',
         params
     })
@@ -124,7 +124,7 @@ export function GetcarProductpackage_API(params: carProductpackageObj) {
 // 在线升级更新 /car/packageUpgrade
 export function packageUpgradeCar_API(params: CarpackageUpgradeInfoObj) {
     return request<any, any>({
-        url: '/farm/car/packageUpgrade',
+        url: '/farm/car/new/packageUpgrade',
         method: 'post',
         params
     })
@@ -132,7 +132,7 @@ export function packageUpgradeCar_API(params: CarpackageUpgradeInfoObj) {
 // 获取PID曲线参数/param/pidCurveParam/get
 export function GetParamPidCurveParam_API(params: carProductpackageObj) {
     return request<any, GetcarProductpackageResponseData>({
-        url: '/farm/car/productPackage',
+        url: '/farm/car/new/productPackage',
         method: 'get',
         params
     })
@@ -140,14 +140,14 @@ export function GetParamPidCurveParam_API(params: carProductpackageObj) {
 // 获取高级参数数据
 export function getAdvanced1Param_API(carId: Number) {
     return request<any, any>({
-        url: `/farm/param/advanced1Param/get?carId=${carId}`,
+        url: `/farm/param/new/advanced1Param/get?carId=${carId}`,
         method: 'get',
     })
 }
 // 更新高级参数数据
 export function advanced1ParamUpdate_API(params: updateInfoObj) {
     return request<any, any>({
-        url: '/farm/param/advanced1Param/update',
+        url: '/farm/param/new/advanced1Param/update',
         method: 'post',
         params
     })
