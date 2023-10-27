@@ -1,5 +1,5 @@
 import { Directive, DirectiveBinding } from 'vue'
- 
+//  el-select 懒加载
 const loadMore: Directive = {
     beforeMount(el: any, binding: DirectiveBinding) {
         const selectDom = document.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
