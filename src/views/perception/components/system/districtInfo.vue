@@ -49,44 +49,42 @@ weatherService();
 </script>
 
 <style scoped lang="scss">
-
 .top_time {
-  height: 223px;
+  height: 23.8vh; /* 223px */
   display: flex;
   flex: 1;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  padding-right: 25px;
-  font-size: 20px;
+  padding-right: 1.3021vw; /* 25px */
+  font-size: 1.0417vw; /* 20px */
 
   span {
-    padding-right: 15px;
+    padding-right: 0.7812vw; /* 15px */
   }
 
   .temp {
-    transform: translate(26px,-44px);
+    transform: translate(1.3542vw,-4.6922vh); /* 26px,-44px */
     display: flex;
     justify-content: center;
     align-items: center;
     .top_time_pic {
-      width: 41px;
+      width: 2.1354vw; /* 41px */
       vertical-align: middle;
-      padding-right: 15px;
+      padding-right: 0.7812vw; /* 15px */
     }
   }
 
   .time {
-    .zoom{
-        width: 24px;
-        height: 24px;
-        margin-right: 16px;
-        vertical-align: middle;
-        cursor: pointer;
-
-      }
+    .zoom {
+      width: 1.25vw; /* 24px */
+      height: 2.56vh; /* 24px */
+      margin-right: 0.8333vw; /* 16px */
+      vertical-align: middle;
+      cursor: pointer;
+    }
     :nth-child(3) {
-      font-size: 34.87px;
+      font-size: 1.8151vw; /* 34.87px */
     }
   }
 }

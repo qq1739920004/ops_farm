@@ -49,7 +49,7 @@ let mask: any = [];
 function startDraw(AMap: any) {
   map.value = new AMap.Map("container", {
     center: [104.114129, 37.550339], // 中国的大致中心点
-    zoom:4.5, // 设置一个合适的缩放级别以显示多个城市
+    zoom:4.4, // 设置一个合适的缩放级别以显示多个城市
     backgroundColor: "transparent",
     mask: mask, // 设置遮罩层
     disableSocket: true,

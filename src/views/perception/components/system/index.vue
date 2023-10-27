@@ -128,17 +128,43 @@ function handleSocketData(data: any) {
 }
 onMounted(() => {
   getMonitor();
-  screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
+  // screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
 });
+function calculateNewFontSize() {
+  const minWidth = 937; // 最小窗口宽度，根据需要调整
+  const minHeight = 500; // 最小窗口高度，根据需要调整
+  const baseFontSize = 8; // 基础字体大小
 
-window.onresize = () => {
-  screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
-};
-function getScale(w = 1920, h = 937) {
-  const ww = window.innerWidth / w;
-  const wh = window.innerHeight / h;
-  return ww < wh ? ww : wh;
+  const currentWidth = window.innerWidth;
+  const currentHeight = window.innerHeight;
+
+  // 计算宽度和高度的比例
+  const widthRatio = currentWidth / minWidth;
+  const heightRatio = currentHeight / minHeight;
+
+  // 选择较小的比例作为缩放比例
+  const scale = Math.min(widthRatio, heightRatio);
+
+  // 计算新的字体大小
+  const newFontSize = baseFontSize * scale;
+
+  // 设置根元素的字体大小
+  document.documentElement.style.fontSize = `${newFontSize}px`;
 }
+
+// 在窗口大小改变时调用计算字体大小的函数
+window.addEventListener('resize', calculateNewFontSize);
+
+// 页面加载时初始化字体大小
+calculateNewFontSize();
+// window.onresize = () => {
+//   screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
+// };
+// function getScale(w = 1920, h = 937) {
+//   const ww = window.innerWidth / w;
+//   const wh = window.innerHeight / h;
+//   return ww < wh ? ww : wh;
+// }
 </script>
 
 <style lang="scss" scoped>
@@ -154,73 +180,65 @@ function getScale(w = 1920, h = 937) {
   .screen {
     .top-img {
       position: fixed;
-      min-width: 1920px;
+      width: 100vw;
       top: 0;
     }
-    width: 1920px;
-    height: 937px;
+    width: 100vw;
+    height: 100vh;
     position: fixed;
-    left: 50%;
-    top: 50%;
-    transform-origin: left top;
+    left: 0;
+    top: 0;
     .top {
       display: flex;
       justify-content: space-between;
-      width: 100%;
-      height: 182px;
-      .top_time {
-        align-self: flex-start;
-      }
+      width: 100vw;
+      height: 19.4vh; /* 182/937 */
     }
     .bottom {
       display: flex;
-      height: 739px;
-      width: 100%;
+      height: 78.8vh; /* 739/937 */
+      width: 100vw;
       .left {
         flex: 1;
         display: flex;
         height: 100%;
-
         flex-direction: column;
         .online {
-          height: 270px;
+          height: 28.8vh; /* 270/937 */
         }
         .year {
-          height: 173px;
+          height: 18.5vh; /* 173/937 */
         }
         .active {
-          height: 256px;
+          height: 27.3vh; /* 256/937 */
         }
       }
       .middle {
-        width: 1039px;
+        width: 54vw; /* 1039/1920 */
         height: 100%;
       }
-
       .right {
-        margin-top: 40px;
         flex: 1;
         height: 100%;
-        transform: translateY(-50px);
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: space-evenly;
         .workarea {
-          height: 391px;
+          height: 37vh; /* 391/937 */
         }
         .state {
-          height: 358px;
+          height: 35vh; /* 358/937 */
         }
       }
     }
   }
 
   .bottom-logo {
-    width: 100%;
-    height: 16px;
+    width: 100vw;
+    height: 1.7vh; /* 16/937 */
     background-image: url("@/assets/systemPerceptionImage/bottom_logo.png");
     background-size: contain;
   }
 }
+
 </style>
-../perception/component/system/carmap/index.vue

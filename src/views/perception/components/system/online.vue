@@ -14,7 +14,7 @@ import * as echarts from "echarts";
 import { ref, watch, onMounted, onUnmounted } from "vue";
 
 let bar = ref();
-var mycharts: any;
+let mycharts: any;
 const props = defineProps({
   typeCounts: {
     type: Object,
@@ -60,7 +60,7 @@ const option = {
   grid: {
     containLabel: true,
     bottom: "5%",
-    top: "5%",
+    top: "14%",
     left: "3%", // 增加这个值，从而减少第二个yAxis的宽度
     right: "5%",
   },
@@ -208,7 +208,10 @@ const option = {
     },
   ],
 };
-
+window.addEventListener('resize', () => {
+    // 当浏览器大小改变时，重绘ECharts图表
+    mycharts.resize();
+});
 const initEcharts = () => {
   mycharts = echarts.init(bar.value);
   mycharts.setOption(option);
@@ -296,33 +299,31 @@ onUnmounted(() => {
 .box {
   background: url(@/assets/systemPerceptionImage/border_green.png) no-repeat;
   background-size: 100% 100%;
-  margin: 0px 10px 10px 15px;
-  padding:10px 0 0 10px ;
+  margin: 0rem 0.625rem 0.625rem 0.9375rem;
+  padding: 0.625rem 0 0 0.625rem;
   .title {
-    height: 40px;
-    line-height: 27px;
+    padding-top: 0.5375rem;
+    height: 2.1vh;
+    line-height: 2.88vh;
     display: flex;
     align-items: center;
-    >img{
-      margin-top: -10px;
+    > img {
+      margin-top: -1.06vh;
     }
-  
     border-left-style: none;
     border-right-style: none;
-
     span {
-      font-size:16px ;
-
+      font-size: 1rem;
     }
-
     span:first-child {
-      font-size: 30px;
+      font-size: 1.875rem;
       font-weight: 900;
     }
   }
-
   .charts {
-    height: calc(100% - 40px);
+    width: 100%;
+    height: calc(100% - 2.1vh);
   }
 }
+
 </style>
