@@ -181,7 +181,7 @@ calculateNewFontSize();
     .top-img {
       position: fixed;
       width: 100vw;
-      top: 0;
+      top: 1rem;
     }
     width: 100vw;
     height: 100vh;
@@ -238,6 +238,7 @@ calculateNewFontSize();
     height: 1.7vh; /* 16/937 */
     background-image: url("@/assets/systemPerceptionImage/bottom_logo.png");
     background-size: contain;
+    transform: translateY(-0.5rem);
   }
 }
 

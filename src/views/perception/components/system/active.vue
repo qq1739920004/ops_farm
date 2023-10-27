@@ -73,9 +73,9 @@ const option = {
   },
 
   grid: {
-    left: "3%",
-    right: "4%",
-    bottom: "3%",
+    left: "2%",
+    right: "6%",
+    bottom: "8%",
     containLabel: true,
   },
   xAxis: [
@@ -97,8 +97,11 @@ const option = {
         textStyle: {
           padding: [10, 0, 0, 0], //表示 [上, 右, 下, 左] 的边距。
           color: "rgba(230, 247, 255, 0.50)",
-          fontSize: 16,
+          fontSize: 12,
         },
+        formatter: function (value:any) {
+                return value.substring(10);
+            }
       },
     },
   ],
@@ -204,7 +207,7 @@ onUnmounted(() => {
   }
   .charts {
     width: 100%;
-    height: calc(100% - 3vh);
+    height: calc(100% - 3.5vh);
   }
 }
 </style>

@@ -116,7 +116,7 @@ defineProps({
     height: 11.6vh;
 
     .top_tittle {
-      padding-top: 1.3rem;
+      padding-top: 2.8rem;
       height: 3.18vh;
       display: flex;
       justify-content: start;
@@ -191,12 +191,7 @@ defineProps({
       padding-right: 0.9375rem;
     }
 
-    .temp {
-      .top_time_pic {
-        vertical-align: middle;
-        padding-right: 0.9375rem;
-      }
-    }
+   
 
     .time {
       :nth-child(2) {
