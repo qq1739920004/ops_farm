@@ -41,8 +41,7 @@ service.interceptors.response.use(
     if (response.data instanceof ArrayBuffer || response.data instanceof Blob) {
       return response.data;
     }
-    console.log(response)
-    // ElMessage.error(msg || '系统出错');
+    ElMessage.error(message || '系统错误');
     return Promise.reject(new Error(message || 'Error'));
   },
   (error: any) => {
@@ -50,7 +49,6 @@ service.interceptors.response.use(
     const { status } = error.response;
     if (status == 403) {
       ElMessage.error('暂无权限');
-
     } else if (status == 401) {
       userStore.clearUserInfo()
       // 前往登录页面

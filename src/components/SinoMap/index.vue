@@ -54,10 +54,11 @@ const props = defineProps({
   },
   mapCenter: {
     type: Object,
-    default: {
-      center: [[31.086444, 121.734942]],
+    default: () => ({
+      markerId: null,
+      center: [[121.734942, 31.086444]],
       zoom: 4,
-    },
+    }),
   },
   mapRenderMode: {
     type: String,
@@ -83,8 +84,8 @@ let lastMarkerData: any = []; // 上一次markerData数据
 let pickupMode: boolean = false; // 是否地图拾取模式
 let pickedPoints: any = [];
 let rangingArray: any = reactive([]);
-const center = L.latLng(31.086444, 121.734942);
-const zoom = 4;
+const defaultMapCenter = [31.086444, 121.734942];
+const defaultMapZoom = 4;
 
 watch(
   () => props.markerData,
@@ -141,6 +142,7 @@ mapTileOptions.list = mapTileOptions.list.filter((item: any) =>
 
 onMounted(() => {
   initMap();
+  handleMapCenter(props.mapCenter);
   createMarker(props.markerData);
   createLine(props.lineData);
 });
@@ -231,10 +233,10 @@ function createMarker(list: any) {
   });
 
   // if (markerArr.length > 0) {
-  //   var groupBounds = markerGroup.getBounds();
-
-  //   // 使用 fitBounds 方法来适应包含所有标记的边界框
-  //   map.fitBounds(groupBounds);
+    // var groupBounds = markerGroup.getBounds();
+    // console.log(groupBounds,'--235')
+    // 使用 fitBounds 方法来适应包含所有标记的边界框
+    // map.fitBounds([L.latLng(31.086444, 121.734942)],);
   // }
   // console.log(markerArr, "--145");
   // var groupBounds = markerArr.getBounds();
@@ -299,7 +301,7 @@ function createIcon(item: any) {
   return L.icon({
     iconUrl: item.markerIcon, // SVG图标的路径
     iconSize: [25, 28], // 图标的大小 [宽度, 高度]
-    iconAnchor: [14, 28], // 图标的锚点位置 [水平, 垂直]
+    iconAnchor: [12, 14], // 图标的锚点位置 [水平, 垂直]
     popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
   });
 }
@@ -309,8 +311,8 @@ function initMap() {
   map = L.map("map", {
     minZoom: 1, //最小缩放值
     maxZoom: 18, //最大缩放值
-    center: center, //注意和其他地图经纬度格式区别
-    zoom: zoom, //初始缩放值
+    // center: props.mapCenter.center, //注意和其他地图经纬度格式区别
+    // zoom: props.mapCenter.zoom, //初始缩放值
     zoomControl: false, //是否启用地图缩放控件
     attributionControl: false, //是否启用地图属性控件
   });
@@ -326,19 +328,18 @@ function createLine(list: any) {
     polyline.remove();
   }
 
-  const polylineLngLat: any = [];
+  const latLng: any = [];
   list.forEach((item: any) => {
     let arr: any = [];
     item.forEach((v: any) => {
       arr.push(gcoordLngLat(v[1], v[0]));
     });
-    polylineLngLat.push(arr);
+    latLng.push(arr);
   });
-
 
   const { color, weight } = props.lineStyle;
 
-  polyline = L.polyline(polylineLngLat, {
+  polyline = L.polyline(latLng, {
     color,
     weight,
   }).addTo(map);
@@ -354,17 +355,28 @@ function mapTileChange() {
 // 处理地图定位
 function handleMapCenter(data: any) {
   if (!data) {
-    // map.fitBounds([center]);
-    // map.setZoom(zoom);
-    // return;
-    map.setView(center, zoom);
+    map.setView(defaultMapCenter, defaultMapZoom);
     return;
   }
-  const { markerId } = data;
-  const findMarker = markerArr.find((item: any) => item.markerId == markerId);
-  findMarker.openPopup();
-  map.fitBounds([findMarker._latlng]);
-  map.setZoom(map.getZoom() - 2);
+  if (data.markerId) {
+    const findMarker = markerArr.find(
+      (item: any) => item.markerId == data.markerId
+    );
+    findMarker.openPopup();
+    map.fitBounds([findMarker._latlng]);
+    map.setZoom(map.getZoom() - 2);
+  }
+  else if (data.center && data.center.length > 0) {
+    let latLng: any = [];
+    latLng = data.center.map((item: any) => {
+      return gcoordLngLat(item[1], item[0]);
+    });
+    var bounds = L.latLngBounds(latLng);
+    map.fitBounds(bounds);
+    data.zoom ? map.setZoom(data.zoom): ''
+  }else {
+    map.setView(defaultMapCenter, defaultMapZoom);
+  }
 }
 
 // 设置图商
