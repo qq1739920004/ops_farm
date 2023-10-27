@@ -8,13 +8,11 @@
                 </el-select>
                 <el-input style="width:179px;margin-right: 20px;" v-if="dealerList.length === 1"
                     v-model="dealerList[0].name" disabled />
-                <el-select :popper-append-to-body="false" @click="changeScrollTop" filterable v-model="pageInfo.carId"
+                <el-select v-load-more="loadmore"  filterable v-model="pageInfo.carId"
                     class="m-2" placeholder="请选择" suffix-icon="search" @change="changeBlur2">
-                    <div class="lazy_area" ref="containerRef" @scroll="handleScroll">
-                        <el-option v-if="CarDealerList" v-for="item in dataItems" :label="item.nameNpn" :value="item.id"
-                            :key="item.id"></el-option>
-                        <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
-                    </div>
+                    <el-option v-if="CarDealerList" v-for="item in dataItems" :label="item.nameNpn" :value="item.id"
+                        :key="item.id"></el-option>
+                    <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
                 </el-select>
             </div>
             <div class="time">
@@ -54,7 +52,8 @@
 
 <script setup lang='ts'>
 import snTable from './components/sn-table.vue'
-import { nextTick, reactive, ref, watch } from 'vue'
+import vLoadMore from '@/utils/loadData'
+import {  reactive, ref, watch } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { paddyWorkList_API, getCarDealerList_API, getPaddyWorkExport_API } from '@/api/jobManagement/index'
 import { carDealer_API } from '@/api/machineryList/index'
@@ -68,22 +67,8 @@ function add0(m: any) {
     return m < 10 ? '0' + m : m;
 }
 // 数据懒加载
-const handleScroll = () => {
-    const container = containerRef.value
-    if (containerRef.value.scrollTop + container.clientHeight >= container.scrollHeight) {
-        loadmore()
-    }
-}
-const changeScrollTop = () => {
-    if (firstOpen.value) {
-        nextTick(() => {
-            containerRef.value.scrollTop = 0
-            firstOpen.value = false
-        })
 
-    }
 
-}
 const formartDate = (val: Date) => {
     var y = val.getFullYear();
     var m = val.getMonth() + 1;
@@ -105,7 +90,6 @@ const pageInfo = reactive<PageObj>({
     st: '',
     et: ''
 })
-const containerRef = ref<any>(null)
 let CarDealerList = ref<dealerCarObj[]>([])
 const dataItems = ref<dealerCarObj[]>([])
 const value1 = ref<Date>()
@@ -144,7 +128,6 @@ const getDealerList = async () => {
     }
     getDealerCarList()
 }
-const firstOpen = ref(false)
 getDealerList()
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
@@ -187,7 +170,6 @@ const changeBlur1 = () => {
     getDealerCarList()
     pageInfo.carId = '请选择'
     paddyWorkList.value = []
-    firstOpen.value = true
 }
 const changeBlur2 = () => {
     getPaddyWorkList()
@@ -252,27 +234,6 @@ const changeA = () => {
 </script>
 
 <style lang="scss" scoped>
-.lazy_area {
-    overflow: hidden;
-    width: 274px;
-    max-height: 240px;
-}
-.lazy_area:hover{
-    overflow: auto;
-}
-.lazy_area::-webkit-scrollbar {
-    width: 6px;
-}
-
-.lazy_area::-webkit-scrollbar-thumb {
-    background-color: var(--el-color-info-light-3);
-}
-
-.lazy_area::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, .3);
-    border-radius: 6px;
-    display: none;
-}
 
 .search_container {
     display: flex;
