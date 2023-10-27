@@ -60,7 +60,6 @@ import { carDealer_API } from '@/api/machineryList/index'
 import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, dealerCarResponseData } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 import router from '@/router'
-import '@/utils/directives.js'
 // 控制table显示与否
 // 时间格式转换
 function add0(m: any) {
