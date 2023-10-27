@@ -10,8 +10,7 @@
                     v-model="dealerList[0].name" disabled />
                 <el-select :popper-append-to-body="false" @click="changeScrollTop" filterable v-model="pageInfo.carId"
                     class="m-2" placeholder="请选择" suffix-icon="search" @change="changeBlur2">
-                    <div class="lazy_area" ref="containerRef" @scroll="handleScroll"
-                        style=" overflow: auto; width: 285px;">
+                    <div class="lazy_area" ref="containerRef" @scroll="handleScroll">
                         <el-option v-if="CarDealerList" v-for="item in dataItems" :label="item.nameNpn" :value="item.id"
                             :key="item.id"></el-option>
                         <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>
@@ -79,6 +78,7 @@ const changeScrollTop = () => {
     if (firstOpen.value) {
         nextTick(() => {
             containerRef.value.scrollTop = 0
+            firstOpen.value = false
         })
 
     }
@@ -252,6 +252,27 @@ const changeA = () => {
 </script>
 
 <style lang="scss" scoped>
+.lazy_area {
+    overflow: hidden;
+    width: 274px;
+    max-height: 240px;
+}
+.lazy_area:hover{
+    overflow: auto;
+}
+.lazy_area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lazy_area::-webkit-scrollbar-thumb {
+    background-color: var(--el-color-info-light-3);
+}
+
+.lazy_area::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, .3);
+    border-radius: 6px;
+    display: none;
+}
 
 .search_container {
     display: flex;
