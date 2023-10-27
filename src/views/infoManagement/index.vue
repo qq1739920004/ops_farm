@@ -3,7 +3,7 @@
         <div class="search_container app_card">
             <div class="input_area">
                 <el-input placeholder="请输入SN号、铭牌SN" v-model="pageInfo.key" class="input-with-select"
-                    @keyup.enter.native="search">
+                    @keyup.enter.native="search" clearable @clear="search">
                     <template #append>
                         <el-button icon="Search" @click="search" />
                     </template>
@@ -11,7 +11,7 @@
                 <div class="kind">
                     设备类型：
                 </div>
-                <el-select v-model="pageInfo.terminalType" class="m-2" placeholder="请选择设备类型"  @change="changeBlur">
+                <el-select v-model="pageInfo.terminalType" class="m-2" placeholder="请选择设备类型" @change="changeBlur">
                     <el-option value="AG360" label="AG360" />
                     <el-option value="AG502" label="AG502" />
                     <el-option value="AG501" label="AG501" />
@@ -85,10 +85,11 @@
                 <el-table-column label="操作" align="center" width="180">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <el-button v-auth="446" type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
+                            <el-button v-auth="446" type="primary" link @click="edit(row)"
+                                :disabled="row.warrantyDate ? true : false">编辑
                             </el-button>
                             <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
-                            <el-button  v-auth="505" class="aftersale_btn" type="primary" link
+                            <el-button v-auth="505" class="aftersale_btn" type="primary" link
                                 @click="gotoAfterSale(row)">售后处理</el-button>
                         </div>
                     </template>
@@ -150,7 +151,8 @@
                 <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <el-button  v-auth="446" type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
+                            <el-button v-auth="446" type="primary" link @click="edit(row)"
+                                :disabled="row.warrantyDate ? true : false">编辑
                             </el-button>
                             <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
                             <el-button v-auth="505" class="aftersale_btn" type="primary" link
@@ -168,59 +170,22 @@
                         {{ row.npn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="维保信息" align="center">
+                <el-table-column label="质保日期" align="center">
                     <template #="{ row }">
-                        <el-popover placement="right" :width="200" trigger="hover" style="">
-                            <template #reference>
-                                <el-button type="primary"
-                                    style="width: 52px;height: 26px;font-size: 14px;font-weight: 400;letter-spacing: 0px;text-align: left;vertical-align: top;">查看</el-button>
-                            </template>
-                            <el-row :gutter="16"
-                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;color: rgba(202, 204, 207, 1);">
-                                <el-col :span="7" :offset="2">
-                                    类型
-                                </el-col>
-                                <el-col :span="15">
-                                    过期时间
-                                </el-col>
-                            </el-row>
-                            <el-row :gutter="16"
-                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
-                                <el-col :span="7" :offset="2">
-                                    罗网
-                                </el-col>
-                                <el-col :span="15">
-                                    {{ row.netDate?.split(' ')[0] }}
-                                </el-col>
-                            </el-row>
-                            <el-row :gutter="16"
-                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
-                                <el-col :span="7" :offset="2">
-                                    软件
-                                </el-col>
-                                <el-col :span="15">
-                                    {{ row.expirationTime?.split(' ')[0] }}
-                                </el-col>
-                            </el-row>
-                            <el-row :gutter="16"
-                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
-                                <el-col :span="7" :offset="2">
-                                    星基
-                                </el-col>
-                                <el-col :span="15">
-                                    {{ row.satelliteDate?.split(' ')[0] }}
-                                </el-col>
-                            </el-row>
-                            <el-row :gutter="16"
-                                style="margin-bottom: 4px ;font-size: 12px;font-weight: 400;letter-spacing: 0px;line-height: 17.38px;">
-                                <el-col :span="7" :offset="2">
-                                    质保
-                                </el-col>
-                                <el-col :span="15">
-                                    {{ row.warrantyDate?.split(' ')[0] }}
-                                </el-col>
-                            </el-row>
-                        </el-popover>
+                        <div
+                            v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) > Date.parse(new Date().toString())">
+                            {{ row.warrantyDate.split(' ')[0] }}</div>
+                        <div v-if="!row.warrantyDate">
+                            <el-tag
+                                style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
+                                class="mx-1" type="danger" effect="dark">未激活</el-tag>
+                        </div>
+                        <div
+                            v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
+                            <el-tag
+                                style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
+                                class="mx-1" effect="dark">已到期</el-tag>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="平板SN" align="center">
@@ -251,10 +216,11 @@
                 <el-table-column label="操作" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
-                            <el-button v-auth="446" type="primary" link @click="edit(row)" :disabled="row.warrantyDate ? true : false">编辑
+                            <el-button v-auth="446" type="primary" link @click="edit(row)"
+                                :disabled="row.warrantyDate ? true : false">编辑
                             </el-button>
                             <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
-                            <el-button  v-auth="505" type="primary" link @click="gotoAfterSale(row)"
+                            <el-button v-auth="505" type="primary" link @click="gotoAfterSale(row)"
                                 class="aftersale_btn">售后处理</el-button>
                         </div>
                     </template>
@@ -417,7 +383,7 @@ const addInfo = async () => {
         await carModuleInfoSave_API(newRecords)
         ElMessage({ type: 'success', message: '添加成功' })
     } catch {
-        ElMessage({ type: 'error', message: '添加失败' })
+        // ElMessage({ type: 'error', message: '添加失败' })
     }
 }
 const editInfo = async () => {
@@ -425,7 +391,7 @@ const editInfo = async () => {
         await carModuleInfoUpdate_API(newRecords)
         ElMessage({ type: 'success', message: '添加成功' })
     } catch {
-        ElMessage({ type: 'error', message: '添加失败' })
+        // ElMessage({ type: 'error', message: '添加失败' })
     }
 
 }
@@ -519,7 +485,7 @@ const removeTradeMark = (id: any) => {
             getInfoMangementInfo()
         }
         catch {
-            ElMessage({ type: 'error', message: '删除失败' })
+            // ElMessage({ type: 'error', message: '删除失败' })
         }
     }).catch(() => {
         ElMessage({
@@ -537,7 +503,7 @@ const submit = async () => {
 const gotoAfterSale = (row: any) => {
     console.log(row);
     $router.push({
-        path: 'infoManagement/aftersale', query: { id:row.id }
+        path: 'infoManagement/aftersale', query: { id: row.id }
     })
 }
 const openExportDia = () => {
@@ -636,5 +602,4 @@ const openExportDia = () => {
         border: 1px solid rgba(220, 223, 230, 1);
     }
 
-}
-</style>
+}</style>

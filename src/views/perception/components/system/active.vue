@@ -164,7 +164,10 @@ const option = {
     },
   ],
 };
-
+window.addEventListener('resize', () => {
+    // 当浏览器大小改变时，重绘ECharts图表
+    mycharts.resize();
+});
 const initEcharts = () => {
   mycharts = echarts.init(bar.value);
   mycharts.setOption(option);
@@ -178,33 +181,30 @@ onUnmounted(() => {
 .box {
   background: url(@/assets/systemPerceptionImage/border_green.png) no-repeat;
   background-size: 100% 100%;
-  margin: 0px 10px 10px 15px;
-  padding: 10px 0 0 10px;
+  margin: 0rem 0.625rem 0.625rem 0.9375rem;
+  padding: 0.625rem 0 0 0.625rem;
   .title {
-    height: 40px;
-    line-height: 27px;
+    height: 2.1vh;
+    line-height: 2.88vh;
     display: flex;
+    padding-top: 0.4375rem;
     align-items: center;
     > img {
-      margin-top: -10px;
+      margin-top: -1.06vh;
     }
-
     border-left-style: none;
     border-right-style: none;
-
     span {
-      font-size: 16px;
+      font-size: 1rem;
     }
-
     span:first-child {
-      font-size: 30px;
+      font-size: 1.5625rem;
       font-weight: 900;
     }
   }
-
   .charts {
     width: 100%;
-    height: calc(100% - 40px);
+    height: calc(100% - 3vh);
   }
 }
 </style>

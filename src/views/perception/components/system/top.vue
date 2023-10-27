@@ -102,79 +102,75 @@ defineProps({
   box-sizing: border-box;
   display: flex;
   width: 100%;
-  height: 223px;
+  height: 11.6vh;
   flex-direction: column;
   flex-wrap: wrap;
-  .top-img{
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+  .top-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
   .top_left {
     flex: 1;
-    height: 223px;
-    
+    height: 11.6vh;
+
     .top_tittle {
-      height: 61px;
+      padding-top: 1.3rem;
+      height: 3.18vh;
       display: flex;
-      padding: 0;
       justify-content: start;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 2.6rem;
       h1 {
-        text-shadow: 0px 2px 32px  rgba(255, 255, 255, 0.8);
-        font-size: 42px;
+        text-shadow: 0px 0.125rem 2rem rgba(255, 255, 255, 0.8);
+        font-size: 2.625rem;
         font-weight: 400;
-        letter-spacing: 5px;
+        letter-spacing: 0.3125rem;
         font-family: 'perceptionTitle';
         cursor: pointer;
         z-index: 9;
         color: rgba(255, 255, 255, 1);
       }
-      a{
+      a {
         display: flex;
         align-items: center;
       }
-      img:nth-child(1){
-        width: 60px;
+      img:nth-child(1) {
+        width: 3.75rem;
         position: relative;
-        margin:0 28px 0 40px ;
+        margin: 0 1.05rem 0 2.1rem;
         z-index: 9;
-
       }
-     
     }
 
     .top_num {
-      height: 120px;
-      margin-left:23px ;
-      // background-color: rgb(210, 149, 159, 0.2);
+      height: 7.5rem;
+      margin-left: 1.4375rem;
       display: flex;
-      justify-content:start;
-      >div {
-        height: 120px;
+      justify-content: start;
+      > div {
+        height: 7.5rem;
         display: flex;
-        padding: 0 15px;
+        padding: 0 0.9375rem;
         img {
           height: 100%;
-          top: 20%;
-          left: 5%;
         }
 
         .word {
-          margin-left: 13px;
+          margin-left: 0.8125rem;
           display: flex;
           flex-direction: column;
           justify-content: start;
           :first-child {
             margin: 0px;
-            font-size: 44px;
+            font-size: 2.75rem;
             color: rgba(67, 207, 124, 1);
           }
 
           :last-child {
             margin: 0px;
-            font-size: 16px;
+            font-size: 1rem;
             color: white;
           }
         }
@@ -183,61 +179,67 @@ defineProps({
   }
 
   .top_time {
-    height: 223px;
+    height: 11.6vh;
     display: flex;
     flex: 1;
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    font-size: 20px;
+    font-size: 1.25rem;
 
     span {
-      padding-right: 15px;
+      padding-right: 0.9375rem;
     }
 
     .temp {
       .top_time_pic {
         vertical-align: middle;
-        padding-right: 15px;
+        padding-right: 0.9375rem;
       }
     }
 
     .time {
       :nth-child(2) {
-        font-size: 34.87px;
+        font-size: 2.179rem;
       }
     }
   }
-  .rotate{
-     position:absolute;
-      top: 0px;
-      left: -2px;
-      width: 100%;
-      border-top: 2px solid #40b971;
-      box-shadow: 0px -10px 4px rgba(255, 255, 255, 0.039);
-      border-radius: 50%;
-      content: "";
-      display: block;
-   }
-  .rotate-dance{
-    .rotate-content{
-      width: 26px;
-      height: 26px!important;
-      position: absolute;
-      left: 24px!important;
-      top: 26px!important;
-    }
-   position: relative;
-   width: 80px;
-   height: 80px;
 
+  .rotate {
+    width: 100%;
+    border-top: 0.125rem solid #40b971;
+    box-shadow: 0px -0.625rem 0.25rem rgba(255, 255, 255, 0.039);
+    border-radius: 50%;
+    content: "";
+    display: block;
   }
-  .rotate-dance2{
-    @extend .rotate-dance;
-    .rotate-content{
-      width: 26px;
+
+  .rotate-dance {
+    position: relative;
+
+    img:nth-child(1){
+      position: absolute;
+      left: 0.15rem !important;
+      top: 0 !important;
     }
-}
+    .rotate-content {
+      width: 1.625rem;
+      height: 1.625rem !important;
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .rotate-dance2 {
+    @extend .rotate-dance;
+    .rotate-content {
+      width: 1.625rem;
+    }
+  }
+
   @keyframes rotate-danc {
     0% {
       transform: rotate(0deg);
@@ -247,5 +249,6 @@ defineProps({
     }
   }
 }
+
 </style>
   
