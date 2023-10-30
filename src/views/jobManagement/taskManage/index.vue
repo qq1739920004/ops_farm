@@ -120,9 +120,9 @@ onMounted(() => {
 let map = <any>null
 const originPoint = ref<any>([31.172800343248, 121.406021546488])
 const originZoom = ref<any>(5)
-const tileLayer = reactive<any>([])
-const tileUrl = reactive<any>({})
-Object.assign(tileUrl, mapTitleLayers)
+// const tileLayer = reactive<any>([])
+// const tileUrl = reactive<any>({})
+// Object.assign(tileUrl, mapTitleLayers)
 const pickupMode = ref<boolean>(false)
 const pickedPoints = ref<any[]>([])
 let calculationObj = <any[]>([])
@@ -206,33 +206,53 @@ const handleMapChange = (mapId: any) => {
             break
     }
 }
-const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
-    try {
-        if (!map) {
-            console.warn('未初始化底图实例')
-            return
-        }
-        if (tileLayer.length) {
-            tileLayer.forEach((layer: any) => layer.remove())
-            Object.assign(tileLayer, [])
-        }
-        let mapUrl = tileUrl[mapName][mapType]
-        let options = reactive<any>({})
-        options.subdomains = tileUrl[mapName]['Subdomains']
-        if ('tms' in tileUrl[mapName]) {
-            options.tms = tileUrl[mapName]['tms']
-        }
-        if ('key' in tileUrl[mapName]) {
-            options.key = tileUrl[mapName]['key']
-        }
-        for (let key in mapUrl) {
-            let layer = L.tileLayer(mapUrl[key], options).addTo(map)
-            tileLayer.push(layer as never)
-        }
-    } catch (error) {
-        console.log(error)
-    }
+// 设置图商
+function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
+  if (!map) {
+    console.warn("未初始化底图实例");
+    return;
+  }
+  let mapUrl = mapTitleLayers[mapName][mapType];
+  let options: any = {};
+  options.subdomains = mapTitleLayers[mapName]["Subdomains"];
+  if ("tms" in mapTitleLayers[mapName]) {
+    options.tms = mapTitleLayers[mapName]["tms"];
+  }
+  if ("key" in mapTitleLayers[mapName]) {
+    options.key = mapTitleLayers[mapName]["key"];
+  }
+  for (let key in mapUrl) {
+    L.tileLayer(mapUrl[key], options).addTo(map);
+  }
 }
+// const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
+//     try {
+//         if (!map) {
+//             console.warn('未初始化底图实例')
+//             return
+//         }
+//         // if (tileLayer.length) {
+//         //     tileLayer.forEach((layer: any) => layer.remove())
+//         //     Object.assign(tileLayer, [])
+//         // }
+//         let mapUrl = tileUrl[mapName][mapType]
+//         let options: any = {}
+//         options.subdomains = tileUrl[mapName]['Subdomains']
+//         if ('tms' in tileUrl[mapName]) {
+//             options.tms = tileUrl[mapName]['tms']
+//         }
+//         if ('key' in tileUrl[mapName]) {
+//             options.key = tileUrl[mapName]['key']
+//         }
+//         for (let key in mapUrl) {
+//             // let layer = L.tileLayer(mapUrl[key], options).addTo(map)
+//             // tileLayer.push(layer as never)
+//             L.tileLayer(mapUrl[key], options).addTo(map);
+//         }
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 
 // 测距
 const calculateDistance = () => {

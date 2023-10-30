@@ -8,7 +8,7 @@
                 </el-select>
                 <el-input style="width:179px;margin-right: 20px;" v-if="dealerList.length === 1"
                     v-model="dealerList[0].name" disabled />
-                <el-select-v2 style="width: 230px;" filterable v-model="pageInfo.carId" :options="options" placeholder="请选择"
+                <el-select-v2  style="width: 230px;" filterable v-model="pageInfo.carId" :options="options" placeholder="请选择"
                     @change="changeBlur2">
                 </el-select-v2>
                 <!-- <el-select v-load-more="loadmore" filterable  v-model="pageInfo.carId"
