@@ -71,3 +71,11 @@ export function getChildrenFileList_API(params: any) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }
     })
 }
+// 下载模板
+export function getDownTemplate_API() {
+    return request<any, any>({
+        url: '/farm/car/downTemplate',
+        method: 'get'
+    })
+}
+

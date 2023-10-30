@@ -5,21 +5,21 @@
             center>
             <div class="content">
                 <el-form style="width: 100%" ref="formRef" label-width="140px">
-                    <el-form-item label="经销商：" >
-                        <el-select v-model="selectValue" class="m-2" placeholder="请选择经销商">
-                            <el-option v-for="item in carDealerList" :label="item.name" :value="item.name"
+                    <el-form-item label="经销商：">
+                        <el-select v-model="uploadData.id" class="m-2" placeholder="请选择经销商">
+                            <el-option v-for="item in carDealerList" :label="item.name" :value="item.id"
                                 :key="item.id"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="文件：" prop="date" >
-                        <el-input class="inputel" placeholder="请输入文件名">
+                    <el-form-item label="文件：" prop="date">
+                        <el-input class="inputel" placeholder="请输入文件名" v-model="fileName">
                             <template #append>
-                                <el-upload style="height:30px;width: 10px; margin-right: 3px;" ref="upload"
-                                    class="upload-demo"
-                                    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :limit="1"
-                                    :auto-upload="false">
+                                <el-upload style="height:30px;width: 10px; margin-right: 3px;" ref="uploadRef"
+                                    class="upload-demo" :action="actionUrl" :data="uploadData"
+                                    :headers="{ 'Authorization': userStore.Authorization }" :limit="1" :auto-upload="false"
+                                    :on-change="handleChange" :on-error="errorResult" :on-success="successResult">
                                     <template #trigger>
-                                        <el-button text>浏览</el-button>
+                                        <el-button>浏览</el-button>
                                     </template>
                                 </el-upload>
                             </template>
@@ -32,7 +32,7 @@
                     <el-button v-auth="567" @click="dialogVisible = false" style="color:var(--el-color-primary)" text>下载模版</el-button>
                     <el-button v-auth="568" type="primary"
                         style="background-color:var(--el-color-primary);color:'#fff'; width: 100px;height: 38px;margin-left:50px"
-                        @click="dialogVisible = false">
+                        @click="submitBtn">
                         录入
                     </el-button>
                 </span>
@@ -42,12 +42,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { carDealer_API } from '@/api/machineryList/index'
+import { ref, watch, reactive } from 'vue'
+import { carDealer_API, getDownTemplate_API } from '@/api/machineryList/index'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
+import type { UploadInstance } from 'element-plus'
+import { ElMessage } from 'element-plus'
+import useUserStore from '@/store/user'
+const userStore = useUserStore()
 const dialogVisible = ref<boolean>(false)
 const carDealerList = ref<carDealerObj[]>([])
-const selectValue = ref('')
+const fileName = ref()
+const uploadRef = ref<UploadInstance>()
+const uploadData = reactive({
+    id: '',
+    companyName: ''
+})
+const actionUrl = import.meta.env.VITE_APP_BASE_API + `/farm/car/batchImport`
 defineExpose({
     dialogVisible
 }
@@ -55,7 +65,55 @@ defineExpose({
 const getInputList = async () => {
     const res: carDealerResponseData = await carDealer_API()
     carDealerList.value = res.data
+
+    carDealerList.value.filter((item) => {
+        if (item.id === uploadData.id) {
+            uploadData.companyName = item.name
+
+        }
+    })
 }
+const handleChange = (e: any) => {
+    fileName.value = e.name
+}
+const submitBtn = () => {
+    if(!uploadData.companyName) {
+        ElMessage({ type: 'error', message: '请先选择经销商', duration: 1000 })
+        return
+    } if(!fileName.value) {
+        ElMessage({ type: 'error', message: '请先上传文件', duration: 1000 })
+        return
+    }
+    uploadRef.value!.submit()
+}
+
+const getTemplate = async () => {
+    try {
+        await getDownTemplate_API()
+        ElMessage({ type: 'success', message: '获取成功', duration: 1000 })
+    } catch {
+
+    }
+}
+const successResult = () => {
+    ElMessage({ type: 'success', message: '上传成功!', duration: 1000 })
+}
+const errorResult = () => {
+    ElMessage({ type: 'error', message: '您当前无权限访问，请联系管理员', duration: 1000 })
+}
+watch(
+    () => uploadData.id,
+    () => {
+        carDealerList.value.filter((item) => {
+            if (item.id === uploadData.id) {
+                uploadData.companyName = item.name
+            }
+        })
+
+    },
+    { deep: true }
+);
+
 </script>
 
 <style lang="scss" scoped>
@@ -64,13 +122,13 @@ const getInputList = async () => {
     font-weight: 400;
     letter-spacing: 0px;
     line-height: 23.17px;
-    
+
 
     :deep(.el-form-item__label) {
         font-size: 16px;
         font-weight: 400;
         letter-spacing: 0px;
-        
+
     }
 
     .m-2 {
@@ -91,5 +149,4 @@ const getInputList = async () => {
     justify-content: center;
     margin-top: -20px;
 }
-
 </style>
