@@ -75,7 +75,9 @@ export function getChildrenFileList_API(params: any) {
 export function getDownTemplate_API() {
     return request<any, any>({
         url: '/farm/car/downTemplate',
-        method: 'get'
+        method: 'get',
+        responseType: 'blob',
     })
 }
+
 

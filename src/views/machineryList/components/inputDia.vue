@@ -17,7 +17,7 @@
                                 <el-upload style="height:30px;width: 10px; margin-right: 3px;" ref="uploadRef"
                                     class="upload-demo" :action="actionUrl" :data="uploadData"
                                     :headers="{ 'Authorization': userStore.Authorization }" :limit="1" :auto-upload="false"
-                                    :on-change="handleChange" :on-error="errorResult" :on-success="successResult">
+                                    :on-change="handleChange" :on-success="successResult" :before-upload="beforeUploadFile">
                                     <template #trigger>
                                         <el-button>浏览</el-button>
                                     </template>
@@ -76,11 +76,19 @@ const getInputList = async () => {
 const handleChange = (e: any) => {
     fileName.value = e.name
 }
+const beforeUploadFile = (file: any) => {
+    const extension = file.name.substring(file.name.lastIndexOf('.') + 1)
+    if (extension !== 'xls' && extension !== 'xlsx') {
+        ElMessage({ type: 'error', message: '只能上传excel的文件', duration: 1000 })
+        return false
+    }
+}
+
 const submitBtn = () => {
-    if(!uploadData.companyName) {
+    if (!uploadData.companyName) {
         ElMessage({ type: 'error', message: '请先选择经销商', duration: 1000 })
         return
-    } if(!fileName.value) {
+    } if (!fileName.value) {
         ElMessage({ type: 'error', message: '请先上传文件', duration: 1000 })
         return
     }
@@ -88,18 +96,26 @@ const submitBtn = () => {
 }
 
 const getTemplate = async () => {
-    try {
-        await getDownTemplate_API()
+    getDownTemplate_API().then((res) => {
+        let name = '模板.xlsx';
+        const type = 'application/vnd.ms-excel;charset=utf-8'; //excel文件
+        let u = window.URL.createObjectURL(new Blob([res], { type: type }));
+        let a = document.createElement('a');
+        a.download = name;
+        a.href = u;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
         ElMessage({ type: 'success', message: '获取成功', duration: 1000 })
-    } catch {
+       
+    })
+ 
 
-    }
 }
 const successResult = () => {
     ElMessage({ type: 'success', message: '上传成功!', duration: 1000 })
-}
-const errorResult = () => {
-    ElMessage({ type: 'error', message: '您当前无权限访问，请联系管理员', duration: 1000 })
+    dialogVisible.value = false
 }
 watch(
     () => uploadData.id,

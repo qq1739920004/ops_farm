@@ -975,7 +975,6 @@ watch(() => paddyWorkList.value,
         border-radius: 4px;
         width: 241px;
 
-
         .popupTitle {
             line-height: 27px;
             width: 97px;
