@@ -974,7 +974,7 @@ watch(() => paddyWorkList.value,
         opacity: 1;
         border-radius: 4px;
         width: 241px;
-        height: 289px;
+
 
         .popupTitle {
             line-height: 27px;
@@ -989,7 +989,8 @@ watch(() => paddyWorkList.value,
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-
+            margin-bottom: 5px;
+            padding-left: 10px;
         }
 
 
@@ -1000,16 +1001,15 @@ watch(() => paddyWorkList.value,
             font-size: 16px;
             font-weight: 400;
             letter-spacing: 0px;
-
-            height: 37px;
+            height: 27px;
+            margin-bottom: 10px;
         }
 
         .popupSn {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 8px;
-
+        
             .popupSn_inner {
                 display: flex;
                 justify-content: center;
@@ -1034,8 +1034,8 @@ watch(() => paddyWorkList.value,
         }
 
         .popupArea {
-            margin-top: 23px;
-            margin-bottom: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
             height: 40px;
@@ -1112,7 +1112,7 @@ watch(() => paddyWorkList.value,
         }
 
         .popupArea2 {
-            margin-bottom: 19px;
+            margin-bottom: 9px;
 
             .left {
                 font-size: 16px;
