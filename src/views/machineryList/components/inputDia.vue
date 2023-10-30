@@ -17,7 +17,8 @@
                                 <el-upload style="height:30px;width: 10px; margin-right: 3px;" ref="uploadRef"
                                     class="upload-demo" :action="actionUrl" :data="uploadData"
                                     :headers="{ 'Authorization': userStore.Authorization }" :limit="1" :auto-upload="false"
-                                    :on-change="handleChange" :on-success="successResult" :before-upload="beforeUploadFile">
+                                    :on-change="handleChange" :on-success="successResult" :before-upload="beforeUploadFile"
+                                    :before-remove="beforeRemove">
                                     <template #trigger>
                                         <el-button>浏览</el-button>
                                     </template>
@@ -83,6 +84,9 @@ const beforeUploadFile = (file: any) => {
         return false
     }
 }
+const beforeRemove = () => {
+    fileName.value = ''
+}
 
 const submitBtn = () => {
     if (!uploadData.companyName) {
@@ -113,9 +117,19 @@ const getTemplate = async () => {
 
 
 }
-const successResult = () => {
-    ElMessage({ type: 'success', message: '上传成功!', duration: 1000 })
-    dialogVisible.value = false
+const successResult = (data: any) => {
+    // ElMessage({ type: 'success', message: '上传成功!', duration: 1000 })
+    // dialogVisible.value = false
+
+    if (data.code === -104) {
+        let messagedata = data.data.errorMessageList.map((item: any,index:any) => {
+            return index+1 + `.sn号为${item.sn}的${item.message}`
+        })
+        ElMessage({ type: 'error', message: messagedata.join(), showClose: true,duration: 8000 })
+    } else {
+        ElMessage({ type: 'success', message: '上传成功!', duration: 1000 })
+        dialogVisible.value = false
+    }
 }
 watch(
     () => uploadData.id,
