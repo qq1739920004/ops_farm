@@ -8,7 +8,7 @@ const useSocketStore = defineStore("socket", () => {
     function connect() {
         ws = new WebSocket(`ws://${import.meta.env.VITE_APP_BASE_WSURL}/websocket?Authorization=${userStore.Authorization}`);
         ws.onopen = () => {
-            // console.success('连接成功');
+            console.log('socket连接成功');
         };
         ws.onmessage = (e: any) => {
             const data = JSON.parse(e.data);
