@@ -29,8 +29,8 @@
             </div>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button @click="dialogVisible = false" style="color:var(--el-color-primary)" text>下载模版</el-button>
-                    <el-button type="primary"
+                    <el-button v-auth="567" @click="dialogVisible = false" style="color:var(--el-color-primary)" text>下载模版</el-button>
+                    <el-button v-auth="568" type="primary"
                         style="background-color:var(--el-color-primary);color:'#fff'; width: 100px;height: 38px;margin-left:50px"
                         @click="dialogVisible = false">
                         录入
