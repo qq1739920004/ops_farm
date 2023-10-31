@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted,onUnmounted, watch } from "vue";
 import Top from "./top.vue";
 import Year from "./year.vue";
 import Carmap from "./carmap/index.vue";
@@ -121,8 +121,9 @@ function handleSocketData(data: any) {
     stateObj.value = data.data.list[0]
   } 
 }
-
-
+onUnmounted(() => {
+  realTime.close()
+})
 </script>
 
 <style lang="scss" scoped>

@@ -61,7 +61,8 @@ import { ref, shallowRef,onMounted,onUnmounted} from 'vue'
 import {getStatisticsReportfarmMachineAPI,getStatisticsReportcarjobAPI,getStatisticsReportnetworkAPI,getStatisticsWxAPI,getStatisticsRemoteAPI,getStatisticsStatAPI} from '@/api/statisticsReport/index'
 import type {FarmMachineObj,getStatisticsReportnetworkAPIResponse} from '@/api/statisticsReport/type'
 import type {EChartsOption} from 'echarts'
-import realTimeStore from '@/store/realTimeData';
+import socket from "@/store/socket";
+
 type timeType={
     st:string,
     et:string
@@ -74,7 +75,7 @@ let time:timeType={
   st:`${year}-${month}-01 00:00:00`,
   et:`${year}-${month}-${day} 23:59:59`
 }
-const realTime=realTimeStore()
+const realTime=socket()
 const farmMachineData=ref<FarmMachineObj>()
 const networkData=ref<getStatisticsReportnetworkAPIResponse['data']['onlineFarmMachines']>()
 let optionfnStatistics=shallowRef<EChartsOption>({})
@@ -83,7 +84,7 @@ let optionVisitStatistics=shallowRef<EChartsOption>({})
   let optionCarjobStatistics=shallowRef<EChartsOption>({})
 
 onMounted(()=>{
-  realTime.startRealTimeData()
+  realTime.connect()
     getStatisticsReportfarmMachine()
     getStatisticsWx(time)
     getStatisticsRemote(time)
@@ -92,7 +93,7 @@ onMounted(()=>{
     getStatisticsReportcarjob()
 })
 onUnmounted(()=>{
-  realTime.closeRealTimeData()
+  realTime.close()
 })
 // 农机数据统计
 const getStatisticsReportfarmMachine=async()=>{
