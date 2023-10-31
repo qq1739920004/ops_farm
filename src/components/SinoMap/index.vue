@@ -68,6 +68,10 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  markerData_one: {
+    type: Object,
+    default: () => ({}),
+  },
   lineData: {
     type: Array,
     default: [],
@@ -102,6 +106,21 @@ watch(
   { deep: true }
 );
 watch(
+  () => props.markerData_one,
+  (markerData_one) => {
+    if (markerData_one.markerType == "add") {
+      createMarker([markerData_one]);
+    }
+    if (markerData_one.markerType == "delete") {
+      removeMarker([markerData_one]);
+    }
+    if (markerData_one.markerType == "update") {
+      updateMarker([markerData_one]);
+    }
+  },
+  { deep: true }
+);
+watch(
   () => props.lineData,
   (lineData) => {
     createLine(lineData);
@@ -119,7 +138,7 @@ watch(
 let map: any = null; // map实例对象
 let polyline: any = null;
 let mapRenderMode = props.mapRenderMode;
-let mapRenderModeLength = 1000; //数量超过1000，强制转为 polymer 聚合引擎
+let mapRenderModeLength = 500; //数量超过1000，强制转为 polymer 聚合引擎
 let markerArr: any = []; // marker坐标点数字
 
 //@ts-ignore
@@ -233,10 +252,10 @@ function createMarker(list: any) {
   });
 
   // if (markerArr.length > 0) {
-    // var groupBounds = markerGroup.getBounds();
-    // console.log(groupBounds,'--235')
-    // 使用 fitBounds 方法来适应包含所有标记的边界框
-    // map.fitBounds([L.latLng(31.086444, 121.734942)],);
+  // var groupBounds = markerGroup.getBounds();
+  // console.log(groupBounds,'--235')
+  // 使用 fitBounds 方法来适应包含所有标记的边界框
+  // map.fitBounds([L.latLng(31.086444, 121.734942)],);
   // }
   // console.log(markerArr, "--145");
   // var groupBounds = markerArr.getBounds();
@@ -365,16 +384,15 @@ function handleMapCenter(data: any) {
     findMarker.openPopup();
     map.fitBounds([findMarker._latlng]);
     map.setZoom(map.getZoom() - 2);
-  }
-  else if (data.center && data.center.length > 0) {
+  } else if (data.center && data.center.length > 0) {
     let latLng: any = [];
     latLng = data.center.map((item: any) => {
       return gcoordLngLat(item[1], item[0]);
     });
     var bounds = L.latLngBounds(latLng);
     map.fitBounds(bounds);
-    data.zoom ? map.setZoom(data.zoom): ''
-  }else {
+    data.zoom ? map.setZoom(data.zoom) : "";
+  } else {
     map.setView(defaultMapCenter, defaultMapZoom);
   }
 }
