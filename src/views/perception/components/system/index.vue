@@ -122,9 +122,7 @@ function handleSocketData(data: any) {
       monitorData.value!.todayAcDevice = data.data.todayAcDevice;
       dataNow.value = data.data.chart[0];
     }
-  }else if (data.type == "notification") {
-    stateObj.value = data.data.list[0]
-  } 
+  }
 }
 onMounted(() => {
   getMonitor();

@@ -113,13 +113,12 @@ function handleSocketData(data: any) {
       monitorData.value = data.data;
       typeCounts.value = data.data.typeCounts;
       provinceCars.value = data.data.provinceCars;
+      stateObj.value = data.data.wsNowCar;
   } else if (data.type == "monitorArea") {
       carAreas.value = data.data.carAreas;
       todayArea.value = data.data.todayArea;
       totalArea.value = data.data.totalArea;
-  } else if (data.type == "notification") {
-    stateObj.value = data.data.list[0]
-  } 
+  }
 }
 onUnmounted(() => {
   realTime.close()
