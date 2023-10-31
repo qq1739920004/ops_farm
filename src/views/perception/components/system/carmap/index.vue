@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 // 导入Vue相关的库
-import { onMounted, ref ,watch} from "vue";
+import { onMounted, ref ,watch,nextTick} from "vue";
 // 导入类型定义
 import type { MonitorObj } from "@/api/perception/type";
 // 导入高德地图加载器
@@ -64,7 +64,12 @@ function startDraw(AMap: any) {
   //边框
   // poly3d(AMap, maskPoly, map, polylines);
   // //标注
-  setMarker(AMap, map, dataList);
+  map.value.on('complete', function() {
+    // 地图加载完成后调用setMarker方法
+    nextTick(()=>{
+      setMarker(AMap, map, dataList);
+    })
+});
   //注册的所有时间
   mapEvent(map);
   // 使用setFitView自动调整视图以适应所有的折线

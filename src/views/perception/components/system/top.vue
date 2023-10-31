@@ -13,7 +13,7 @@
         <div>
           <img  src="~@/assets/systemPerceptionImage/top_number1.png" alt=""  />
           <div class="word">
-            <p>{{ monitorData.todayAcDevice }}</p>
+            <p>{{ monitorData.todayAcDevice || 0 }}</p>
             <p>今日活跃数 </p>
           </div>
         </div>

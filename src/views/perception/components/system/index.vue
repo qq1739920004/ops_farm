@@ -110,7 +110,7 @@ function handleSocketData(data: any) {
       typeCounts.value = data.data.typeCounts;
       provinceCars.value = data.data.provinceCars;
       carAreas.value = data.data.provinceCars;
-      stateObj.value = data.data.wsNowCar;
+      // stateObj.value = data.data.wsNowCar;
     }
   } else if (data.type == "monitorArea") {
     if (data.data) {
@@ -122,7 +122,9 @@ function handleSocketData(data: any) {
       monitorData.value!.todayAcDevice = data.data.todayAcDevice;
       dataNow.value = data.data.chart[0];
     }
-  }
+  }else if (data.type == "notification") {
+    stateObj.value = data.data.list[0]
+  } 
 }
 onMounted(() => {
   getMonitor();
