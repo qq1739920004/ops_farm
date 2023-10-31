@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted,onUnmounted } from "vue";
 import Top from "./top.vue";
 import Year from "./year.vue";
 import active from "./active.vue";
@@ -122,9 +122,7 @@ function handleSocketData(data: any) {
       monitorData.value!.todayAcDevice = data.data.todayAcDevice;
       dataNow.value = data.data.chart[0];
     }
-  }else if (data.type == "notification") {
-    stateObj.value = data.data.list[0]
-  } 
+  }
 }
 onMounted(() => {
   getMonitor();
@@ -165,6 +163,9 @@ calculateNewFontSize();
 //   const wh = window.innerHeight / h;
 //   return ww < wh ? ww : wh;
 // }
+onUnmounted(() => {
+  realTime.close()
+})
 </script>
 
 <style lang="scss" scoped>

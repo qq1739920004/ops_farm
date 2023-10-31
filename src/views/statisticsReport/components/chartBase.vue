@@ -48,7 +48,6 @@ onMounted(
 )
 
 watch(() => props.options, () => {
-  console.log(props.options);
   if(Object.keys(props.options).length===0){
     hideLd()
   }else{

@@ -62,9 +62,9 @@
 <script lang="ts" setup>
 import { watch, ref, PropType, onMounted } from "vue";
 import type { FarmMachineObj } from "@/api/statisticsReport/type";
-import realTimeStore from "@/store/realTimeData";
+import socket from "@/store/socket";
 import { Top, Bottom } from "@element-plus/icons-vue";
-const realTime = realTimeStore();
+const realTime = socket();
 let changeNumOnline = ref(0);
 let changeNumtodayArea = ref(0);
 let changeNumnewCar = ref(0);
@@ -84,19 +84,24 @@ watch(props, (newValue) => {
   fmData.value = newValue.farmMachineData;
 });
 watch(
-  () => realTime.realTimeData,
-  (newValue) => {
-    if (fmData.value) {
-      let tempNumOnline = newValue.onlineDevice - fmData.value.device.onlineDevice;
+  () => realTime.socketData,
+  (newValue:any) => {
+    console.log(newValue)
+    console.log(343);
+    if(newValue.type == "monitor"){
+      if (fmData.value) {
+      let tempNumOnline = newValue.data.onlineDevice - fmData.value.device.onlineDevice;
       // let tempNumtodayArea = newValue.totalDevice - fmData.value.workArea.todayArea;
-      let tempNumnewCar = newValue.todayCar - fmData.value.car.newCar;
+      let tempNumnewCar = newValue.data.todayCar - fmData.value.car.newCar;
       changeNumOnline.value = tempNumOnline ? tempNumOnline : changeNumOnline.value;
       // changeNumtodayArea.value= newValue.totalDevice - fmData.value.workArea.todayArea;
       changeNumnewCar.value = tempNumnewCar ? tempNumnewCar : changeNumnewCar.value;
-      fmData.value.device.onlineDevice = newValue.onlineDevice;
+      fmData.value.device.onlineDevice = newValue.data.onlineDevice;
       // fmData.value.workArea.todayArea = newValue.totalDevice;
-      fmData.value.car.newCar = newValue.todayCar;
+      fmData.value.car.newCar = newValue.data.todayCar;
     }
+    }
+    
   },
   { deep: true }
 );
