@@ -6,7 +6,7 @@ const useSocketStore = defineStore("socket", () => {
     let ws: any = null
     let socketData = ref({})
     function connect() {
-        ws = new WebSocket(`ws://${import.meta.env.VITE_APP_BASE_WSURL}/websocket?Authorization=${userStore.Authorization}`);
+        ws = new WebSocket(`${import.meta.env.VITE_APP_BASE_WSURL}/websocket?Authorization=${userStore.Authorization}`);
         ws.onopen = () => {
             console.log('socket连接成功');
         };

@@ -56,7 +56,7 @@ const option = {
     containLabel: true,
     bottom: "5%",
     top: "5%",
-    left: "5%", // 增加这个值，从而减少第二个yAxis的宽度
+    left: "8%", // 增加这个值，从而减少第二个yAxis的宽度
     right: "5%",
   },
   xAxis: {
@@ -103,9 +103,9 @@ const option = {
           title: {
             fontFamily: "perceptionFont",
             color: "#43cf7c",
-            fontSize: 24,
+            fontSize: 20,
             align: "left",
-            width:80
+            width:90
           },
         },
       },

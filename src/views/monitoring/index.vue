@@ -1,9 +1,18 @@
 <template>
   <div class="map_container">
-    <sino-map :markerData="markerData" :mapCenter="mapCenter" />
+    <sino-map
+      :markerData="markerData"
+      :markerData_one="markerData_one"
+      :mapCenter="mapCenter"
+    />
     <div class="search_box">
-      <el-autocomplete v-model="searchSn" :fetch-suggestions="querySearch" placeholder="SN、铭牌SN、车辆名、公司、电话"
-        @select="handleSelect" clearable>
+      <el-autocomplete
+        v-model="searchSn"
+        :fetch-suggestions="querySearch"
+        placeholder="SN、铭牌SN、车辆名、公司、电话"
+        @select="handleSelect"
+        clearable
+      >
         <template #suffix>
           <el-icon>
             <Search />
@@ -64,7 +73,11 @@
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
-            <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange" />
+            <el-checkbox
+              size="large"
+              v-model="item.checked"
+              @change="markerTypeChange"
+            />
             <SvgIcon :icon="item.typeName" size="22" />
             <span class="label">{{ item.typeName }}</span>
           </label>
@@ -73,10 +86,12 @@
         <br />
       </ul>
     </div>
-    <div :class="{
-      notice_box: true,
-      notice_box_active: notice_box_isActive,
-    }">
+    <div
+      :class="{
+        notice_box: true,
+        notice_box_active: notice_box_isActive,
+      }"
+    >
       <div class="header" @click="notice_box_isActive = !notice_box_isActive">
         <h3>状态通知</h3>
         <el-icon v-if="!notice_box_isActive" color="#fff">
@@ -88,7 +103,11 @@
       </div>
       <div class="content">
         <el-timeline>
-          <el-timeline-item v-for="(item, index) in carLogList" :key="index" :color="item.color">
+          <el-timeline-item
+            v-for="(item, index) in carLogList"
+            :key="index"
+            :color="item.color"
+          >
             <div class="item">
               <div class="l">
                 <span class="state" :style="{ color: item.color }">{{
@@ -115,9 +134,20 @@
     </div>
 
     <!-- 实时趋势驾驶图diaLog -->
-    <realTimeChart ref="realTime" :sn="sn" :socketData="socketStore.socketData" />
-    <RemoteControl :isChange="isChange" :terminalType="terminalType" :version="version" :type="type" :carId="carId"
-      :sn="sn" :name="name" />
+    <realTimeChart
+      ref="realTime"
+      :sn="sn"
+      :socketData="socketStore.socketData"
+    />
+    <RemoteControl
+      :isChange="isChange"
+      :terminalType="terminalType"
+      :version="version"
+      :type="type"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    />
   </div>
 </template>
 
@@ -145,7 +175,7 @@ import SinoMap from "@/components/SinoMap/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import realTimeChart from "./components/realTimeChart.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
-import { reactive, ref, watch,onUnmounted } from "vue";
+import { reactive, ref, watch, onUnmounted } from "vue";
 import useSocketStore from "@/store/socket";
 import { useRouter } from "vue-router";
 import {
@@ -156,6 +186,7 @@ import {
 const router = useRouter();
 const socketStore = useSocketStore();
 let markerData = reactive<any>([]);
+let markerData_one = ref<any>({});
 let dataStatistics = ref<any>({});
 let carLogList: any = ref([]);
 
@@ -195,8 +226,8 @@ watch(
   { deep: true }
 );
 onUnmounted(() => {
-  socketStore.close()
-})
+  socketStore.close();
+});
 
 getFaromDataStatistics();
 getOnlineFarmPosition();
@@ -259,21 +290,35 @@ function handleSocketData(socketData: any) {
       const markerLat = data.posX;
       const markerIcon = createMarkerIcon(data);
       const markerPopup = createMarkerPopup(data);
-      markerData.push({
+      markerData_one = {
         markerId,
-        markerVisible,
         markerLng,
         markerLat,
         markerIcon,
         markerPopup,
-      });
+        markerType: "add",
+        markerVisible
+      };
+      // markerData.push({
+      //   markerId,
+      //   markerVisible,
+      //   markerLng,
+      //   markerLat,
+      //   markerIcon,
+      //   markerPopup,
+      // });
     }
     if (action == "offline") {
       const markerId = data.sn;
-      const idx = markerData.findIndex(
-        (item: any) => item.markerId == markerId
-      );
-      markerData.splice(idx, 1);
+      markerData_one = {
+        markerId,
+        markerType: "delete",
+      };
+
+      // const idx = markerData.findIndex(
+      //   (item: any) => item.markerId == markerId
+      // );
+      // markerData.splice(idx, 1);
     }
     if (action == "online") {
       const markerId = data.sn;
@@ -281,12 +326,21 @@ function handleSocketData(socketData: any) {
       const markerLat = data.posX;
       const markerIcon = createMarkerIcon(data);
       const markerPopup = createMarkerPopup(data);
-      const find = markerData.find((item: any) => item.markerId == markerId);
-      if (!find) return;
-      find.markerLng = markerLng;
-      find.markerLat = markerLat;
-      find.markerIcon = markerIcon;
-      find.markerPopup = markerPopup;
+      markerData_one = {
+        markerId,
+        markerLng,
+        markerLat,
+        markerIcon,
+        markerPopup,
+        markerType: "update",
+      };
+
+      // const find = markerData.find((item: any) => item.markerId == markerId);
+      // if (!find) return;
+      // find.markerLng = markerLng;
+      // find.markerLat = markerLat;
+      // find.markerIcon = markerIcon;
+      // find.markerPopup = markerPopup;
     }
   }
   if (socketData.module == "farm" && socketData.type == "monitor") {
@@ -470,7 +524,8 @@ function createMarkerPopup(item: any) {
     }
   }
 
-  const cardUsage = item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
+  const cardUsage =
+    item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
   const popup = `<div class="map_popup">
         <ul class="popup_container">
           <li>
@@ -481,8 +536,8 @@ function createMarkerPopup(item: any) {
             <div class="r">
               <div class="label">SN:</div>
               <div class="value"  style="cursor: pointer;text-decoration: underline;" onclick='goMachineryList_markerPopup(${JSON.stringify(
-    item
-  )})'>${item.sn}</div>
+                item
+              )})'>${item.sn}</div>
             </div>
           </li>
           <li>
@@ -521,15 +576,17 @@ function createMarkerPopup(item: any) {
             <div class="l">
               <div class="label">解状态:</div>
               <div class="value">
-                <span class='status ${item.solStat == 4 ? "status_3" : "status_0"
-    }'></span>
+                <span class='status ${
+                  item.solStat == 4 ? "status_3" : "status_0"
+                }'></span>
                 <span>${snTypeReflect[item.solStat] || "未知解"}</span>
               </div>
             </div>
             <div class="r">
               <div class="label">差分链:</div>
-              <div class="value">${diffSource[item.diffSource] || "/"} (${item.diffAge
-    }s)</div>
+              <div class="value">${diffSource[item.diffSource] || "/"} (${
+    item.diffAge
+  }s)</div>
             </div>
           </li>
           <li>
@@ -578,22 +635,24 @@ function createMarkerPopup(item: any) {
         </ul>
         <ul class="btns_container">
           <li>
-            <div class="btn ${!openRemote ? "disabled" : ""
-    }" onclick='openRemote_markerPopup(${JSON.stringify(
-      item
-    )})'>远程管理</div>
+            <div class="btn ${
+              !openRemote ? "disabled" : ""
+            }" onclick='openRemote_markerPopup(${JSON.stringify(
+    item
+  )})'>远程管理</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
-      item
-    )})'>历史轨迹</div>
+              item
+            )})'>历史轨迹</div>
           </li>
           <li>
-            <div class="btn ${item.driveState == 0 ? "disabled" : ""
-    }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
-      item
-    )})'>实时驾驶趋势图</div>
+            <div class="btn ${
+              item.driveState == 0 ? "disabled" : ""
+            }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
+    item
+  )})'>实时驾驶趋势图</div>
             <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
-      item
-    )})'>历史驾驶趋势图</div>
+              item
+            )})'>历史驾驶趋势图</div>
           </li>
         </ul>
       </div>`;

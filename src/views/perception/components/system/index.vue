@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted,onUnmounted } from "vue";
 import Top from "./top.vue";
 import Year from "./year.vue";
 import active from "./active.vue";
@@ -110,7 +110,7 @@ function handleSocketData(data: any) {
       typeCounts.value = data.data.typeCounts;
       provinceCars.value = data.data.provinceCars;
       carAreas.value = data.data.provinceCars;
-      stateObj.value = data.data.wsNowCar;
+      // stateObj.value = data.data.wsNowCar;
     }
   } else if (data.type == "monitorArea") {
     if (data.data) {
@@ -119,8 +119,10 @@ function handleSocketData(data: any) {
     }
   } else if (data.type == "monitorCarNum") {
     if (data.data) {
-      monitorData.value!.todayAcDevice = data.data.todayAcDevice;
-      dataNow.value = data.data.chart[0];
+      let tempTodayAcDevice=monitorData.value?.todayAcDevice
+      let tempDataNow=dataNow.value
+      monitorData.value!.todayAcDevice = data.data.todayAcDevice|| tempTodayAcDevice;
+      dataNow.value = data.data.chart[0] || tempDataNow;
     }
   }else if (data.type == "notification") {
     stateObj.value = data.data.list[0]
@@ -165,6 +167,9 @@ calculateNewFontSize();
 //   const wh = window.innerHeight / h;
 //   return ww < wh ? ww : wh;
 // }
+onUnmounted(() => {
+  realTime.close()
+})
 </script>
 
 <style lang="scss" scoped>

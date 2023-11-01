@@ -57,6 +57,10 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  markerData_one: {
+    type: Object,
+    default: () => ({}),
+  },
   lineData: {
     type: Array,
     default: [],
@@ -91,6 +95,23 @@ watch(
   { deep: true }
 );
 watch(
+  () => props.markerData_one,
+  (markerData_one) => {
+    // console.log(markerData_one,'--111');
+    
+    if (markerData_one.markerType == "add") {
+      createMarker([markerData_one]);
+    }
+    if (markerData_one.markerType == "delete") {
+      removeMarker([markerData_one]);
+    }
+    if (markerData_one.markerType == "update") {
+      updateMarker([markerData_one]);
+    }
+  },
+  { deep: true }
+);
+watch(
   () => props.lineData,
   (lineData) => {
     createLine(lineData);
@@ -108,7 +129,7 @@ watch(
 let map: any = null; // map实例对象
 let polyline: any = null;
 let mapRenderMode = props.mapRenderMode;
-let mapRenderModeLength = 1000; //数量超过1000，强制转为 polymer 聚合引擎
+let mapRenderModeLength = 500; //数量超过1000，强制转为 polymer 聚合引擎
 let markerArr: any = []; // marker坐标点数字
 
 //@ts-ignore
@@ -354,15 +375,18 @@ function handleMapCenter(data: any) {
     findMarker.openPopup();
     map.fitBounds([findMarker._latlng]);
     map.setZoom(map.getZoom() - 2);
-  }
-  else if (data.center && data.center.length > 0) {
+  } else if (data.center && data.center.length > 0) {
     let latLng: any = [];
     latLng = data.center.map((item: any) => {
       return gcoordLngLat(item[1], item[0]);
     });
     var bounds = L.latLngBounds(latLng);
     map.fitBounds(bounds);
+<<<<<<< HEAD
     data.zoom ? map.setZoom(data.zoom) : ''
+=======
+    data.zoom ? map.setZoom(data.zoom) : "";
+>>>>>>> 4a70a7abaaec0d54256d18c19d441d85feeec8da
   } else {
     map.setView(defaultMapCenter, defaultMapZoom);
   }

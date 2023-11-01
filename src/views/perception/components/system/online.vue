@@ -61,7 +61,7 @@ const option = {
     containLabel: true,
     bottom: "5%",
     top: "14%",
-    left: "3%", // 增加这个值，从而减少第二个yAxis的宽度
+    left: "10%", // 增加这个值，从而减少第二个yAxis的宽度
     right: "5%",
   },
   dataZoom: [
@@ -122,9 +122,9 @@ const option = {
           },
           title: {
             color: "#43cf7c",
-            fontSize: 24,
+            fontSize: '1.35rem',
             align: "left",
-            width: 100,
+            width: 90,
           },
         },
       },
@@ -151,7 +151,7 @@ const option = {
       data: seriesData,
       axisLabel: {
         color: "#43cf7c",
-        fontSize: 20,
+        fontSize: '1.25rem',
       },
     },
   ],
@@ -171,7 +171,7 @@ const option = {
         show: true,
         position: "insideRight",
         color: "#f5fff5",
-        fontSize: 16,
+        fontSize: '1rem',
         offset: [5, -10],
         formatter: function (data: { value: number }) {
           // 柱子顶部分隔线样式
@@ -184,7 +184,7 @@ const option = {
           },
           value: {
             color: "#f5fff5",
-            fontSize: 16,
+            fontSize: '1rem',
             align: "right",
           },
         },

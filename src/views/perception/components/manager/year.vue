@@ -85,6 +85,8 @@
             display: flex;  
             justify-content: center;  
             align-items: center; 
+            background-position: center;
+            background-size: 120%;
             font-size: 30px;
         }
     }

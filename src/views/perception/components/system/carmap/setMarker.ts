@@ -40,7 +40,7 @@ function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"]) {
       position: [dataList[i].lng, dataList[i].lat],
       content: markerContent,
       map: map.value,
-      zIndex: 200
+      zIndex: 999999,
     });
    
     // 使用ECharts初始化柱状图容器并设置数据
