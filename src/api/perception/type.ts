@@ -63,6 +63,7 @@ export interface recordsType
     carId: number,
     deviceSn:string,
     position:string,
+    judgeLevel?:string
 }
 // 定义一个车辆数量的类型
 interface CarCount {
