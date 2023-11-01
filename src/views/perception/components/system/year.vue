@@ -49,7 +49,7 @@ defineProps({
   background: url(@/assets/systemPerceptionImage/border_year_green.png) no-repeat;
   background-size: 100% 100%;
   margin: 0rem 0.625rem 0.625rem 0.9375rem;
-  padding: 0.375rem 0 0 0.625rem;
+  padding: 0.375rem 0 0 0;
   
   .content-box {
     .area{
@@ -62,7 +62,7 @@ defineProps({
     justify-content: space-evenly;
     align-items: center;
     .value-box {
-      width: 8.6979vw;
+      width: 9vw;
       height: 8.5271vh;
       color: #47cf82;
       font-size: 2.2rem;
@@ -80,7 +80,7 @@ defineProps({
         background-color: transparent;
         border-radius: 50%;
         border: 0.125rem solid #b8b9b9de;
-        margin-right: 0.625rem;
+        margin-right: 0.325rem;
         position: relative;
         &::after {
           content: "";
@@ -114,6 +114,7 @@ defineProps({
   .title {
     height: 2.8vh;
     padding-top: 0.5375rem;
+    padding-left: 0.625rem;
     display: flex;
     align-items: center;
     > img {

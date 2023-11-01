@@ -119,8 +119,10 @@ function handleSocketData(data: any) {
     }
   } else if (data.type == "monitorCarNum") {
     if (data.data) {
-      monitorData.value!.todayAcDevice = data.data.todayAcDevice;
-      dataNow.value = data.data.chart[0];
+      let tempTodayAcDevice=monitorData.value?.todayAcDevice
+      let tempDataNow=dataNow.value
+      monitorData.value!.todayAcDevice = data.data.todayAcDevice|| tempTodayAcDevice;
+      dataNow.value = data.data.chart[0] || tempDataNow;
     }
   }else if (data.type == "notification") {
     stateObj.value = data.data.list[0]
