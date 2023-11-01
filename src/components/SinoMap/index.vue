@@ -97,8 +97,6 @@ watch(
 watch(
   () => props.markerData_one,
   (markerData_one) => {
-    // console.log(markerData_one,'--111');
-    
     if (markerData_one.markerType == "add") {
       createMarker([markerData_one]);
     }
@@ -382,7 +380,7 @@ function handleMapCenter(data: any) {
     });
     var bounds = L.latLngBounds(latLng);
     map.fitBounds(bounds);
-    data.zoom ? map.setZoom(data.zoom) : "";
+    data.zoom ? map.setZoom(data.zoom) : ''
   } else {
     map.setView(defaultMapCenter, defaultMapZoom);
   }

@@ -12,14 +12,22 @@
     }">
       <img class="state-line" src="@/assets/perceptionImage/stateLine.png" alt="">
     <TransitionGroup name="list" tag="ul">
-        <li v-for="item in dataArr" :key="item.carId">
+        <li v-for="item in dataArr" :key="item.sn||item.deviceSn">
           <div class="state_time">{{ item.time }}</div>
           <div class="state_main">
             <span v-if="!item.onlineTcp" class="circle-out">●</span>
             <span v-else class="circle-login">●</span>
             <div :class="['state_bar',item.onlineTcp?'state_bar_login':'state_bar_out']">
               <span>{{ item.sn||item.deviceSn }}</span>
-              <span>{{ item.name||item.position  }}</span>
+              <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="item.name||item.position"
+        placement="top-end"
+      >
+      <span>{{ nameOut(item.name||item.position)  }}</span>
+
+      </el-tooltip>
               <span class="state-tips">
                   <img v-if="!item.onlineTcp" src="@/assets/perceptionImage/stateOut.png" alt="">
                   <img v-else src="@/assets/perceptionImage/stateIn.png" alt="">
@@ -44,6 +52,14 @@ const props=defineProps({
   }
 })
 let dataArr=ref<recordsType[]>([]) 
+  function nameOut(value:string){
+  if(value.length>10){
+    console.log(value.substring(0,10));
+    return `${value.substring(0,10)}...`
+  }else{
+    return value
+  }
+}
 function getTime(item:recordsType){
   if (item.onlineTcp) {
     return item.onlineTime

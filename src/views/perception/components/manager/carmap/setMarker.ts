@@ -64,6 +64,13 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
             trigger: 'axis', // 'axis' 表示与坐标轴触发，适用于柱状图、折线图等
             renderMode: 'html',
             boxWidth: 400,
+            backgroundColor: "rgba(85, 104, 79, 0.5)", // 设置背景颜色为透明
+            textStyle: {
+              color: "#FFFFFF", // 设置字体颜色为白色
+            },
+            borderColor: "rgba(67, 207, 124, 1)", // 设置边框颜色
+            borderWidth: 1, // 设置边框宽度，可以根据需要调整
+            z: 100, // 设置柱状图的层级
             formatter: function (params: any) {
               // params 是一个包含每个系列数据点信息的数组
               // 您可以根据 params 的内容自定义 tooltip 的格式
@@ -140,6 +147,9 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
               label: {
                   show: true,
                   color: "white",
+                  fontWeight: 800,
+                  fontSize:16,
+                  textShadow: 'black',
                   position: 'top',
                   formatter: function(params:EChartsParams) {
                     // 如果在线数为0，则不显示
@@ -161,9 +171,13 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
               },
               stack: "total",
               emphasis: {
-                  focus: "series",
+                focus: "none",
               },
               label: {
+                  fontWeight: 800,
+                  fontSize:16,
+
+                  textShadow: 'black',
                   show: true,
                   color: "white",
                   position: 'top',

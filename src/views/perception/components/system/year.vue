@@ -15,8 +15,8 @@
       <div class="item-box">
         <span>当年累计作业面积</span>
         <div class="value-box">
-          <span class="circle"></span><span  class="area">{{ Math.trunc(totalArea) }}</span
-          ><span class="unit">/亩</span>
+          <span class="circle"></span><span  class="area">{{ numPurify(Math.trunc(totalArea)) }}</span
+          ><span class="unit">/万亩</span>
         </div>
       </div>
     </div>
@@ -33,6 +33,14 @@
 </template>
 
 <script setup lang="ts">
+function numPurify(value:number){
+  let tempV:Array<string | number>=(value/10000+'').split('.')
+  if(tempV[0]==0){
+    return value/10000
+  }else{
+    return (value/10000+'').split('.')[0]
+  }
+}
 defineProps({
   totalArea: {
     type: Number,
@@ -52,9 +60,6 @@ defineProps({
   padding: 0.375rem 0 0 0;
   
   .content-box {
-    .area{
-      font-size: 1.8rem;
-    }
     display: flex;
     width: 100%;
     height:calc(100% - 0.8rem);
