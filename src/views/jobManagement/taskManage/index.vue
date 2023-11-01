@@ -36,7 +36,7 @@
                     <el-option style="width: 200px;" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
                         :key="item.id"></el-option>
                 </el-select> -->
-                <el-select-v2 style="width: 230px;" filterable v-model="pageInfo.carId" :options="optionsList"
+                <el-select-v2 style="width: 250px;" filterable v-model="pageInfo.carId" :options="optionsList"
                     placeholder="请选择" @change="changeBlur2">
                 </el-select-v2>
                 <div :class="isShow ? 'infiniteMenu' : 'infiniteMenu2'">
@@ -208,22 +208,22 @@ const handleMapChange = (mapId: any) => {
 }
 // 设置图商
 function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
-  if (!map) {
-    console.warn("未初始化底图实例");
-    return;
-  }
-  let mapUrl = mapTitleLayers[mapName][mapType];
-  let options: any = {};
-  options.subdomains = mapTitleLayers[mapName]["Subdomains"];
-  if ("tms" in mapTitleLayers[mapName]) {
-    options.tms = mapTitleLayers[mapName]["tms"];
-  }
-  if ("key" in mapTitleLayers[mapName]) {
-    options.key = mapTitleLayers[mapName]["key"];
-  }
-  for (let key in mapUrl) {
-    L.tileLayer(mapUrl[key], options).addTo(map);
-  }
+    if (!map) {
+        console.warn("未初始化底图实例");
+        return;
+    }
+    let mapUrl = mapTitleLayers[mapName][mapType];
+    let options: any = {};
+    options.subdomains = mapTitleLayers[mapName]["Subdomains"];
+    if ("tms" in mapTitleLayers[mapName]) {
+        options.tms = mapTitleLayers[mapName]["tms"];
+    }
+    if ("key" in mapTitleLayers[mapName]) {
+        options.key = mapTitleLayers[mapName]["key"];
+    }
+    for (let key in mapUrl) {
+        L.tileLayer(mapUrl[key], options).addTo(map);
+    }
 }
 // const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
 //     try {
@@ -324,6 +324,7 @@ const loadWorkData = async (workId: any) => {
             let PointListTransed = res.data[item].map((item2: any) => {
                 return coorTransform([item2.posX as never, item2.posY as never], mapId.value) // 转换坐标
             })
+            console.log(PointListTransed)
             tranpatrnt.value.push(PointListTransed)
             // 取中间点
             {
@@ -1008,7 +1009,7 @@ watch(() => paddyWorkList.value,
             display: flex;
             justify-content: center;
             align-items: center;
-        
+
             .popupSn_inner {
                 display: flex;
                 justify-content: center;

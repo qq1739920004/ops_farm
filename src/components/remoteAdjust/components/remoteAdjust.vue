@@ -31,7 +31,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updateCarParams">确定</el-button>
+                    <el-button v-if="carParamsData" type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="calibFormRef" :validate-on-rule-change="false" v-show="activeIndex == '2'"
@@ -48,7 +48,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updateCalibParams">确定</el-button>
+                    <el-button type="primary" v-if="CalibTitleData" @click="updateCalibParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="pidFormRef" :validate-on-rule-change="false" v-show="activeIndex == '3'" :rules="pibParamRules"
@@ -65,7 +65,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updatePidParams">确定</el-button>
+                    <el-button type="primary" v-if="PidTitleData" @click="updatePidParams">确定</el-button>
                 </div>
             </el-form>
 
@@ -75,15 +75,15 @@
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="18" :offset="6">
                         <el-form-item class="item" label="差分设置：" prop="type">
-                            <el-select v-model="workPattern.type" style=" width: 187px;
+                            <el-select v-model="workPattern.type" style=" width: 225px;
                 height: 32px;">
                                 <el-option label="内置网络" :value="'1'" />
                                 <el-option label="罗网" :value="'3'" disabled />
                                 <!-- <el-option label="外置网络" :value="2"></el-option> -->
                             </el-select>
-                            <el-button :disabled="workPattern.type === '3' ? true : false" style="margin-left: 20px;"
-                                type="primary" @click="updateChafenData">设置</el-button>
-                            <el-button v-show="workPattern.type == '1'"  type="primary" text class="btn3" style=""
+                            <el-button type="primary" :disabled="workPattern.type === '3' ? true : false"
+                                style="margin-left: 20px;" @click="updateChafenData">设置</el-button>
+                            <el-button v-show="workPattern.type == '1'" type="primary" text class="btn3" style=""
                                 @click="getExtendSourceNode">获取源节点</el-button>
                         </el-form-item>
                     </el-col>
@@ -139,13 +139,12 @@
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="18" :offset="6">
                         <el-form-item class="item" label="日志回传:">
-                            <el-date-picker style="width: 187px;
+                            <el-date-picker style="width: 227px;
                                 height: 32px;" v-model="dateValue" type="daterange" range-separator="-"
                                 @change="changeDate" :disabled-date="disabledDate" start-placeholder="Start date"
                                 end-placeholder="End date" size="large" />
                             <el-button type="primary" style="margin-left: 20px;">回传</el-button>
-                            <el-button type="primary" text class="btn3" style=""
-                                @click="toFileList">文件查看</el-button>
+                            <el-button type="primary" text class="btn3" style="" @click="toFileList">文件查看</el-button>
                         </el-form-item>
 
                     </el-col>
@@ -171,8 +170,8 @@
                 <el-row style="margin-top:40px ;">
                     <el-col :span="12" :offset="6">
                         <el-form-item class="item" label="模块选择：" prop="radio1">
-                            <el-radio-group text-color="var(--el-color-primary)" style="transform: translateY(-5px);"
-                                v-model="formLabelAlign.radio1" class="ml-4">
+                            <el-radio-group @change="changeRadio1" text-color="var(--el-color-primary)"
+                                style="transform: translateY(-5px);" v-model="formLabelAlign.radio1" class="ml-4">
                                 <el-radio v-for="(item, index) in updateModelItem" :key="index" :label="item.label"
                                     size="large" style="margin-right: 30px;">{{ item.name }}</el-radio>
                             </el-radio-group>
@@ -183,8 +182,8 @@
                 <el-row>
                     <el-col :span="12" :offset="6">
                         <el-form-item class="item" label="模块选择：" prop="radio2">
-                            <el-radio-group text-color="var(--el-color-primary)" style="transform: translateY(-5px);"
-                                v-model="formLabelAlign.radio2" class="ml-4">
+                            <el-radio-group @change="changeRadio2" text-color="var(--el-color-primary)"
+                                style="transform: translateY(-5px);" v-model="formLabelAlign.radio2" class="ml-4">
                                 <el-radio label="1" size="large" style="margin-right: 30px;">正式版</el-radio>
                                 <el-radio label="2" size="large" style="margin-right: 30px;">测试版</el-radio>
                             </el-radio-group>
@@ -336,18 +335,17 @@ defineExpose({
 //     'label': '21', 'name': 'Hub蓝牙'
 // }
 const updateModelItem = reactive([{
-    'label': '11', 'name': 'EC20'
+    'label': '11001', 'name': 'EC20'
 }, {
-    'label': '12', 'name': '板卡'
+    'label': '11002', 'name': '板卡'
 }
 ])
 const formLabelAlign = reactive({
     name: '',
     region: '',
     type: '',
-    radio1: '11',
-    radio2: '2',
-    pid: '11001',
+    radio1: '11001',
+    radio2: '1',
     filename: 0
 })
 // 文件存储
@@ -421,6 +419,12 @@ const chaFenlist = ref<chaFenObj>({
     'warrantyDate': '',
     'workPattern': 0
 })
+const changeRadio1 = () => {
+    getProductList()
+}
+const changeRadio2 = () => {
+    getProductList()
+}
 // 源节点列表
 const sourceNode = ref<string[]>([])
 // 获取车辆参数
@@ -461,6 +465,7 @@ const closeRemoteAdjust = () => {
     pidFormRef.value.resetFields()
     moudleRef.value.resetFields()
     formLabelAlignRef.value.resetFields()
+    activeName.value = '1'
 
 
 }
@@ -658,7 +663,7 @@ const gotoChafen = () => {
 
 // 获取在线升级数据
 const getProductList = async () => {
-    const res: GetcarProductpackageResponseData = await GetcarProductpackage_API({ 'pid': formLabelAlign.pid, 'versionType': formLabelAlign.radio2 })
+    const res: GetcarProductpackageResponseData = await GetcarProductpackage_API({ 'pid': formLabelAlign.radio1, 'versionType': formLabelAlign.radio2 })
     productList.value = res.data
 }
 // 在线升级更新数据
@@ -871,15 +876,15 @@ const formartDate = (val: Date) => {
     min-height: 336px;
 
     .mktitle {
-       display: flex;
-       width: 100%;
-       justify-content: center;
+        display: flex;
+        width: 100%;
+        justify-content: center;
         /** 文本1 */
         font-size: 16px;
         font-weight: 400;
         letter-spacing: 0px;
         line-height: 23.17px;
-        
+
     }
 
     :deep(.item .el-form-item__label) {

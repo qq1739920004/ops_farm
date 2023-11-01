@@ -153,7 +153,8 @@ export interface updateCarObj {
 }
 export interface carProductpackageObj {
     pid: string,
-    versionType: string
+    versionType: string,
+    deviceId?: string
 }
 export interface GetcarProductpackageObj {
     id: number,
