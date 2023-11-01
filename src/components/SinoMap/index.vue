@@ -108,8 +108,6 @@ watch(
 watch(
   () => props.markerData_one,
   (markerData_one) => {
-    // console.log(markerData_one,'--111');
-    
     if (markerData_one.markerType == "add") {
       createMarker([markerData_one]);
     }
