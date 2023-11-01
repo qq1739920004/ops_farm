@@ -65,7 +65,6 @@ import type { ChartData } from "@/api/perception/type.ts";
 
 const realTime = socket();
 realTime.connect();
-
 // 监测数据
 const monitorData = ref<MonitorObj>();
 //状态通知
@@ -125,7 +124,14 @@ function handleSocketData(data: any) {
       dataNow.value = data.data.chart?data.data.chart[0]:tempDataNow;
     }
   }else if (data.type == "notification") {
-    stateObj.value = data.data.list[0]
+    if(data.data.list.some((item:recordsType)=>{
+      item.judgeLevel
+    })){
+    }else{
+      if(stateObj.value && (stateObj.value.onlineTime !=data.data.list[0].onlineTime)){
+        stateObj.value = data.data.list[0]
+      }
+    }
   } 
 }
 onMounted(() => {
