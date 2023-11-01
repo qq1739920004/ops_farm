@@ -33,7 +33,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updateCarParams">确定</el-button>
+                    <el-button v-if="carParamsData" type="primary" @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
             <el-form :validate-on-rule-change="false" ref="calibFormRef" v-show="activeName == '2'" :rules="CalibParamRules"
@@ -50,7 +50,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updateCalibParams">确定</el-button>
+                    <el-button v-if="CalibTitleData" type="primary" @click="updateCalibParams">确定</el-button>
                 </div>
             </el-form>
             <el-form :validate-on-rule-change="false" ref="pidFormRef" v-show="activeName == '3'" :rules="pibParamRules"
@@ -67,7 +67,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updatebasicParams">确定</el-button>
+                    <el-button v-if="CalibTitleData" type="primary" @click="updatebasicParams">确定</el-button>
                 </div>
             </el-form>
             <el-form :validate-on-rule-change="false" ref="advanceFormRef" v-show="activeName == '4'"
@@ -85,7 +85,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" @click="updateAdvanced1Params">确定</el-button>
+                    <el-button v-if="advance1TitleData" type="primary" @click="updateAdvanced1Params">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="moudleRef" :validate-on-rule-change="false" v-show="activeName == '5'" :rules="rules"
@@ -411,6 +411,7 @@ const closeRemoteAdjust = () => {
     moudleRef.value.resetFields()
     formLabelAlignRef.value.resetFields()
     advanceFormRef.value.resetFields()
+    activeName.value = '1'
 }
 const changeLogStatus = async (val: string, val2: any) => {
     if (switchStatus) {

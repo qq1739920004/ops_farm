@@ -3,12 +3,7 @@
     <div id="map"></div>
     <div class="map_utils">
       <el-select v-model="mapTileOptions.id" @change="mapTileChange">
-        <el-option
-          v-for="item in mapTileOptions.list"
-          :key="item.id"
-          :label="item.lable"
-          :value="item.id"
-        />
+        <el-option v-for="item in mapTileOptions.list" :key="item.id" :label="item.lable" :value="item.id" />
       </el-select>
       <div class="map_utils_item">
         <el-tooltip effect="light" content="点回回全局">
@@ -23,13 +18,7 @@
             <SvgIcon icon="ranging" />
           </el-button>
         </el-tooltip>
-        <el-button
-          class="clear_btn"
-          v-if="rangingArray.length > 0"
-          @click="clearMapRanging"
-          type="danger"
-          >清除</el-button
-        >
+        <el-button class="clear_btn" v-if="rangingArray.length > 0" @click="clearMapRanging" type="danger">清除</el-button>
       </div>
     </div>
   </div>
@@ -233,10 +222,10 @@ function createMarker(list: any) {
   });
 
   // if (markerArr.length > 0) {
-    // var groupBounds = markerGroup.getBounds();
-    // console.log(groupBounds,'--235')
-    // 使用 fitBounds 方法来适应包含所有标记的边界框
-    // map.fitBounds([L.latLng(31.086444, 121.734942)],);
+  // var groupBounds = markerGroup.getBounds();
+  // console.log(groupBounds,'--235')
+  // 使用 fitBounds 方法来适应包含所有标记的边界框
+  // map.fitBounds([L.latLng(31.086444, 121.734942)],);
   // }
   // console.log(markerArr, "--145");
   // var groupBounds = markerArr.getBounds();
@@ -373,8 +362,8 @@ function handleMapCenter(data: any) {
     });
     var bounds = L.latLngBounds(latLng);
     map.fitBounds(bounds);
-    data.zoom ? map.setZoom(data.zoom): ''
-  }else {
+    data.zoom ? map.setZoom(data.zoom) : ''
+  } else {
     map.setView(defaultMapCenter, defaultMapZoom);
   }
 }
@@ -473,9 +462,11 @@ function initRanging() {
   position: relative;
   height: 100%;
 }
+
 #map {
   height: 100%;
 }
+
 .map_utils {
   position: absolute;
   z-index: 999;
@@ -483,11 +474,14 @@ function initRanging() {
   left: 10px;
   display: flex;
   align-items: center;
+
   .el-select {
     width: 120px;
   }
+
   .map_utils_item {
     margin-left: 6px;
+
     .clear_btn {
       margin-left: 6px;
     }

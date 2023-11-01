@@ -39,11 +39,11 @@
                         </el-col>
                         <el-col :span="14">
                             <span class="bold">{{
-                                item.todayArea ? (item.todayArea / 1000).toFixed(2) : "--"
+                                item.todayArea ? (item.todayArea ).toFixed(2) : "--"
                             }}</span>
                             <span style="padding: 0 5px">/</span>
                             <span>{{
-                                item.totalArea ? (item.totalArea / 1000).toFixed(2) : "--"
+                                item.totalArea ? (item.totalArea).toFixed(2) : "--"
                             }}</span>
                         </el-col>
                     </el-row>
@@ -78,11 +78,11 @@
                         </el-col>
                         <el-col :span="14">
                             <span class="bold">{{
-                                item.todayArea ? (item.todayArea / 1000).toFixed(2) : "--"
+                                item.todayArea ? (item.todayArea).toFixed(2) : "--"
                             }}</span>
                             <span style="padding: 0 5px">/</span>
                             <span>{{
-                                item.totalArea ? (item.totalArea / 1000).toFixed(2) : "--"
+                                item.totalArea ? (item.totalArea).toFixed(2) : "--"
                             }}</span>
                         </el-col>
                     </el-row>

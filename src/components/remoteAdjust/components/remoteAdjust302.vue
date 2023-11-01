@@ -3,7 +3,7 @@
     <el-dialog @open="openRemoteAdjust" @close="closeRemoteAdjust" style="border-radius: 8px;" v-model="dialogVisible"
         title="远程管理" width="1012px" height="516px" center>
         <div class="top">
-            <span>车辆名称：</span>
+            <span style="margin-right: 20px;">车辆名称：{{ props.name || '/' }}</span>
             <span>车辆类型：{{ props.terminalType }}</span>
         </div>
         <div class="menuArea">
@@ -33,7 +33,8 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button :disabled="!carParamsData" type="primary" @click="updateCarParams">确定</el-button>
+                    <el-button v-if="carParamsData" :disabled="!carParamsData" type="primary"
+                        @click="updateCarParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="calibFormRef" :validate-on-rule-change="false" v-show="activeIndex == '2'"
@@ -50,7 +51,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button :disabled="!CalibTitleData" type="primary" @click="updateCalibParams">确定</el-button>
+                    <el-button v-if="CalibTitleData" type="primary" @click="updateCalibParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="pidFormRef" :validate-on-rule-change="false" v-show="activeIndex == '3'" :rules="pibParamRules"
@@ -67,7 +68,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button :disabled="!PidTitleData" type="primary" @click="updatePidParams">确定</el-button>
+                    <el-button v-if="PidTitleData" type="primary" @click="updatePidParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="pidCurveRef" :validate-on-rule-change="false" v-show="activeIndex == '9'" :rules="pidCurveRules"
@@ -85,7 +86,7 @@
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button :disabled="!PidCurveTitleData" type="primary" @click="updatePidCurveParams">确定</el-button>
+                    <el-button v-if="PidCurveTitleData" type="primary" @click="updatePidCurveParams">确定</el-button>
                 </div>
             </el-form>
             <el-form ref="supLowFormRef" :validate-on-rule-change="false" v-show="activeIndex == '10'"
@@ -118,8 +119,8 @@
                                 <el-option label="罗网" :value="'3'" disabled />
                                 <el-option label="内置电台" :value="0"></el-option>
                             </el-select>
-                            <el-button v-show="workPattern.type != '0'" :disabled="workPattern.type === '3' ? true : false" style="margin-left: 20px;"
-                                type="primary" @click="updateChafenData">设置</el-button>
+                            <el-button v-show="workPattern.type != '0'" :disabled="workPattern.type === '3' ? true : false"
+                                style="margin-left: 20px;" type="primary" @click="updateChafenData">设置</el-button>
                             <el-button v-show="workPattern.type == '1'" type="primary" text class="btn3"
                                 @click="getExtendSourceNode">获取源节点</el-button>
                             <el-button v-show="workPattern.type == '0'" style="margin-left: 20px;" type="primary"
@@ -264,8 +265,8 @@
                 <el-row>
                     <el-col :span="12" :offset="6">
                         <el-form-item class="item" label="版本类型：" prop="name" style="margin-top: 20px;">
-                            <el-radio-group text-color="var(--el-color-primary)" style="transform: translateY(-5px);"
-                                v-model="formLabelAlign.radio2" class="ml-4">
+                            <el-radio-group @change="changeRadio2" text-color="var(--el-color-primary)"
+                                style="transform: translateY(-5px);" v-model="formLabelAlign.radio2" class="ml-4">
                                 <el-radio label="1" size="large" style="margin-right: 30px;">正式版</el-radio>
                                 <el-radio label="2" size="large" style="margin-right: 30px;">测试版</el-radio>
                             </el-radio-group>
@@ -319,6 +320,7 @@ import type { TabsPaneContext } from 'element-plus'
 const activeName = ref('1')
 
 const handleClick = (tab: TabsPaneContext) => {
+
     activeIndex.value = tab.props.name as never
 }
 const carFormRef = ref()
@@ -402,7 +404,7 @@ const formLabelAlign = reactive({
     region: '',
     type: '',
     radio1: '11',
-    radio2: '2',
+    radio2: '1',
     pid: '9002',
     filename: 0
 })
@@ -417,6 +419,7 @@ const radioChannelOptions = reactive({
     8: 4620500,
     9: 4630500,
 })
+
 const paramDescribeList = ref<paramDescribeObj>({
     version: '',
     type: '',
@@ -539,6 +542,9 @@ const closeRemoteAdjust = () => {
     formLabelAlignRef.value.resetFields()
     pidCurveRef.value.resetFields()
     supLowFormRef.value.resetFields()
+    console.log('guanbi');
+    activeName.value = '1'
+
 
 }
 const openRemoteAdjust = () => {
@@ -821,12 +827,19 @@ const gotoChafen = () => {
     sourceNode.value = []
     workPattern.value.type = '3'
 }
-
+// const changeRadio1 = () => {
+//     getProductList()
+// }
+const changeRadio2 = () => {
+    getProductList()
+}
 // 获取在线升级数据
 const getProductList = async () => {
-    const res: GetcarProductpackageResponseData = await GetcarProductpackage_API({ 'pid': formLabelAlign.pid, 'versionType': formLabelAlign.radio2 })
-    if (res.data != null) {
+    try {
+        const res: GetcarProductpackageResponseData = await GetcarProductpackage_API({ 'pid': formLabelAlign.pid, 'versionType': formLabelAlign.radio2 })
         productList.value = res.data
+    } catch {
+        productList.value = []
     }
 
 }
@@ -1047,8 +1060,8 @@ const pidSupLowRules = computed(() => {
 
     .mktitle {
         display: flex;
-       width: 100%;
-       justify-content: center;
+        width: 100%;
+        justify-content: center;
         /** 文本1 */
         font-size: 16px;
         font-weight: 400;

@@ -163,14 +163,14 @@
             ? true
             : false
           " class="box-item" effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
-          <el-button style="width: 52px" :disabled="row.openRemote" type="primary" text @click="
+          <el-button style="width: 52px" :disabled="!row.openRemote" type="primary" text @click="
             gotoRemote(
               row.terminalType,
               row.version,
               row.type,
               row.id,
               row.sn,
-              row.carName
+              row.name
             )
             ">远程管理</el-button>
         </el-tooltip>
@@ -204,6 +204,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const props = defineProps(["carNewList"]);
+
 const emits = defineEmits(["changeSort"]);
 // const switchStatus = ref<boolean>(false)
 const sn = ref();
