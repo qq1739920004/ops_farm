@@ -382,11 +382,7 @@ function handleMapCenter(data: any) {
     });
     var bounds = L.latLngBounds(latLng);
     map.fitBounds(bounds);
-<<<<<<< HEAD
-    data.zoom ? map.setZoom(data.zoom) : ''
-=======
     data.zoom ? map.setZoom(data.zoom) : "";
->>>>>>> 4a70a7abaaec0d54256d18c19d441d85feeec8da
   } else {
     map.setView(defaultMapCenter, defaultMapZoom);
   }
