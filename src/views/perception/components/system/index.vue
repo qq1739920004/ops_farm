@@ -122,7 +122,7 @@ function handleSocketData(data: any) {
       let tempTodayAcDevice=monitorData.value?.todayAcDevice
       let tempDataNow=dataNow.value
       monitorData.value!.todayAcDevice = data.data.todayAcDevice|| tempTodayAcDevice;
-      dataNow.value = data.data.chart[0] || tempDataNow;
+      dataNow.value = data.data.chart?data.data.chart[0]:tempDataNow;
     }
   }else if (data.type == "notification") {
     stateObj.value = data.data.list[0]
