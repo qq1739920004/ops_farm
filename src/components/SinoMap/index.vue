@@ -3,7 +3,12 @@
     <div id="map"></div>
     <div class="map_utils">
       <el-select v-model="mapTileOptions.id" @change="mapTileChange">
-        <el-option v-for="item in mapTileOptions.list" :key="item.id" :label="item.lable" :value="item.id" />
+        <el-option
+          v-for="item in mapTileOptions.list"
+          :key="item.id"
+          :label="item.lable"
+          :value="item.id"
+        />
       </el-select>
       <div class="map_utils_item">
         <el-tooltip effect="light" content="点回回全局">
@@ -18,7 +23,13 @@
             <SvgIcon icon="ranging" />
           </el-button>
         </el-tooltip>
-        <el-button class="clear_btn" v-if="rangingArray.length > 0" @click="clearMapRanging" type="danger">清除</el-button>
+        <el-button
+          class="clear_btn"
+          v-if="rangingArray.length > 0"
+          @click="clearMapRanging"
+          type="danger"
+          >清除</el-button
+        >
       </div>
     </div>
   </div>
@@ -33,7 +44,7 @@ import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { mapTileLayers } from "./utils/mapTileLayers";
-import { reactive, onMounted, watch } from "vue";
+import { ref, reactive, onMounted, watch } from "vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 
 const props = defineProps({
@@ -57,7 +68,11 @@ const props = defineProps({
     type: Array,
     default: [],
   },
-  markerData_one: {
+  markerDataHidden: {
+    type: Array,
+    default: [],
+  },
+  markerDataHandle: {
     type: Object,
     default: () => ({}),
   },
@@ -73,7 +88,6 @@ const props = defineProps({
     },
   },
 });
-let lastMarkerData: any = []; // 上一次markerData数据
 let pickupMode: boolean = false; // 是否地图拾取模式
 let pickedPoints: any = [];
 let rangingArray: any = reactive([]);
@@ -83,28 +97,28 @@ const defaultMapZoom = 4;
 watch(
   () => props.markerData,
   (markerData) => {
-    diffArray(lastMarkerData, markerData);
-    lastMarkerData = JSON.parse(JSON.stringify(markerData));
-    if (markerData.length > mapRenderModeLength && mapRenderMode == "dom") {
-      markerClusterGroup.clearLayers();
-      markerGroup.clearLayers();
-      mapRenderMode = "polymer";
-      updateMarkerVisible(markerData);
-    }
+    createMarker(markerData);
   },
   { deep: true }
 );
 watch(
-  () => props.markerData_one,
-  (markerData_one) => {
-    if (markerData_one.markerType == "add") {
-      createMarker([markerData_one]);
+  () => props.markerDataHidden,
+  (markerDataHidden) => {
+    updateMarkerVisible(markerDataHidden);
+  },
+  { deep: true }
+);
+watch(
+  () => props.markerDataHandle,
+  (markerDataHandle) => {
+    if (markerDataHandle.markerHandle == "add") {
+      createMarker([markerDataHandle]);
     }
-    if (markerData_one.markerType == "delete") {
-      removeMarker([markerData_one]);
+    if (markerDataHandle.markerHandle == "delete") {
+      removeMarker([markerDataHandle]);
     }
-    if (markerData_one.markerType == "update") {
-      updateMarker([markerData_one]);
+    if (markerDataHandle.markerHandle == "update") {
+      updateMarker([markerDataHandle]);
     }
   },
   { deep: true }
@@ -127,7 +141,8 @@ watch(
 let map: any = null; // map实例对象
 let polyline: any = null;
 let mapRenderMode = props.mapRenderMode;
-let mapRenderModeLength = 500; //数量超过1000，强制转为 polymer 聚合引擎
+let mapRenderModeLength = ref(0);
+let mapRenderModeLengthMax = 300; //数量超过1000，强制转为 polymer 聚合引擎
 let markerArr: any = []; // marker坐标点数字
 
 //@ts-ignore
@@ -148,6 +163,19 @@ mapTileOptions.list = mapTileOptions.list.filter((item: any) =>
   props.mapTile.includes(item.id)
 );
 
+watch(
+  () => mapRenderModeLength,
+  (mapRenderModeLength) => {
+    if (mapRenderModeLength.value > mapRenderModeLengthMax && mapRenderMode == 'dom') {
+      markerClusterGroup.clearLayers();
+      markerGroup.clearLayers();
+      mapRenderMode = "polymer";
+      updateMarkerVisible(props.markerDataHidden);
+    }
+  },
+  { deep: true }
+);
+
 onMounted(() => {
   initMap();
   handleMapCenter(props.mapCenter);
@@ -155,70 +183,9 @@ onMounted(() => {
   createLine(props.lineData);
 });
 
-// 处理markerId后扁平化数组
-// function arryFlat(data: any) {
-//   data = JSON.parse(JSON.stringify(data));
-//   data.forEach((item: any, index: number) => {
-//     item.forEach((v: any) => {
-//       v.markerId = v.markerId + "_" + index;
-//     });
-//   });
-
-//   return data.flat();
-// }
-
-function diffArray(arr1: any, arr2: any) {
-  // 新增了marker点
-  if (arr1.length < arr2.length) {
-    let resList: any = [];
-    arr2.forEach((item: any) => {
-      let flag = true;
-      arr1.forEach((v: any) => {
-        if (item.markerId == v.markerId) {
-          flag = false;
-        }
-      });
-      if (flag) resList.push(item);
-    });
-    createMarker(resList);
-  }
-  // 删除了marke点
-  if (arr1.length > arr2.length) {
-    let resList: any = [];
-    arr1.forEach((item: any) => {
-      let flag = true;
-      arr2.forEach((v: any) => {
-        if (item.markerId == v.markerId) {
-          flag = false;
-        }
-      });
-      if (flag) resList.push(item);
-    });
-    removeMarker(resList);
-  }
-
-  // 更新了marker点
-  if (arr1.length == arr2.length) {
-    let resList: any = [];
-    let resVisibleList: any = [];
-    arr1.forEach((item: any) => {
-      arr2.forEach((v: any) => {
-        if (item.markerId == v.markerId) {
-          if (JSON.stringify(item) != JSON.stringify(v)) {
-            resList.push(v);
-            if (item.markerVisible != v.markerVisible) {
-              resVisibleList.push(v);
-            }
-          }
-        }
-      });
-    });
-    updateMarkerVisible(resVisibleList);
-    updateMarker(resList);
-  }
-}
 // 创建地图marker点
 function createMarker(list: any) {
+  mapRenderModeLength.value += list.length;
   list.forEach((item: any) => {
     let marker: any;
     const [markerLng, markerLat] = gcoordLngLat(item.markerLng, item.markerLat);
@@ -231,28 +198,23 @@ function createMarker(list: any) {
     marker.bindPopup(item.markerPopup);
 
     marker.markerId = item.markerId; // marker对象上设置唯一标识
+    marker.markerType = item.markerType; // marker对象上设置唯一标识
     markerArr.push(marker);
     if (mapRenderMode == "dom") {
-      item.markerVisible ? markerGroup.addLayer(marker) : "";
+      props.markerDataHidden.includes(item.markerType)
+        ? ""
+        : markerGroup.addLayer(marker);
     }
     if (mapRenderMode == "polymer") {
-      item.markerVisible ? markerClusterGroup.addLayers(marker) : "";
+      props.markerDataHidden.includes(item.markerType)
+        ? ""
+        : markerClusterGroup.addLayer(marker);
     }
   });
-
-  // if (markerArr.length > 0) {
-  // var groupBounds = markerGroup.getBounds();
-  // console.log(groupBounds,'--235')
-  // 使用 fitBounds 方法来适应包含所有标记的边界框
-  // map.fitBounds([L.latLng(31.086444, 121.734942)],);
-  // }
-  // console.log(markerArr, "--145");
-  // var groupBounds = markerArr.getBounds();
-  // console.log(groupBounds, "--147");
-  // 使用 fitBounds 方法来适应包含所有标记的边界框
 }
 // 删除地图marker点
 function removeMarker(list: any) {
+  mapRenderModeLength.value -= list.length;
   list.forEach((item: any) => {
     markerArr.forEach((v: any, i: number) => {
       if (item.markerId == v.markerId) {
@@ -286,21 +248,21 @@ function updateMarker(list: any) {
 }
 // 修改地图marker显隐藏
 function updateMarkerVisible(list: any) {
-  list.forEach((item: any) => {
-    markerArr.forEach((v: any) => {
-      if (item.markerId == v.markerId) {
-        if (mapRenderMode == "dom") {
-          item.markerVisible
-            ? markerGroup.addLayer(v)
-            : markerGroup.removeLayer(v);
-        }
-        if (mapRenderMode == "polymer") {
-          item.markerVisible
-            ? markerClusterGroup.addLayers(v)
-            : markerClusterGroup.removeLayer(v);
-        }
+  markerArr.forEach((item: any) => {
+    if (mapRenderMode == "dom") {
+      if (list.includes(item.markerType)) {
+        markerGroup.removeLayer(item);
+      } else {
+        markerGroup.addLayer(item);
       }
-    });
+    }
+    if (mapRenderMode == "polymer") {
+      if (list.includes(item.markerType)) {
+        markerClusterGroup.removeLayer(item);
+      } else {
+        markerClusterGroup.addLayer(item);
+      }
+    }
   });
 }
 // 创建icon图标
@@ -335,7 +297,6 @@ function createLine(list: any) {
   if (polyline) {
     polyline.remove();
   }
-
   const latLng: any = [];
   list.forEach((item: any) => {
     let arr: any = [];
@@ -380,7 +341,7 @@ function handleMapCenter(data: any) {
     });
     var bounds = L.latLngBounds(latLng);
     map.fitBounds(bounds);
-    data.zoom ? map.setZoom(data.zoom) : ''
+    data.zoom ? map.setZoom(data.zoom) : "";
   } else {
     map.setView(defaultMapCenter, defaultMapZoom);
   }

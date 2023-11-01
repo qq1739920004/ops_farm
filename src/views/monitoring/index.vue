@@ -2,7 +2,8 @@
   <div class="map_container">
     <sino-map
       :markerData="markerData"
-      :markerData_one="markerData_one"
+      :markerDataHandle="markerDataHandle"
+      :markerDataHidden="markerDataHidden"
       :mapCenter="mapCenter"
     />
     <div class="search_box">
@@ -164,6 +165,8 @@ import AG502 from "@/assets/icons/AG502.svg";
 import AG502_warn from "@/assets/icons/AG502_warn.svg";
 import AG302Android from "@/assets/icons/AG302Android.svg";
 import AG302Android_warn from "@/assets/icons/AG302Android_warn.svg";
+import MC100 from '@/assets/icons/MC100.svg'
+import MC100_warn from '@/assets/icons/MC100_warn.svg'
 import AGunknown from "@/assets/icons/AGunknown.svg";
 import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
 import wifi_0 from "@/assets/monitoring/wifi_0.png";
@@ -186,7 +189,8 @@ import {
 const router = useRouter();
 const socketStore = useSocketStore();
 let markerData = reactive<any>([]);
-let markerData_one = ref<any>({});
+let markerDataHidden = ref<any>([]);
+let markerDataHandle = ref<any>({});
 let dataStatistics = ref<any>({});
 let carLogList: any = ref([]);
 
@@ -285,62 +289,45 @@ function handleSocketData(socketData: any) {
     let { action, data } = socketData;
     if (action == "upline") {
       const markerId = data.sn;
-      const markerVisible = true;
       const markerLng = data.posY;
       const markerLat = data.posX;
+      const markerType = createMarkerType(data);
       const markerIcon = createMarkerIcon(data);
       const markerPopup = createMarkerPopup(data);
-      markerData_one = {
+      markerDataHandle = {
         markerId,
         markerLng,
         markerLat,
+        markerType,
         markerIcon,
         markerPopup,
-        markerType: "add",
-        markerVisible
+        markerHandle: "add",
       };
-      // markerData.push({
-      //   markerId,
-      //   markerVisible,
-      //   markerLng,
-      //   markerLat,
-      //   markerIcon,
-      //   markerPopup,
-      // });
     }
     if (action == "offline") {
       const markerId = data.sn;
-      markerData_one = {
+      markerDataHandle = {
         markerId,
-        markerType: "delete",
+        markerHandle: "delete",
       };
 
-      // const idx = markerData.findIndex(
-      //   (item: any) => item.markerId == markerId
-      // );
-      // markerData.splice(idx, 1);
     }
     if (action == "online") {
       const markerId = data.sn;
       const markerLng = data.posY;
       const markerLat = data.posX;
+      const markerType = createMarkerType(data);
       const markerIcon = createMarkerIcon(data);
       const markerPopup = createMarkerPopup(data);
-      markerData_one = {
+      markerDataHandle = {
         markerId,
         markerLng,
         markerLat,
+        markerType,
         markerIcon,
         markerPopup,
-        markerType: "update",
+        markerHandle: "update",
       };
-
-      // const find = markerData.find((item: any) => item.markerId == markerId);
-      // if (!find) return;
-      // find.markerLng = markerLng;
-      // find.markerLat = markerLat;
-      // find.markerIcon = markerIcon;
-      // find.markerPopup = markerPopup;
     }
   }
   if (socketData.module == "farm" && socketData.type == "monitor") {
@@ -426,9 +413,9 @@ async function getOnlineFarmPosition() {
     item.markerId = item.sn;
     item.markerLng = item.posY;
     item.markerLat = item.posX;
+    item.markerType = createMarkerType(item);
     item.markerIcon = createMarkerIcon(item);
     item.markerPopup = createMarkerPopup(item);
-    item.markerVisible = true;
   });
   onlineFarmMachines = onlineFarmMachines.filter(
     (item: any) => item.markerLng || item.markerLng == 0
@@ -438,29 +425,35 @@ async function getOnlineFarmPosition() {
 
 //
 function markerTypeChange() {
-  let types = dataStatistics.value.type.filter((item: any) => item.checked);
+  let types = dataStatistics.value.type.filter((item: any) => !item.checked);
   types = types.map((item: any) => item.typeName);
-  markerData.forEach((item: any) => (item.markerVisible = false));
-  types.forEach((item: any) => {
-    let findList = markerData.filter((v: any) => {
-      if (
-        (v.terminalType == "AG302Android" || v.terminalType == "AG501Pro") &&
-        v.terminalType == item
-      ) {
-        return true;
-      }
-      if (
-        v.terminalType != "AG302Android" &&
-        v.terminalType != "AG501Pro" &&
-        v.terminalType.includes(item)
-      ) {
-        return true;
-      }
-    });
-    findList.forEach((item: any) => {
-      item.markerVisible = true;
-    });
-  });
+  markerDataHidden.value = types;
+}
+
+function createMarkerType(item: any) {
+  if (item.terminalType.includes("AG360")) {
+    return "AG360";
+  } else if (
+    item.terminalType.includes("AG501") &&
+    item.terminalType != "AG501Pro"
+  ) {
+    return "AG501";
+  } else if (item.terminalType == "AG501Pro") {
+    return "AG501Pro";
+  } else if (item.terminalType.includes("AG502")) {
+    return "AG502";
+  } else if (
+    item.terminalType.includes("AG302") &&
+    item.terminalType != "AG302Android"
+  ) {
+    return "AG302";
+  } else if (item.terminalType == "AG302Android") {
+    return "AG302Android";
+  } else if (item.terminalType.includes("MC100")) {
+    return "MC100";
+  } else {
+    return "";
+  }
 }
 
 // marker弹窗
@@ -675,6 +668,8 @@ function createMarkerIcon(item: any) {
     icon = driveState == 0 ? AG302_warn : AG302;
   } else if (terminalType == "AG302Android") {
     icon = driveState == 0 ? AG302Android_warn : AG302Android;
+  } else if (item.terminalType.includes("MC100")) {
+    icon = driveState == 0 ? MC100_warn : MC100;
   } else {
     icon = driveState == 0 ? AGunknown_warn : AGunknown;
   }
