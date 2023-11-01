@@ -103,7 +103,7 @@ const option = {
           title: {
             fontFamily: "perceptionFont",
             color: "#43cf7c",
-            fontSize: 20,
+            fontSize: '1.35rem',
             align: "left",
             width:90
           },
@@ -134,7 +134,8 @@ const option = {
         color: "#43cf7c",
         fontFamily: "perceptionFont",
 
-        fontSize: 20,
+        fontSize: '1.25rem',
+
       },
     },
   ],
@@ -155,7 +156,8 @@ const option = {
         show: true,
         position: "inside",//
         color: "#f5fff5",
-        fontSize: 20,
+        fontSize: '1rem',
+
         // offset: [15, -5],
         formatter: "{c}",
       },

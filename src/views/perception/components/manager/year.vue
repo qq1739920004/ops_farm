@@ -12,7 +12,7 @@
                 {{Math.trunc(todayArea)  }}
             </div>
             <div class="chart_year" ref="bar2">
-                {{Math.trunc(totalArea)  }}
+                {{numPurify(Math.trunc(totalArea))  }}
             </div>
             
         </div>
@@ -21,7 +21,7 @@
                 今日作业面积/亩
             </div>
             <div>
-                当年累计作业面积/亩
+                当年累计作业面积/万亩
             </div>
         </div>
 
@@ -29,6 +29,14 @@
 </template>
     
 <script setup lang='ts'>
+function numPurify(value:number){
+  let tempV:Array<string | number>=(value/10000+'').split('.')
+  if(tempV[0]==0){
+    return value/10000
+  }else{
+    return (value/10000+'').split('.')[0]
+  }
+}
  defineProps({
     totalArea: {
         type: Number,
