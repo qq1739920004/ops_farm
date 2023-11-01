@@ -143,10 +143,12 @@ watch(()=>props.stateObj,(newValue)=>{
     .state-line{
       position: absolute;
       height: var(--lineHeight);
+      width: 1px;
+      transition: all 1s;
       left: 14px;
       top: 48px;
       z-index: -9;
-      opacity: 0.8;
+      opacity: 0.6;
     }
     height: calc(100% - 40px);
     overflow: auto;

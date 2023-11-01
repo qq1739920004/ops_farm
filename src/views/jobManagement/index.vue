@@ -8,7 +8,7 @@
                 </el-select>
                 <el-input style="width:179px;margin-right: 20px;" v-if="dealerList.length === 1"
                     v-model="dealerList[0].name" disabled />
-                <el-select-v2  style="width: 230px;" filterable v-model="pageInfo.carId" :options="options" placeholder="请选择"
+                <el-select-v2 style="width: 350px;"  filterable v-model="pageInfo.carId" :options="options" placeholder="请选择"
                     @change="changeBlur2">
                 </el-select-v2>
                 <!-- <el-select v-load-more="loadmore" filterable  v-model="pageInfo.carId"
@@ -144,10 +144,20 @@ const getDealerCarList = async () => {
     }
     else {
         CarDealerList.value = res.data
-        options = CarDealerList.value.map((item: any, _idx) => ({
-            value: item.id,
-            label: `${item.nameNpn}`,
-        }))
+        options = CarDealerList.value.map((item: any, _idx) => {
+            if (item.nameNpn.includes('()')) {
+                return {
+                    value: item.id,
+                    label: item.nameNpn.split('(')[0],
+                }
+            } else {
+                return {
+                    value: item.id,
+                    label: `${item.nameNpn}`,
+                }
+            }
+
+        })
         // dataItems.value = CarDealerList.value.filter((_item, index) => {
         //     return index < 50
         // })
@@ -243,6 +253,7 @@ const changeA = () => {
 </script>
 
 <style lang="scss" scoped>
+
 .search_container {
     display: flex;
     justify-content: space-between;

@@ -108,6 +108,7 @@ const option = {
         show: true, //是否显示标签
         position: "right", //标签位置
         color: "#3aed81", //标签颜色
+        fontSize:13,
         //字体
         fontFamily: "perceptionFont",
         formatter: function (params: any) {

@@ -122,7 +122,7 @@ const option = {
           },
           title: {
             color: "#43cf7c",
-            fontSize: 20,
+            fontSize: '1.35rem',
             align: "left",
             width: 90,
           },
@@ -151,7 +151,7 @@ const option = {
       data: seriesData,
       axisLabel: {
         color: "#43cf7c",
-        fontSize: 20,
+        fontSize: '1.25rem',
       },
     },
   ],
@@ -171,7 +171,7 @@ const option = {
         show: true,
         position: "insideRight",
         color: "#f5fff5",
-        fontSize: 16,
+        fontSize: '1rem',
         offset: [5, -10],
         formatter: function (data: { value: number }) {
           // 柱子顶部分隔线样式
@@ -184,7 +184,7 @@ const option = {
           },
           value: {
             color: "#f5fff5",
-            fontSize: 16,
+            fontSize: '1rem',
             align: "right",
           },
         },

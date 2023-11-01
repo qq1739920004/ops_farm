@@ -3,12 +3,7 @@
     <div id="map"></div>
     <div class="map_utils">
       <el-select v-model="mapTileOptions.id" @change="mapTileChange">
-        <el-option
-          v-for="item in mapTileOptions.list"
-          :key="item.id"
-          :label="item.lable"
-          :value="item.id"
-        />
+        <el-option v-for="item in mapTileOptions.list" :key="item.id" :label="item.lable" :value="item.id" />
       </el-select>
       <div class="map_utils_item">
         <el-tooltip effect="light" content="点回回全局">
@@ -23,13 +18,7 @@
             <SvgIcon icon="ranging" />
           </el-button>
         </el-tooltip>
-        <el-button
-          class="clear_btn"
-          v-if="rangingArray.length > 0"
-          @click="clearMapRanging"
-          type="danger"
-          >清除</el-button
-        >
+        <el-button class="clear_btn" v-if="rangingArray.length > 0" @click="clearMapRanging" type="danger">清除</el-button>
       </div>
     </div>
   </div>
@@ -391,7 +380,11 @@ function handleMapCenter(data: any) {
     });
     var bounds = L.latLngBounds(latLng);
     map.fitBounds(bounds);
+<<<<<<< HEAD
+    data.zoom ? map.setZoom(data.zoom) : ''
+=======
     data.zoom ? map.setZoom(data.zoom) : "";
+>>>>>>> 4a70a7abaaec0d54256d18c19d441d85feeec8da
   } else {
     map.setView(defaultMapCenter, defaultMapZoom);
   }
@@ -491,9 +484,11 @@ function initRanging() {
   position: relative;
   height: 100%;
 }
+
 #map {
   height: 100%;
 }
+
 .map_utils {
   position: absolute;
   z-index: 999;
@@ -501,11 +496,14 @@ function initRanging() {
   left: 10px;
   display: flex;
   align-items: center;
+
   .el-select {
     width: 120px;
   }
+
   .map_utils_item {
     margin-left: 6px;
+
     .clear_btn {
       margin-left: 6px;
     }
