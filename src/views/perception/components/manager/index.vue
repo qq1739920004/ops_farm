@@ -113,20 +113,20 @@ function handleSocketData(data: any) {
       monitorData.value = data.data;
       typeCounts.value = data.data.typeCounts;
       provinceCars.value = data.data.provinceCars;
-      // stateObj.value = data.data.wsNowCar;
+      stateObj.value = data.data.wsNowCar;
   } else if (data.type == "monitorArea") {
       carAreas.value = data.data.carAreas;
       todayArea.value = data.data.todayArea;
       totalArea.value = data.data.totalArea;
-  }else if (data.type == "notification") {
-    if(data.data.list.some((item:recordsType)=>{
-      item.judgeLevel
-    })){
-    }else{
-      if(stateObj.value && (stateObj.value.onlineTime !=data.data.list[0].onlineTime)){
-        stateObj.value = data.data.list[0]
-      }
-    }
+  // }else if (data.type == "notification") {
+  //   if(data.data.list.some((item:recordsType)=>{
+  //     item.judgeLevel
+  //   })){
+  //   }else{
+  //     if(stateObj.value && (stateObj.value.onlineTime !=data.data.list[0].onlineTime)){
+  //       stateObj.value = data.data.list[0]
+  //     }
+  //   }
   } 
 }
 onUnmounted(() => {
@@ -190,7 +190,7 @@ onUnmounted(() => {
       }
 
       .right {
-        transform: translateY(-20px);
+        transform: translateY(-40px);
         flex: 1;
         height: 100%;
         display: flex;

@@ -11,20 +11,28 @@
       <img v-else-if="weather.now.text==='多云'" class="top_time_pic" src="~@/assets/perceptionImage/weatherElse.png" alt="" />
       <img v-else class="top_time_pic" src="~@/assets/perceptionImage/weatherElse.png" alt="" />
     </div> -->
-    <div class="time">
-      <!-- <span>{{ time.week }}</span> -->
-      <span>{{ time.date }}</span>
-      <span>{{ time.time }}</span>
-
-    </div>
+    <span class="manager-name">{{ companyName }}</span>
     <!-- //公司logo -->
-    <div class="corporation-logo">
-      <img src="@/assets/perceptionImage/corporation-logo.png" alt="">
-    </div>
     <div class="logo-text">
-      <img @click="screenChange(false)" class="zoom" v-if="isZoom" src="@/assets/perceptionImage/out.svg" alt="">
-      <img @click="screenChange(true)" class="zoom" v-else src="@/assets/perceptionImage/zoom.svg" alt="">
-      <span>北斗农机智能监管平台</span>
+      <img
+        @click="screenChange(false)"
+        class="zoom"
+        v-if="isZoom"
+        src="@/assets/perceptionImage/out.svg"
+        alt=""
+      />
+      <img
+        @click="screenChange(true)"
+        class="zoom"
+        v-else
+        src="@/assets/perceptionImage/zoom.svg"
+        alt=""
+      />
+      <div class="time">
+        <!-- <span>{{ time.week }}</span> -->
+        <span>{{ time.date }}</span>
+        <span>{{ time.time }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -32,13 +40,19 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { getCurrentDateTime } from "@/utils/getTimeInfo";
-import {fullScreen} from '@/utils/fullScreen.ts';
+import { fullScreen } from "@/utils/fullScreen.ts";
 // import { getWeather } from "@/api/perception/index.ts";
 // import {getWeatherAPI} from '@/api/perception/index.ts';
-let isZoom=ref(false)
-function screenChange(zValue:boolean){
-  isZoom.value=zValue
-  fullScreen()
+defineProps({
+  companyName: {
+    type: String,
+    default: "XXXXXX",
+  },
+});
+let isZoom = ref(false);
+function screenChange(zValue: boolean) {
+  isZoom.value = zValue;
+  fullScreen();
 }
 const time = ref(getCurrentDateTime());
 // let weather: any = ref(null);
@@ -58,28 +72,28 @@ weatherService();
 
 <style scoped lang="scss">
 .top_time {
-  height: 223px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: start !important;
+  height: 168px;
   padding-right: 25px;
   margin-top: 10px;
   font-size: 20px;
-
   span {
     padding-right: 15px;
   }
 
   .temp {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     .top_time_pic {
       width: 41px;
       vertical-align: middle;
       padding-right: 15px;
     }
+  }
+  .manager-name {
+    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
+    font-size: 24px;
+    letter-spacing: 2px;
+    line-height: 34.75px;
+    color: rgba(255, 255, 255, 1);
+    margin-bottom: 22px;
   }
 
   .time {
@@ -87,18 +101,17 @@ weatherService();
     :nth-child(2) {
       font-size: 34.87px;
     }
-   
   }
-  .logo-text{
-      font-size: 22px;
-      display: flex;
-      align-items: center;
-      .zoom{
-        width: 20px;
-        height: 20px;
-        margin-right: 16px;
-        cursor: pointer;
-      }
+  .logo-text {
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    .zoom {
+      width: 24px;
+height: 24px;
+      margin-right: 16px;
+      cursor: pointer;
     }
+  }
 }
 </style>
