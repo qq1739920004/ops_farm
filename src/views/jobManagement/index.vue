@@ -60,12 +60,12 @@ import snTable from './components/sn-table.vue'
 // import vLoadMore from '@/utils/loadData'
 import { reactive, ref, watch } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
-import { paddyWorkList_API, getCarDealerList_API, getPaddyWorkExport_API,getTrueLocation_API } from '@/api/jobManagement/index'
+import { paddyWorkList_API, getCarDealerList_API, getPaddyWorkExport_API } from '@/api/jobManagement/index'
 import { carDealer_API } from '@/api/machineryList/index'
 import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, dealerCarResponseData } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 import router from '@/router'
-
+import axios from 'axios';
 
 
 
@@ -176,16 +176,23 @@ const getPaddyWorkList = async () => {
 
     paddyWorkList.value.forEach((item: any) => {
         if (item.lineptax && item.lineptay) {
-            const res = getTrueLocation_API({
-                'ak':'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
-                'output':'json',
-                'coordtype':'wgs84ll',
-                'location':item.lineptay+','+item.lineptax
+            axios({
+                url: '/api-baidu/reverse_geocoding/v3/',
+                method: 'get',
+                //params是URL拼接
+                params: {
+                    'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
+                    'output': 'json',
+                    'coordtype': 'wgs84ll',
+                    'location': item.lineptay + ',' + item.lineptax
+                }
+            }).then((res: any) => {
+                item.position = res.data.result.formatted_address
             })
-            console.log(res);
-            
+
+            // const res = getTrueLocation_API()
+
         }
-        item.position = item.lineptax
     })
     console.log(paddyWorkList.value)
     // res.data.records.forEach((item: any, index: any) => {
