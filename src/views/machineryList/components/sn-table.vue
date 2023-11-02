@@ -2,13 +2,17 @@
 <template>
   <el-table @sort-change="changesort" :data="props.carNewList" stripe>
     <el-table-column type="index" label="序号" width="60" align="center" />
+    <el-table-column label="车主姓名" prop="userName" align="center">
+    </el-table-column>
+    <el-table-column label="车主手机号" prop="tel" align="center">
+    </el-table-column>
     <el-table-column label="铭牌SN" width="180" align="center">
       <template #default="scope">
         <div style="display: flex; align-items: center">
           <el-icon>
             <MapLocation :style="scope.row.onlineTcp !== 0
-                ? 'color:var(--el-color-primary); width: 16px;height: 16px;'
-                : 'color:var(--el-color-info-light-5); width: 16px; height: 16px;'
+              ? 'color:var(--el-color-primary); width: 16px;height: 16px;'
+              : 'color:var(--el-color-info-light-5); width: 16px; height: 16px;'
               " />
           </el-icon>
           <span style="margin-left: 10px">{{ scope.row.npn }}</span>
@@ -16,9 +20,7 @@
       </template>
     </el-table-column>
     <el-table-column label="SN" prop="sn" align="center"> </el-table-column>
-    <el-table-column label="车主姓名" prop="userName" align="center">
-    </el-table-column>
-    <el-table-column label="车辆型号" prop="model" align="center" />
+
     <el-table-column label="设备所在地" align="center">
       <template #="{ row }">
         <div style="color: rgba(130, 130, 130, 1)">
@@ -148,21 +150,14 @@
     <!-- 说明  离线和自动驾驶状态不可编辑 -->
     <el-table-column label="操作" width="290" align="center">
       <template #="{ row }">
-        <el-button v-auth="458" style="width: 22px" type="primary" text @click="
-          gotoMachineDetail(
-            row.id,
-            row.terminalType,
-            row.netDate?.split(' ')[0],
-            row.expirationTime?.split(' ')[0],
-            row.satelliteDate?.split(' ')[0],
-            row.warrantyDate?.split(' ')[0]
-          )
-          ">详情</el-button>
 
+        <el-button :disabled="row.onlineTcp === 0 ? true : false" v-auth="476" style="width: 52px" type="primary" text
+          @click="gotoRegister(row.id, row.sn, row.deviceId)">软件注册</el-button>
         <el-tooltip style="margin-right: 6px" :disabled="row.onlineTcp === 1 || row.driveState === 1 || row.driveState === 2
-            ? true
-            : false
+          ? true
+          : false
           " class="box-item" effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
+
           <el-button style="width: 52px" :disabled="!row.openRemote" type="primary" text @click="
             gotoRemote(
               row.terminalType,
@@ -176,9 +171,18 @@
         </el-tooltip>
         <!-- <el-button v-auth="531" style="width: 62px;margin-right: 6px;" type="primary" text
                     @click="toFileList(row)">文件存储</el-button> -->
-        <el-button :disabled="row.onlineTcp === 0 ? true : false" v-auth="476" style="width: 22px" type="primary" text
-          @click="gotoRegister(row.id, row.sn, row.deviceId)">注册</el-button>
+
         <el-button v-auth="503" style="width: 52px" type="primary" text @click="gotoMap(row.sn, row.npn)">历史轨迹</el-button>
+        <el-button v-auth="458" style="width: 22px" type="primary" text @click="
+          gotoMachineDetail(
+            row.id,
+            row.terminalType,
+            row.netDate?.split(' ')[0],
+            row.expirationTime?.split(' ')[0],
+            row.satelliteDate?.split(' ')[0],
+            row.warrantyDate?.split(' ')[0]
+          )
+          ">详情</el-button>
       </template>
     </el-table-column>
   </el-table>

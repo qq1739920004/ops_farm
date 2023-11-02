@@ -26,3 +26,13 @@ export function getPaddyWorkExport_API(data: PageObj) {
         data,
     })
 }
+
+
+// 获取真实地址
+export function getTrueLocation_API(params:any) {
+    return request<any,any>({
+        url:`http://api.map.baidu.com/reverse_geocoding/v3/`,
+        method: 'get',
+        params
+    })
+}

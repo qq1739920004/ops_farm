@@ -53,7 +53,7 @@
           <span>在线数</span>
         </li>
         <li>
-          <span>{{ dataStatistics.workArea?.totalArea.toFixed(2) }}</span>
+          <span>{{ (dataStatistics.workArea?.totalArea/ 10000).toFixed(2) }}</span>
           <span>累计作业(万亩)</span>
         </li>
         <li class="bottom_li">
@@ -188,7 +188,7 @@ import {
 } from "@/api/monitoring";
 const router = useRouter();
 const socketStore = useSocketStore();
-let markerData = reactive<any>([]);
+let markerData = ref<any>([]);
 let markerDataHidden = ref<any>([]);
 let markerDataHandle = ref<any>({});
 let dataStatistics = ref<any>({});
@@ -208,6 +208,7 @@ let isChange = ref(false);
 const searchSn = ref(""); // sn 车辆名 公司 手机号
 const mapCenter = reactive<any>({
   markerId: "",
+  mapCenter:[]
 });
 
 // @ts-ignore
@@ -224,7 +225,6 @@ window.openRemote_markerPopup = openRemote_markerPopup;
 watch(
   () => socketStore.socketData,
   (socketData) => {
-    // if (markerData.length <= 0) return;
     handleSocketData(socketData);
   },
   { deep: true }
@@ -246,7 +246,7 @@ function searchDevicePosition(id: any) {
 // sn、车辆名、公司名、电话 搜索
 function querySearch(queryString: string, cb: any) {
   // if (!queryString) return;
-  let filterData = markerData.filter((item: any) => {
+  let filterData = markerData.value.filter((item: any) => {
     if (item.sn && item.sn.includes(queryString)) {
       return true;
     }
@@ -310,7 +310,6 @@ function handleSocketData(socketData: any) {
         markerId,
         markerHandle: "delete",
       };
-
     }
     if (action == "online") {
       const markerId = data.sn;
@@ -420,7 +419,10 @@ async function getOnlineFarmPosition() {
   onlineFarmMachines = onlineFarmMachines.filter(
     (item: any) => item.markerLng || item.markerLng == 0
   );
-  markerData.push(...onlineFarmMachines);
+  markerData.value = onlineFarmMachines;
+  mapCenter.center = onlineFarmMachines.map((item:any) => {
+    return [item.posY,item.posX]
+  })
 }
 
 //
