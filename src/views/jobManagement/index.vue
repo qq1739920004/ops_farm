@@ -8,7 +8,7 @@
                 </el-select>
                 <el-input style="width:179px;margin-right: 20px;" v-if="dealerList.length === 1"
                     v-model="dealerList[0].name" disabled />
-                <el-select-v2 style="width: 350px;"  filterable v-model="pageInfo.carId" :options="options" placeholder="请选择"
+                <el-select-v2 style="width: 350px;" filterable v-model="pageInfo.carId" :options="options" placeholder="请选择"
                     @change="changeBlur2">
                 </el-select-v2>
                 <!-- <el-select v-load-more="loadmore" filterable  v-model="pageInfo.carId"
@@ -54,24 +54,26 @@
     </div>
 </template>
 
+
 <script setup lang='ts'>
 import snTable from './components/sn-table.vue'
 // import vLoadMore from '@/utils/loadData'
 import { reactive, ref, watch } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
-import { paddyWorkList_API, getCarDealerList_API, getPaddyWorkExport_API } from '@/api/jobManagement/index'
+import { paddyWorkList_API, getCarDealerList_API, getPaddyWorkExport_API,getTrueLocation_API } from '@/api/jobManagement/index'
 import { carDealer_API } from '@/api/machineryList/index'
 import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, dealerCarResponseData } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 import router from '@/router'
+
+
+
+
 // 控制table显示与否
 // 时间格式转换
 function add0(m: any) {
     return m < 10 ? '0' + m : m;
 }
-// 数据懒加载
-
-
 const formartDate = (val: Date) => {
     var y = val.getFullYear();
     var m = val.getMonth() + 1;
@@ -171,6 +173,27 @@ const getPaddyWorkList = async () => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
     total.value = res.data.total
     paddyWorkList.value = res.data.records
+
+    paddyWorkList.value.forEach((item: any) => {
+        if (item.lineptax && item.lineptay) {
+            const res = getTrueLocation_API({
+                'ak':'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
+                'output':'json',
+                'coordtype':'wgs84ll',
+                'location':item.lineptay+','+item.lineptax
+            })
+            console.log(res);
+            
+        }
+        item.position = item.lineptax
+    })
+    console.log(paddyWorkList.value)
+    // res.data.records.forEach((item: any, index: any) => {
+    //     paddyWorkList.value.forEach((val: any) => {
+    //         val.position1 = item.lineptax
+    //         console.log(index,val.position1)
+    //     })
+    // })
 }
 // 监视日期，起始日期大于末尾日期则交换
 watch(() => [value1.value, value2.value], () => {
@@ -253,7 +276,6 @@ const changeA = () => {
 </script>
 
 <style lang="scss" scoped>
-
 .search_container {
     display: flex;
     justify-content: space-between;
