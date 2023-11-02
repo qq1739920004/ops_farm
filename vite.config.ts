@@ -70,7 +70,7 @@ export default defineConfig({
         rewrite: (path) =>
           path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
       },
-
+   
       // 自定义地图服务代理
       '/_AMapService/v4/map/styles': {
         target: 'https://webapi.amap.com/v4/map/styles',
