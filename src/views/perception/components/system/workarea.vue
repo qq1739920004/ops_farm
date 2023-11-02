@@ -223,8 +223,9 @@ onMounted(() => {
 watch(props, (newValue) => {
   isDataUpdated.value = true;
   let plist=newValue.carAreas.filter((item:any)=>item.code)
+  console.log(plist);
   option.yAxis.data = plist.map((item: any) => item.name);
-  option.series[0].data = plist.map((item: any) => item.totalNum);
+  option.series[0].data = plist.map((item: any) => item.onlineNum);
    // 设置新数据后，保持当前的滚动位置
    option.dataZoom[0].startValue = dataZoomMove.start;
   option.dataZoom[0].endValue = dataZoomMove.end;

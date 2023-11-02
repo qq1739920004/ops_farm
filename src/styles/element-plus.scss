@@ -2,16 +2,11 @@
     text-decoration: underline;
 }
 
-// .el-button.is-disabled {
-//     color: var(--el-color-info-light-5) !important;
-// }
+.el-button.is-text.is-disabled {
+    color: var(--el-color-info-light-5) !important;
 
-// .el-button.is-disabled:hover {
-//     color: var(--el-color-info-light-5) !important;
-// }
-// .el-button.is-text.is-disabled{
-//     color: var(--el-color-info-light-5) !important;
-// }
-// .el-button.is-text.is-disabled:hover{
-//     color: var(--el-color-info-light-5) !important;
-// }
+}
+
+.el-button.is-text.is-disabled:hover {
+    color: var(--el-color-info-light-5) !important;
+}

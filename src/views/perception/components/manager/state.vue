@@ -15,9 +15,9 @@
         <li v-for="item in dataArr" :key="item.sn||item.deviceSn">
           <div class="state_time">{{ item.time }}</div>
           <div class="state_main">
-            <span v-if="!item.onlineTcp" class="circle-out">●</span>
+            <span v-if="item.offlineTime!=item.onlineTime" class="circle-out">●</span>
             <span v-else class="circle-login">●</span>
-            <div :class="['state_bar',item.onlineTcp?'state_bar_login':'state_bar_out']">
+            <div :class="['state_bar',item.offlineTime==item.onlineTime?'state_bar_login':'state_bar_out']">
               <span>{{ item.sn||item.deviceSn }}</span>
               <el-tooltip
         class="box-item"
@@ -29,7 +29,7 @@
 
       </el-tooltip>
               <span class="state-tips">
-                  <img v-if="!item.onlineTcp" src="@/assets/perceptionImage/stateOut.png" alt="">
+                  <img v-if="item.offlineTime!=item.onlineTime" src="@/assets/perceptionImage/stateOut.png" alt="">
                   <img v-else src="@/assets/perceptionImage/stateIn.png" alt="">
                 </span>
             </div>
@@ -61,7 +61,7 @@ let dataArr=ref<recordsType[]>([])
   }
 }
 function getTime(item:recordsType){
-  if (item.onlineTcp) {
+  if (item.offlineTime==item.onlineTime) {
     return item.onlineTime
   }else{
     return item.offlineTime
@@ -83,7 +83,7 @@ onMounted(() => {
     })
   })
 watch(()=>props.stateObj,(newValue)=>{
-  if(newValue){
+  if(newValue && !newValue.judgeLevel){
   dataArr.value.unshift({
     time:getTime(newValue),
     ...newValue

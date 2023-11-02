@@ -119,7 +119,14 @@ function handleSocketData(data: any) {
       todayArea.value = data.data.todayArea;
       totalArea.value = data.data.totalArea;
   }else if (data.type == "notification") {
-    stateObj.value = data.data.list[0]
+    if(data.data.list.some((item:recordsType)=>{
+      item.judgeLevel
+    })){
+    }else{
+      if(stateObj.value && (stateObj.value.onlineTime !=data.data.list[0].onlineTime)){
+        stateObj.value = data.data.list[0]
+      }
+    }
   } 
 }
 onUnmounted(() => {
