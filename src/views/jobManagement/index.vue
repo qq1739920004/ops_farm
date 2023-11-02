@@ -8,7 +8,7 @@
                 </el-select>
                 <el-input style="width:179px;margin-right: 20px;" v-if="dealerList.length === 1"
                     v-model="dealerList[0].name" disabled />
-                <el-select-v2 style="width: 350px;"  filterable v-model="pageInfo.carId" :options="options" placeholder="请选择"
+                <el-select-v2 style="width: 350px;" filterable v-model="pageInfo.carId" :options="options" placeholder="请选择"
                     @change="changeBlur2">
                 </el-select-v2>
                 <!-- <el-select v-load-more="loadmore" filterable  v-model="pageInfo.carId"
@@ -54,6 +54,7 @@
     </div>
 </template>
 
+
 <script setup lang='ts'>
 import snTable from './components/sn-table.vue'
 // import vLoadMore from '@/utils/loadData'
@@ -64,14 +65,15 @@ import { carDealer_API } from '@/api/machineryList/index'
 import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, dealerCarResponseData } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 import router from '@/router'
+import axios from 'axios';
+
+
+
 // 控制table显示与否
 // 时间格式转换
 function add0(m: any) {
     return m < 10 ? '0' + m : m;
 }
-// 数据懒加载
-
-
 const formartDate = (val: Date) => {
     var y = val.getFullYear();
     var m = val.getMonth() + 1;
@@ -171,6 +173,34 @@ const getPaddyWorkList = async () => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
     total.value = res.data.total
     paddyWorkList.value = res.data.records
+
+    paddyWorkList.value.forEach((item: any) => {
+        if (item.lineptax && item.lineptay) {
+            axios({
+                url: '/api-baidu/reverse_geocoding/v3/',
+                method: 'get',
+                //params是URL拼接
+                params: {
+                    'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
+                    'output': 'json',
+                    'coordtype': 'wgs84ll',
+                    'location': item.lineptay + ',' + item.lineptax
+                }
+            }).then((res: any) => {
+                item.position = res.data.result.formatted_address
+            })
+
+            // const res = getTrueLocation_API()
+
+        }
+    })
+    console.log(paddyWorkList.value)
+    // res.data.records.forEach((item: any, index: any) => {
+    //     paddyWorkList.value.forEach((val: any) => {
+    //         val.position1 = item.lineptax
+    //         console.log(index,val.position1)
+    //     })
+    // })
 }
 // 监视日期，起始日期大于末尾日期则交换
 watch(() => [value1.value, value2.value], () => {
@@ -253,7 +283,6 @@ const changeA = () => {
 </script>
 
 <style lang="scss" scoped>
-
 .search_container {
     display: flex;
     justify-content: space-between;

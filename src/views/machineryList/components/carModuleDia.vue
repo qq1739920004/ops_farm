@@ -1,4 +1,5 @@
-<!--  -->
+<!--  export const cityCodeList = {
+}-->
 <template>
     <div>
         <el-dialog style="border-radius: 8px;" v-model="dialogVisible" title="车型模版" width="847px" height="336px" center>

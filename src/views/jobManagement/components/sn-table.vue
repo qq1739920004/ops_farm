@@ -2,6 +2,10 @@
 <template>
     <el-table :data="props.paddyWorkList" stripe>
         <el-table-column type="index" label="序号" width="80" align="center" />
+        <el-table-column label="车主" prop="userName" align="center">
+        </el-table-column>
+        <el-table-column label="车主手机号" prop="tel" align="center">
+        </el-table-column>
         <el-table-column label="作业名称" prop="name" align="center">
         </el-table-column>
         <el-table-column label="作业类型" align="center">
@@ -15,7 +19,7 @@
             <template #="{ row }">
                 {{ row.workedArea }}亩</template>
         </el-table-column>
-        <el-table-column label="作业周期" align="center">
+        <el-table-column label="作业周期" align="center" width="200px">
             <template #="{ row }">
                 <el-row justify="center">
                     {{ row.createtime }}
@@ -29,7 +33,15 @@
         </el-table-column>
         <el-table-column label="SN" prop="sn" align="center">
         </el-table-column>
-        <el-table-column label="铭牌号" prop="npn" align="center">
+        <el-table-column label="铭牌SN" prop="npn" align="center">
+            <template #default="scope">
+        <div style="display: flex; align-items: center">
+          <el-icon>
+            <MapLocation style="color:var(--el-color-primary); width: 16px;height: 16px;" />
+          </el-icon>
+          <span style="margin-left: 10px">{{ scope.row.npn }}</span>
+        </div>
+      </template>
         </el-table-column>
         <el-table-column label="所属车辆" prop="carName" align="center">
         </el-table-column>
