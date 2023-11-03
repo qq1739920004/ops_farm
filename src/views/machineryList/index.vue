@@ -164,7 +164,7 @@ const getCarList = async () => {
       openRemote = false; // 禁用
     } else {
       if (
-        item.terminalType == "AG320" ||
+        item.terminalType == "AG302" ||
         item.terminalType.includes("AG360") ||
         item.terminalType == "AG502"
       ) {
