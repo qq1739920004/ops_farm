@@ -4,16 +4,16 @@ export interface ResponseData {
 }
 
 export interface paramDescribeObj {
-    version: string,
-    type: string,
-    paramType: string
+    paramVersionnum: string,
+    paramType: string,
+    type:string
 }
 
 export interface paramDescribeResponseData extends ResponseData {
     data: {
         id: Number,
-        version: Number,
-        type: Number,
+        paramVersionnum: Number,
+        paramType: Number,
         createTime: Number,
         paramJson: string
     } | null
@@ -27,7 +27,7 @@ export interface carParamsDataRangObj {
 // export interface carParamsDataObj {
 //     name: string,
 //     range: string | carParamsDataRangObj[],
-//     type: string
+//     paramType: string
 // }
 // 车辆参数
 export interface paramsParamObj {
@@ -120,9 +120,9 @@ export interface chaFenObj {
     softwareVersion: string
     tel: null | string
     terminalType: string
-    type: number
+    paramType: number
     userName: null | string
-    version: number
+    paramVersionnum: number
     warrantyDate: string
     workPattern: number
 
@@ -194,7 +194,7 @@ export interface GetcarProductpackageObj {
             publishCount: number,
             downloads: number,
             creatorName: string,
-            type: string,
+            paramType: string,
             modelName: string
         }
     ]

@@ -3,8 +3,8 @@
     <RemoteAdjustDia360
       ref="RemoteD"
       :terminalType="terminalType"
-      :version="version"
-      :type="type"
+      :paramVersionnum="paramVersionnum"
+      :paramType="paramType"
       :carId="carId"
       :sn="sn"
       :name="name"
@@ -13,8 +13,8 @@
     <RemoteAdjustDia302
       ref="RemoteD302"
       :terminalType="terminalType"
-      :version="version"
-      :type="type"
+      :paramVersionnum="paramVersionnum"
+      :paramType="paramType"
       :carId="carId"
       :sn="sn"
       :name="name"
@@ -23,8 +23,8 @@
     <RemoteAdjustDia502
       ref="RemoteD502"
       :terminalType="terminalType"
-      :version="version"
-      :type="type"
+      :paramVersionnum="paramVersionnum"
+      :paramType="paramType"
       :carId="carId"
       :sn="sn"
       :name="name"
@@ -41,16 +41,16 @@ import RemoteAdjustDia502 from "./components/remoteAdjust502.vue";
 
 const props = defineProps([
   "terminalType",
-  "type",
-  "version",
+  "paramType",
+  "paramVersionnum",
   "carId",
   "sn",
   "name",
   "isChange",
 ]);
 const terminalType = ref<string>("");
-const version = ref<string>("");
-const type = ref<string>("");
+const paramVersionnum = ref<string>("");
+const paramType = ref<string>("");
 const name = ref<string>("");
 const carId = ref<number>();
 const sn = ref();
@@ -77,8 +77,8 @@ watch(
   () => props.isChange,
   () => {
     terminalType.value = props.terminalType;
-    version.value = props.version;
-    type.value = props.type;
+    paramVersionnum.value = props.paramVersionnum;
+    paramType.value = props.paramType;
     carId.value = props.carId;
     sn.value = props.sn;
     name.value = props.name;

@@ -3,7 +3,7 @@ import { paramDescribeObj, paramDescribeResponseData, paramCarParamResponseData,
 // 获取远程参数列表
 export function paramParamDescribe_API(data: paramDescribeObj) {
     return request<any, paramDescribeResponseData>({
-        url: `/farm/param/new/paramDescribe?version=${data.version}&type=${data.type}&paramType=${data.paramType}`,
+        url: `/farm/param/new/paramDescribe?version=${data.paramVersionnum}&type=${data.type}&paramType=${data.paramType}`,
         method: 'get',
     })
 }

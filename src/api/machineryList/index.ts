@@ -9,9 +9,9 @@ export function carNewList_API(data: string) {
     })
 }
 // 车辆详情/car/new/detail
-export function carNewDetail_API(carId: Number) {
+export function carNewDetail_API(carId: Number,type:number) {
     return request<any, carNewDetailResponseData>({
-        url: `/farm/car/new/detail?carId=${carId}`,
+        url: `/farm/car/new/detail?carId=${carId}&type=${type}`,
         method: 'get',
     })
 }

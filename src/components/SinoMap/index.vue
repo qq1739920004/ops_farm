@@ -98,7 +98,8 @@ watch(
   () => props.markerData,
   (markerData) => {
     createMarker(markerData);
-  }
+  },
+  { deep: true }
 );
 watch(
   () => props.markerDataHidden,
@@ -141,7 +142,7 @@ let map: any = null; // map实例对象
 let polyline: any = null;
 let mapRenderMode = props.mapRenderMode;
 let mapRenderModeLength = ref(0);
-let mapRenderModeLengthMax = 500; //数量超过1000，强制转为 polymer 聚合引擎
+let mapRenderModeLengthMax = 300; //数量超过1000，强制转为 polymer 聚合引擎
 let markerArr: any = []; // marker坐标点数字
 
 //@ts-ignore
@@ -165,10 +166,7 @@ mapTileOptions.list = mapTileOptions.list.filter((item: any) =>
 watch(
   () => mapRenderModeLength,
   (mapRenderModeLength) => {
-    if (
-      mapRenderModeLength.value > mapRenderModeLengthMax &&
-      mapRenderMode == "dom"
-    ) {
+    if (mapRenderModeLength.value > mapRenderModeLengthMax && mapRenderMode == 'dom') {
       markerClusterGroup.clearLayers();
       markerGroup.clearLayers();
       mapRenderMode = "polymer";
@@ -326,17 +324,7 @@ function mapTileChange() {
 // 处理地图定位
 function handleMapCenter(data: any) {
   if (!data) {
-    let latLng: any = [];
-    if (props.mapCenter.center) {
-      latLng = props.mapCenter.center.map((item: any) => {
-        return gcoordLngLat(item[1], item[0]);
-      });
-      var bounds = L.latLngBounds(latLng);
-      map.fitBounds(bounds);
-      props.mapCenter.zoom ? map.setZoom(props.mapCenter.zoom) : "";
-    } else {
-      map.setView(defaultMapCenter, defaultMapZoom);
-    }
+    map.setView(defaultMapCenter, defaultMapZoom);
     return;
   }
   if (data.markerId) {

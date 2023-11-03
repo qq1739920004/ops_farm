@@ -106,7 +106,12 @@ export interface carNewDetailObj {
     steeringWheelSn: string,
     hubBluetooth: string,
     hub: string,
-    hubSn: string
+    hubSn: string,
+    expirationTime:string,
+    warrantyDate:string,
+    netDate:string,
+    satelliteDate:string
+
 
 }
 export interface carNewDetailResponseData extends ResponseData {

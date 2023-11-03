@@ -1,19 +1,10 @@
 <template>
   <div class="map_container">
-    <sino-map
-      :markerData="markerData"
-      :markerDataHandle="markerDataHandle"
-      :markerDataHidden="markerDataHidden"
-      :mapCenter="mapCenter"
-    />
+    <sino-map :markerData="markerData" :markerDataHandle="markerDataHandle" :markerDataHidden="markerDataHidden"
+      :mapCenter="mapCenter" />
     <div class="search_box">
-      <el-autocomplete
-        v-model="searchSn"
-        :fetch-suggestions="querySearch"
-        placeholder="SN、铭牌SN、车辆名、公司、电话"
-        @select="handleSelect"
-        clearable
-      >
+      <el-autocomplete v-model="searchSn" :fetch-suggestions="querySearch" placeholder="SN、铭牌SN、车辆名、公司、电话"
+        @select="handleSelect" clearable>
         <template #suffix>
           <el-icon>
             <Search />
@@ -53,7 +44,7 @@
           <span>在线数</span>
         </li>
         <li>
-          <span>{{ (dataStatistics.workArea?.totalArea/ 10000).toFixed(2) }}</span>
+          <span>{{ (dataStatistics.workArea?.totalArea / 10000).toFixed(2) }}</span>
           <span>累计作业(万亩)</span>
         </li>
         <li class="bottom_li">
@@ -74,11 +65,7 @@
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
-            <el-checkbox
-              size="large"
-              v-model="item.checked"
-              @change="markerTypeChange"
-            />
+            <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange" />
             <SvgIcon :icon="item.typeName" size="22" />
             <span class="label">{{ item.typeName }}</span>
           </label>
@@ -87,12 +74,10 @@
         <br />
       </ul>
     </div>
-    <div
-      :class="{
-        notice_box: true,
-        notice_box_active: notice_box_isActive,
-      }"
-    >
+    <div :class="{
+      notice_box: true,
+      notice_box_active: notice_box_isActive,
+    }">
       <div class="header" @click="notice_box_isActive = !notice_box_isActive">
         <h3>状态通知</h3>
         <el-icon v-if="!notice_box_isActive" color="#fff">
@@ -104,11 +89,7 @@
       </div>
       <div class="content">
         <el-timeline>
-          <el-timeline-item
-            v-for="(item, index) in carLogList"
-            :key="index"
-            :color="item.color"
-          >
+          <el-timeline-item v-for="(item, index) in carLogList" :key="index" :color="item.color">
             <div class="item">
               <div class="l">
                 <span class="state" :style="{ color: item.color }">{{
@@ -135,20 +116,9 @@
     </div>
 
     <!-- 实时趋势驾驶图diaLog -->
-    <realTimeChart
-      ref="realTime"
-      :sn="sn"
-      :socketData="socketStore.socketData"
-    />
-    <RemoteControl
-      :isChange="isChange"
-      :terminalType="terminalType"
-      :version="version"
-      :type="type"
-      :carId="carId"
-      :sn="sn"
-      :name="name"
-    />
+    <realTimeChart ref="realTime" :sn="sn" :socketData="socketStore.socketData" />
+    <RemoteControl :isChange="isChange" :terminalType="terminalType" :paramVersionnum="paramVersionnum" :paramType="paramType" :carId="carId"
+      :sn="sn" :name="name" />
   </div>
 </template>
 
@@ -180,13 +150,14 @@ import realTimeChart from "./components/realTimeChart.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
 import { reactive, ref, watch, onUnmounted } from "vue";
 import useSocketStore from "@/store/socket";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import {
   onlineFarmMachinePosition_API,
   farmMachineDataStatistics_API,
   carLog_API,
 } from "@/api/monitoring";
 const router = useRouter();
+let $route = useRoute()
 const socketStore = useSocketStore();
 let markerData = ref<any>([]);
 let markerDataHidden = ref<any>([]);
@@ -197,10 +168,10 @@ let carLogList: any = ref([]);
 let sn = ref();
 let realTime = ref();
 let terminalType = ref();
-let version = ref();
+let paramVersionnum = ref();
 let carId = ref();
 let name = ref();
-let type = ref();
+let paramType = ref();
 let notice_box_isActive = ref(false);
 let isChange = ref(false);
 // let searchForm = reactive({ sn: "" });
@@ -208,7 +179,7 @@ let isChange = ref(false);
 const searchSn = ref(""); // sn 车辆名 公司 手机号
 const mapCenter = reactive<any>({
   markerId: "",
-  mapCenter:[]
+  mapCenter: []
 });
 
 // @ts-ignore
@@ -420,8 +391,11 @@ async function getOnlineFarmPosition() {
     (item: any) => item.markerLng || item.markerLng == 0
   );
   markerData.value = onlineFarmMachines;
-  mapCenter.center = onlineFarmMachines.map((item:any) => {
-    return [item.posY,item.posX]
+  if($route.query.markerId) {
+    mapCenter.markerId= $route.query.markerId
+  }
+  mapCenter.center = onlineFarmMachines.map((item: any) => {
+    return [item.posY, item.posX]
   })
 }
 
@@ -460,6 +434,7 @@ function createMarkerType(item: any) {
 
 // marker弹窗
 function createMarkerPopup(item: any) {
+  
   const driveState: any = {
     0: "非自动驾驶",
     1: "自动驾驶",
@@ -531,8 +506,8 @@ function createMarkerPopup(item: any) {
             <div class="r">
               <div class="label">SN:</div>
               <div class="value"  style="cursor: pointer;text-decoration: underline;" onclick='goMachineryList_markerPopup(${JSON.stringify(
-                item
-              )})'>${item.sn}</div>
+    item
+  )})'>${item.sn}</div>
             </div>
           </li>
           <li>
@@ -571,17 +546,15 @@ function createMarkerPopup(item: any) {
             <div class="l">
               <div class="label">解状态:</div>
               <div class="value">
-                <span class='status ${
-                  item.solStat == 4 ? "status_3" : "status_0"
-                }'></span>
+                <span class='status ${item.solStat == 4 ? "status_3" : "status_0"
+    }'></span>
                 <span>${snTypeReflect[item.solStat] || "未知解"}</span>
               </div>
             </div>
             <div class="r">
               <div class="label">差分链:</div>
-              <div class="value">${diffSource[item.diffSource] || "/"} (${
-    item.diffAge
-  }s)</div>
+              <div class="value">${diffSource[item.diffSource] || "/"} (${item.diffAge
+    }s)</div>
             </div>
           </li>
           <li>
@@ -630,24 +603,22 @@ function createMarkerPopup(item: any) {
         </ul>
         <ul class="btns_container">
           <li>
-            <div class="btn ${
-              !openRemote ? "disabled" : ""
-            }" onclick='openRemote_markerPopup(${JSON.stringify(
-    item
-  )})'>远程管理</div>
+            <div class="btn ${!openRemote ? "disabled" : ""
+    }" onclick='openRemote_markerPopup(${JSON.stringify(
+      item
+    )})'>远程管理</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
-              item
-            )})'>历史轨迹</div>
+      item
+    )})'>历史轨迹</div>
           </li>
           <li>
-            <div class="btn ${
-              item.driveState == 0 ? "disabled" : ""
-            }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
-    item
-  )})'>实时驾驶趋势图</div>
+            <div class="btn ${item.driveState == 0 ? "disabled" : ""
+    }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
+      item
+    )})'>实时驾驶趋势图</div>
             <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
-              item
-            )})'>历史驾驶趋势图</div>
+      item
+    )})'>历史驾驶趋势图</div>
           </li>
         </ul>
       </div>`;
@@ -720,8 +691,8 @@ function openRemote_markerPopup(arg: any) {
   if (arg.driveState != 0) return;
   isChange.value = !isChange.value;
   terminalType.value = arg.terminalType;
-  version.value = arg.version;
-  type.value = arg.type;
+  paramVersionnum.value = arg.version;
+  paramType.value = arg.type;
   carId.value = arg.carId;
   sn.value = arg.sn;
   name.value = arg.carName;

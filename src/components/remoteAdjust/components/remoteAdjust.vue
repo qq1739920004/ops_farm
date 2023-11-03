@@ -143,8 +143,8 @@
                                 height: 32px;" v-model="dateValue" type="daterange" range-separator="-"
                                 @change="changeDate" :disabled-date="disabledDate" start-placeholder="Start date"
                                 end-placeholder="End date" size="large" />
-                            <el-button type="primary" style="margin-left: 20px;">回传</el-button>
-                            <el-button type="primary" text class="btn3" style="" @click="toFileList">文件查看</el-button>
+                            <el-button type="primary"  v-auth= '532' style="margin-left: 20px;">回传</el-button>
+                            <el-button type="primary" v-auth="531" text class="btn3" style="" @click="toFileList">文件查看</el-button>
                         </el-form-item>
 
                     </el-col>
@@ -238,8 +238,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, paramsParamObj, paramCarParamResponseData, paramcalibParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
 import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, pidParamParam_API, getSourceNode_path, updateCar_API, updatePidParm_API, updateCalibParam_API, GetcarProductpackage_API, packageUpgradeCar_API } from '@/api/machineryList/remoteAdjust/index'
-import { carNewList_API, logOpen_API } from '@/api/machineryList/index'
-import { pageInfo } from '@/api/machineryList/type'
+import { carNewDetail_API, logOpen_API } from '@/api/machineryList/index'
 import type { TabsPaneContext } from 'element-plus'
 import { useRouter } from 'vue-router'
 
@@ -256,19 +255,12 @@ const formLabelAlignRef = ref()
 const dialogVisible = ref<boolean>(false)
 const activeIndex = ref<string>('1')
 const labelPosition = ref('right')
-const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn', 'name'])
+const props = defineProps(['terminalType', 'paramType', 'paramVersionnum', 'carId', 'sn', 'name'])
 const carParamsData = ref<any | null>([])
 const CalibTitleData = ref<any | null>([])
 const PidTitleData = ref<any | null>([])
 const productList = ref<GetcarProductpackageObj[]>([])
 
-const pageInfo = reactive<pageInfo>({
-    key: '',
-    currentPage: 1,
-    pageSize: 10,
-    companyId: '',
-    order: '1'
-})
 // 车辆参数列表
 const paramParamsData = reactive<paramsParamObj | {}>({
     'Vehicle1': "",
@@ -352,14 +344,14 @@ const formLabelAlign = reactive({
 const toFileList = () => {
     router.push({
         path: 'machineryList/file', query: {
-            pid: chaFenlist.value.type == 4 ? 9004 : "",
+            pid: chaFenlist.value.paramType == 4 ? 9004 : "",
             sn: props.sn,
         }
     })
 }
 const switchStatus = ref<boolean>(false)
 const paramDescribeList = ref<paramDescribeObj>({
-    version: '',
+    paramVersionnum: '',
     type: '',
     paramType: ''
 })
@@ -413,9 +405,9 @@ const chaFenlist = ref<chaFenObj>({
     'softwareVersion': '',
     'tel': '',
     'terminalType': '',
-    'type': 0,
+    'paramType': 0,
     'userName': '',
-    'version': 0,
+    'paramVersionnum': 0,
     'warrantyDate': '',
     'workPattern': 0
 })
@@ -473,8 +465,8 @@ const openRemoteAdjust = () => {
     // 强制更改index为1
     activeIndex.value = '1'
     // 参数赋值
-    paramDescribeList.value.version = props.version
-    paramDescribeList.value.type = props.type
+    paramDescribeList.value.paramVersionnum = props.paramVersionnum
+    paramDescribeList.value.type = props.paramType
     paramDescribeList.value.paramType = 'car'
     getCarParams('car')
     if (carParamsData.value != null) {
@@ -488,7 +480,6 @@ const openRemoteAdjust = () => {
     if (PidTitleData.value != null) {
         getPid()
     }
-    pageInfo.key = props.sn
     getChafenList()
     getProductList()
 }
@@ -598,8 +589,8 @@ const changeDate = () => {
 }
 // 情况差分数据
 const getChafenList = async () => {
-    const res: any = await carNewList_API(JSON.stringify(pageInfo))
-    chaFenlist.value = res.data.records[0]
+    const res: any = await carNewDetail_API(props.carId, 2)
+    chaFenlist.value = res.data
 
 }
 // 获取源节点
@@ -669,7 +660,7 @@ const getProductList = async () => {
 // 在线升级更新数据
 const updateProductList = async () => {
     try {
-        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'updateModel': formLabelAlign.radio1, 'upgradeWay': 0 })
+        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'updateModel': formLabelAlign.radio1 === '11001' ? '11' : '12', 'upgradeWay': 1 })
         ElMessage({ type: 'success', message: '修改成功' })
     }
     catch {

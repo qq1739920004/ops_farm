@@ -8,9 +8,10 @@
     </el-table-column>
     <el-table-column label="铭牌SN" width="180" align="center">
       <template #default="scope">
-        <div style="display: flex; align-items: center">
+        <div :class="scope.row.onlineTcp === 1 ? 'sn_area1' : 'sn_area2'"
+          @click="gotoMonitor(scope.row.sn, scope.row.onlineTcp)">
           <el-icon>
-            <MapLocation :style="scope.row.onlineTcp !== 0
+            <MapLocation :style="scope.row.onlineTcp === 1
               ? 'color:var(--el-color-primary); width: 16px;height: 16px;'
               : 'color:var(--el-color-info-light-5); width: 16px; height: 16px;'
               " />
@@ -24,7 +25,7 @@
     <el-table-column label="设备所在地" align="center">
       <template #="{ row }">
         <div style="color: rgba(130, 130, 130, 1)">
-          {{ row.province }}
+          {{ cityCodeList[row.addrcode] }}
         </div>
       </template>
     </el-table-column>
@@ -151,9 +152,9 @@
     <el-table-column label="操作" width="290" align="center">
       <template #="{ row }">
 
-        <el-button :disabled="row.onlineTcp === 0 ? true : false" v-auth="476" style="width: 52px" type="primary" text
+        <el-button :disabled="row.onlineTcp === 1 ? false : true" v-auth="476" style="width: 52px" type="primary" text
           @click="gotoRegister(row.id, row.sn, row.deviceId)">软件注册</el-button>
-        <el-tooltip style="margin-right: 6px" :disabled="row.onlineTcp === 1 || row.driveState === 1 || row.driveState === 2
+        <el-tooltip style="margin-right: 6px" :disabled="row.openRemote
           ? true
           : false
           " class="box-item" effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
@@ -161,8 +162,8 @@
           <el-button style="width: 52px" :disabled="!row.openRemote" type="primary" text @click="
             gotoRemote(
               row.terminalType,
-              row.version,
-              row.type,
+              row.paramVersionnum,
+              row.paramType,
               row.id,
               row.sn,
               row.name
@@ -189,8 +190,8 @@
   <slot></slot>
   <MachineDetailDia ref="MachineD" :carId="carId" :terminalType="terminalType2" :netDate="netDate"
     :expirationTime="expirationTime" :satelliteDate="satelliteDate" :warrantyDate="warrantyDate"></MachineDetailDia>
-  <RemoteControl :isChange="isChange" :terminalType="terminalType" :version="version" :type="type" :carId="carId" :sn="sn"
-    :name="name" />
+  <RemoteControl :isChange="isChange" :terminalType="terminalType" :paramVersionnum="paramVersionnum"
+    :paramType="paramType" :carId="carId" :sn="sn" :name="name" />
   <RegisterDia ref="RegisterD" :sn="sn" :carId="carId" :deviceId="deviceId"></RegisterDia>
 </template>
 
@@ -204,7 +205,9 @@ import { pageInfo } from "@/api/machineryList/type";
 import MachineDetailDia from "./machineDetailDia.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
 import RegisterDia from "./registerDia.vue";
-import { useRouter } from "vue-router";
+import { useRouter } from "vue-router"
+import { cityCodeList } from './citycode'
+
 
 const router = useRouter();
 const props = defineProps(["carNewList"]);
@@ -218,8 +221,8 @@ const expirationTime = ref<string>("");
 const satelliteDate = ref<string>("");
 const warrantyDate = ref<string>("");
 const RegisterD = ref();
-const version = ref<string>("");
-const type = ref<string>("");
+const paramVersionnum = ref<string>("");
+const paramType = ref<string>("");
 const name = ref<string>("");
 const deviceId = ref<string>("");
 const isChange = ref(false);
@@ -293,6 +296,14 @@ const changesort = (val: any) => {
 //         }
 //     }
 // }
+// 跳转 monitor
+const gotoMonitor = (sn: any, onlineTcp: any) => {
+  if (onlineTcp === 1) {
+    router.push({ path: "/monitoring", query: { markerId: sn } });
+  } else {
+  }
+
+}
 const gotoMachineDetail = (
   val: any,
   val2: any,
@@ -324,8 +335,8 @@ const gotoRemote = (
   val6: any
 ) => {
   terminalType.value = val;
-  version.value = val2;
-  type.value = val3;
+  paramVersionnum.value = val2;
+  paramType.value = val3;
   carId.value = val4;
   sn.value = val5;
   name.value = val6;
@@ -338,4 +349,20 @@ const gotoMap = (sn: string, npn: string) => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.sn_area1 {
+  display: flex;
+  align-items: center;
+
+}
+
+.sn_area2 {
+  display: flex;
+  align-items: center;
+  // color: var(--el-color-info-light-5)
+}
+
+.sn_area1:hover {
+  cursor: pointer;
+}
+</style>
