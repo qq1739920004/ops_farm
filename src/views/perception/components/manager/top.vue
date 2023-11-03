@@ -4,7 +4,7 @@
       <div class="top_tittle">
         <router-link to="/monitoring">
           <img src="~@/assets/perceptionImage/top_title_logo.png" key="" alt="" />
-          <h1>{{companyName}}数字大屏</h1>
+          <h1>司南导航北斗农机智能监管平台</h1>
         </router-link>
       </div>
       <div class="top_num">
@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    <district-info></district-info>
+    <district-info :companyName="companyName"></district-info>
   </div>
 </template>
 <script setup lang="ts">
@@ -137,7 +137,6 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
 
     .top_tittle {
       height: 83px;
-      margin-bottom: 15px;
       padding: 0;
       display: flex;
       justify-content: start;
@@ -150,12 +149,10 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
       }
 
       h1 {
-        text-shadow: 0px 3px 4px rgba(255, 255, 255, 0.3),
-          0px 2px 32px rgba(153, 255, 194, 0.8);
-        font-size: 42px;
-        font-weight: 400;
-        letter-spacing: 12px;
-        font-family: 'perceptionTitle';
+        text-shadow: 0px 2px 32px  rgba(153, 255, 194, 0.8);
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: 10px;
       }
 
       a {
@@ -170,7 +167,7 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
       // background-color: rgb(210, 149, 159, 0.2);
       display: flex;
       justify-content: start;
-
+      padding-top: 10px;
       >div {
         height: 140px;
         display: flex;
@@ -227,7 +224,7 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
   }
 
   .top_time {
-    height: 223px;
+    height: 168px;
     display: flex;
     flex: 1;
     flex-direction: column;

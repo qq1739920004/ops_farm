@@ -12,24 +12,27 @@
     }">
       <img class="state-line" src="@/assets/perceptionImage/stateLine.png" alt="">
     <TransitionGroup name="list" tag="ul">
-        <li v-for="item in dataArr" :key="item.sn||item.deviceSn">
-          <div class="state_time">{{ item.time }}</div>
+        <li v-for="item in dataArr" :key="item.onlineTime+item.onlineTcp">
+          <div class="state_time">
+            <span>{{ item.time }}</span>
+            <span>{{ item.sn||item.deviceSn }}</span>
+          </div>
           <div class="state_main">
-            <span v-if="item.offlineTime!=item.onlineTime" class="circle-out">●</span>
+            <span v-if="!item.onlineTcp" class="circle-out">●</span>
             <span v-else class="circle-login">●</span>
-            <div :class="['state_bar',item.offlineTime==item.onlineTime?'state_bar_login':'state_bar_out']">
-              <span>{{ item.sn||item.deviceSn }}</span>
+            <div :class="['state_bar',item.onlineTcp?'state_bar_login':'state_bar_out']">
+              <span>{{ item.userNameCar||'未知'}}</span>
               <el-tooltip
         class="box-item"
         effect="dark"
         :content="item.name||item.position"
         placement="top-end"
       >
-      <span>{{ nameOut(item.name||item.position)  }}</span>
+      <span>{{ nameOut(item.name||item.position||'未知')  }}</span>
 
       </el-tooltip>
               <span class="state-tips">
-                  <img v-if="item.offlineTime!=item.onlineTime" src="@/assets/perceptionImage/stateOut.png" alt="">
+                  <img v-if="!item.onlineTcp" src="@/assets/perceptionImage/stateOut.png" alt="">
                   <img v-else src="@/assets/perceptionImage/stateIn.png" alt="">
                 </span>
             </div>
@@ -54,14 +57,13 @@ const props=defineProps({
 let dataArr=ref<recordsType[]>([]) 
   function nameOut(value:string){
   if(value.length>10){
-    console.log(value.substring(0,10));
     return `${value.substring(0,10)}...`
   }else{
     return value
   }
 }
 function getTime(item:recordsType){
-  if (item.offlineTime==item.onlineTime) {
+  if (item.onlineTcp) {
     return item.onlineTime
   }else{
     return item.offlineTime
@@ -73,6 +75,7 @@ onMounted(() => {
     pageSize:5
   }).then((res)=>{
     res.data.records.map((item)=>{
+      console.log(item);
       if(item){
       dataArr.value.push({
         time:getTime(item),
@@ -83,6 +86,7 @@ onMounted(() => {
     })
   })
 watch(()=>props.stateObj,(newValue)=>{
+  console.log(newValue);
   if(newValue && !newValue.judgeLevel){
   dataArr.value.unshift({
     time:getTime(newValue),
@@ -182,11 +186,16 @@ watch(()=>props.stateObj,(newValue)=>{
     }
 
     .state_time {
+      display: flex;
+      justify-content: space-between;
       padding-left: 40px;
+      padding-right: 35px;
+
     }
 
     .state_main {
       padding-left: 5px;
+
       // height: 40px;
       height: calc(100% - 20px);
       display: flex;

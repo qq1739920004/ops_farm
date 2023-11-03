@@ -7,12 +7,12 @@
 
     <div class="state">
     <TransitionGroup name="list" tag="ul">
-        <li v-for="item in dataArr" :key="item.offlineTime">
+        <li v-for="item in dataArr" :key="item.onlineTime">
           <div class="state_time">{{ item.time }}</div>
           <div class="state_main">
-            <span v-if="item.offlineTime!=item.onlineTime" class="circle-out">●</span>
+            <span v-if="!item.onlineTcp" class="circle-out">●</span>
             <span v-else class="circle-login">●</span>
-            <div :class="['state_bar',item.offlineTime==item.onlineTime?'state_bar_login':'state_bar_out']">
+            <div :class="['state_bar',item.onlineTcp?'state_bar_login':'state_bar_out']">
               <span>{{ item.sn||item.deviceSn }}</span>
               <el-tooltip
         class="box-item"
@@ -20,11 +20,11 @@
         :content="item.name||item.position"
         placement="top-end"
       >
-      <span>{{ nameOut(item.name||item.position)  }}</span>
+      <span>{{ nameOut(item.name||item.position||'未知')  }}</span>
 
       </el-tooltip>
               <span>
-                <el-tag v-if="item.offlineTime!=item.onlineTime" type="danger" size="small" effect="dark"
+                <el-tag v-if="!item.onlineTcp" type="danger" size="small" effect="dark"
                   >离线</el-tag>
                 <el-tag v-else type="success" size="small" effect="dark"
                   >上线</el-tag>
@@ -57,7 +57,7 @@ function nameOut(value:string){
   }
 }
 function getTime(item:recordsType){
-  if (item.offlineTime==item.onlineTime) {
+  if (item.onlineTcp) {
     return item.onlineTime
   }else{
     return item.offlineTime
