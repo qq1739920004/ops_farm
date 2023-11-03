@@ -837,7 +837,7 @@ const getProductList = async () => {
 // 在线升级更新数据
 const updateProductList = async () => {
     try {
-        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'upgradeWay': 2 })
+        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'upgradeWay': 1, 'updateModel':'9'})
         ElMessage({ type: 'success', message: '修改成功' })
     }
     catch {

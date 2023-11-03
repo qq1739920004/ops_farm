@@ -589,9 +589,9 @@ const changeDate = () => {
 }
 // 情况差分数据
 const getChafenList = async () => {
-    const res: any = await carNewDetail_API(props.carId,2)
+    const res: any = await carNewDetail_API(props.carId, 2)
     chaFenlist.value = res.data
-    
+
 }
 // 获取源节点
 const getExtendSourceNode = () => {
@@ -660,7 +660,7 @@ const getProductList = async () => {
 // 在线升级更新数据
 const updateProductList = async () => {
     try {
-        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'updateModel': formLabelAlign.radio1, 'upgradeWay': 0 })
+        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'updateModel': formLabelAlign.radio1 === '11001' ? '11' : '12', 'upgradeWay': 1 })
         ElMessage({ type: 'success', message: '修改成功' })
     }
     catch {
