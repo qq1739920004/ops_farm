@@ -313,8 +313,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, paramsParamObj, paramCarParamResponseData, paramcalibParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
 import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, pidParamParam_API, getSourceNode_path, updateCar_API, updatePidParm_API, updateCalibParam_API, GetcarProductpackage_API, packageUpgradeCar_API, pidCurveParam_API, updatePidCurveParm_API, pidSlsParam_API, updatepidSlsParam_API } from '@/api/machineryList/remoteAdjust/index'
-import { carNewList_API, logOpen_API } from '@/api/machineryList/index'
-import { pageInfo } from '@/api/machineryList/type'
+import { carNewDetail_API, logOpen_API } from '@/api/machineryList/index'
 import type { TabsPaneContext } from 'element-plus'
 
 const activeName = ref('1')
@@ -333,7 +332,7 @@ const supLowFormRef = ref()
 const dialogVisible = ref<boolean>(false)
 const activeIndex = ref<string>('1')
 const labelPosition = ref('right')
-const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn', 'name'])
+const props = defineProps(['terminalType', 'paramType', 'paramVersionnum', 'carId', 'sn', 'name'])
 const carParamsData = ref<any | null>([])
 const CalibTitleData = ref<any | null>([])
 const PidTitleData = ref<any | null>([])
@@ -341,13 +340,6 @@ const PidCurveTitleData = ref<any | null>([])
 const PidSupLowTitleData = ref<any | null>([])
 const productList = ref<GetcarProductpackageObj[]>([])
 const custom = ref<number>(0)
-const pageInfo = reactive<pageInfo>({
-    key: '',
-    currentPage: 1,
-    pageSize: 10,
-    companyId: '',
-    order: '1'
-})
 const switchStatus = ref(false)
 const beforeSwitchChange = () => {
     switchStatus.value = true;
@@ -421,7 +413,7 @@ const radioChannelOptions = reactive({
 })
 
 const paramDescribeList = ref<paramDescribeObj>({
-    version: '',
+    paramVersionnum: '',
     type: '',
     paramType: ''
 })
@@ -458,9 +450,9 @@ const chaFenlist = ref<chaFenObj>({
     'softwareVersion': '',
     'tel': '',
     'terminalType': '',
-    'type': 0,
+    'paramType': 0,
     'userName': '',
-    'version': 0,
+    'paramVersionnum': 0,
     'warrantyDate': '',
     'workPattern': 0
 })
@@ -551,8 +543,8 @@ const openRemoteAdjust = () => {
     // 强制更改index为1
     activeIndex.value = '1'
     // 参数赋值
-    paramDescribeList.value.version = props.version
-    paramDescribeList.value.type = props.type
+    paramDescribeList.value.paramVersionnum = props.paramVersionnum
+    paramDescribeList.value.type = props.paramType
     paramDescribeList.value.paramType = 'car'
     getCarParams('car')
     if (carParamsData.value != null) {
@@ -574,7 +566,6 @@ const openRemoteAdjust = () => {
     if (PidSupLowTitleData.value != null) {
         getPidSupLowList()
     }
-    pageInfo.key = props.sn
     getChafenList()
     getProductList()
 }
@@ -736,8 +727,8 @@ const getPid = async () => {
 }
 // 情况差分数据
 const getChafenList = async () => {
-    const res: any = await carNewList_API(JSON.stringify(pageInfo))
-    chaFenlist.value = res.data.records[0]
+    const res: any = await carNewDetail_API(props.carId,2)
+    chaFenlist.value = res.data
     custom.value = chaFenlist.value.radioChannel as number / 10000 || 0
 }
 // 获取源节点
@@ -846,7 +837,7 @@ const getProductList = async () => {
 // 在线升级更新数据
 const updateProductList = async () => {
     try {
-        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'upgradeWay': 2 })
+        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'upgradeWay': 1, 'updateModel':'9'})
         ElMessage({ type: 'success', message: '修改成功' })
     }
     catch {

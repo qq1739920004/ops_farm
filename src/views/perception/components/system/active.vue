@@ -86,7 +86,6 @@ const option = {
       axisTick: {
         show: false, // 不显示坐标轴刻度线
       },
-
       axisLine: {
         lineStyle: {
           color: "#ffffff",
@@ -97,7 +96,7 @@ const option = {
         textStyle: {
           padding: [10, 0, 0, 0], //表示 [上, 右, 下, 左] 的边距。
           color: "rgba(230, 247, 255, 0.50)",
-          fontSize: 12,
+          fontSize: '0.75rem',
         },
         formatter: function (value:any) {
                 return value.substring(10);
@@ -112,9 +111,10 @@ const option = {
       axisLabel: {
         textStyle: {
           color: "rgba(230, 247, 255, 0.50)",
-          fontSize: 16,
+          fontSize: '1rem',
         },
       },
+      interval:1,
       // y轴的分割线
       splitLine: {
         show: true,

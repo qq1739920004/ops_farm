@@ -273,12 +273,15 @@ const baseInfo = ref<carNewDetailObj>({
     "updateTime": "",
     "sn": "",
     "name": "",
+    "satelliteDate":"",
     "companyName": "",
     "userName": "",
     "tel": '',
     "model": "",
     "lastOnlineTime": "",
     "lastAutoDriveTime": "",
+    'warrantyDate':"",
+    'netDate':"",
     "board": "",
     "ec20": "",
     "radioStation": "",
@@ -292,7 +295,8 @@ const baseInfo = ref<carNewDetailObj>({
     "steeringWheelSn": "",
     "hubBluetooth": "",
     "hub": "",
-    "hubSn": ""
+    "hubSn": "",
+    "expirationTime":''
 })
 // 报警
 const alarmRecord = ref<any>([])
@@ -331,7 +335,7 @@ const getHandler = async () => {
 // 基本信息
 const getBaseInfo = async () => {
     try {
-        const res: carNewDetailResponseData = await carNewDetail_API(Number(carId.value))
+        const res: carNewDetailResponseData = await carNewDetail_API(Number(carId.value),1)
         res.data ? baseInfo.value = res.data : ''
     } catch (e) {
         console.log(e)
