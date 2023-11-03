@@ -140,7 +140,7 @@ function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"]) {
           },
           label: {
             show: true,
-            color: "white",
+            color: "#16A157",
             position: "top",
             formatter: function(params:EChartsParams) {
               // 如果在线数为0，则不显示
