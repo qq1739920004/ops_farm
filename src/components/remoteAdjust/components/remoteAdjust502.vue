@@ -206,8 +206,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, paramsParamObj, paramCarParamResponseData, paramcalibParamData, paramAdvanced1ParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
 import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, getSourceNode_path, updateCar_API, updateBasicParm_API, updateCalibParam_API, GetcarProductpackage_API, basicParam_API, getAdvanced1Param_API, advanced1ParamUpdate_API } from '@/api/machineryList/remoteAdjust/index'
-import { carNewList_API, logOpen_API } from '@/api/machineryList/index'
-import { pageInfo } from '@/api/machineryList/type'
+import { carNewDetail_API, logOpen_API } from '@/api/machineryList/index'
 import type { TabsPaneContext } from 'element-plus'
 
 const activeName = ref('1')
@@ -223,7 +222,7 @@ const formLabelAlignRef = ref()
 const advanceFormRef = ref()
 const dialogVisible = ref<boolean>(false)
 const labelPosition = ref('right')
-const props = defineProps(['terminalType', 'type', 'version', 'carId', 'sn', 'name'])
+const props = defineProps(['terminalType', 'paramType', 'paramVersionnum', 'carId', 'sn', 'name'])
 const carParamsData = ref<any | null>([])
 const CalibTitleData = ref<any | null>([])
 const basicTitleData = ref<any | null>([])
@@ -231,13 +230,6 @@ const advance1TitleData = ref<any | null>([])
 const basicParamsData = reactive<any>({})
 const advanced1ParamsData = reactive<any>({})
 const productList = ref<GetcarProductpackageObj[]>([])
-const pageInfo = reactive<pageInfo>({
-    key: '',
-    currentPage: 1,
-    pageSize: 10,
-    companyId: '',
-    order: '1'
-})
 // 车辆参数列表
 const paramParamsData = reactive<paramsParamObj>({
     'Vehicle1': "",
@@ -315,7 +307,7 @@ const formLabelAlign = reactive({
 })
 
 const paramDescribeList = ref<paramDescribeObj>({
-    version: '',
+    paramVersionnum: '',
     type: '',
     paramType: ''
 })
@@ -352,9 +344,9 @@ const chaFenlist = ref<chaFenObj>({
     'softwareVersion': '',
     'tel': '',
     'terminalType': '',
-    'type': 0,
+    'paramType': 0,
     'userName': '',
-    'version': 0,
+    'paramVersionnum': 0,
     'warrantyDate': '',
     'workPattern': 0
 })
@@ -429,8 +421,8 @@ const openRemoteAdjust = () => {
     // 强制更改index为1
     activeName.value = '1'
     // 参数赋值
-    paramDescribeList.value.version = props.version
-    paramDescribeList.value.type = props.type
+    paramDescribeList.value.paramVersionnum = props.paramVersionnum
+    paramDescribeList.value.type = props.paramType
     paramDescribeList.value.paramType = 'car'
     getCarParams('car')
     if (carParamsData.value != null) {
@@ -448,7 +440,6 @@ const openRemoteAdjust = () => {
     if (advance1TitleData.value != null) {
         getAdvanced1()
     }
-    pageInfo.key = props.sn
     getChafenList()
     getProductList()
 }
@@ -589,8 +580,8 @@ const updateAdvanced1Params = async () => {
 
 // 情况差分数据
 const getChafenList = async () => {
-    const res: any = await carNewList_API(JSON.stringify(pageInfo))
-    chaFenlist.value = res.data.records[0]
+    const res: any = await carNewDetail_API(props.carId,2)
+    chaFenlist.value = res.data
 
 }
 // 获取源节点

@@ -172,18 +172,18 @@
 
             <div class="line line3">
                 <div class="tit">软件过期:</div>
-                <div class="data">{{ props.expirationTime }}</div>
+                <div class="data">{{ NewDetail.expirationTime }}</div>
                 <div class="tit">质保过期:</div>
-                <div class="data">{{ props.warrantyDate }}</div>
+                <div class="data">{{ NewDetail.warrantyDate }}</div>
                 <div class="tit">罗网过期:</div>
-                <div class="data">{{ props.netDate }}</div>
+                <div class="data">{{ NewDetail.netDate }}</div>
 
             </div>
 
 
             <div class="line line3">
                 <div class="tit">星基过期:</div>
-                <div class="data">{{ props.satelliteDate }}</div>
+                <div class="data">{{ NewDetail.satelliteDate }}</div>
             </div>
         </div>
     </el-dialog>
@@ -211,13 +211,17 @@ const NewDetail = reactive<carNewDetailObj>({
     "age": 0,
     "creatorName": "",
     "creatorTel": "",
+    "satelliteDate":"",
     "sunFlowerSn": "",
     "softwareVersion": "",
     "createTime": "",
     "updateTime": "",
+    'netDate':"",
     "sn": "",
     "name": "",
     "companyName": "",
+    "warrantyDate":'',
+    "expirationTime":'',
     "userName": "",
     "model": "",
     "lastOnlineTime": "",
@@ -241,7 +245,7 @@ const NewDetail = reactive<carNewDetailObj>({
 
 const getNewDetail = async () => {
     carId.value = props.carId
-    const res: carNewDetailResponseData = await carNewDetail_API(carId.value)
+    const res: carNewDetailResponseData = await carNewDetail_API(carId.value,1)
     Object.assign(NewDetail, res.data)
 
 }
