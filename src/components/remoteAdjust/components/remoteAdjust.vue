@@ -143,8 +143,8 @@
                                 height: 32px;" v-model="dateValue" type="daterange" range-separator="-"
                                 @change="changeDate" :disabled-date="disabledDate" start-placeholder="Start date"
                                 end-placeholder="End date" size="large" />
-                            <el-button type="primary" style="margin-left: 20px;">回传</el-button>
-                            <el-button type="primary" text class="btn3" style="" @click="toFileList">文件查看</el-button>
+                            <el-button type="primary"  v-auth= '532' style="margin-left: 20px;">回传</el-button>
+                            <el-button type="primary" v-auth="531" text class="btn3" style="" @click="toFileList">文件查看</el-button>
                         </el-form-item>
 
                     </el-col>
