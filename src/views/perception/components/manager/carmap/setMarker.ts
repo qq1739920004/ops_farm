@@ -146,7 +146,7 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
               },
               label: {
                   show: true,
-                  color: "white",
+                  color: "#16A157",
                   fontWeight: 800,
                   fontSize:16,
                   textShadow: 'black',
@@ -176,7 +176,6 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
               label: {
                   fontWeight: 800,
                   fontSize:16,
-
                   textShadow: 'black',
                   show: true,
                   color: "white",

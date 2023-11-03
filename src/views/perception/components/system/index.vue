@@ -192,6 +192,7 @@ onUnmounted(() => {
     .top-img {
       position: fixed;
       width: 100vw;
+      height: 4rem;
       top: 1rem;
     }
     width: 100vw;
