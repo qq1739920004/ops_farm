@@ -61,8 +61,8 @@ const option = {
     containLabel: true,
     bottom: "5%",
     top: "14%",
-    left: "10%", // 增加这个值，从而减少第二个yAxis的宽度
-    right: "5%",
+    left: "13%", // 增加这个值，从而减少第二个yAxis的宽度
+    right: "10%",
   },
   dataZoom: [
     {
