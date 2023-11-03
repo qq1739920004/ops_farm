@@ -26,6 +26,7 @@ let mycharts: any;
 let data: CarData["data"];
 let timeArr: string[] = [];
 let countArr: any[] = [];
+let intervalV=ref(1000)
 watch(
   () => props.dataNow,
   (val: ChartData) => {
@@ -47,6 +48,7 @@ function updataOption() {
   countArr = data.chart.map((item) => {
     return { value: item.count };
   });
+console.log(Math.max(...countArr.map(res=>res.value))/3);
   countArr[countArr.length - 1] = {
     value: countArr.at(-1).value,
     symbolSize: 15,
@@ -56,7 +58,9 @@ function updataOption() {
       borderWidth: 15, //拐点边框大小，
     },
   };
+  intervalV.value=Math.floor(Math.max(...countArr.map(res=>res.value))/2)
   option.xAxis[0].data = timeArr;
+  option.yAxis[0].interval = intervalV.value;
   option.series[0].data = countArr;
 }
 const option = {
@@ -114,7 +118,7 @@ const option = {
           fontSize: '1rem',
         },
       },
-      interval:1,
+      interval:intervalV.value,
       // y轴的分割线
       splitLine: {
         show: true,
