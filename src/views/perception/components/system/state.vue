@@ -7,7 +7,7 @@
 
     <div class="state">
     <TransitionGroup name="list" tag="ul">
-        <li v-for="item in dataArr" :key="item.onlineTime">
+        <li v-for="item in dataArr" :key="item.onlineTime+item.onlineTcp">
           <div class="state_time">{{ item.time }}</div>
           <div class="state_main">
             <span v-if="!item.onlineTcp" class="circle-out">●</span>
