@@ -177,10 +177,8 @@ const getPaddyWorkList = async () => {
     paddyWorkList.value.forEach((item: any) => {
         if (item.lineptax && item.lineptay) {
             axios({
-               
-                url: `${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3/`,
+                url: `${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`,
                 method: 'get',
-                //params是URL拼接
                 params: {
                     'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
                     'output': 'json',
