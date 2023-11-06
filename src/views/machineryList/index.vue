@@ -160,7 +160,7 @@ const getCarList = async () => {
   );
   carNewList.value = res.data.records.map((item) => {
     let openRemote: any = true; //是否远程管理
-    if (item.onlineTcp == 0 || item.driveState != 0) {
+    if (item.onlineTcp === 0 || item.driveState != 0) {
       openRemote = false; // 禁用
     } else {
       if (

@@ -159,7 +159,7 @@
           : false
           " class="box-item" effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
 
-          <el-button style="width: 52px" :disabled="row.openRemote" type="primary" text @click="
+          <el-button style="width: 52px" :disabled="!row.openRemote" type="primary" text @click="
             gotoRemote(
               row.terminalType,
               row.paramVersionnum,
