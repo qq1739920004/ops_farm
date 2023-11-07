@@ -68,7 +68,7 @@
                     <el-form-item label="服务热线" prop="serviceTel">
                         <el-input v-model="formData.serviceTel" />
                     </el-form-item>
-                    <el-form-item label="出厂编号模板" prop="factoryNumTmpl">
+                    <el-form-item label="出厂编号模板" prop="factoryNumTmpl" v-if="!formData.id">
                         <el-input v-model="formData.factoryNumTmpl" />
                     </el-form-item>
                     <el-form-item label="出厂编号" prop="factoryNum">
