@@ -32,10 +32,10 @@
                 <el-table-column prop="produceNum" label="生产编号" align="center" />
                 <el-table-column prop="produceTime" show-overflow-tooltip label="生产日期" align="center" />
                 <el-table-column prop="ratedPower" label="额定功率" align="center" />
-                <el-table-column label="操作" align="center">
-                    <template template #="{ row }">
-                        <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
-                        <el-button link style="color: #f94a56" @click="deleteData(row)">删除</el-button>
+                <el-table-column label="操作" align="center" width="160">
+                    <template template #="{ row }" >
+                        <el-button type="primary" text @click="handleEdit(row)">编辑</el-button>
+                        <el-button text style="color: #f94a56" @click="deleteData(row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -97,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, reactive } from 'vue'
+import { ref, nextTick } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import { sacredCowQrList_path, sacredCowQrSave_path, sacredCowQrUpdate_path, sacredCowQrRemove_path, sacredCowQrExport_path } from '@/api/codeManagement/index'
@@ -108,7 +108,7 @@ const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
 const exportIds = ref([])
-let formData = reactive<any>({})
+let formData = ref<any>({})
 const formRef = ref()
 const dialogVisible = ref<boolean>(false)
 const currentChange = (val: any) => {
@@ -162,7 +162,7 @@ const getList = async () => {
 getList()
 const handleEdit = (val: any) => {
 
-    formData = val
+    formData.value = val
     dialogVisible.value = true
     nextTick(() => {
         formRef.value.clearValidate()
@@ -207,7 +207,8 @@ const rules = {
 }
 // 关闭弹窗
 const handleAddDialogClose = () => {
-    formRef.value.clearValidate();
+  formData.value = {}
+  
 }
 // 新增数据
 const addData = async () => {
@@ -222,11 +223,10 @@ const addData = async () => {
         }
     ).then(() => {
         try {
-            sacredCowQrSave_path(formData).then((res) => {
+            sacredCowQrSave_path(formData.value).then((res) => {
                 if (res.page === 1) {
                     ElMessage({ type: 'success', message: '新增成功' })
                     dialogVisible.value = false;
-                    Object.assign(formData, {})
                 } else {
                     res.page === 2
                         ? ElMessage({ type: 'error', message: '新建失败，出厂编号已存在' })
@@ -257,11 +257,10 @@ const editData = async () => {
         }
     ).then(() => {
         try {
-            sacredCowQrUpdate_path(formData).then((res) => {
+            sacredCowQrUpdate_path(formData.value).then((res) => {
                 if (res.page === 1) {
                     ElMessage({ type: 'success', message: '修改成功' })
                     dialogVisible.value = false;
-                    Object.assign(formData, {})
                 } else {
                     ElMessage({ type: 'error', message: '修改失败' })
                 }
@@ -276,7 +275,7 @@ const editData = async () => {
 // 点击新建
 const openDialog = () => {
     dialogVisible.value = true
-    Object.assign(formData, {})
+ 
     nextTick(() => {
         formRef.value.clearValidate()
     })
