@@ -324,7 +324,6 @@ const loadWorkData = async (workId: any) => {
             let PointListTransed = res.data[item].map((item2: any) => {
                 return coorTransform([item2.posX as never, item2.posY as never], mapId.value) // 转换坐标
             })
-            console.log(PointListTransed)
             tranpatrnt.value.push(PointListTransed)
             // 取中间点
             {
@@ -670,7 +669,6 @@ watch(() => paddyWorkList.value,
                 if (subItem.checked) {
                     if (!hasMarker(subItem.id)) {
                         addPathAB(subItem)
-                        console.log(markerCollect2)
                     } if (!hasMarkerField(subItem.id, 'lines')) {
                         loadWorkData(subItem.id)
                     }

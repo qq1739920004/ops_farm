@@ -110,7 +110,6 @@ async function drawingCity(AMap: any, cityArr: string[]) {
   }
 }
 onMounted(() => {
-  console.log(dataList);
   let { codeArr } = purifyCityArr(dataList);
   initMap(codeArr);
 });

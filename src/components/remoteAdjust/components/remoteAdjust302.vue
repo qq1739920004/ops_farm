@@ -460,7 +460,6 @@ const chaFenlist = ref<chaFenObj>({
 const sourceNode = ref<string[]>([])
 const changeLogStatus = async (val: string, val2: any) => {
     if (switchStatus) {
-        console.log(val, val2);
         try {
             await logOpen_API({ 'sn': val, 'flag': val2 })
             ElMessage({ type: 'success', message: '修改成功', duration: 1000 })

@@ -150,7 +150,6 @@ const getList = async () => {
                     : "/";
             })
             tableData.value = res.page.list
-            console.log(tableData.value)
             total.value = res.page.total
         }
 
