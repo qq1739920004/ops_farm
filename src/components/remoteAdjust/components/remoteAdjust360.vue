@@ -200,7 +200,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="12" :offset="6">
-                        <el-form-item class="item" label="模块选择：" prop="radio2">
+                        <el-form-item class="item" label="版本类型：" prop="radio2">
                             <el-radio-group @change="changeRadio2" text-color="var(--el-color-primary)"
                                 style="transform: translateY(-5px);" v-model="formLabelAlign.radio2" class="ml-4">
                                 <el-radio label="1" size="large" style="margin-right: 30px;">正式版</el-radio>

@@ -108,7 +108,19 @@ const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
 const exportIds = ref([])
-let formData = ref<any>({})
+let formData = ref<any>({
+    model:'-AG502BD-2.5GD-',
+    ratedVoltage:'',
+    produceNum:'',
+    exeStandard:'NY/T 3334-2018',
+    lineAccuracy:'2.5',
+    companyAddress:'上海市嘉定区马陆镇澄浏中路618号2幢3楼',
+    serviceTel:'400-630-2933',
+    factoryNumTmpl:'',
+    factoryNum:'',
+    produceTime:'',
+    ratedPower:'160W'
+})
 const formRef = ref()
 const dialogVisible = ref<boolean>(false)
 const currentChange = (val: any) => {
@@ -207,7 +219,19 @@ const rules = {
 }
 // 关闭弹窗
 const handleAddDialogClose = () => {
-  formData.value = {}
+  formData.value = {
+    model:'-AG502BD-2.5GD-',
+    ratedVoltage:'',
+    produceNum:'',
+    exeStandard:'NY/T 3334-2018',
+    lineAccuracy:'2.5',
+    companyAddress:'上海市嘉定区马陆镇澄浏中路618号2幢3楼',
+    serviceTel:'400-630-2933',
+    factoryNumTmpl:'',
+    factoryNum:'',
+    produceTime:'',
+    ratedPower:'160W'
+}
   
 }
 // 新增数据
