@@ -1,9 +1,7 @@
 
 
-$appMenuColor: var(--app-menu-color);
-
 :export {
-    appMenuColor: $appMenuColor;
+    appMenuColor: var(--app-menu-color);
 }
 
 

@@ -105,7 +105,7 @@ export default {
         userAuthApply_path(params).then((res) => {
           if (res.code == 200) {
             this.dialogFormVisible = false;
-            this.$message({ type: "success", message: "申请成功" });
+            this.$message({ type: "success", message: "请等待系统管理员分配权限" });
           }
         });
       });

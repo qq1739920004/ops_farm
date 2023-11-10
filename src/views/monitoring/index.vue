@@ -296,7 +296,7 @@ function handleSocketData(socketData: any) {
       const markerType = createMarkerType(data);
       const markerIcon = createMarkerIcon(data);
       const markerPopup = createMarkerPopup(data);
-      markerDataHandle = {
+      markerDataHandle.value = {
         markerId,
         markerLng,
         markerLat,
@@ -308,7 +308,7 @@ function handleSocketData(socketData: any) {
     }
     if (action == "offline") {
       const markerId = data.sn;
-      markerDataHandle = {
+      markerDataHandle.value = {
         markerId,
         markerHandle: "delete",
       };
@@ -320,7 +320,7 @@ function handleSocketData(socketData: any) {
       const markerType = createMarkerType(data);
       const markerIcon = createMarkerIcon(data);
       const markerPopup = createMarkerPopup(data);
-      markerDataHandle = {
+      markerDataHandle.value = {
         markerId,
         markerLng,
         markerLat,
