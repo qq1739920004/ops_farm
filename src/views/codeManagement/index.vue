@@ -110,7 +110,7 @@ const total = ref(0)
 const exportIds = ref([])
 let formData = ref<any>({
     model:'-AG502BD-2.5GD-',
-    ratedVoltage:'',
+    ratedVoltage:'DC12V',
     produceNum:'',
     exeStandard:'NY/T 3334-2018',
     lineAccuracy:'2.5',
