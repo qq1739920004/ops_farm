@@ -12,11 +12,11 @@
 
             </div>
             <div>
-                <el-button @click="exportData" type="primary">
+                <el-button v-auth='575' @click="exportData" type="primary">
                     <el-icon class="el-icon--left">
                         <SvgIcon icon="export" size="16" />
                     </el-icon>导出</el-button>
-                <el-button v-auth="448" type="primary" icon="Plus" @click="openDialog">新建</el-button>
+                <el-button v-auth="576" type="primary" icon="Plus" @click="openDialog">新建</el-button>
             </div>
         </div>
         <div class="table_container app_card">
@@ -34,8 +34,8 @@
                 <el-table-column prop="ratedPower" label="额定功率" align="center" />
                 <el-table-column label="操作" align="center" width="160">
                     <template template #="{ row }" >
-                        <el-button type="primary" text @click="handleEdit(row)">编辑</el-button>
-                        <el-button text style="color: #f94a56" @click="deleteData(row)">删除</el-button>
+                        <el-button v-auth="577" type="primary" text @click="handleEdit(row)">编辑</el-button>
+                        <el-button v-auth="574"  text style="color: #f94a56" @click="deleteData(row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
