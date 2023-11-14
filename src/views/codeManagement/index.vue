@@ -33,9 +33,9 @@
                 <el-table-column prop="produceTime" show-overflow-tooltip label="生产日期" align="center" />
                 <el-table-column prop="ratedPower" label="额定功率" align="center" />
                 <el-table-column label="操作" align="center" width="160">
-                    <template template #="{ row }" >
+                    <template template #="{ row }">
                         <el-button v-auth="577" type="primary" text @click="handleEdit(row)">编辑</el-button>
-                        <el-button v-auth="574"  text style="color: #f94a56" @click="deleteData(row)">删除</el-button>
+                        <el-button v-auth="574" text style="color: #f94a56" @click="deleteData(row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -43,9 +43,15 @@
             <el-dialog v-model="dialogVisible" :title="formData.id ? '编辑' : '新建'" width="660px"
                 @close="handleAddDialogClose">
                 <el-form ref="formRef" :model="formData" label-width="120px" :rules="rules">
-                    <el-form-item label="型号" prop="model">
-                        <el-input v-model="formData.model" />
+                    <el-form-item  label="型号" prop="model">
+                        <el-select v-model="formData.model" style="width:100%;">
+                            <el-option v-for="item in modelList" :value="item.value" :label="item.label">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
+                    <!-- <el-form-item v-show="formData.id" label="型号" prop="model">
+                        <el-input v-model="formData.model" />
+                    </el-form-item> -->
                     <el-form-item label="额定电压" prop="ratedVoltage">
                         <el-input v-model="formData.ratedVoltage" />
                     </el-form-item>
@@ -109,18 +115,37 @@ const pageSize = ref(10)
 const total = ref(0)
 const exportIds = ref([])
 let formData = ref<any>({
-    model:'-AG502BD-2.5GD-',
-    ratedVoltage:'DC12V',
-    produceNum:'',
-    exeStandard:'NY/T 3334-2018',
-    lineAccuracy:'2.5',
-    companyAddress:'上海市嘉定区马陆镇澄浏中路618号2幢3楼',
-    serviceTel:'400-630-2933',
-    factoryNumTmpl:'',
-    factoryNum:'',
-    produceTime:'',
-    ratedPower:'160W'
+    model: '-AG502BD-2.5GD-',
+    ratedVoltage: 'DC12V',
+    produceNum: '',
+    exeStandard: 'NY/T 3334-2018',
+    lineAccuracy: '2.5',
+    companyAddress: '上海市嘉定区马陆镇澄浏中路618号2幢3楼',
+    serviceTel: '400-630-2933',
+    factoryNumTmpl: '',
+    factoryNum: '',
+    produceTime: '',
+    ratedPower: '160W'
 })
+
+const modelList = ref([
+    {
+        'label': '-AG502BD-2.5GD-',
+        'value': '-AG502BD-2.5GD-'
+    },
+    {
+        'label': '-AG501BD-2.5GD-',
+        'value': '-AG501BD-2.5GD-'
+    },
+    {
+        'label': '-AG360BD-2.5GD-',
+        'value': '-AG360BD-2.5GD-'
+    },
+    {
+        'label': '-AG360 PRO BD-2.5GD-',
+        'value': '-AG360 PRO BD-2.5GD-'
+    }
+])
 const formRef = ref()
 const dialogVisible = ref<boolean>(false)
 const currentChange = (val: any) => {
@@ -219,20 +244,20 @@ const rules = {
 }
 // 关闭弹窗
 const handleAddDialogClose = () => {
-  formData.value = {
-    model:'-AG502BD-2.5GD-',
-    ratedVoltage:'DC12V',
-    produceNum:'',
-    exeStandard:'NY/T 3334-2018',
-    lineAccuracy:'2.5',
-    companyAddress:'上海市嘉定区马陆镇澄浏中路618号2幢3楼',
-    serviceTel:'400-630-2933',
-    factoryNumTmpl:'',
-    factoryNum:'',
-    produceTime:'',
-    ratedPower:'160W'
-}
-  
+    formData.value = {
+        model: '-AG502BD-2.5GD-',
+        ratedVoltage: 'DC12V',
+        produceNum: '',
+        exeStandard: 'NY/T 3334-2018',
+        lineAccuracy: '2.5',
+        companyAddress: '上海市嘉定区马陆镇澄浏中路618号2幢3楼',
+        serviceTel: '400-630-2933',
+        factoryNumTmpl: '',
+        factoryNum: '',
+        produceTime: '',
+        ratedPower: '160W'
+    }
+
 }
 // 新增数据
 const addData = async () => {
@@ -299,7 +324,7 @@ const editData = async () => {
 // 点击新建
 const openDialog = () => {
     dialogVisible.value = true
- 
+
     nextTick(() => {
         formRef.value.clearValidate()
     })
