@@ -54,7 +54,9 @@
         </li>
         <li>
           <span>{{
-           dataStatistics.workArea ?  (dataStatistics.workArea?.totalArea / 10000).toFixed(2) : ''
+            dataStatistics.workArea
+              ? (dataStatistics.workArea?.totalArea / 10000).toFixed(2)
+              : ""
           }}</span>
           <span>累计作业(万亩)</span>
         </li>
@@ -182,13 +184,14 @@ import realTimeChart from "./components/realTimeChart.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
 import { reactive, ref, watch, onUnmounted } from "vue";
 import useSocketStore from "@/store/socket";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import {
   onlineFarmMachinePosition_API,
   farmMachineDataStatistics_API,
   carLog_API,
 } from "@/api/monitoring";
 const router = useRouter();
+const route = useRoute();
 const socketStore = useSocketStore();
 let markerData = ref<any>([]);
 let markerDataHidden = ref<any>([]);
@@ -422,9 +425,13 @@ async function getOnlineFarmPosition() {
     (item: any) => item.markerLng || item.markerLng == 0
   );
   markerData.value = onlineFarmMachines;
+  route.query.markerId ? (mapCenter.markerId = route.query.markerId) : "";
   mapCenter.center = onlineFarmMachines.map((item: any) => {
     return [item.posY, item.posX];
   });
+
+
+
 }
 
 //
