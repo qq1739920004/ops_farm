@@ -31,7 +31,7 @@ export function getHelpHandlerAPI() {
 // 完成处理
 export function getHelpHandlingFinishAPI(params: RecordsObj) {
     return request<any, FinishData>({
-        url: `/farm/help/update?id=${params.id}&carId=${params.carId}&status=${params.status}&handlerId=${params.handlerId}&info=${params.info}`,
+        url: `/farm/help/new/update?id=${params.id}&carId=${params.carId}&status=${params.status}&handlerId=${params.handlerId}&info=${params.info}`,
         method: 'get'
     })
 }
@@ -40,7 +40,7 @@ export function getHelpHandlingFinishAPI(params: RecordsObj) {
 // 参数更改
 export function getHelpHandlingParamChangeAPI(carId: number) {
     return request<any, any>({
-        url: `/farm/param/paramChangeRecord/get?carId=${carId}`,
+        url: `/farm/param/new/paramChangeRecord/get?carId=${carId}`,
         method: 'get',
     })
 }
