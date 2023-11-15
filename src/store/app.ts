@@ -18,7 +18,7 @@ if (navigatorLanguage == 'zh' || navigatorLanguage == 'zh-CN') {
 const useAppStore = defineStore("app", () => {
     const isDark = useDark();
     const layout = useStorage('layout', 'vertical')
-    const themeColor = useStorage('themeColor', '#33B838')
+    const themeColor = useStorage('themeColor_farm', '#33B838')
     const device = ref('desktop') // 屏幕类型
     const language = useStorage("language", navigatorLanguage);
     const locale = computed(() => {
