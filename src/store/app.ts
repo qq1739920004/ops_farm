@@ -8,17 +8,21 @@ import { useStorage, useDark, useToggle } from "@vueuse/core";
 import { getLightColor, getDarkColor } from "@/utils/color";
 import { ref, computed } from 'vue'
 
-
+let navigatorLanguage = navigator.language;
+if (navigatorLanguage == 'zh' || navigatorLanguage == 'zh-CN') {
+    navigatorLanguage = 'zh'
+} else {
+    navigatorLanguage = 'en'
+}
 
 const useAppStore = defineStore("app", () => {
-    const routes: any = ref([])
     const isDark = useDark();
     const layout = useStorage('layout', 'vertical')
     const themeColor = useStorage('themeColor', '#33B838')
     const device = ref('desktop') // 屏幕类型
-    const language = useStorage("language", 'zh-cn');
+    const language = useStorage("language", navigatorLanguage);
     const locale = computed(() => {
-        if (language.value == 'zh-cn') {
+        if (language.value == 'zh') {
             return zhCn
         }
         if (language.value == 'en') {
@@ -26,11 +30,6 @@ const useAppStore = defineStore("app", () => {
         }
     });
     setPrimaryColor()
-
-    // 修改路由
-    function updateRoutes(arg: any) {
-        routes.value = arg 
-    }
 
     // 修改layout 
     function updateLayout(arg: string) {
@@ -72,14 +71,12 @@ const useAppStore = defineStore("app", () => {
     }
 
     return {
-        routes,
         isDark,
         device,
         layout,
         themeColor,
         language,
         locale,
-        updateRoutes,
         updateIsDark,
         updateDevice,
         updateLayout,

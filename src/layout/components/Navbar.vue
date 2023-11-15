@@ -13,8 +13,8 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item
-            :disabled="locale == 'zh-cn'"
-            @click="changeLang('zh-cn')"
+            :disabled="locale == 'zh'"
+            @click="changeLang('zh')"
             >中文</el-dropdown-item
           >
           <el-dropdown-item

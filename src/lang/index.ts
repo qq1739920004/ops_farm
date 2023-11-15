@@ -6,7 +6,7 @@ import useAppStore from '@/store/app'
 const appStore = useAppStore()
 
 const messages = {
-    'zh-cn': zh,
+    'zh': zh,
     'en': en
 };
 
