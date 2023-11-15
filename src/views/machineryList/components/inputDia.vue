@@ -1,8 +1,8 @@
 <!--  -->
 <template>
     <div>
-        <el-dialog @open="getInputList" style="border-radius: 8px;" v-model="dialogVisible" title="录入经销商设备" width="30%"
-            center>
+        <el-dialog @close="closeInputList" @open="getInputList" style="border-radius: 8px;" v-model="dialogVisible"
+            title="录入经销商设备" width="30%" center>
             <div class="content">
                 <el-form style="width: 100%" ref="formRef" label-width="140px">
                     <el-form-item label="经销商：">
@@ -54,7 +54,7 @@ const dialogVisible = ref<boolean>(false)
 const carDealerList = ref<carDealerObj[]>([])
 const fileName = ref()
 const uploadRef = ref<UploadInstance>()
-const uploadData = reactive({
+let uploadData = reactive({
     id: '',
     companyName: ''
 })
@@ -73,6 +73,11 @@ const getInputList = async () => {
 
         }
     })
+}
+const closeInputList = () => {
+    uploadData.id = ''
+    fileName.value = ''
+    uploadRef.value?.clearFiles()
 }
 const handleChange = (e: any) => {
     fileName.value = e.name
@@ -122,10 +127,11 @@ const successResult = (data: any) => {
     // dialogVisible.value = false
 
     if (data.code === -104) {
-        let messagedata = data.data.errorMessageList.map((item: any,index:any) => {
-            return index+1 + `.sn号为${item.sn}的${item.message}`
+        let messagedata = data.data.errorMessageList.map((item: any, index: any) => {
+            return index + 1 + `.sn号为${item.sn}的${item.message}`
         })
-        ElMessage({ type: 'error', message: messagedata.join(), showClose: true,duration: 8000 })
+        ElMessage({ type: 'error', message: messagedata.join(), showClose: true, duration: 8000 })
+        uploadRef.value?.clearFiles()
     } else {
         ElMessage({ type: 'success', message: '上传成功!', duration: 1000 })
         dialogVisible.value = false
