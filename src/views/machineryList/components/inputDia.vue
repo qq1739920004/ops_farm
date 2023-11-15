@@ -186,13 +186,4 @@ watch(
     margin-top: -20px;
 }
 
-:deep(.el-popup-parent--hidden) {
-    .el-message.el-message--error.is-closable {
-        white-space: pre-line;
-
-        .el-message__content {
-            color: white;
-        }
-    }
-}
 </style>
