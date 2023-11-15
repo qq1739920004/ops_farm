@@ -130,7 +130,7 @@ const successResult = (data: any) => {
         let messagedata = data.data.errorMessageList.map((item: any, index: any) => {
             return index + 1 + `.sn号为${item.sn}的${item.message}`
         })
-        ElMessage({ type: 'error', message: messagedata.join(), showClose: true, duration: 8000 })
+        ElMessage({ type: 'error', message: messagedata.join(`<br/>`), showClose: true, dangerouslyUseHTMLString: true, duration: 8000 })
         uploadRef.value?.clearFiles()
     } else {
         ElMessage({ type: 'success', message: '上传成功!', duration: 1000 })
@@ -184,5 +184,15 @@ watch(
     display: flex;
     justify-content: center;
     margin-top: -20px;
+}
+
+:deep(.el-popup-parent--hidden) {
+    .el-message.el-message--error.is-closable {
+        white-space: pre-line;
+
+        .el-message__content {
+            color: white;
+        }
+    }
 }
 </style>
