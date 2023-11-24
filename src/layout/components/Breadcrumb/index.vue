@@ -13,10 +13,10 @@
         v-if="
           item.redirect === 'noredirect' || index === breadcrumbs.length - 1
         "
-        >{{ item.meta.title }}</span
+        >{{ translateItem(item) }}</span
       >
       <a v-else @click.prevent="handleLink(item, index)">
-        {{ item.meta.title }}
+        {{ translateItem(item) }}
       </a>
     </el-breadcrumb-item>
   </el-breadcrumb>
@@ -28,6 +28,8 @@ import { useRoute, RouteLocationMatched } from "vue-router";
 import { compile } from "path-to-regexp";
 import router from "@/router";
 import SvgIcon from "@/components/SvgIcon/index.vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const isBackShow = ref(false); // 是否展示返回按钮
 const currentRoute = useRoute();
 const pathCompile = (path: string) => {
@@ -37,6 +39,10 @@ const pathCompile = (path: string) => {
 };
 const breadcrumbs = ref([] as Array<RouteLocationMatched>);
 
+function translateItem(item: any) {
+  return t(item.meta.titleEn) || item.meta.title;
+}
+
 function getBreadcrumb() {
   let matched = currentRoute.matched.filter(
     (item) => item.meta && item.meta.title
@@ -45,8 +51,12 @@ function getBreadcrumb() {
   const lastRouter: any = matched[matched.length - 1];
   let lastRouterBreadcrumb = lastRouter.meta.breadcrumb || [];
   lastRouterBreadcrumb = lastRouterBreadcrumb.map((item: any) => {
-    return { path: item.path, meta: { title: item.title } };
+    return {
+      path: item.path,
+      meta: { title: item.title, titleEn: item.titleEn },
+    };
   });
+
   matched.splice(matched.length - 1, 0, ...lastRouterBreadcrumb);
   breadcrumbs.value = matched.filter((item) => {
     return item.meta && item.meta.title && !item.meta.breadcrumbHidden;

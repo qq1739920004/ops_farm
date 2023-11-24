@@ -8,9 +8,10 @@
     />
     <div class="search_box">
       <el-autocomplete
+        :style="{width: labelWidth}"
         v-model="searchSn"
         :fetch-suggestions="querySearch"
-        placeholder="SN、铭牌SN、车辆名、公司、电话"
+        :placeholder="$t('messages.SNLabelSNcarName')"
         @select="handleSelect"
         clearable
       >
@@ -42,15 +43,15 @@
       <ul class="top">
         <li>
           <span>{{ dataStatistics.device?.totalDevice }}</span>
-          <span>总数</span>
+          <span>{{ $t("messages.total") }}</span>
         </li>
         <li>
           <span>{{ dataStatistics.workArea?.todayArea.toFixed(2) }}</span>
-          <span>今日作业(亩)</span>
+          <span>{{ $t("messages.todaysOperation") }}</span>
         </li>
         <li>
           <span>{{ dataStatistics.device?.onlineDevice }}</span>
-          <span>在线数</span>
+          <span>{{ $t("messages.onlineCount") }}</span>
         </li>
         <li>
           <span>{{
@@ -58,19 +59,19 @@
               ? (dataStatistics.workArea?.totalArea / 10000).toFixed(2)
               : ""
           }}</span>
-          <span>累计作业(万亩)</span>
+          <span>{{ $t("messages.cumulativeOperation") }}</span>
         </li>
         <li class="bottom_li">
           <span>{{ dataStatistics.drive?.driving }}</span>
           <div>
-            <span>工作中</span>
+            <span>{{ $t("messages.InOperation") }}</span>
             <div></div>
           </div>
         </li>
         <li class="bottom_li">
           <span>{{ dataStatistics.drive?.standbyDevice }}</span>
           <div>
-            <span>待机</span>
+            <span>{{ $t("messages.Standby") }}</span>
             <div></div>
           </div>
         </li>
@@ -98,7 +99,7 @@
       }"
     >
       <div class="header" @click="notice_box_isActive = !notice_box_isActive">
-        <h3>状态通知</h3>
+        <h3>{{ $t("messages.StatusNotification") }}</h3>
         <el-icon v-if="!notice_box_isActive" color="#fff">
           <ArrowDownBold />
         </el-icon>
@@ -116,11 +117,17 @@
             <div class="item">
               <div class="l">
                 <span class="state" :style="{ color: item.color }">{{
-                  item.state == 0 ? "离线" : item.state == 1 ? "上线" : "告警"
+                  item.state == 0
+                    ? $t("messages.Offline")
+                    : item.state == 1
+                    ? $t("messages.Online")
+                    : $t("messages.Alarms")
                 }}</span>
               </div>
               <div class="r">
-                <p v-if="item.state == 2" class="state_2">驾驶效果差</p>
+                <p v-if="item.state == 2" class="state_2">
+                  {{ $t("messages.Poordrivingperformance") }}
+                </p>
                 <div class="title">
                   <span>{{ item.carName }}</span>
                   <span @click="searchDevicePosition(item.markerId)">{{
@@ -182,7 +189,7 @@ import SinoMap from "@/components/SinoMap/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import realTimeChart from "./components/realTimeChart.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
-import { reactive, ref, watch, onUnmounted } from "vue";
+import { reactive, ref, watch, onUnmounted, computed } from "vue";
 import useSocketStore from "@/store/socket";
 import { useRouter, useRoute } from "vue-router";
 import {
@@ -190,6 +197,9 @@ import {
   farmMachineDataStatistics_API,
   carLog_API,
 } from "@/api/monitoring";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+const { locale } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const socketStore = useSocketStore();
@@ -236,6 +246,9 @@ watch(
 );
 onUnmounted(() => {
   socketStore.close();
+});
+const labelWidth = computed(() => {
+  return locale.value == "zh" ? "280px" : "350px";
 });
 
 getFaromDataStatistics();
@@ -429,9 +442,6 @@ async function getOnlineFarmPosition() {
   mapCenter.center = onlineFarmMachines.map((item: any) => {
     return [item.posY, item.posX];
   });
-
-
-
 }
 
 //
@@ -534,7 +544,7 @@ function createMarkerPopup(item: any) {
         <ul class="popup_container">
           <li>
             <div class="l">
-              <div class="label">车辆名称:</div>
+              <div class="label">${t('messages.carName')}:</div>
               <div class="value">${item.carName}</div>
             </div>
             <div class="r">
@@ -763,7 +773,7 @@ function openRemote_markerPopup(arg: any) {
     z-index: 999;
 
     :deep(.el-autocomplete) {
-      width: 280px;
+      width: 330px;
     }
   }
 
@@ -782,6 +792,7 @@ function openRemote_markerPopup(arg: any) {
       flex-wrap: wrap;
       border-bottom: 2px solid rgba(0, 218, 216, 0.3);
       padding-bottom: 10px;
+      text-align: center;
 
       li {
         width: 50%;

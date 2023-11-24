@@ -58,6 +58,7 @@ function formatRoute(menuPermissions) {
       item.component = Layout;
       item.meta = {
         title: item.name,
+        titleEn: item.nameEs,
         icon: item.icon,
       };
       return item;
@@ -95,6 +96,7 @@ function formatRoute(menuPermissions) {
           } else {
             item2.activeMenu = item.file_path;
             item2.breadcrumb = item.name;
+            item2.breadcrumbEn = item.nameEs
           }
           setFirstRouter(item.children);
         });
@@ -120,10 +122,11 @@ function formatRoute(menuPermissions) {
     list.forEach((item) => {
       item.meta = {
         title: item.name,
+        titleEn: item.nameEs,
         icon: item.icon,
         keepAlive: item.keepAlive,
         activeMenu: item.activeMenu ? item.activeMenu : "",
-        breadcrumb: item.breadcrumb ? [{ title: item.breadcrumb }] : "",
+        breadcrumb: item.breadcrumb ? [{ title: item.breadcrumb,titleEn:item.breadcrumbEn }] : "",
         // hideTitle: !item.crumb
       };
       item.visible ? (item.meta.hidden = true) : "";
