@@ -17,12 +17,12 @@
 
 <script setup lang="ts">
 // 导入Vue相关的库
-import { onMounted, ref ,watch,nextTick} from "vue";
+import { onMounted, ref, watch, nextTick } from "vue";
 // 导入类型定义
 import type { MonitorObj } from "@/api/perception/type";
 // 导入高德地图加载器
 import AMapLoader from "@amap/amap-jsapi-loader";
-import { setMarker,updateChart } from "./setMarker";
+import { setMarker, updateChart } from "./setMarker";
 import { mapEvent } from './mapEvent';
 interface Props {
   provinceCars: MonitorObj["provinceCars"];
@@ -49,7 +49,7 @@ let mask: any = [];
 function startDraw(AMap: any) {
   map.value = new AMap.Map("container", {
     center: [104.114129, 37.550339], // 中国的大致中心点
-    zoom:4.4, // 设置一个合适的缩放级别以显示多个城市
+    zoom: 4.4, // 设置一个合适的缩放级别以显示多个城市
     backgroundColor: "transparent",
     mask: mask, // 设置遮罩层
     disableSocket: true,
@@ -64,12 +64,12 @@ function startDraw(AMap: any) {
   //边框
   // poly3d(AMap, maskPoly, map, polylines);
   // //标注
-  map.value.on('complete', function() {
+  map.value.on('complete', function () {
     // 地图加载完成后调用setMarker方法
-    nextTick(()=>{
+    nextTick(() => {
       setMarker(AMap, map, dataList);
     })
-});
+  });
   //注册的所有时间
   mapEvent(map);
   // 使用setFitView自动调整视图以适应所有的折线
@@ -86,47 +86,49 @@ function initMap() {
   AMapLoader.load({
     key: "604de37af9e617ea3d9d26f306743698",
     version: "2.0",
-    plugins: ["AMap.DistrictSearch", "AMap.Polyline","AMap.DistrictLayer"],
+    plugins: ["AMap.DistrictSearch", "AMap.Polyline", "AMap.DistrictLayer"],
   })
     .then((AMap: any) => {
       AMap.plugin('AMap.DistrictSearch', function () {
-  let district = new AMap.DistrictSearch({ // 创建行政区查询对象
-    extensions: 'all', // 返回行政区边界坐标等具体信息
-    level: 'province' // 设置查询行政区级别为国 
-  });
-  district.search('中国', function(status:any, result:any) {
-      if(status=='complete'){
-        drawingCity(AMap,result.districtList[0].boundaries);
-      }
- })
-})
+        let district = new AMap.DistrictSearch({ // 创建行政区查询对象
+          extensions: 'all', // 返回行政区边界坐标等具体信息
+          level: 'province' // 设置查询行政区级别为国 
+        });
+        district.search('中国', function (status: any, result: any) {
+          if (status == 'complete') {
+            drawingCity(AMap, result.districtList[0].boundaries);
+          }
+        })
+      })
     })
     .catch((e: any) => {
       console.log(e);
     });
 }
-async function drawingCity(AMap: any,data:any) {
-      //数据处理
-      for(let i=0;i<data.length;i+=1){//构造MultiPolygon的path
-        data[i] = [data[i]]
-              }
-      mask = data;
-      startDraw(AMap);
+async function drawingCity(AMap: any, data: any) {
+  //数据处理
+  for (let i = 0; i < data.length; i += 1) {//构造MultiPolygon的path
+    data[i] = [data[i]]
+  }
+  mask = data;
+  startDraw(AMap);
 }
 onMounted(() => {
   initMap();
 });
-watch(() =>props.provinceCars, () => {
+watch(() => props.provinceCars, () => {
   updateChart(props.provinceCars)
 }, { deep: true })
 </script>
 
 <style scoped lang="scss">
- :deep(.echarts-container) {
-    transition: opacity .3s;  /* 0.3秒的淡入淡出效果 */
+:deep(.echarts-container) {
+  transition: opacity .3s;
+  /* 0.3秒的淡入淡出效果 */
 }
+
 .carmap {
- 
+
   position: relative;
   width: 100%;
   height: 100%;
