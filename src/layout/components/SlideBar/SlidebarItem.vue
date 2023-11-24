@@ -17,7 +17,7 @@
       </el-icon>
    
       <span v-if="onlyOneChild.meta.title">
-        {{ onlyOneChild.meta.title }}
+        {{ $t(onlyOneChild.meta.titleEn) }}
       </span>
     </el-menu-item>
   </template>

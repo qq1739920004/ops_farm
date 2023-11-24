@@ -6,19 +6,22 @@
         <el-option
           v-for="item in mapTileOptions.list"
           :key="item.id"
-          :label="item.lable"
+          :label="t(item.lable)"
           :value="item.id"
         />
       </el-select>
       <div class="map_utils_item">
-        <el-tooltip effect="light" content="点回回全局">
+        <el-tooltip
+          effect="light"
+          :content="t('sinoMap.Clickmetoreturntotheoverallsituation')"
+        >
           <el-button @click="handleMapCenter('')">
             <SvgIcon icon="refresh" />
           </el-button>
         </el-tooltip>
       </div>
       <div class="map_utils_item">
-        <el-tooltip effect="light" content="测距">
+        <el-tooltip effect="light" :content="t('sinoMap.ranging')">
           <el-button @click="mapRanging">
             <SvgIcon icon="ranging" />
           </el-button>
@@ -46,6 +49,10 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { mapTileLayers } from "./utils/mapTileLayers";
 import { ref, reactive, onMounted, watch } from "vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
+import { useI18n } from "vue-i18n";
+
+
+const { t } = useI18n();
 
 const props = defineProps({
   mapTile: {
@@ -62,7 +69,7 @@ const props = defineProps({
   },
   mapRenderMode: {
     type: String,
-    default: "dom", // 原生dom渲染， 或者 polymer 聚合引擎；
+    default: "", // 原生dom渲染， 或者 polymer 聚合引擎；
   },
   markerData: {
     type: Array,
@@ -80,11 +87,21 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  polygonData: {
+    type: Array,
+    default: [],
+  },
   lineStyle: {
     type: Object,
     default: {
-      color: "#8dfc96",
-      weight: 2,
+      color: "#8be668",
+      weight: 4,
+    },
+  },
+  polygonStyle: {
+    type: Object,
+    default: {
+      radius: 20000,
     },
   },
 });
@@ -97,6 +114,11 @@ const defaultMapZoom = 4;
 watch(
   () => props.markerData,
   (markerData) => {
+    // 清空marker点
+    markerArr.length = 0;
+    markerClusterGroup.clearLayers();
+    markerGroup.clearLayers();
+
     createMarker(markerData);
   }
 );
@@ -130,19 +152,34 @@ watch(
   { deep: true }
 );
 watch(
+  () => props.polygonData,
+  (polygonData) => {
+    createPolygon(polygonData);
+  },
+  { deep: true }
+);
+watch(
   () => props.mapCenter,
   (mapCenter) => {
     handleMapCenter(mapCenter);
   },
   { deep: true }
 );
+watch(
+  () => props.polygonStyle,
+  () => {
+    createPolygon(props.polygonData);
+  },
+  { deep: true }
+);
 
 let map: any = null; // map实例对象
 let polyline: any = null;
-let mapRenderMode = props.mapRenderMode;
+let mapRenderMode = props.mapRenderMode || "dom";
 let mapRenderModeLength = ref(0);
 let mapRenderModeLengthMax = 500; //数量超过1000，强制转为 polymer 聚合引擎
 let markerArr: any = []; // marker坐标点数字
+let polygonArr: any = [];
 
 //@ts-ignore
 let markerClusterGroup = L.markerClusterGroup();
@@ -151,9 +188,24 @@ let markerGroup = L.featureGroup();
 let mapTileOptions = reactive({
   id: props.mapTile[0],
   list: [
-    { id: 0, lable: "卫星地图", mapName: "GaoDe", mapType: "Satellite" },
-    { id: 1, lable: "高德地图", mapName: "GaoDe", mapType: "Normal" },
-    { id: 2, lable: "google地图", mapName: "Google", mapType: "Normal" },
+    {
+      id: 0,
+      lable: "sinoMap.SatellitesMap",
+      mapName: "GaoDe",
+      mapType: "Satellite",
+    },
+    {
+      id: 1,
+      lable: "sinoMap.AMAP",
+      mapName: "GaoDe",
+      mapType: "Normal",
+    },
+    {
+      id: 2,
+      lable: "sinoMap.googleMap",
+      mapName: "Google",
+      mapType: "Normal",
+    },
     { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
   ],
 });
@@ -167,7 +219,8 @@ watch(
   (mapRenderModeLength) => {
     if (
       mapRenderModeLength.value > mapRenderModeLengthMax &&
-      mapRenderMode == "dom"
+      mapRenderMode == "dom" &&
+      !props.mapRenderMode
     ) {
       markerClusterGroup.clearLayers();
       markerGroup.clearLayers();
@@ -198,7 +251,15 @@ function createMarker(list: any) {
       marker = L.marker([markerLat, markerLng]);
     }
     marker.bindPopup(item.markerPopup);
-
+    if (item.markerName) {
+      marker
+        .bindTooltip(item.markerName, {
+          permanent: true,
+          direction: "top",
+          offset: [0, -15],
+        })
+        .openTooltip();
+    }
     marker.markerId = item.markerId; // marker对象上设置唯一标识
     marker.markerType = item.markerType; // marker对象上设置唯一标识
     markerArr.push(marker);
@@ -269,13 +330,30 @@ function updateMarkerVisible(list: any) {
 }
 // 创建icon图标
 function createIcon(item: any) {
-  if (!item.markerIcon) return;
-  return L.icon({
-    iconUrl: item.markerIcon, // SVG图标的路径
-    iconSize: [25, 28], // 图标的大小 [宽度, 高度]
-    iconAnchor: [12, 14], // 图标的锚点位置 [水平, 垂直]
-    popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
-  });
+  if (item.markerIcon) {
+    return L.icon({
+      iconUrl: item.markerIcon, // SVG图标的路径
+      iconSize: [25, 28], // 图标的大小 [宽度, 高度]
+      iconAnchor: [12, 14], // 图标的锚点位置 [水平, 垂直]
+      popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
+    });
+  }
+  if (item.markerTitle) {
+    return L.divIcon({
+      className: "custom-icon",
+      // html:  item.markerTitle,
+      // '<div style="transform: rotate(' +
+      // (item.markerRotate || 0) +
+      // 'deg)">' +
+      // item.markerTitle +
+      // "</div>",
+      html: `<div style="transform: rotate(${item.markerRotate || 0}deg)">
+   ${item.markerTitle}
+    </div>`,
+      iconSize: [40, 10], // 图标的大小 [宽度, 高度]
+      // iconAnchor: [null, null], // 图标的锚点位置 [水平, 垂直]
+    });
+  }
 }
 
 // 初始化加载地图
@@ -293,17 +371,43 @@ function initMap() {
   markerClusterGroup.addTo(map);
   mapTileChange();
   initRanging();
+  mapzoomChange();
 }
+
+// 创建多面形
+function createPolygon(list: any) {
+  polygonArr.forEach((item: any) => {
+    item.remove();
+  });
+  polygonArr.length = 0;
+
+  const { radius } = props.polygonStyle;
+
+  list.forEach((item: any) => {
+    item.forEach((v: any) => {
+      const [markerLng, markerLat] = gcoordLngLat(v[0], v[1]);
+      var circle = L.circle([markerLat, markerLng], {
+        radius, // 半径（单位：米）
+        color: "none",
+        fillColor: "#5AF269",
+        fillOpacity: 0.3,
+      }).addTo(map);
+      polygonArr.push(circle);
+    });
+  });
+}
+
 // 创建线
 function createLine(list: any) {
   if (polyline) {
     polyline.remove();
   }
+
   const latLng: any = [];
   list.forEach((item: any) => {
     let arr: any = [];
     item.forEach((v: any) => {
-      arr.push(gcoordLngLat(v[1], v[0]));
+      arr.push(gcoordLngLat(v[0], v[1]).reverse());
     });
     latLng.push(arr);
   });
@@ -398,6 +502,46 @@ function mapRanging() {
   }
   pickupMode = true; //开启拾取模式
 }
+// 地图缩放处理事件
+function mapzoomChange() {
+  let flag1 = false;
+  let flag2 = false;
+  map.on("zoomend", function () {
+    let zoom = map.getZoom();
+    let fontSize: number;
+    if (zoom <= 10) {
+      fontSize = zoom / 5;
+      flag2 = false;
+    } else {
+      fontSize = 14;
+      flag2 = true;
+    }
+    setProperty();
+    function setProperty() {
+      document.documentElement.style.setProperty(
+        "--map-font-size",
+        `${fontSize}px`
+      );
+    }
+    if (flag1 != flag2) {
+      setlatLng();
+    }
+    function setlatLng() {
+      flag1 = flag2;
+      markerArr.forEach((item: any) => {
+        if (item.getTooltip()) {
+          item.getTooltip().setLatLng(item.getLatLng());
+        }
+        // 特殊处理
+        let icon = item.getIcon();
+        if(icon.options.className) {
+          zoom <= 10 ? icon.options.iconSize = [50,10] : icon.options.iconSize = [300,20];
+          item.setIcon(icon)
+        }
+      });
+    }
+  });
+}
 
 // 清除地图测距
 function clearMapRanging() {
@@ -449,6 +593,9 @@ function initRanging() {
 </script>
 
 <style lang="scss" scoped>
+:root {
+  --map-font-size: 1px;
+}
 .SinoMap_component {
   position: relative;
   height: 100%;
@@ -467,7 +614,7 @@ function initRanging() {
   align-items: center;
 
   .el-select {
-    width: 120px;
+    width: 135px;
   }
 
   .map_utils_item {
@@ -492,5 +639,23 @@ function initRanging() {
   .leaflet-popup-tip {
     background-color: var(--el-bg-color);
   }
+}
+:deep(.custom-icon) {
+  color: #ffdf00;
+  font-size: var(--map-font-size);
+  font-weight: 700;
+  div {
+    background: linear-gradient(
+      90deg,
+      rgba(0, 135, 245, 1) 0%,
+      rgba(0, 123, 255, 0) 100%
+    );
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    padding: 2px 5px;
+  }
+}
+:deep(.leaflet-tooltip) {
+  font-size: 8px;
 }
 </style>
