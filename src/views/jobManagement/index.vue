@@ -65,8 +65,11 @@ import { carDealer_API } from '@/api/machineryList/index'
 import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, dealerCarResponseData } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 import router from '@/router'
+// import useJsonp from './useJsonp.ts'
 import axios from 'axios';
-
+// import { jsonp } from 'jsonp'
+// import { VueJsonp } from 'vue-jsonp';
+import jsonp from 'axios-jsonp'
 
 
 // 控制table显示与否
@@ -168,6 +171,7 @@ const getDealerCarList = async () => {
     }
 }
 
+
 // 获取数据
 const getPaddyWorkList = async () => {
     const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
@@ -176,20 +180,27 @@ const getPaddyWorkList = async () => {
 
     paddyWorkList.value.forEach((item: any) => {
         if (item.lineptax && item.lineptay) {
-            axios({
-                url: `${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`,
-                method: 'get',
+            //xxx.vue
+            // const location = item.lineptay + ',' + item.lineptax
+            // const { responseData, isLoading, error, fetchData } = useJsonp(`${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3?ak=G5zGmmVnuYiUCN087KWmpZM70sZPvnQe&output=json&coordtype=wgs84ll&location=31.225696563611,121.49884033194,43.302917,124.324073`)
+            // console.log(fetchData)
+            // .then((res: any) => {
+            //     console.log(res);
+            //     // item.position = res.data.result.formatted_address
+            // })
+
+            axios.get(`${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`, {
+
                 params: {
                     'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
                     'output': 'json',
                     'coordtype': 'wgs84ll',
                     'location': item.lineptay + ',' + item.lineptax
-                }
+                },
+                adapter: jsonp
             }).then((res: any) => {
                 item.position = res.data.result.formatted_address
             })
-
-            // const res = getTrueLocation_API()
 
         }
     })

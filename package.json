@@ -13,10 +13,12 @@
     "@amap/amap-jsapi-loader": "^1.0.1",
     "@element-plus/icons-vue": "^2.1.0",
     "axios": "^1.4.0",
+    "axios-jsonp": "^1.0.4",
     "echarts": "^5.4.3",
     "element-plus": "^2.3.8",
     "gcoord": "^1.0.5",
     "gsap": "^3.12.2",
+    "jsonp": "^0.2.1",
     "leaflet": "^1.9.4",
     "leaflet.chinatmsproviders": "^3.0.6",
     "leaflet.markercluster": "^1.5.3",
@@ -34,6 +36,7 @@
     "wkt": "^0.1.1"
   },
   "devDependencies": {
+    "@types/jsonp": "^0.2.3",
     "@types/leaflet": "^1.9.3",
     "@vitejs/plugin-vue": "^4.2.3",
     "svg-sprite-loader": "^6.0.11",
