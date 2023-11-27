@@ -12,14 +12,14 @@
           <img class="top-left" src="~@/assets/perceptionImage/top_number1.png" alt="" />
           <div class="word">
             <p>{{ onlineDeviceValue }}</p>
-            <p>当前在线数</p>
+            <p>{{$t('perception.tonline')}}</p>
           </div>
         </div>
         <div>
           <img class="top-left" src="~@/assets/perceptionImage/top_number2.png" alt="" />
           <div class="word">
             <p>{{ addNowYearDeviceValue }}</p>
-            <p>当年新增农机</p>
+            <p>{{$t('perception.newlyIncreased')}}</p>
           </div>
         </div>
         <div>
@@ -29,7 +29,7 @@
           </div>
           <div class="word2">
             <p>{{ totalDeviceValue }}</p>
-            <p>农机总数</p>
+            <p>{{$t('perception.totalVehicle')}}</p>
           </div>
         </div>
         <div>
@@ -39,7 +39,7 @@
           </div>
           <div class="word2">
             <p class="yellow-text">{{ activeDeviceValue }}</p>
-            <p>已售农机数</p>
+            <p>{{$t('perception.soldVehicle')}}</p>
           </div>
         </div>
       </div>

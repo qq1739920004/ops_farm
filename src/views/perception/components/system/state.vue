@@ -2,7 +2,7 @@
   <div class="box">
     <div class="title">
       <img src="~@/assets/systemPerceptionImage/stateIcon.png" alt="">
-      <span>状态通知栏</span> 
+      <span>{{$t('perception.statusNotification')}}</span> 
     </div>
 
     <div class="state">
@@ -25,9 +25,9 @@
       </el-tooltip>
               <span>
                 <el-tag v-if="!item.onlineTcp" type="danger" size="small" effect="dark"
-                  >离线</el-tag>
+                  >{{$t('messages.Offline')}}</el-tag>
                 <el-tag v-else type="success" size="small" effect="dark"
-                  >上线</el-tag>
+                  >{{$t('messages.Online')}}</el-tag>
                 </span>
             </div>
           </div>

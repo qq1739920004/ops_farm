@@ -14,14 +14,14 @@
           <img  src="~@/assets/systemPerceptionImage/top_number1.png" alt=""  />
           <div class="word">
             <p>{{ monitorData.todayAcDevice || 0 }}</p>
-            <p>今日活跃数 </p>
+            <p>{{$t('perception.activeToday')}} </p>
           </div>
         </div>
         <div>
           <img  src="~@/assets/systemPerceptionImage/top_number2.png" alt="" />
           <div class="word">
             <p>{{ Math.floor(monitorData.todayArea) }}</p>
-            <p>今日作业面积</p>
+            <p>{{$t('perception.todayWorkingArea')}}</p>
           </div>
         </div>
         <div>
@@ -31,7 +31,7 @@
           </div>
           <div class="word">
             <p>{{ monitorData.totalDevice }}</p>
-            <p>农机总数</p>
+            <p>{{$t('perception.totalVehicle')}}</p>
           </div>
         </div>
         <div>
@@ -41,7 +41,7 @@
           </div>
           <div class="word">
             <p>{{ monitorData.onlineDevice }}</p>
-            <p>在线农机数</p>
+            <p>{{$t('perception.online')}}</p>
           </div>
         </div>
         <div>
@@ -51,7 +51,7 @@
           </div>
           <div class="word">
             <p>{{ monitorData.activeDevice }}</p>
-            <p>激活农机数</p>
+            <p>{{$t('perception.activeAmount')}}</p>
           </div>
         </div>
       </div>

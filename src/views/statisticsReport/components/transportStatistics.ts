@@ -5,7 +5,8 @@ import type { getStatisticsRemoteAPIResponse } from "@/api/statisticsReport/type
 import type { EChartsOption } from "echarts";
 export function transportOption(
   data: getStatisticsRemoteAPIResponse["data"],
-  optionfnStatistics: ShallowRef<EChartsOption>
+  optionfnStatistics: ShallowRef<EChartsOption>,
+  t:any
 ) {
   let option = shallowRef<EChartsOption>({});
  const purifyData:number[][]=[[],[],[],[]]
@@ -23,7 +24,7 @@ export function transportOption(
       left: 40
     },
     title: {
-      text: '运维统计',
+      text: t('statisticsReport.operatingStatistics'),
       left: 13,
       top: 16,
       textStyle: {
@@ -39,19 +40,19 @@ export function transportOption(
       right: 10,
       data: [
         {
-          name: '远程校准',
+          name: t('statisticsReport.remoteCalibration'),
           icon: 'roundRect'
         },
         {
-          name: '设置数据链',
+          name: t('statisticsReport.setDataLink'),
           icon: 'roundRect'
         },
         {
-          name: '注册',
+          name: t('statisticsReport.register'),
           icon: 'roundRect'
         },
         {
-          name: '小程序',
+          name: t('statisticsReport.miniProgram'),
           icon: 'roundRect'
         }
       ]
@@ -106,7 +107,7 @@ export function transportOption(
         data: purifyData[0],
         smooth: false,
         type: 'line',
-        name: '远程校准',
+        name: t('statisticsReport.remoteCalibration'),
         itemStyle: {
           color: '#44AAFF'
         }
@@ -115,7 +116,7 @@ export function transportOption(
         data: purifyData[1],
         smooth: false,
         type: 'line',
-        name: '设置数据链',
+        name: t('statisticsReport.setDataLink'),
         itemStyle: {
           color: '#FF4A3A'
         }
@@ -124,7 +125,7 @@ export function transportOption(
         data: purifyData[2],
         smooth: false,
         type: 'line',
-        name: '注册',
+        name: t('statisticsReport.register'),
         itemStyle: {
           color: '#00E581'
         }
@@ -133,7 +134,7 @@ export function transportOption(
         data: purifyData[3],
         smooth: false,
         type: 'line',
-        name: '小程序',
+        name: t('statisticsReport.miniProgram'),
         itemStyle: {
           color: '#ffa500'
         }

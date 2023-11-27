@@ -2,16 +2,16 @@
     <div class='app_container'>
         <div class="search_container app_card">
             <div class="input_area">
-                <el-input placeholder="请输入铭牌SN" v-model="pageInfo.key" class="input-with-select"
+                <el-input :placeholder="$t('work.work')" v-model="pageInfo.key" class="input-with-select"
                     @keyup.enter.native="search" clearable @clear="search">
                     <template #append>
                         <el-button icon="Search" @click="search" />
                     </template>
                 </el-input>
                 <div class="kind">
-                    设备类型：
+                    {{$t('work.deviceType')}}：
                 </div>
-                <el-select  v-model="pageInfo.terminalType" class="m-2" placeholder="请选择设备类型" @change="changeBlur">
+                <el-select  v-model="pageInfo.terminalType" class="m-2" :placeholder="$t('work.deviceType')" @change="changeBlur">
                     <el-option value="AG360" label="AG360" />
                     <el-option value="AG502" label="AG502" />
                     <el-option value="AG501" label="AG501" />
@@ -21,20 +21,20 @@
                 <el-button type="primary" @click="openExportDia">
                     <el-icon class="el-icon--left">
                         <SvgIcon icon="export" size="16" />
-                    </el-icon>导出</el-button>
-                <el-button v-auth="448" type="primary" icon="Plus" @click="openDialog">新建</el-button>
+                    </el-icon>{{$t('work.export')}}</el-button>
+                <el-button v-auth="448" type="primary" icon="Plus" @click="openDialog">{{$t('work.new')}}</el-button>
             </div>
         </div>
         <div class="table_container app_card">
             <el-table @selection-change="handleSelectionChange" :data="records" v-show="scence == '1'" stripe>
                 <el-table-column type="selection" width="55" />
-                <el-table-column type="index" width="80" label="序号" align="center" />
-                <el-table-column label="铭牌SN" align="center">
+                <el-table-column type="index" width="80" :label="$t('work.item')" align="center" />
+                <el-table-column :label="$t('work.labelSN')" align="center">
                     <template #="{ row }">
                         {{ row.npn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="质保日期" align="center">
+                <el-table-column :label="$t('work.guarantee')" align="center">
                     <template #="{ row }">
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) > Date.parse(new Date().toString())">
@@ -42,17 +42,17 @@
                         <div v-if="!row.warrantyDate">
                             <el-tag
                                 style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
-                                class="mx-1" type="danger" effect="dark">未激活</el-tag>
+                                class="mx-1" type="danger" effect="dark">{{$t('work.noactive')}}</el-tag>
                         </div>
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
                             <el-tag
                                 style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
-                                class="mx-1" effect="dark">已到期</el-tag>
+                                class="mx-1" effect="dark">{{ $t('work.due') }}</el-tag>
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="一体机SN" align="center">
+                <el-table-column :label="$t('work.gnssPoleSN')" align="center">
                     <template #="{ row }">
                         {{ row.sn || '/' }}
                     </template>
@@ -62,35 +62,35 @@
                         {{ row.hubSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="电机SN" align="center">
+                <el-table-column :label="$t('work.motorSN')" align="center">
                     <template #="{ row }">
                         {{ row.motorSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="多功能方向盘SN" align="center">
+                <el-table-column :label="$t('work.steeringSN')" align="center">
                     <template #="{ row }">
                         {{ row.steeringWheelSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="车身IMU_SN" align="center">
+                <el-table-column :label="$t('work.bobyIMUSN')" align="center">
                     <template #="{ row }">
                         {{ row.carImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="前轮IMU_SN" align="center">
+                <el-table-column :label="$t('work.frontSN')" align="center">
                     <template #="{ row }">
                         {{ row.wheelImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" width="180">
+                <el-table-column :label="$t('work.operation')" align="center" width="180">
                     <template #="{ row }">
                         <div class="edit-btn">
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
-                                :disabled="row.warrantyDate ? true : false">编辑
+                                :disabled="row.warrantyDate ? true : false">{{$t('work.edit')}}
                             </el-button>
-                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
+                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button>
                             <el-button v-auth="505" class="aftersale_btn" type="primary" link
-                                @click="gotoAfterSale(row)">售后处理</el-button>
+                                @click="gotoAfterSale(row)">{{$t('work.afterSale')}}</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -99,12 +99,12 @@
             <el-table @selection-change="handleSelectionChange" :data="records" v-show="scence == '2'" stripe>
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" label="序号" align="center" />
-                <el-table-column label="铭牌SN" align="center">
+                <el-table-column :label="$t('work.labelSN')" align="center">
                     <template #="{ row }">
                         {{ row.npn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="质保日期" align="center">
+                <el-table-column :label="$t('work.guarantee')" align="center">
                     <template #="{ row }">
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) > Date.parse(new Date().toString())">
@@ -113,50 +113,50 @@
                         <div v-if="!row.warrantyDate">
                             <el-tag
                                 style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
-                                class="mx-1" type="danger" effect="dark">未激活</el-tag>
+                                class="mx-1" type="danger" effect="dark">{{ $t('work.noactive') }}</el-tag>
                         </div>
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
                             <el-tag
                                 style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
-                                class="mx-1" effect="dark">已到期</el-tag>
+                                class="mx-1" effect="dark">{{ $t('work.due') }}</el-tag>
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="平板SN" align="center">
+                <el-table-column :label="$t('work.PlateSN')" align="center">
                     <template #="{ row }">
                         {{ row.sn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="电机SN" align="center">
+                <el-table-column :label="$t('work.MotorSN')" align="center">
                     <template #="{ row }">
                         {{ row.motorSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="车身SN" align="center">
+                <el-table-column :label="$t('work.BodySN')" align="center">
                     <template #="{ row }">
                         {{ row.carImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="天线1_SN" align="center">
+                <el-table-column :label="$t('work.Antenna1_SN')" align="center">
                     <template #="{ row }">
                         {{ row.antennaOne || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="天线2_SN" align="center">
+                <el-table-column :label="$t('work.Antenna2_SN')" align="center">
                     <template #="{ row }">
                         {{ row.antennaTwo || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center">
+                <el-table-column :label="$t('work.operation')" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
-                                :disabled="row.warrantyDate ? true : false">编辑
+                                :disabled="row.warrantyDate ? true : false">{{$t('work.edit')}}
                             </el-button>
-                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
+                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button>
                             <el-button v-auth="505" class="aftersale_btn" type="primary" link
-                                @click="gotoAfterSale(row)">售后处理</el-button>
+                                @click="gotoAfterSale(row)">{{$t('work.afterSale')}}</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -164,13 +164,13 @@
             </el-table>
             <el-table @selection-change="handleSelectionChange" :data="records" v-show="scence == '3'" stripe>
                 <el-table-column type="selection" width="55" />
-                <el-table-column type="index" width="80" label="序号" align="center" />
-                <el-table-column label="铭牌SN" width="200" align="center">
+                <el-table-column type="index" width="80" :label="$t('work.item')" align="center" />
+                <el-table-column :label="$t('work.labelSN')" width="200" align="center">
                     <template #="{ row }">
                         {{ row.npn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="质保日期" align="center">
+                <el-table-column :label="$t('work.guarantee')" align="center">
                     <template #="{ row }">
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) > Date.parse(new Date().toString())">
@@ -178,50 +178,50 @@
                         <div v-if="!row.warrantyDate">
                             <el-tag
                                 style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
-                                class="mx-1" type="danger" effect="dark">未激活</el-tag>
+                                class="mx-1" type="danger" effect="dark">{{$t('work.noactive')}}</el-tag>
                         </div>
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
                             <el-tag
                                 style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
-                                class="mx-1" effect="dark">已到期</el-tag>
+                                class="mx-1" effect="dark">{{$t('work.due')}}</el-tag>
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="平板SN" align="center">
+                <el-table-column :label="$t('work.PlateSN')" align="center">
                     <template #="{ row }">
                         {{ row.sn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="电机SN" align="center">
+                <el-table-column :label="$t('work.MotorSN')" align="center">
                     <template #="{ row }">
                         {{ row.motorSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="车身SN" align="center">
+                <el-table-column :label="$t('work.BodySN')" align="center">
                     <template #="{ row }">
                         {{ row.carImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="前轮SN" align="center">
+                <el-table-column :label="$t('work.frontSN')" align="center">
                     <template #="{ row }">
                         {{ row.wheelImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="天线1_SN" align="center">
+                <el-table-column :label="$t('work.Antenna1_SN')" align="center">
                     <template #="{ row }">
                         {{ row.antennaOne || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center">
+                <el-table-column :label="$t('work.operation')" align="center">
                     <template #="{ row }">
                         <div class="edit-btn">
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
-                                :disabled="row.warrantyDate ? true : false">编辑
+                                :disabled="row.warrantyDate ? true : false">{{$t('work.edit')}}
                             </el-button>
-                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>删除</el-button>
+                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button>
                             <el-button v-auth="505" type="primary" link @click="gotoAfterSale(row)"
-                                class="aftersale_btn">售后处理</el-button>
+                                class="aftersale_btn">{{$t('work.afterSale')}}</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -231,10 +231,10 @@
             </Pagination>
         </div>
         <div class="dialog">
-            <el-dialog style="border-radius: 8px;" v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'"
+            <el-dialog style="border-radius: 8px;" v-model="dialogVisible" :title="newRecords.id ? $t('work.edit') : $t('work.new')"
                 width="544px" height="580px">
                 <el-form label-width="140px" style="width: 90%" ref="formRef" :model="newRecords" :rules="rules">
-                    <el-form-item label="设备类型" prop="terminalType">
+                    <el-form-item :label="$t('work.deviceType')" prop="terminalType">
                         <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
                             style="width:100%" prop="terminalType">
                             <el-option value="AG360" label="AG360" />
@@ -242,25 +242,25 @@
                             <el-option value="AG501" label="AG501" />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="铭牌SN" prop="npn">
+                    <el-form-item :label="$t('work.labelSN')" prop="npn">
                         <el-input v-model="newRecords.npn"></el-input>
                     </el-form-item>
-                    <el-form-item label="一体机SN" prop="sn">
+                    <el-form-item :label="$t('work.gnssPoleSN')" prop="sn">
                         <el-input v-model="newRecords.sn"></el-input>
                     </el-form-item>
                     <el-form-item label="HUB_SN" prop="hubSn">
                         <el-input v-model="newRecords.hubSn"></el-input>
                     </el-form-item>
-                    <el-form-item label="电机SN" prop="motorSn">
+                    <el-form-item :label="$t('work.MotorSN')" prop="motorSn">
                         <el-input v-model="newRecords.motorSn"></el-input>
                     </el-form-item>
-                    <el-form-item label="多功能方向盘SN" prop="steeringWheelSn">
+                    <el-form-item :label="$t('work.steeringSN')" prop="steeringWheelSn">
                         <el-input v-model="newRecords.steeringWheelSn"></el-input>
                     </el-form-item>
-                    <el-form-item label="车身IMU_SN" prop="carImuSn">
+                    <el-form-item :label="$t('work.bobyIMUSN')" prop="carImuSn">
                         <el-input v-model="newRecords.carImuSn"></el-input>
                     </el-form-item>
-                    <el-form-item label="前轮IMU_SN" prop="wheelImuSn">
+                    <el-form-item :label="$t('work.frontSN')" prop="wheelImuSn">
                         <el-input v-model="newRecords.wheelImuSn"></el-input>
                     </el-form-item>
                 </el-form>
@@ -268,10 +268,10 @@
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button type="primary" v-if="!newRecords.id" @click="submit">
-                            确定
+                          {{$t('work.frontSN')}}
                         </el-button>
                         <el-button type="primary" v-else @click="editSubmit">
-                            确定
+                          {{$t('work.frontSN')}}
                         </el-button>
                     </span>
                 </template>

@@ -4,7 +4,7 @@
     <div class="search_container app_card">
       <div>
         <el-input
-          placeholder="请输入SN、电话"
+          :placeholder="$t('work.enterSNOrPhone')"
           v-model="helpHandling.key"
           @keyup.enter.native="search()"
         >
@@ -14,15 +14,15 @@
         </el-input>
       </div>
       <div class="state">
-        <span>状态：</span>
+        <span>{{$t('work.type')}}：</span>
         <el-select
           v-model="helpHandling.status"
-          placeholder="请选择"
+          :placeholder="$t('work.pleaseSelect')"
           @change="chooseStatus"
         >
-          <el-option value="0" label="待处理" />
-          <el-option value="1" label="已指派" />
-          <el-option value="2" label="已处理" />
+          <el-option value="0" :label="$t('work.pending')" />
+          <el-option value="1" :label="$t('work.assigned')" />
+          <el-option value="2" :label="$t('work.processed')" />
         </el-select>
       </div>
       <div class="tag">
@@ -30,7 +30,7 @@
           <el-icon :size="20">
             <Edit />
           </el-icon>
-          待处理{{ helpHandlingUncount }}
+          {{$t('work.pending')}} {{ helpHandlingUncount }}
         </el-tag>
       </div>
     </div>
@@ -44,13 +44,13 @@
         stripe
       >
         <el-table-column
-          label="序号"
+          :label="$t('work.type')"
           type="index"
           align="center"
           width="60px"
         />
         <el-table-column label="SN" prop="sn" align="center" />
-        <el-table-column label="状态" prop="status" align="center">
+        <el-table-column :label="$t('work.type')" prop="status" align="center">
           <template #="{ row }">
             <div v-if="row.status == 0">
               <el-tag
@@ -59,20 +59,20 @@
                   background: rgba(255, 212, 212, 1);
                   border: 1px solid rgba(255, 212, 212, 1);
                 "
-                >待处理</el-tag
+                >{{$t('work.pending')}}</el-tag
               >
             </div>
             <div v-if="row.status == 1">
-              <el-tag>已指派</el-tag>
+              <el-tag>{{$t('work.assigned')}}</el-tag>
             </div>
             <div v-if="row.status == 2">
-              <el-tag>已处理</el-tag>
+              <el-tag>{{$t('work.processed')}}</el-tag>
             </div>
           </template>
         </el-table-column>
 
         <el-table-column
-          label="求助时间"
+          :label="$t('work.helpTime')"
           prop="helpTime"
           :sortable="'custom'"
           align="center"
@@ -80,17 +80,17 @@
         </el-table-column>
 
         <el-table-column
-          label="处理时间"
+          :label="$t('work.processTime')"
           prop="handleTime"
           sortable
           align="center"
         />
-        <el-table-column label="历时" prop="consumeTime" align="center" />
-        <el-table-column label="处理人" prop="handlerName" align="center" />
-        <el-table-column label="管理员" prop="managerName" align="center" />
-        <el-table-column label="指派时间" prop="assignTime" align="center" />
-        <el-table-column label="备注" prop="info" />
-        <el-table-column label="操作" prop="status" align="center">
+        <el-table-column :label="$t('work.period')" prop="consumeTime" align="center" />
+        <el-table-column :label="$t('work.handler')" prop="handlerName" align="center" />
+        <el-table-column :label="$t('work.admin')" prop="managerName" align="center" />
+        <el-table-column :label="$t('work.assignTime')" prop="assignTime" align="center" />
+        <el-table-column :label="$t('work.remark')" prop="info" />
+        <el-table-column :label="$t('work.operation')" prop="status" align="center">
           <template #="{ row }">
             <el-button
               v-auth="506"
@@ -99,7 +99,7 @@
               type="success"
               @click="handleEdit(row)"
               :disabled="row.status == 2"
-              >处理</el-button
+              >{{$t('work.processed2')}}</el-button
             >
           </template>
         </el-table-column>
@@ -187,7 +187,7 @@ const getHelpHandlingUncount = async () => {
 };
 
 const tsToStr = (nowtime: any) => {
-  // 处理历时  将时间戳转化为时间格式
+  // $t('work.processed2')$t('work.period')  将时间戳转化为时间格式
   let date = new Date(parseInt(nowtime) * 1000);
   // let Year = date.getFullYear();
   // let Moth = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);

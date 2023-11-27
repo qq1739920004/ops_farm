@@ -5,7 +5,8 @@ import type { getStatisticsReportcarjobAPIResponse } from "@/api/statisticsRepor
 import type { EChartsOption } from "echarts";
 export function carjobOption(
   data: getStatisticsReportcarjobAPIResponse["data"],
-  optionfnStatistics: ShallowRef<EChartsOption>
+  optionfnStatistics: ShallowRef<EChartsOption>,
+  t:any
 ) {
   let xAxisData: string[] = [];
   let carSum: number[] = [];
@@ -25,7 +26,7 @@ export function carjobOption(
       top: 80,
     },
     title: {
-      text: '车辆分布与作业信息',
+      text: t('statisticsReport.vehicleLocationAndProject'),
       left: 13,
       top: 16,
       textStyle: {
@@ -46,7 +47,7 @@ export function carjobOption(
       trigger: 'axis'
     },
    legend: {
-      data: [ '车辆总数','今日上线','累计作业'],
+      data: [ t('statisticsReport.total'),t('statisticsReport.todayOnline'),t('statisticsReport.cumulativeProject')],
       right: '30',
       top: '20',
    },
@@ -73,7 +74,7 @@ export function carjobOption(
    ],
    series: [
     {
-       name: '今日上线',
+       name: t('statisticsReport.todayOnline'),
        type: 'bar',
        barWidth:5,
        data: carOnline,
@@ -82,7 +83,7 @@ export function carjobOption(
        },
     },
     {
-       name: '车辆总数',
+       name: t('statisticsReport.total'),
        type: 'bar',
        barWidth:5,
        itemStyle: {
@@ -91,7 +92,7 @@ export function carjobOption(
        data: carSum
     },
     {
-       name: '累计作业',
+       name: t('statisticsReport.cumulativeProject'),
        type: 'bar',
        barWidth: 5,
        itemStyle: {

@@ -3,7 +3,7 @@
     <div class="title">
       <span>|</span>&nbsp
       <span class="arrows-shadow">▸</span>
-      状态通知栏
+      {{$t('perception.statusNotification')}}
       <span class="arrows-shadow">◂</span>
     </div>
 

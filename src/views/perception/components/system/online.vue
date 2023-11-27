@@ -2,7 +2,7 @@
   <div class="box">
     <div class="title">
       <img src="~@/assets/systemPerceptionImage/onlineIcon.png" alt="">
-      <span>各类型农机在线数</span> 
+      <span>{{$t('perception.numberOfAgriculturalMachineryOnline')}}</span> 
     </div>
 
     <div class="charts" ref="bar"></div>

@@ -3,7 +3,7 @@
     <div class="title">
       <span>|</span>&nbsp
       <span class="arrows-shadow">▸</span>
-      各类型农机在线数
+      {{$t('perception.numberOfAgriculturalMachineryOnline')}}
       <span class="arrows-shadow">◂</span>
     </div>
 

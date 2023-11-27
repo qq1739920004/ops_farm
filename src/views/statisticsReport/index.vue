@@ -2,16 +2,16 @@
   <div class="app_container">
     <div class="top">
       <div class="chart1">
-        <div class="chart_title">实时统计</div>
+        <div class="chart_title">{{t('statisticsReport.realTime')}}</div>
         <Chartone :farmMachineData="farmMachineData"></Chartone>
       </div>
       <div class="chart2">
-        <div class="chart_title">网络状况</div>
+        <div class="chart_title">{{t('statisticsReport.internetStatus')}}</div>
 
         <chart-net :data="networkData"></chart-net>
       </div>
       <div class="chart3">
-        <div class="chart_title">省份在线车辆排名</div>
+        <div class="chart_title">{{t('statisticsReport.onlineRanking')}}</div>
         <Chartthree :farmMachineData="farmMachineData"> </Chartthree>
       </div>
     </div>
@@ -52,17 +52,18 @@ import Chartone from './components/chartone.vue'
 import chartNet from './components/chartNet.vue'
 import Chartthree from './components/chartthree.vue'
 import chartBase from './components/chartBase.vue'
+import socket from "@/store/socket";
+
 import { fnOption } from './components/fnStatistics'
 import { transportOption } from './components/transportStatistics'
 import { visitOption } from './components/visitStatistics'
 import {carjobOption} from './components/carjobStatistics';
-
-import { ref, shallowRef,onMounted,onUnmounted} from 'vue'
+import { ref, shallowRef,onMounted,onUnmounted,watchEffect} from 'vue'
 import {getStatisticsReportfarmMachineAPI,getStatisticsReportcarjobAPI,getStatisticsReportnetworkAPI,getStatisticsWxAPI,getStatisticsRemoteAPI,getStatisticsStatAPI} from '@/api/statisticsReport/index'
 import type {FarmMachineObj,getStatisticsReportnetworkAPIResponse} from '@/api/statisticsReport/type'
 import type {EChartsOption} from 'echarts'
-import socket from "@/store/socket";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 type timeType={
     st:string,
     et:string
@@ -112,7 +113,7 @@ const getStatisticsWx=async(time:timeType)=>{
         st:time.st,
         et:time.et
       })
-      fnOption(res.data,optionfnStatistics)
+      watchEffect(()=>fnOption(res.data,optionfnStatistics,t))
    }catch(err){
     optionfnStatistics.value={}
     console.log(err)
@@ -126,7 +127,7 @@ const getStatisticsRemote=async(time:timeType)=>{
         et:time.et
       })
 
-      transportOption(res.data,optionTransportStatistics)
+      watchEffect(()=>transportOption(res.data,optionTransportStatistics,t))
    }catch(err){
     optionTransportStatistics.value={}
     console.log(err)
@@ -139,7 +140,7 @@ const getStatisticsStat=async(time:timeType)=>{
         st:time.st,
         et:time.et
       })
-      visitOption(res.data,optionVisitStatistics)
+      watchEffect(()=>visitOption(res.data,optionVisitStatistics,t))
    }catch(err){
     optionVisitStatistics.value={}
     console.log(err)
@@ -158,7 +159,7 @@ const getStatisticsReportnetwork=async()=>{
 const getStatisticsReportcarjob=async()=>{
     try{
       let res= await getStatisticsReportcarjobAPI()
-      carjobOption(res.data,optionCarjobStatistics)
+      watchEffect(()=>carjobOption(res.data,optionCarjobStatistics,t))
    }catch(err){
     optionCarjobStatistics.value={}
     console.log(err)

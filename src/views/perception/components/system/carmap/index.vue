@@ -3,11 +3,11 @@
     <div class="map-bar-info">
       <div class='map-info'>
         <div class="yellow"></div>
-        <span>总数</span>
+        <span>{{$t('perception.total')}}</span>
       </div>
       <div class='map-info'>
         <div class="gree"></div>
-        <span>在线数</span>
+        <span>{{$t('perception.tonline')}}</span>
       </div>
 
     </div>
@@ -24,6 +24,8 @@ import type { MonitorObj } from "@/api/perception/type";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { setMarker, updateChart } from "./setMarker";
 import { mapEvent } from './mapEvent';
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 interface Props {
   provinceCars: MonitorObj["provinceCars"];
 }
@@ -67,7 +69,7 @@ function startDraw(AMap: any) {
   map.value.on('complete', function () {
     // 地图加载完成后调用setMarker方法
     nextTick(() => {
-      setMarker(AMap, map, dataList);
+      setMarker(AMap, map, dataList,t);
     })
   });
   //注册的所有时间

@@ -2,7 +2,7 @@
   <div class="box">
     <div class="title">
       <img src="~@/assets/systemPerceptionImage/activeIcon.png" alt="" />
-      <span>车辆活跃度</span>
+      <span>{{$t('perception.vehicleActivity')}}</span>
     </div>
 
     <div class="charts" ref="bar"></div>

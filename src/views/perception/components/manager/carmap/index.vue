@@ -3,11 +3,11 @@
     <div class="map-bar-info">
       <div class='map-info'>
         <div class="yellow"></div>
-        <span>总数</span>
+        <span>{{$t('perception.total')}}</span>
       </div>
       <div class='map-info'>
         <div class="gree"></div>
-        <span>在线数</span>
+        <span>{{$t('perception.tonline')}}</span>
       </div>
 
     </div>
@@ -27,6 +27,8 @@ import { purifyBaiduData, purifyCityArr } from './utils';
 import { poly3d } from "./polygon3d";
 import { setMarker,updateChart } from "./setMarker";
 import { mapEvent } from './mapEvent';
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 interface Props {
   provinceCars: MonitorObj["provinceCars"];
 }
@@ -70,7 +72,7 @@ function startDraw(AMap: any,cityArr: string[]) {
   //边框
   poly3d(AMap, maskPoly, map, polylines);
   //标注
-  setMarker(AMap, map, dataList,cityArr.length);
+  setMarker(AMap, map, dataList,cityArr.length,t);
   //注册的所有时间
   mapEvent(map);
   // 使用setFitView自动调整视图以适应所有的折线

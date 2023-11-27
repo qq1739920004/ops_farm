@@ -5,21 +5,21 @@
       :class="{ active: activeIndex === 0 }"
       @click="changeActiveIndex(0)"
     >
-      今日
+      {{$t("work.today")}}
     </div>
     <div
       class="legend_item"
       :class="{ active: activeIndex === 1 }"
       @click="changeActiveIndex(1)"
     >
-      本月
+      {{$t("work.thisMonth")}}
     </div>
     <div
       class="legend_item"
       :class="{ active: activeIndex === 2 }"
       @click="changeActiveIndex(2)"
     >
-      今年
+    {{$t("work.thisYear")}}
     </div>
   </div>
 </template>
@@ -61,16 +61,19 @@ onMounted(()=>{
 
 <style scope>
 .legend_container {
-  width: 120px;
+  min-width: 190px;
   position: absolute;
-  top: 20px;
+  top: 50px;
   z-index: 999;
-  left: 200px;
+  left: 180px;
   display: flex;
   justify-content: space-between;
   font-size: 14px;
   cursor: pointer;
   .active {
+  color: #0080ff;
+}
+.legend_item:hover {
   color: #0080ff;
 }
 }

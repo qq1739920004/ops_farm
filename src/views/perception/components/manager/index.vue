@@ -46,6 +46,7 @@ import Online from "./online.vue";
 import { getMonitorAPI,getUserAuth } from "@/api/perception/index.ts";
 import type { MonitorObj, recordsType } from "@/api/perception/type";
 import socket from "@/store/socket";
+
 defineProps({
   companyName:{
     type:String,
@@ -68,7 +69,7 @@ const carAreas = ref<Array<object>>([]);
 
 const todayArea = ref<number>();
 const totalArea = ref<number>();
-// 各类型农机在线数
+// {{$t('perception.numberOfAgriculturalMachineryOnline')}}
 const typeCounts = ref<Array<object>>([]);
 // 各省车辆状态
 const provinceCars = ref<MonitorObj["provinceCars"]>();

@@ -3,9 +3,11 @@ import type { ShallowRef } from "vue";
 import type { getStatisticsWxAPIResponse } from "@/api/statisticsReport/type";
 //导入echarts的option类型
 import type { EChartsOption } from "echarts";
+
 export function fnOption(
   data: getStatisticsWxAPIResponse["data"],
-  optionfnStatistics: ShallowRef<EChartsOption>
+  optionfnStatistics: ShallowRef<EChartsOption>,
+  t: any
 ) {
   let option = shallowRef<EChartsOption>({});
   option.value = {
@@ -16,7 +18,7 @@ export function fnOption(
       left: 40
     },
     title: {
-      text: '功能统计',
+      text: t('statisticsReport.newVehicle'),
       left: 13,
       top: 16,
       textStyle: {
@@ -32,7 +34,7 @@ export function fnOption(
       right: 10,
       data: [
         {
-          name: '参数同步',
+          name: t('statisticsReport.parameter'),
           icon: 'roundRect'
         }
       ]
@@ -88,7 +90,7 @@ export function fnOption(
         data: data.chart.data,
         smooth: false,
         type: 'line',
-        name: '参数同步',
+        name: t('statisticsReport.parameter'),
         itemStyle: {
           color: '#00FB8D'
         }

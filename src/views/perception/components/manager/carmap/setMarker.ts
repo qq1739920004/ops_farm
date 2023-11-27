@@ -23,7 +23,7 @@ function updateChart(dataList:MonitorObj["provinceCars"]){
   })
 }
 
-function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:number){
+function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:number,t:any){
   for(let i=0;i<length;i++){
         const markerContent = document.createElement('div');
         const chartContainer = document.createElement('div');
@@ -83,10 +83,10 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
                   param.color +
                   ';"></span>';
                 // 判断系列名称并显示相应的数据
-                if (param.seriesName === "在线数") {
+                if (param.seriesName === t('perception.tonline')) {
                   tooltipHtml += " " + param.seriesName + ": " + param.data;
                   numCurent.value = param.data;
-                } else if (param.seriesName === "总数") {
+                } else if (param.seriesName === t('perception.total')) {
                   tooltipHtml +=
                     " " + param.seriesName + ": " + (param.data + numCurent.value); // 使用 totalNum
                 }
@@ -130,7 +130,7 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
               show: false  // 隐藏y轴
           },
           series: [{
-              name: '在线数',
+              name: t('perception.tonline'),
               data: [dataList[i].onlineNum],
               //如果是0，就不显示这个值
               
@@ -162,7 +162,7 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
               },
           },
           {
-              name: '总数',
+              name: t('perception.total'),
               data: [dataList[i].totalNum - dataList[i].onlineNum],
               type: 'bar',
               itemStyle: {

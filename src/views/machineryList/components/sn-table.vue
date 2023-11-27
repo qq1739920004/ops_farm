@@ -1,12 +1,12 @@
 <!--  -->
 <template>
   <el-table @sort-change="changesort" :data="props.carNewList" stripe>
-    <el-table-column type="index" label="序号" width="60" align="center" />
-    <el-table-column label="车主姓名" prop="userName" align="center">
+    <el-table-column type="index" :label="$t('devicelist.item')" width="60" align="center" />
+    <el-table-column :label="$t('devicelist.name')" prop="userName" align="center">
     </el-table-column>
-    <el-table-column label="车主手机号" prop="tel" align="center">
+    <el-table-column :label="$t('devicelist.tel')" prop="tel" align="center">
     </el-table-column>
-    <el-table-column label="铭牌SN" width="180" align="center">
+    <el-table-column :label="$t('devicelist.labelSN')" width="180" align="center">
       <template #default="scope">
         <div :class="scope.row.onlineTcp === 1 ? 'sn_area1' : 'sn_area2'"
           @click="gotoMonitor(scope.row.sn, scope.row.onlineTcp)">
@@ -22,16 +22,16 @@
     </el-table-column>
     <el-table-column label="SN" prop="sn" align="center"> </el-table-column>
 
-    <el-table-column label="设备所在地" align="center">
+    <el-table-column :label="$t('devicelist.location')" align="center">
       <template #="{ row }">
         <div style="color: rgba(130, 130, 130, 1)">
           {{ cityCodeList[row.addrcode] }}
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="类型" prop="terminalType" align="center">
+    <el-table-column :label="$t('devicelist.type')" prop="terminalType" align="center">
     </el-table-column>
-    <el-table-column label="软件过期" align="center">
+    <el-table-column :label="$t('devicelist.expiredTime')" align="center">
       <template #="{ row }">
         <!-- v-if="row.expirationTime && Date.parse(row.expirationTime.toString()) > Date.parse(new Date().toString())"> -->
         <div style="display: flex; justify-content: center">
@@ -115,7 +115,7 @@
                 </el-popover>
             </template>
         </el-table-column> -->
-    <el-table-column sortable label="最近上线时间" prop="createtime" align="center">
+    <el-table-column sortable :label="$t('devicelist.lastOnlineTime')" prop="createtime" align="center">
       <template #="{ row }">
         <!-- <el-tooltip
           style="margin-right: 6px"
@@ -149,15 +149,15 @@
             </template>
         </el-table-column> -->
     <!-- 说明  离线和自动驾驶状态不可编辑 -->
-    <el-table-column label="操作" width="290" align="center">
+    <el-table-column :label="$t('devicelist.operation')" width="290" align="center">
       <template #="{ row }">
 
         <el-button :disabled="row.onlineTcp === 1 ? false : true" v-auth="476" style="width: 52px" type="primary" text
-          @click="gotoRegister(row.id, row.sn, row.deviceId)">软件注册</el-button>
+          @click="gotoRegister(row.id, row.sn, row.deviceId)">{{$t('devicelist.swRegistration')  }}</el-button>
         <el-tooltip style="margin-right: 6px" :disabled="row.openRemote
           ? true
           : false
-          " class="box-item" effect="dark" content="车辆离线或处于自动驾驶状态" placement="top-start">
+          " class="box-item" effect="dark" :content="$t('devicelist.deviceStatys')" placement="top-start">
 
           <el-button style="width: 52px" :disabled="!row.openRemote" type="primary" text @click="
             gotoRemote(
@@ -168,12 +168,12 @@
               row.sn,
               row.name
             )
-            ">远程管理</el-button>
+            ">{{$t('devicelist.remoteMgt')}}</el-button>
         </el-tooltip>
         <!-- <el-button v-auth="531" style="width: 62px;margin-right: 6px;" type="primary" text
                     @click="toFileList(row)">文件存储</el-button> -->
 
-        <el-button v-auth="503" style="width: 52px" type="primary" text @click="gotoMap(row.sn, row.npn)">历史轨迹</el-button>
+        <el-button v-auth="503" style="width: 52px" type="primary" text @click="gotoMap(row.sn, row.npn)">{{$t('devicelist.historyTrack')}}</el-button>
         <el-button v-auth="458" style="width: 22px" type="primary" text @click="
           gotoMachineDetail(
             row.id,
@@ -183,7 +183,7 @@
             row.satelliteDate?.split(' ')[0],
             row.warrantyDate?.split(' ')[0]
           )
-          ">详情</el-button>
+          ">{{$t('devicelist.details')}}</el-button>
       </template>
     </el-table-column>
   </el-table>

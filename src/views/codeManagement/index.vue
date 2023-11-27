@@ -3,7 +3,7 @@
     <div class='app_container'>
         <div class="search_container app_card">
             <div class="input_area">
-                <el-input placeholder="请输入出厂编号" class="input-with-select" v-model="searchValue" @keyup.enter.native="search"
+                <el-input :placeholder="$t('work.inputFactoryNumber')" class="input-with-select" v-model="searchValue" @keyup.enter.native="search"
                     clearable @clear="search">
                     <template #append>
                         <el-button icon="Search" @click="search" />
@@ -15,84 +15,84 @@
                 <el-button v-auth='575' @click="exportData" type="primary">
                     <el-icon class="el-icon--left">
                         <SvgIcon icon="export" size="16" />
-                    </el-icon>导出</el-button>
-                <el-button v-auth="576" type="primary" icon="Plus" @click="openDialog">新建</el-button>
+                    </el-icon>{{$t('work.export')}}</el-button>
+                <el-button v-auth="576" type="primary" icon="Plus" @click="openDialog">{{$t('work.new')}}</el-button>
             </div>
         </div>
         <div class="table_container app_card">
             <!-- @select="handleSelect" @select-all="handleSelectAll" -->
             <el-table :data="tableData" style="width: 100%" @select="handleSelect" @select-all="handleSelectAll">
                 <el-table-column type="selection" width="60" align="center" />
-                <el-table-column type="index" label="序号" width="80" align="center" />
-                <el-table-column prop="factoryNum" label="出厂编号" show-overflow-tooltip width="" align="center" />
-                <el-table-column prop="model" label="型号" show-overflow-tooltip width="" align="center" />
-                <el-table-column prop="ratedVoltage" label="额定电压" align="center" />
-                <el-table-column prop="exeStandard" label="执行标准" show-overflow-tooltip width="" align="center" />
-                <el-table-column prop="lineAccuracy" label="直线精度( ±cm )" align="center" />
-                <el-table-column prop="produceNum" label="生产编号" align="center" />
-                <el-table-column prop="produceTime" show-overflow-tooltip label="生产日期" align="center" />
-                <el-table-column prop="ratedPower" label="额定功率" align="center" />
-                <el-table-column label="操作" align="center" width="160">
+                <el-table-column type="index" :label="$t('work.item')" width="80" align="center" />
+                <el-table-column prop="factoryNum" :label="$t('work.factoryNumber')" show-overflow-tooltip width="" align="center" />
+                <el-table-column prop="model" :label="$t('work.model')" show-overflow-tooltip width="" align="center" />
+                <el-table-column prop="ratedVoltage" :label="$t('work.ratedVoltage')" align="center" />
+                <el-table-column prop="exeStandard" :label="$t('work.executiveStandard')" show-overflow-tooltip width="" align="center" />
+                <el-table-column prop="lineAccuracy" :label="$t('work.linearAccuracy')" align="center" />
+                <el-table-column prop="produceNum" :label="$t('work.productionNumber')" align="center" />
+                <el-table-column prop="produceTime" show-overflow-tooltip :label="$t('work.productionDate')" align="center" />
+                <el-table-column prop="ratedPower" :label="$t('work.ratedPower')" align="center" />
+                <el-table-column :label="$t('work.operation')" align="center" width="160">
                     <template template #="{ row }">
-                        <el-button v-auth="577" type="primary" text @click="handleEdit(row)">编辑</el-button>
-                        <el-button v-auth="574" text style="color: #f94a56" @click="deleteData(row)">删除</el-button>
+                        <el-button v-auth="577" type="primary" text @click="handleEdit(row)">{{ $t('work.edit') }}</el-button>
+                        <el-button v-auth="574" text style="color: #f94a56" @click="deleteData(row)">{{ $t('work.delete') }}</el-button>
                     </template>
                 </el-table-column>
             </el-table>
 
-            <el-dialog v-model="dialogVisible" :title="formData.id ? '编辑' : '新建'" width="660px"
+            <el-dialog v-model="dialogVisible" :title="formData.id ? $t('work.edit') : $t('work.new')" width="660px"
                 @close="handleAddDialogClose">
                 <el-form ref="formRef" :model="formData" label-width="120px" :rules="rules">
-                    <el-form-item  label="型号" prop="model">
+                    <el-form-item  :label="$t('work.model')" prop="model">
                         <el-select v-model="formData.model" style="width:100%;">
                             <el-option v-for="item in modelList" :value="item.value" :label="item.label">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <!-- <el-form-item v-show="formData.id" label="型号" prop="model">
+                    <!-- <el-form-item v-show="formData.id" :label="$t('work.model')" prop="model">
                         <el-input v-model="formData.model" />
                     </el-form-item> -->
-                    <el-form-item label="额定电压" prop="ratedVoltage">
+                    <el-form-item :label="$t('work.ratedVoltage')" prop="ratedVoltage">
                         <el-input v-model="formData.ratedVoltage" />
                     </el-form-item>
-                    <el-form-item label="生产编号" prop="produceNum">
+                    <el-form-item :label="$t('work.productionNumber')" prop="produceNum">
                         <el-input v-model="formData.produceNum">
                             <!-- <el-button slot="prepend" icon="">AG360</el-button> -->
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="执行标准" prop="exeStandard">
+                    <el-form-item :label="$t('work.executiveStandard')" prop="exeStandard">
                         <el-input v-model="formData.exeStandard" />
                     </el-form-item>
-                    <el-form-item label="直线精度(±cm)" prop="lineAccuracy">
+                    <el-form-item :label="$t('work.linearAccuracy')" prop="lineAccuracy">
                         <el-input v-model="formData.lineAccuracy">
                             <el-button slot="append" icon="">cm</el-button>
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="公司地址" prop="companyAddress">
+                    <el-form-item :label="$t('work.companyAddress')" prop="companyAddress">
                         <el-input v-model="formData.companyAddress" />
                     </el-form-item>
-                    <el-form-item label="服务热线" prop="serviceTel">
+                    <el-form-item :label="$t('work.serviceHotline')" prop="serviceTel">
                         <el-input v-model="formData.serviceTel" />
                     </el-form-item>
-                    <el-form-item label="出厂编号模板" prop="factoryNumTmpl" v-if="!formData.id">
+                    <el-form-item :label="$t('work.factoryNumberTemplate')" prop="factoryNumTmpl" v-if="!formData.id">
                         <el-input v-model="formData.factoryNumTmpl" />
                     </el-form-item>
-                    <el-form-item label="出厂编号" prop="factoryNum">
+                    <el-form-item :label="$t('work.factoryNumber')" prop="factoryNum">
                         <el-input v-model="formData.factoryNum" />
                     </el-form-item>
-                    <el-form-item label="生产日期" prop="produceTime">
+                    <el-form-item :label="$t('work.productionDate')" prop="produceTime">
                         <el-date-picker v-model="formData.produceTime" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"
                             placeholder="选择日期" style="width: 100%" />
                     </el-form-item>
-                    <el-form-item label="额定功率" prop="ratedPower">
+                    <el-form-item :label="$t('work.ratedPower')" prop="ratedPower">
                         <el-input v-model="formData.ratedPower" />
                     </el-form-item>
                 </el-form>
                 <template #footer>
                     <span class="dialog-footer">
-                        <el-button type="danger" @click="dialogVisible = false">取消</el-button>
-                        <el-button type="primary" v-if="!formData.id" @click="addData">确定</el-button>
-                        <el-button type="primary" v-else @click="editData">确定</el-button>
+                        <el-button type="danger" @click="dialogVisible = false">{{ $t('work.cancel') }}</el-button>
+                        <el-button type="primary" v-if="!formData.id" @click="addData">{{ $t('work.submit') }}</el-button>
+                        <el-button type="primary" v-else @click="editData">{{ $t('work.submit') }}</el-button>
                     </span>
                 </template>
             </el-dialog>
@@ -108,6 +108,8 @@ import Pagination from '@/components/Pagination/index.vue'
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import { sacredCowQrList_path, sacredCowQrSave_path, sacredCowQrUpdate_path, sacredCowQrRemove_path, sacredCowQrExport_path } from '@/api/codeManagement/index'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const tableData = ref<any>([])
 const searchValue = ref('')
 const currentPage = ref(1)
@@ -207,40 +209,40 @@ const handleEdit = (val: any) => {
 }
 const deleteData = (val: any) => {
     ElMessageBox.confirm(
-        '此操作将永久删除该产品信息, 是否继续?',
+        t('work.deleteProductConfirmation'),
         'Warning',
         {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+            confirmButtonText: t('work.submit'),
+            cancelButtonText: t('work.cancel'),
             type: 'warning',
         }
     ).then(() => {
         sacredCowQrRemove_path({ id: val.id }).then((res) => {
             if (res.page === 1) {
-                ElMessage({ type: 'success', message: '删除成功' })
+                ElMessage({ type: 'success', message: t('work.deleteSuccess') })
                 searchValue.value = ''
                 currentPage.value = 1
                 pageSize.value = 10
                 getList()
             } else {
-                ElMessage({ type: 'error', message: '删除失败' })
+                ElMessage({ type: 'error', message: t('work.deleteFailed') })
             }
         });
     })
 
 }
 const rules = {
-    model: [{ required: true, message: '请输入型号', trigger: 'blur' },],
-    ratedVoltage: [{ required: true, message: '请输入额定电压', trigger: 'blur' },],
-    produceNum: [{ required: true, message: '请输入生产编号', trigger: 'blur' }],
-    exeStandard: [{ required: true, message: '请输入执行标准', trigger: 'blur' }],
-    lineAccuracy: [{ required: true, message: '请输入直线精度', trigger: 'blur' }],
-    companyAddress: [{ required: true, message: '请输入公司地址', trigger: 'blur' },],
-    serviceTel: [{ required: true, message: '请输入服务热线', trigger: 'blur' },],
-    factoryNumTmpl: [{ required: true, message: '请输入出厂编号模板', trigger: 'blur' }],
-    factoryNum: [{ required: true, message: '请输入出厂编号', trigger: 'blur' }],
-    produceTime: [{ required: true, message: '请选择日期', trigger: 'blur' }],
-    ratedPower: [{ required: true, message: '请输入额定功率', trigger: 'blur' }]
+    model: [{ required: true, message: t('work.enterModel'), trigger: 'blur' },],
+    ratedVoltage: [{ required: true, message: t('work.enterRatedVoltage'), trigger: 'blur' },],
+    produceNum: [{ required: true, message: t('work.enterProductionNumber'), trigger: 'blur' }],
+    exeStandard: [{ required: true, message: t('work.enterExecutiveStandard'), trigger: 'blur' }],
+    lineAccuracy: [{ required: true, message: t('work.enterLinearAccuracy'), trigger: 'blur' }],
+    companyAddress: [{ required: true, message: t('work.enterCompanyAddress'), trigger: 'blur' },],
+    serviceTel: [{ required: true, message: t('work.enterServiceHotline'), trigger: 'blur' },],
+    factoryNumTmpl: [{ required: true, message: t('work.enterFactoryNumberTemplate'), trigger: 'blur' }],
+    factoryNum: [{ required: true, message: t('work.enterFactoryNumber'), trigger: 'blur' }],
+    produceTime: [{ required: true, message:t('work.selectDate'), trigger: 'blur' }],
+    ratedPower: [{ required: true, message: t('work.enterRatedPower'), trigger: 'blur' }]
 }
 // 关闭弹窗
 const handleAddDialogClose = () => {

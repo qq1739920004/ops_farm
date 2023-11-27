@@ -3,7 +3,7 @@
     <div class="search_container app_card">
       <div class="input_area">
         <el-input
-          placeholder="请输入SN号、铭牌SN"
+          :placeholder="$t('devicelist.pleaseInput')"
           v-model="pageInfo.key"
           class="input-with-select"
           @keyup.enter.native="search"
@@ -40,7 +40,7 @@
       </div>
       <div class="button_area">
         <el-button style="margin-right: 20px" type="primary" @click="gotoInput"
-          >录入经销商设备</el-button
+          >{{$t('devicelist.inputDealerDevice')}}</el-button
         >
         <el-button-group class="button_group2">
           <el-button

@@ -5,7 +5,8 @@ import type { getStatisticsStatAPIResponse } from "@/api/statisticsReport/type";
 import type { EChartsOption } from "echarts";
 export function visitOption(
   data: getStatisticsStatAPIResponse["data"],
-  optionfnStatistics: ShallowRef<EChartsOption>
+  optionfnStatistics: ShallowRef<EChartsOption>,
+  t:any
 ) {
   let option = shallowRef<EChartsOption>({});
  const purifyData:number[][]=[[],[]]
@@ -21,7 +22,7 @@ export function visitOption(
       left: 40
     },
     title: {
-      text: '访问次数统计',
+      text: t('statisticsReport.visitTimes'),
       left: 13,
       top: 16,
       textStyle: {
@@ -37,11 +38,11 @@ export function visitOption(
       right: 10,
       data: [
         {
-          name: '态势监控',
+          name: t('statisticsReport.monitoring'),
           icon: 'roundRect'
         },
         {
-          name: '农机列表',
+          name: t('statisticsReport.list'),
           icon: 'roundRect'
         }
       ]
@@ -102,7 +103,7 @@ export function visitOption(
         data:purifyData[0],
         smooth: false,
         type: 'line',
-        name: '态势监控',
+        name: t('statisticsReport.monitoring'),
         itemStyle: {
           color: '#FFBA37'
         }
@@ -111,7 +112,7 @@ export function visitOption(
         data:purifyData[1],
         smooth: false,
         type: 'line',
-        name: '农机列表',
+        name: t('statisticsReport.list'),
         itemStyle: {
           color: '#44AAFF'
         }

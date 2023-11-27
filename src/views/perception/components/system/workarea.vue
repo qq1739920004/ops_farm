@@ -2,7 +2,7 @@
   <div class="box">
     <div class="title">
       <img src="~@/assets/systemPerceptionImage/onlineNumIcon.png" alt="">
-      <span>各省在线数/总数</span>
+      <span>{{$t('perception.provinceOnlineTotal')}}</span>
     </div>
     <div class="charts-box">
       <div class="charts" ref="bar"></div>

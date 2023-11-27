@@ -17,7 +17,7 @@
           }}</span>
         </template>
       </el-statistic>
-      <div class="bottom_title">车辆在线数</div>
+      <div class="bottom_title">{{$t('statisticsReport.online')}}</div>
     </el-col>
 
     <el-col :span="8">
@@ -37,7 +37,7 @@
           }}</span>
         </template>
       </el-statistic>
-      <div class="bottom_title">今日作业面积(亩)</div>
+      <div class="bottom_title">{{$t('statisticsReport.todayWorkingArea')}}</div>
     </el-col>
 
     <el-col :span="8">
@@ -54,7 +54,7 @@
           }}</span>
         </template>
       </el-statistic>
-      <div class="bottom_title">今日新增车辆</div>
+      <div class="bottom_title">{{$t('statisticsReport.newVehicle')}}</div>
     </el-col>
   </el-row>
 </template>

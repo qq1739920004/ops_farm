@@ -23,7 +23,7 @@ function updateChart(dataList: MonitorObj["provinceCars"]) {
   });
 }
 
-function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"]) {
+function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"],t:any) {
   for (let i = 0; i <= dataList.length; i++) {
     if (!dataList[i].code) return;
     const markerContent = document.createElement("div");
@@ -90,10 +90,10 @@ function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"]) {
               param.color +
               ';"></span>';
             // 判断系列名称并显示相应的数据
-            if (param.seriesName === "在线数") {
+            if (param.seriesName === t('perception.tonline')) {
               tooltipHtml += " " + param.seriesName + ": " + param.data;
               numCurent.value = param.data;
-            } else if (param.seriesName === "总数") {
+            } else if (param.seriesName === t('perception.total')) {
               tooltipHtml +=
                 " " + param.seriesName + ": " + (param.data + numCurent.value); // 使用 totalNum
             }
@@ -124,7 +124,7 @@ function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"]) {
       series: [
         {
           z: 50, // 设置柱状图的层级
-          name: "在线数",
+          name: t('perception.tonline'),
           data: [dataList[i].onlineNum],
           type: "bar",
 
@@ -153,7 +153,7 @@ function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"]) {
         },
         {
           z: 50, // 设置柱状图的层级
-          name: "总数",
+          name: t('perception.total'),
           data: [dataList[i].totalNum - dataList[i].onlineNum],
           type: "bar",
           itemStyle: {

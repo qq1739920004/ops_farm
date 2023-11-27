@@ -75,7 +75,7 @@ const dataNow = ref<ChartData>();
 const todayArea = ref<number>();
 const totalArea = ref<number>();
 const addNowYearDevice = ref(0);
-// 各类型农机在线数
+// {{$t('perception.numberOfAgriculturalMachineryOnline')}}
 const typeCounts = ref<Array<object>>([]);
 // 各省车辆状态
 const provinceCars = ref<MonitorObj["provinceCars"]>();

@@ -2,7 +2,7 @@
 
 <template>
     <div class="content">
-        <el-dialog style="border-radius: 8px;" v-model="dialogVisible" title="注册设备" width="630px">
+        <el-dialog style="border-radius: 8px;" v-model="dialogVisible" :title="$t('devicelist.device') " width="630px">
             <!-- <div class="content">
                 <div class="up">
                     <span>注册设备SN号：{{ props.sn }}</span>
@@ -18,21 +18,21 @@
                 </div>
             </div> -->
             <el-form style="width: 100%" label-width="160px">
-                <el-form-item label="注册设备SN号:" label-width="198px">
+                <el-form-item :label="$t('devicelist.snPlaceholder')" label-width="198px">
                     <span class="span_title"> {{ props.sn }}</span>
                 </el-form-item>
-                <el-form-item label="注册时长:">
+                <el-form-item :label="$t('devicelist.time')+':'">
                     <el-radio-group v-model="date" class="ml-4">
-                        <el-radio :label="-1">立即过期</el-radio>
-                        <el-radio :label="365">一年</el-radio>
-                        <el-radio :label="65535">永久</el-radio>
+                        <el-radio :label="-1">{{$t('devicelist.expiredNow')}}</el-radio>
+                        <el-radio :label="365">{{$t('devicelist.oneYear')}}</el-radio>
+                        <el-radio :label="65535">{{$t('devicelist.permanent')}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
             </el-form>
             <template #footer>
                 <span class="dialog-footer">
                     <el-button type="primary" @click="activationAddBtn">
-                        配置
+                      {{$t('devicelist.apply')}}
                     </el-button>
                 </span>
             </template>

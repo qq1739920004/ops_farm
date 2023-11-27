@@ -20,23 +20,23 @@
 
             </div>
             <div class="time">
-                <p :class="isActive == 1 ? 'active' : ''" @click="onDayClick">今日</p>
-                <p :class="isActive == 2 ? 'active' : ''" @click="onMonthClick">本月</p>
-                <p :class="isActive == 3 ? 'active' : ''" @click="onYearClick">今年</p>
+                <p :class="isActive == 1 ? 'active' : ''" @click="onDayClick">{{$t('work.today')}}</p>
+                <p :class="isActive == 2 ? 'active' : ''" @click="onMonthClick">{{$t('work.thisMonth')}}</p>
+                <p :class="isActive == 3 ? 'active' : ''" @click="onYearClick">{{$t('work.thisYear')}}</p>
                 <div class="demo-date-picker">
                     <div class="block">
                         <el-date-picker style="width: 144px;" class=".date_picker1" v-model="value1" type="date"
-                            placeholder="请选择日期" size="default" :disabled-date="disabledDate" @change="changeA()" />
+                            :placeholder="$t('work.startDate')" size="default" :disabled-date="disabledDate" @change="changeA()" />
                     </div>
                     <div class="gang">--</div>
                     <div class="block">
                         <el-date-picker style="width: 144px;" class=".date_picker2" v-model="value2" type="date"
-                            placeholder="请选择日期" :disabled-date="disabledDate" size="default" @change="changeA()" />
+                            :placeholder="$t('work.endDate')" :disabled-date="disabledDate" size="default" @change="changeA()" />
                     </div>
                 </div>
             </div>
             <div class="button_area">
-                <el-button type="primary" @click="openExportDia">导出</el-button>
+                <el-button type="primary" @click="openExportDia">{{ $t('work.export') }}</el-button>
                 <el-button
                     @click="router.push({ path: '/jobManagement/taskManage', query: { companyId: pageInfo.companyId, carId: pageInfo.carId } })"
                     icon="MapLocation" class="btn2"></el-button>

@@ -2,21 +2,21 @@
   <div class="box">
     <div class="title">
       <img src="~@/assets/systemPerceptionImage/yearIcon.png" alt="" />
-      <span>当年统计数</span>
+      <span>{{$t('perception.statisticThisYear')}}</span>
     </div>
     <div class="content-box">
       <div class="item-box">
-        <span>当年新增农机</span>
+        <span>{{$t('perception.newlyIncreased')}}</span>
         <div class="value-box">
           <span class="circle"></span><span>{{ Math.trunc(addNowYearDevice) }}</span
-          ><span class="unit">/辆</span>
+          ><span class="unit">/{{$t('perception.vehicles')}}</span>
         </div>
       </div>
       <div class="item-box">
-        <span>当年累计作业面积</span>
+        <span>{{$t('perception.workingArea')}}</span>
         <div class="value-box">
           <span class="circle"></span><span  class="area">{{ numPurify(Math.trunc(totalArea)) }}</span
-          ><span class="unit">/万亩</span>
+          ><span class="unit">/{{$t('perception.tenThousandMu')}}</span>
         </div>
       </div>
     </div>

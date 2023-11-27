@@ -3,7 +3,7 @@
         <div class="title">
             <span>|</span>&nbsp
             <span class="arrows-shadow">▸</span>
-            当年统计数
+            {{$t('perception.statisticThisYear')}}
             <span class="arrows-shadow">◂</span>
         </div>
 
@@ -18,10 +18,10 @@
         </div>
         <div class="charts_title">
             <div>
-                今日作业面积/亩
+                {{$t('perception.todayWorkingAreaMu')}}
             </div>
             <div>
-                当年累计作业面积/万亩
+                {{$t('perception.WanMu')}}
             </div>
         </div>
 
