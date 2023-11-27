@@ -6,7 +6,7 @@
         </el-table-column>
         <el-table-column :label="$t('devicelist.tel')" prop="tel" align="center">
         </el-table-column>
-        <el-table-column :label="$t('devicelist.project')" prop="name" align="center">
+        <el-table-column :label="$t('work.project')" prop="name" align="center">
         </el-table-column>
         <el-table-column :label="$t('devicelist.type')" align="center">
             <template #="{ row }">
@@ -15,11 +15,11 @@
                     {{ workTypeReflect[row.worktype] || '/' }} </el-tag>
             </template>
         </el-table-column>
-        <el-table-column :label="$t('devicelist.acreage')" align="center">
+        <el-table-column :label="$t('work.acreage')" align="center">
             <template #="{ row }">
-                {{ row.workedArea }}{{$t('devicelist.are')}}</template>
+                {{ row.workedArea }}{{$t('work.are')}}</template>
         </el-table-column>
-        <el-table-column :label="$t('devicelist.projectTime')" align="center" width="200px">
+        <el-table-column :label="$t('work.projectTime')" align="center" width="200px">
             <template #="{ row }">
                 <el-row justify="center">
                     {{ row.createtime }}
@@ -43,7 +43,7 @@
         </div>
       </template>
         </el-table-column>
-        <el-table-column :label="$t('devicelist.vehicle')" prop="carName" align="center">
+        <el-table-column :label="$t('work.vehicle')" prop="carName" align="center">
         </el-table-column>
     </el-table>
     <slot></slot>
