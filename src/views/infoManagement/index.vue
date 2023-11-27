@@ -2,7 +2,7 @@
     <div class='app_container'>
         <div class="search_container app_card">
             <div class="input_area">
-                <el-input :placeholder="$t('work.work')" v-model="pageInfo.key" class="input-with-select"
+                <el-input :placeholder="$t('work.labelSN')" v-model="pageInfo.key" class="input-with-select"
                     @keyup.enter.native="search" clearable @clear="search">
                     <template #append>
                         <el-button icon="Search" @click="search" />
