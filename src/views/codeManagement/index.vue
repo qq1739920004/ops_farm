@@ -42,7 +42,7 @@
 
             <el-dialog v-model="dialogVisible" :title="formData.id ? $t('work.edit') : $t('work.new')" width="660px"
                 @close="handleAddDialogClose">
-                <el-form ref="formRef" :model="formData" label-width="120px" :rules="rules">
+                <el-form ref="formRef" :model="formData" label-width="auto" :rules="rules">
                     <el-form-item  :label="$t('work.model')" prop="model">
                         <el-select v-model="formData.model" style="width:100%;">
                             <el-option v-for="item in modelList" :value="item.value" :label="item.label">

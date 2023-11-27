@@ -2,70 +2,33 @@
   <div class="app_container">
     <div class="search_container app_card">
       <div class="input_area">
-        <el-input
-          :placeholder="$t('devicelist.pleaseInput')"
-          v-model="pageInfo.key"
-          class="input-with-select"
-          @keyup.enter.native="search"
-          clearable
-          @clear="clearAll"
-        >
+        <el-input :placeholder="$t('devicelist.pleaseInput')" v-model="pageInfo.key" class="input-with-select"
+          @keyup.enter.native="search" clearable @clear="clearAll">
           <template #append>
             <el-button icon="Search" @click="search" />
           </template>
         </el-input>
-        <el-select
-          filterable
-          v-if="dealerList.length > 1"
-          class="m_2"
-          placeholder="公司/经销商"
-          v-model="pageInfo.companyId"
-          @change="changeBlur"
-        >
-          <el-option
-            v-for="item in dealerList"
-            :label="item.name"
-            :value="item.id"
-            :key="item.id"
-          ></el-option>
+        <el-select filterable v-if="dealerList.length > 1" class="m_2" placeholder="公司/经销商" v-model="pageInfo.companyId"
+          @change="changeBlur">
+          <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
         </el-select>
-        <el-input
-          v-if="dealerList.length == 1"
-          class="m_2"
-          v-model="dealerList[0].name"
-          @change="changeBlur"
-          disabled
-        >
+        <el-input v-if="dealerList.length == 1" class="m_2" v-model="dealerList[0].name" @change="changeBlur" disabled>
         </el-input>
       </div>
       <div class="button_area">
-        <el-button style="margin-right: 20px" type="primary" @click="gotoInput"
-          >{{$t('devicelist.inputDealerDevice')}}</el-button
-        >
+        <el-button style="margin-right: 20px" type="primary"
+          @click="gotoInput">{{ $t('devicelist.inputDealerDevice') }}</el-button>
         <el-button-group class="button_group2">
-          <el-button
-            icon="Expand"
-            :class="{ tab_active: tableShow }"
-            @click="switchTabShow(true)"
-          />
-          <el-button
-            icon="menu"
-            :class="{ tab_active: !tableShow }"
-            @click="switchTabShow(false)"
-          />
+          <el-button icon="Expand" :class="{ tab_active: tableShow }" @click="switchTabShow(true)" />
+          <el-button icon="menu" :class="{ tab_active: !tableShow }" @click="switchTabShow(false)" />
         </el-button-group>
       </div>
     </div>
     <div class="table_container app_card" v-show="tableShow">
       <sn-table :carNewList="carNewList" @changeSort="changeSort">
         <div>
-          <Pagination
-            :total="total"
-            :currentPage="pageInfo.currentPage"
-            :pageSize="pageInfo.pageSize"
-            @pageChange="currentChange"
-            :disabled="dealerList.length == 0 ? true : false"
-          >
+          <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
+            @pageChange="currentChange" :disabled="dealerList.length == 0 ? true : false">
           </Pagination>
         </div>
       </sn-table>

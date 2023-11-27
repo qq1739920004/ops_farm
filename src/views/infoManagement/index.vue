@@ -41,13 +41,13 @@
                             {{ row.warrantyDate.split(' ')[0] }}</div>
                         <div v-if="!row.warrantyDate">
                             <el-tag
-                                style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
+                                style="color:rgba(255, 112, 112, 1);width: 78px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
                                 class="mx-1" type="danger" effect="dark">{{$t('work.noactive')}}</el-tag>
                         </div>
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
                             <el-tag
-                                style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
+                                style=" color:rgba(42, 130, 228, 1);width: 78px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
                                 class="mx-1" effect="dark">{{ $t('work.due') }}</el-tag>
                         </div>
                     </template>
@@ -82,7 +82,7 @@
                         {{ row.wheelImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column :label="$t('work.operation')" align="center" width="180">
+                <el-table-column :label="$t('work.operation')" align="center" width="200">
                     <template #="{ row }">
                         <div class="edit-btn">
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
@@ -148,7 +148,7 @@
                         {{ row.antennaTwo || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column :label="$t('work.operation')" align="center">
+                <el-table-column :label="$t('work.operation')" align="center" width="200">
                     <template #="{ row }">
                         <div class="edit-btn">
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
@@ -213,7 +213,7 @@
                         {{ row.antennaOne || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column :label="$t('work.operation')" align="center">
+                <el-table-column :label="$t('work.operation')" align="center" width="200">
                     <template #="{ row }">
                         <div class="edit-btn">
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
@@ -541,7 +541,6 @@ const openExportDia = () => {
         }
 
         .kind {
-            width: 70px;
             height: 21px;
             opacity: 1;
             /** 文本1 */
@@ -569,7 +568,6 @@ const openExportDia = () => {
     justify-content: space-around;
 
     .aftersale_btn {
-        width: 40px;
         word-wrap: break-word;
         overflow-wrap: break-word;
         white-space: normal;

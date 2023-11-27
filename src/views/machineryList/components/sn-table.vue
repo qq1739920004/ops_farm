@@ -4,7 +4,7 @@
     <el-table-column type="index" :label="$t('devicelist.item')" width="60" align="center" />
     <el-table-column :label="$t('devicelist.name')" prop="userName" align="center">
     </el-table-column>
-    <el-table-column :label="$t('devicelist.tel')" prop="tel" align="center">
+    <el-table-column :label="$t('devicelist.tel')" prop="tel" width="110" align="center">
     </el-table-column>
     <el-table-column :label="$t('devicelist.labelSN')" width="180" align="center">
       <template #default="scope">
@@ -115,7 +115,7 @@
                 </el-popover>
             </template>
         </el-table-column> -->
-    <el-table-column sortable :label="$t('devicelist.lastOnlineTime')" prop="createtime" align="center">
+    <el-table-column sortable :label="$t('devicelist.lastOnlineTime')" prop="createtime" align="center" width="160">
       <template #="{ row }">
         <!-- <el-tooltip
           style="margin-right: 6px"
@@ -149,17 +149,16 @@
             </template>
         </el-table-column> -->
     <!-- 说明  离线和自动驾驶状态不可编辑 -->
-    <el-table-column :label="$t('devicelist.operation')" width="290" align="center">
+    <el-table-column :label="$t('devicelist.operation')" width="375" align="center">
       <template #="{ row }">
-
-        <el-button :disabled="row.onlineTcp === 1 ? false : true" v-auth="476" style="width: 52px" type="primary" text
+        <el-button :disabled="row.onlineTcp === 1 ? false : true" v-auth="476" style="width: 85px" type="primary" text
           @click="gotoRegister(row.id, row.sn, row.deviceId)">{{$t('devicelist.swRegistration')  }}</el-button>
         <el-tooltip style="margin-right: 6px" :disabled="row.openRemote
           ? true
           : false
           " class="box-item" effect="dark" :content="$t('devicelist.deviceStatys')" placement="top-start">
 
-          <el-button style="width: 52px" :disabled="!row.openRemote" type="primary" text @click="
+          <el-button style="width: 85px" :disabled="!row.openRemote" type="primary" text @click="
             gotoRemote(
               row.terminalType,
               row.paramVersionnum,
@@ -173,8 +172,8 @@
         <!-- <el-button v-auth="531" style="width: 62px;margin-right: 6px;" type="primary" text
                     @click="toFileList(row)">文件存储</el-button> -->
 
-        <el-button v-auth="503" style="width: 52px" type="primary" text @click="gotoMap(row.sn, row.npn)">{{$t('devicelist.historyTrack')}}</el-button>
-        <el-button v-auth="458" style="width: 22px" type="primary" text @click="
+        <el-button v-auth="503" style="width: 75px;" type="primary" text @click="gotoMap(row.sn, row.npn)">{{$t('devicelist.historyTrack')}}</el-button>
+        <el-button v-auth="458" style="width: 40px" type="primary" text @click="
           gotoMachineDetail(
             row.id,
             row.terminalType,

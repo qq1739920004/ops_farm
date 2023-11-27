@@ -335,7 +335,6 @@ const changeA = () => {
         p {
             margin-right: 32px;
             line-height: 5px;
-            width: 28px;
             height: 20px;
             font-size: 14px;
             vertical-align: middle;
