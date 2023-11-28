@@ -67,6 +67,7 @@ const en = {
   },
   work: {
     builtInNetwork: "Built-in Network",
+    details: "Details",
     logUploadNotAvailableAG302: "The log upload feature for AG302 and AG302_Android is not yet available",
     noFirmwarePackageForDevice: "No firmware package available for the device",
     logUploadFeatureNotAvailable: "The log upload feature for AG302 and A3502_Android is not yet available",
@@ -226,6 +227,9 @@ const en = {
     enterModel: "Please enter model",
     deleteSuccess: "Delete successful",
     deleteFailed: "Delete failed",
+    assigned: "Assigned",
+    processed: "Processed",
+    snPlaceholder: "Please enter SN",
   },
   perception: {
     activeToday: "Active today",
