@@ -5,7 +5,7 @@
             title="录入经销商设备" width="30%" center>
             <div class="content">
                 <el-form style="width: 100%" ref="formRef" label-width="140px">
-                    <el-form-item label="经销商：">
+                    <el-form-item :label="$t('work.dealer')+':'">
                         <el-select v-model="uploadData.id" class="m-2" placeholder="请选择经销商">
                             <el-option v-for="item in carDealerList" :label="item.name" :value="item.id"
                                 :key="item.id"></el-option>

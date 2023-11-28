@@ -258,7 +258,7 @@ const handlerList = ref<HandlerUserVO[]>([{
     tel: '',
     handlerId: ''
 }])
-// 基本信息
+// {{$t('work.basicInformation')}}
 const baseInfo = ref<carNewDetailObj>({
     "id": 0,
     "onlineTcp": 0,
@@ -332,7 +332,7 @@ const getHandler = async () => {
     const res: HelpHandlerData = await getHelpHandlerAPI()
     handlerList.value = res.data
 }
-// 基本信息
+// {{$t('work.basicInformation')}}
 const getBaseInfo = async () => {
     try {
         const res: carNewDetailResponseData = await carNewDetail_API(Number(carId.value),1)

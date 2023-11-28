@@ -4,7 +4,7 @@
         <el-dialog v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'" width="544px" height="580px">
             <el-form label-width="140px" style="width: 90%" ref="formRef" :model="newRecords" :rules="rules">
                 <el-form-item label="设备类型" prop="terminalType">
-                    <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
+                    <el-select v-model="newRecords.terminalType" class="m-2" :placeholder="$t('work.pleaseSelect')" width="120px"
                         style="width:100%" prop="terminalType">
                         <el-option value="AG360" label="AG360" />
                         <el-option value="AG502" label="AG502" />

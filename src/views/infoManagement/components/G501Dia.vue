@@ -5,7 +5,7 @@
             height="580px">
             <el-form label-width="140px" style="width: 90%" ref="formRef" :model="props.newRecords" :rules="rules">
                 <el-form-item label="设备类型" prop="terminalType">
-                    <el-select style="width: 100%;" v-model="props.newRecords.terminalType" class="m-2" placeholder="请选择"
+                    <el-select style="width: 100%;" v-model="props.newRecords.terminalType" class="m-2" :placeholder="$t('work.pleaseSelect')"
                         prop="terminalType">
                         <el-option value="AG360" label="AG360" />
                         <el-option value="AG502" label="AG502" />

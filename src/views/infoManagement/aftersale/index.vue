@@ -9,44 +9,44 @@
                         <el-row :gutter="16">
                             <el-col :span="10" :offset="2">
                                 <el-descriptions title="">
-                                    <el-descriptions-item label="客户名称:">{{ topvalue.username }}</el-descriptions-item>
+                                    <el-descriptions-item :label="$t('work.customerName')+':'">{{ topvalue.username }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
                             <el-col :span="11">
                                 <el-descriptions title="">
-                                    <el-descriptions-item label="手机号码:">{{ topvalue.tel }}</el-descriptions-item>
+                                    <el-descriptions-item :label="$t('work.phoneNumber')+':'">{{ topvalue.tel }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="11" :offset="3">
                                 <el-descriptions title="">
-                                    <el-descriptions-item label="经销商：">{{ topvalue.companyName }}</el-descriptions-item>
+                                    <el-descriptions-item :label="$t('work.dealer')+':'">{{ topvalue.companyName }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
                         </el-row>
                         <el-row :gutter="16">
                             <el-col :span="9" :offset="3">
                                 <el-descriptions title="">
-                                    <el-descriptions-item label="创建人:">{{ topvalue.creatorName }}</el-descriptions-item>
+                                    <el-descriptions-item :label="$t('work.creator')+':'">{{ topvalue.creatorName }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
                             <el-col :span="11">
                                 <el-descriptions title="">
-                                    <el-descriptions-item label="注册码:">{{ topvalue.code }}</el-descriptions-item>
+                                    <el-descriptions-item :label="$t('work.registrationCode')+':'">{{ topvalue.code }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
                         </el-row>
                         <el-row :gutter="16">
                             <el-col :span="10" :offset="2">
                                 <el-descriptions title="">
-                                    <el-descriptions-item label="罗网期限:">{{ topvalue.netDate?.split(' ')[0]
+                                    <el-descriptions-item :label="$t('work.nettingDuration')+':'">{{ topvalue.netDate?.split(' ')[0]
                                     }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
                             <el-col :span="11">
                                 <el-descriptions title="">
-                                    <el-descriptions-item label="质保期限:">{{ topvalue.warrantyDate?.split(' ')[0]
+                                    <el-descriptions-item :label="$t('work.warrantyPeriod')+':'">{{ topvalue.warrantyDate?.split(' ')[0]
                                     }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
@@ -54,13 +54,13 @@
                         <el-row :gutter="16">
                             <el-col :span="10" :offset="2">
                                 <el-descriptions title="">
-                                    <el-descriptions-item label="软件期限:">{{ topvalue.expirationTime?.split(' ')[0]
+                                    <el-descriptions-item :label="$t('work.softwareDuration')+':'">{{ topvalue.expirationTime?.split(' ')[0]
                                     }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
                             <el-col :span="11">
                                 <el-descriptions title="">
-                                    <el-descriptions-item label="星基期限:">{{ topvalue.satelliteDate?.split(' ')[0]
+                                    <el-descriptions-item :label="$t('work.satelliteBaseDuration')+':'">{{ topvalue.satelliteDate?.split(' ')[0]
                                     }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
@@ -69,71 +69,71 @@
                     </div>
                 </div>
                 <div class="right">
-                    <div class="righttitle">部件</div>
+                    <div class="righttitle">{{$t('work.component')}}</div>
                     <div class="rightcontent">
                         <el-form :model="topvalue" ref="formRef" :rules="rules" hide-required-asterisk>
-                            <el-form-item label="铭牌SN:" label-width="110px">
+                            <el-form-item :label="$t('work.labelSN')+':'" label-width="110px">
                                 <span style="color: var(--el-input-text-color,var(--el-text-color-regular))"> {{
                                     topvalue.npn || '/' }}</span>
                             </el-form-item>
-                            <el-form-item label="平板SN:" label-width="110px" prop="sn">
+                            <el-form-item :label="$t('work.PlateSN')+':'" label-width="110px" prop="sn">
                                 <el-input v-model="topvalue.sn">
                                     <template #append>
-                                        <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">更换</el-button>
+                                        <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="电机SN:" label-width="110px" prop="motorSn">
+                            <el-form-item :label="$t('work.MotorSN')+':'" label-width="110px" prop="motorSn">
                                 <el-input v-model="topvalue.motorSn">
                                     <template #append>
                                         <el-button @click="changeMotorSnBtn(topvalue.motorSn)"
-                                            class="change_btn">更换</el-button>
+                                            class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence != '1'" label="车身SN:" label-width="110px" prop="carImuSn">
+                            <el-form-item v-if="scence != '1'" :label="$t('work.BodySN')+':'" label-width="110px" prop="carImuSn">
                                 <el-input v-model="topvalue.carImuSn">
                                     <template #append>
                                         <el-button @click="changeCarImuSnBtn(topvalue.carImuSn)"
-                                            class="change_btn">更换</el-button>
+                                            class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence != '1'" label="前轮SN:" label-width="110px" prop="wheelImuSn">
+                            <el-form-item v-if="scence != '1'" :label="$t('work.frontWheelSN')+':'" label-width="110px" prop="wheelImuSn">
                                 <el-input v-model="topvalue.wheelImuSn">
                                     <template #append>
                                         <el-button @click="changeWheelImuSnBtn(topvalue.wheelImuSn)"
-                                            class="change_btn">更换</el-button>
+                                            class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence != '1'" label="天线_1SN:" label-width="110px" prop="antennaOne">
+                            <el-form-item v-if="scence != '1'" :label="$t('work.Antenna1_SN')+':'" label-width="110px" prop="antennaOne">
                                 <el-input v-model="topvalue.antennaOne">
                                     <template #append>
                                         <el-button @click="changeAntennaOneBtn(topvalue.antennaOne)"
-                                            class="change_btn">更换</el-button>
+                                            class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence == '2'" label="天线_2SN:" label-width="110px" prop="antennaTwo">
+                            <el-form-item v-if="scence == '2'" :label="$t('work.Antenna2_SN')+':'" label-width="110px" prop="antennaTwo">
                                 <el-input v-model="topvalue.antennaTwo">
                                     <template #append>
                                         <el-button @click="changeAntennaTwoBtn(topvalue.antennaTwo)"
-                                            class="change_btn">更换</el-button>
+                                            class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
                             <el-form-item v-if="scence == '1'" label="HUB_SN:" label-width="110px" prop="hubSn">
                                 <el-input v-model="topvalue.hubSn">
                                     <template #append>
-                                        <el-button @click="changeHubSnBtn(topvalue.hubSn)" class="change_btn">更换</el-button>
+                                        <el-button @click="changeHubSnBtn(topvalue.hubSn)" class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence == '1'" label="一体机SN:" label-width="110px" prop="sn">
+                            <el-form-item v-if="scence == '1'" :label="$t('work.gnssPoleSN')+':'" label-width="110px" prop="sn">
                                 <el-input v-model="topvalue.sn">
                                     <template #append>
-                                        <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">更换</el-button>
+                                        <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
@@ -143,17 +143,17 @@
             </div>
             <div class="bottomarea">
                 <div class="bottomtitle">
-                    <span>变更信息</span>
+                    <span>{{$t('work.changeInformation')}}</span>
                     <el-button type="primary" @click="getInfo">
-                        加载信息
+                        {{$t('work.loadInformation')}}
                     </el-button>
                 </div>
                 <div class="main">
                     <el-table :data="tableData" style="width: 100%;" :row-style="{ height: '60px' }"
                         :cell-style="{ padding: '10px' }">
-                        <el-table-column type="index" label="序号" width="80" />
-                        <el-table-column prop="dateTime" label="时间" width="200" />
-                        <el-table-column prop="operation" label="操作" />
+                        <el-table-column type="index" :label="$t('work.item')+':'" width="80" />
+                        <el-table-column prop="dateTime" :label="$t('work.time')+':'" width="200" />
+                        <el-table-column prop="operation" :label="$t('work.operation')+':'" />
                     </el-table>
                 </div>
             </div>

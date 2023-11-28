@@ -2,7 +2,7 @@
 <template>
     <div>
         <el-table :data="fileListData" style="width:100%" v-loading="loading">
-            <el-table-column type="index" label="序号" :width="60">
+            <el-table-column type="index" :label="$t('work.item')+':'" :width="60">
             </el-table-column>
             <el-table-column label="文件名称">
                 <template #="{ row }">
@@ -12,7 +12,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="操作">
+            <el-table-column :label="$t('work.operation')+':'">
                 <template #="{ row }">
                     <el-button type="text" v-if="!row.isBack">
                         <a :href="baseUrl + '/log_download/' + parentSn + '/' + row">下载</a>

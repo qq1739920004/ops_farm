@@ -3,16 +3,16 @@
         <div class="search_container app_card">
             <div class="input_area">
                 <el-select v-if="dealerList.length > 1" filterable v-model="pageInfo.companyId" class="input-with-select"
-                    placeholder="请选择" @change="changeBlur1">
+                    :placeholder="$t('work.pleaseSelect')" @change="changeBlur1">
                     <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
                 </el-select>
                 <el-input style="width:179px;margin-right: 20px;" v-if="dealerList.length === 1"
                     v-model="dealerList[0].name" disabled />
-                <el-select-v2 style="width: 350px;" filterable v-model="pageInfo.carId" :options="options" placeholder="请选择"
+                <el-select-v2 style="width: 350px;" filterable v-model="pageInfo.carId" :options="options" :placeholder="$t('work.pleaseSelect')"
                     @change="changeBlur2">
                 </el-select-v2>
                 <!-- <el-select v-load-more="loadmore" filterable  v-model="pageInfo.carId"
-                    class="m-2" placeholder="请选择" remote-show-suffix @change="changeBlur2">
+                    class="m-2" :placeholder="$t('work.pleaseSelect')" remote-show-suffix @change="changeBlur2">
                     <el-option v-if="CarDealerList" v-for="item in dataItems" :label="item.nameNpn" :value="item.id"
                         :key="item.id"></el-option>
                     <el-option value="请选择" v-else disabled>该公司下暂无车辆,请选择其他公司</el-option>

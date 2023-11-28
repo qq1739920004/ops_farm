@@ -30,7 +30,7 @@
         </div>
         <div class="head_top">
             <div class="left">
-                <el-button type='primary' icon="back" @click="router.go(-1)">返回</el-button>
+                <el-button type='primary' icon="back" @click="router.go(-1)">{{$t('work.goBack')}}</el-button>
             </div>
         </div>
     </div>

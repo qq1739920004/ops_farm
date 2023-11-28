@@ -31,7 +31,7 @@
           v-if="rangingArray.length > 0"
           @click="clearMapRanging"
           type="danger"
-          >清除</el-button
+          >{{$t('work.clear')}}</el-button
         >
       </div>
     </div>

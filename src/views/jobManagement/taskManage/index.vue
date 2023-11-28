@@ -10,25 +10,25 @@
         </div>
         <el-button style="color:rgba(76, 176, 79, 1);" @click="clearDistance" class="map_button"> <el-icon>
                 <Delete />
-            </el-icon>清除</el-button>
+            </el-icon>{{$t('work.clear')}}</el-button>
         <el-button class="map_button2" @click="calculateDistance">
             <SvgIcon icon="ruler" size="16" />
         </el-button>
         <div class="head_top">
             <div class="left">
-                <el-button style="color:rgba(76, 176, 79, 1)" icon="back" @click="router.go(-1)">返回</el-button>
+                <el-button style="color:rgba(76, 176, 79, 1)" icon="back" @click="router.go(-1)">{{$t('work.goBack')}}</el-button>
             </div>
             <div class="right">
-                <el-select style="width: 270px; margin-right: 10px;" v-model="pageInfo.companyId" placeholder="请选择"
+                <el-select style="width: 270px; margin-right: 10px;" v-model="pageInfo.companyId" :placeholder="$t('work.pleaseSelect')"
                     @change="changeBlur1">
                     <template #prefix>
-                        <span class="select_title">单位:</span>
+                        <span class="select_title">{{$t('work.unit')}}:</span>
                     </template>
                     <el-option style="width: 230px;" v-for="item in dealerList" :label="item.name" :value="item.id"
                         :key="item.id"></el-option>
                 </el-select>
 
-                <!-- <el-select filterable style="width: 230px;" v-model="pageInfo.carId" placeholder="请选择"
+                <!-- <el-select filterable style="width: 230px;" v-model="pageInfo.carId" :placeholder="$t('work.pleaseSelect')"
                     @change="changeBlur2">
                     <template #prefix>
                         <span class="select_title2">当前车辆：</span>
@@ -36,8 +36,8 @@
                     <el-option style="width: 200px;" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
                         :key="item.id"></el-option>
                 </el-select> -->
-                <el-select-v2 style="width: 250px;" filterable v-model="pageInfo.carId" :options="optionsList"
-                    placeholder="请选择" @change="changeBlur2">
+                <el-select-v2 :style="{ width: '250px', '--content-text': '\'' + $t('work.currentVehicle') + '\'' }"  filterable v-model="pageInfo.carId" :options="optionsList"
+                    :placeholder="$t('work.pleaseSelect')" @change="changeBlur2">
                 </el-select-v2>
                 <div :class="isShow ? 'infiniteMenu' : 'infiniteMenu2'">
                     <div class="el_icon" v-show="isShow" @click="changeisShow(false)">
@@ -46,16 +46,16 @@
                     <div class="el_icon" v-show="!isShow" @click="changeisShow(true)">
                         <SvgIcon icon="minus-square" size="16" />
                     </div>
-                    <div :class="isShow ? 'empty_list' : 'empty_list2'" v-if='!paddyWorkList.length'> 暂无数据 </div>
+                    <div :class="isShow ? 'empty_list' : 'empty_list2'" v-if='!paddyWorkList.length'>{{$t('work.noData')}}</div>
                     <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
                         <li v-for="(item, index) in paddyWorkList" :key="index"
                             :class="item.checked ? 'infinite-list-item' : 'infinite-list-item2'">
                             <div class="li_title">
                                 <el-tooltip class="box-item" effect="dark" :content="item.name" placement="left-start">
-                                    作业{{ item.name }}
+                                  {{$t('work.operationWork')}}{{ item.name }}
                                 </el-tooltip>
                             </div>
-                            {{ item.workedArea }}亩
+                            {{ item.workedArea }}{{$t('work.are')}}
                             <el-checkbox-group v-model="ids">
                                 <el-checkbox :label="item.id">
                                     <br />
@@ -91,6 +91,8 @@ import a from '@/assets/jobManage/a.png'
 import b from '@/assets/jobManage/b.png'
 import c from '@/assets/jobManage/c.png'
 import SvgIcon from "@/components/SvgIcon/index.vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 // 提交的车辆数组
 const ids = ref<any>([])
 const isShow = ref<boolean>(true)
@@ -298,12 +300,12 @@ const saveMarker2 = (workId: any, markerObj: any) => {
 }
 // 农业分类
 const workTypeReflect = reactive<any>({
-    1: '播种',
-    2: '翻地',
-    3: '起陇',
-    4: '收割',
-    5: '喷药',
-    6: '其他',
+  1: t('devicelist.status1'),
+    2: t('devicelist.status2'),
+    3: t('devicelist.status3'),
+    4: t('devicelist.status4'),
+    5: t('devicelist.status5'),
+    6: t('devicelist.status6'),
 })
 // 画线
 const middlePoint = ref<any>([0, 0])
@@ -683,8 +685,9 @@ watch(() => paddyWorkList.value,
 </script>
 
 <style lang="scss" scoped>
+
 :deep(.el-select-v2__placeholder::before) {
-    content: '当前车辆：';
+    content:var( --content-text);
     margin-right: 2px;
     font-size: 14px;
     font-weight: 400;

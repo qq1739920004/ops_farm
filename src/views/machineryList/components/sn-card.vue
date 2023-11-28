@@ -17,7 +17,7 @@
                         item.name || "/"
                     }}</el-col>
                     <el-col :span="12" class="item_title_city" @click.native="handleProButClick(item)">
-                        <el-tooltip class="item" effect="dark" content="地级市列表" placement="top">
+                        <el-tooltip class="item" effect="dark" :content="$t('work.prefectureCityList')" placement="top">
                             <el-icon>
                                 <More />
                             </el-icon>
@@ -26,8 +26,8 @@
                 </el-row>
                 <div style="cursor: pointer" @click="handleProCardClick(item)">
                     <el-row class="item_text">
-                        <el-col :span="10">在线/累计车辆</el-col>
-                        <el-col :span="14">今日/累计作业(千亩)</el-col>
+                        <el-col :span="10">{{$t('work.onlineTotalVehicles')}}</el-col>
+                        <el-col :span="14">{{$t('work.todayTotalOperation')}}</el-col>
                     </el-row>
                     <el-row class="item_count">
                         <el-col :span="10" class="item_count_each">
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div v-if="provinceCountData.length === 0" style="margin: auto; padding-top: 50px">
-                暂无数据
+              {{$t('work.noData')}}
             </div>
         </div>
         <!-- 地级市卡片容器 -->
@@ -65,8 +65,8 @@
                 </el-row>
                 <div style="cursor: pointer" @click="handleCityCardClick(item)">
                     <el-row class="item_text">
-                        <el-col :span="10">在线/累计车辆</el-col>
-                        <el-col :span="14">今日/累计作业(千亩)</el-col>
+                        <el-col :span="10">{{$t('work.onlineTotalVehicles')}}</el-col>
+                        <el-col :span="14">{{$t('work.todayTotalOperation')}}</el-col>
                     </el-row>
                     <el-row class="item_count">
                         <el-col :span="10">

@@ -98,7 +98,7 @@
             </el-table>
             <el-table @selection-change="handleSelectionChange" :data="records" v-show="scence == '2'" stripe>
                 <el-table-column type="selection" width="55" />
-                <el-table-column type="index" width="80" label="序号" align="center" />
+                <el-table-column type="index" width="80" :label="$t('work.item')+':'" align="center" />
                 <el-table-column :label="$t('work.labelSN')" align="center">
                     <template #="{ row }">
                         {{ row.npn || '/' }}
@@ -235,7 +235,7 @@
                 width="544px" height="580px">
                 <el-form label-width="140px" style="width: 90%" ref="formRef" :model="newRecords" :rules="rules">
                     <el-form-item :label="$t('work.deviceType')" prop="terminalType">
-                        <el-select v-model="newRecords.terminalType" class="m-2" placeholder="请选择" width="120px"
+                        <el-select v-model="newRecords.terminalType" class="m-2" :placeholder="$t('work.pleaseSelect')" width="120px"
                             style="width:100%" prop="terminalType">
                             <el-option value="AG360" label="AG360" />
                             <el-option value="AG502" label="AG502" />
