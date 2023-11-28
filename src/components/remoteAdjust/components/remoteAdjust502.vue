@@ -101,16 +101,16 @@
                                 <!-- <el-option label="外置网络" :value="2"></el-option> -->
                             </el-select>
                             <el-button :disabled="workPattern.type === '3' ? true : false" style="margin-left: 20px;"
-                                type="primary" @click="updateChafenData">设置</el-button>
+                                type="primary" @click="updateChafenData">{{$t('work.settings')}}</el-button>
                             <el-button v-show="workPattern.type == '1'"  type="primary" text class="btn3" style=""
-                                @click="getExtendSourceNode">获取源节点</el-button>
+                                @click="getExtendSourceNode">{{$t('work.getSourceNode')}}</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <div v-show="workPattern.type != '3'">
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="服务器IP:" prop="insideHost">
+                            <el-form-item class="item" :label="$t('work.serverIP')" prop="insideHost">
                                 <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideHost" />
                             </el-form-item>
@@ -119,7 +119,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="端口：" prop="insidePort">
+                            <el-form-item class="item" :label="$t('work.port')" prop="insidePort">
                                 <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insidePort" />
                             </el-form-item>
@@ -128,7 +128,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="源节点：" prop="insideSourceNode">
+                            <el-form-item class="item" :label="$t('work.sourceNode')" prop="insideSourceNode">
                                 <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideSourceNode">
                                     <el-option v-for="(item, index) in sourceNode" :key="index" :label="item"
@@ -139,7 +139,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="用户名：" prop="insideUsername">
+                            <el-form-item class="item" :label="$t('work.username')" prop="insideUsername">
                                 <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideUsername" />
                             </el-form-item>
@@ -148,7 +148,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="密码：" prop="insidePassword">
+                            <el-form-item class="item" :label="$t('work.password')" prop="insidePassword">
                                 <el-input type="password" show-password style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insidePassword" />
                             </el-form-item>
@@ -157,7 +157,7 @@
                 </div>
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="18" :offset="6">
-                        <el-form-item class="item" label="日志回传:">
+                        <el-form-item class="item" :label="$t('work.logUpload')">
                             <el-row>
                                 <el-col align="center">
                                     AG502以及AG502_Android的日志回传功能暂未开放
@@ -169,7 +169,7 @@
                 </el-row>
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="12" :offset="6">
-                        <el-form-item class="item" label="数据存储:">
+                        <el-form-item class="item" :label="$t('work.dataStorage')">
                             <el-switch v-auth='474' :before-change="beforeSwitchChange"
                                 @change="changeLogStatus(props.sn, chaFenlist.isTransfer)" v-model="chaFenlist.isTransfer"
                                 class="ml-2" inline-prompt active-text="开" inactive-text="关" />

@@ -117,14 +117,14 @@
                 height: 32px;">
                                 <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
                                 <el-option :label="$t('work.netting')" :value="'3'" disabled />
-                                <el-option label="内置电台" :value="0"></el-option>
+                                <el-option :label="$t('work.builtInRadio')" :value="0"></el-option>
                             </el-select>
                             <el-button v-show="workPattern.type != '0'" :disabled="workPattern.type === '3' ? true : false"
-                                style="margin-left: 20px;" type="primary" @click="updateChafenData">设置</el-button>
+                                style="margin-left: 20px;" type="primary" @click="updateChafenData">{{$t('work.settings')}}</el-button>
                             <el-button v-show="workPattern.type == '1'" type="primary" text class="btn3"
-                                @click="getExtendSourceNode">获取源节点</el-button>
+                                @click="getExtendSourceNode">{{$t('work.getSourceNode')}}</el-button>
                             <el-button v-show="workPattern.type == '0'" style="margin-left: 20px;" type="primary"
-                                @click="updateChafenData2">设置</el-button>
+                                @click="updateChafenData2">{{$t('work.settings')}}</el-button>
                         </el-form-item>
                     </el-col>
 
@@ -132,7 +132,7 @@
                 <div v-show="workPattern.type == '1'">
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="服务器IP:" prop="insideHost">
+                            <el-form-item class="item" :label="$t('work.serverIP')" prop="insideHost">
                                 <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideHost" />
                             </el-form-item>
@@ -141,7 +141,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="端口：" prop="insidePort">
+                            <el-form-item class="item" :label="$t('work.port')" prop="insidePort">
                                 <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insidePort" />
                             </el-form-item>
@@ -150,7 +150,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="源节点：" prop="insideSourceNode">
+                            <el-form-item class="item" :label="$t('work.sourceNode')" prop="insideSourceNode">
                                 <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideSourceNode">
                                     <el-option v-for="(item, index) in sourceNode" :key="index" :label="item"
@@ -161,7 +161,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="用户名：" prop="insideUsername">
+                            <el-form-item class="item" :label="$t('work.username')" prop="insideUsername">
                                 <el-input style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insideUsername" />
                             </el-form-item>
@@ -170,7 +170,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="密码：" prop="insidePassword">
+                            <el-form-item class="item" :label="$t('work.password')" prop="insidePassword">
                                 <el-input type="password" show-password style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.insidePassword" />
                             </el-form-item>
@@ -195,23 +195,23 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="信道：" prop="radioChannel">
+                            <el-form-item class="item" :label="$t('work.channel')" prop="radioChannel">
                                 <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.radioChannel">
-                                    <el-option v-if="chaFenlist.protocol === 2" label="自定义" :value="0" />
+                                    <el-option v-if="chaFenlist.protocol === 2" :label="$t('work.custom')" :value="0" />
                                     <!-- <el-option v-for="item in radioChannelOptions" :key="item" :label="item" :value="item"></el-option> -->
                                     <el-option v-for="(value, key) in radioChannelOptions" :key="key" :label="value"
                                         :value="value" />
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-input-number v-show="chaFenlist.radioChannel === 0" label="自定义" :value="0" v-model="custom"
+                        <el-input-number v-show="chaFenlist.radioChannel === 0" :label="$t('work.custom')" :value="0" v-model="custom"
                             clearable size="small" :min="410" :max="470" :step="0.0125" :step-strictly="true" :precision="4"
                             style="position: relative; top: 5px; height: 30px" />
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="模式：" prop="radioStatus">
+                            <el-form-item class="item" :label="$t('work.mode')" prop="radioStatus">
                                 <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.radioStatus">
                                     <el-option label="TX_MODE" :value="0" />
@@ -222,7 +222,7 @@
                     </el-row>
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="12" :offset="6">
-                            <el-form-item class="item" label="功率：" prop="radioPower">
+                            <el-form-item class="item" :label="$t('work.power')" prop="radioPower">
                                 <el-select style=" width: 187px;
                 height: 32px;" v-model="chaFenlist.radioPower">
                                     <el-option label="0.5W" :value="0.5" />
@@ -235,7 +235,7 @@
                 </div>
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="18" :offset="6">
-                        <el-form-item class="item" label="日志回传:">
+                        <el-form-item class="item" :label="$t('work.logUpload')">
                             <el-row>
                                 <el-col align="center">
                                     AG302以及A3502_Android的日志回传功能暂未开放
@@ -247,7 +247,7 @@
                 </el-row>
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="12" :offset="6">
-                        <el-form-item class="item" label="数据存储:">
+                        <el-form-item class="item" :label="$t('work.dataStorage')">
                             <el-switch v-auth='474' :before-change="beforeSwitchChange"
                                 @change="changeLogStatus(props.sn, chaFenlist.isTransfer)" v-model="chaFenlist.isTransfer"
                                 class="ml-2" inline-prompt active-text="开" inactive-text="关" />
@@ -260,15 +260,15 @@
                 :inline="true" :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
                 <div class="mktitle">
-                    双天线一体机
+                    {{$t('work.dualAntennaOneMachine')}}
                 </div>
                 <el-row>
                     <el-col :span="12" :offset="6">
-                        <el-form-item class="item" label="版本类型：" prop="name" style="margin-top: 20px;">
+                        <el-form-item class="item" :label="$t('work.versionType')" prop="name" style="margin-top: 20px;">
                             <el-radio-group @change="changeRadio2" text-color="var(--el-color-primary)"
                                 style="transform: translateY(-5px);" v-model="formLabelAlign.radio2" class="ml-4">
-                                <el-radio label="1" size="large" style="margin-right: 30px;">正式版</el-radio>
-                                <el-radio label="2" size="large" style="margin-right: 30px;">测试版</el-radio>
+                                <el-radio label="1" size="large" style="margin-right: 30px;">{{$t('work.officialVersion')}}</el-radio>
+                                <el-radio label="2" size="large" style="margin-right: 30px;">{{$t('work.betaVersion')}}</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
@@ -276,14 +276,14 @@
                 </el-row>
                 <el-row style="margin-bottom: 20px;">
                     <el-col :span="12" :offset="6">
-                        <el-form-item class="item" label="版本选择：" prop="name">
+                        <el-form-item class="item" :label="$t('work.versionSelection')+'：'" prop="name">
                             <el-select v-if="productList.length >= 1" style=" width: 187px;
                 height: 32px;" v-model="formLabelAlign.filename">
                                 <el-option v-for="(item, index) in productList" :key="index" :value="index"
                                     :label="item.filename"></el-option>
                             </el-select>
                             <div v-else style=" width: 187px;height: 32px;">
-                                该设备没有固件包
+                                {{$t('work.noFirmwarePackageForDevice')}}
                             </div>
                         </el-form-item>
                     </el-col>
@@ -291,7 +291,7 @@
 
                 <div class="buttonarea">
                     <el-button type="danger" :disabled="productList.length >= 1 ? false : true"
-                        @click="updateProductListBtn">强制升级</el-button>
+                        @click="updateProductListBtn">{{$t('work.forceUpgrade')}}</el-button>
                 </div>
             </el-form>
 
@@ -300,7 +300,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col align="center">
-                        AG302以及AG302_Android的日志回传功能暂未开放
+                      {{$t('work.logUploadNotAvailableAG302')}}
                     </el-col>
                 </el-row>
             </el-form>

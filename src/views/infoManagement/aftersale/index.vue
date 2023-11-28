@@ -4,7 +4,7 @@
         <div class="table_container app_card">
             <div class="middle-area">
                 <div class="left ">
-                    <div class="lefttitle">基本信息</div>
+                    <div class="lefttitle">{{$t('work.basicInformation')}}</div>
                     <div class="leftcontent">
                         <el-row :gutter="16">
                             <el-col :span="10" :offset="2">

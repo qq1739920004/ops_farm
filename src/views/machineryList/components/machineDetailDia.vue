@@ -5,13 +5,13 @@
                 <div class="data">{{ NewDetail.creatorName }}</div>
             </div>
             <div class="line line2 ">
-                <div class="tit">车主姓名:</div>
+                <div class="tit">{{$t('devicelist.name')}}:</div>
                 <div class="data">{{ NewDetail.userName }}</div>
-                <div class="tit">车主电话:</div>
+                <div class="tit">{{$t('devicelist.tel')}}:</div>
                 <div class="data">{{ NewDetail.tel }}</div>
             </div>
             <div class="line line3">
-                <div class="tit">车辆厂家:</div>
+                <div class="tit">{{$t('work.vehicleManufacturer')}}:</div>
                 <div class="data data4">{{ NewDetail.factory }}</div>
                 <div class="tit">车辆型号:</div>
                 <div class="data data4">{{ NewDetail.model }}</div>
@@ -21,13 +21,13 @@
             <div class="line line2 ">
                 <div class="tit">向日葵SN:</div>
                 <div class="data data4"> {{ NewDetail.sunFlowerSn }}</div>
-                <div class="tit">软件版本:</div>
+                <div class="tit">{{$t('work.softwareVersion')}}:</div>
                 <div class="data ">{{ NewDetail.softwareVersion }}</div>
             </div>
             <div class="line line2 ">
-                <div class="tit">创建时间:</div>
+                <div class="tit">{{$t('work.creationTime')}}:</div>
                 <div class="data">{{ NewDetail.createTime?.split(' ')[0] }}</div>
-                <div class="tit">更新时间: </div>
+                <div class="tit">{{$t('work.updateTime')}}: </div>
                 <div class="data">{{ NewDetail.updateTime?.split(' ')[0] }}</div>
             </div>
             <div v-if="props.terminalType != 'AG302'">
@@ -95,27 +95,27 @@
                 <div class="data">{{ NewDetail.companyName }}</div>
             </div>
             <div class="line line3">
-                <div class="tit">车主姓名:</div>
+                <div class="tit">{{$t('devicelist.name')}}:</div>
                 <div class="data">{{ NewDetail.userName }}</div>
-                <div class="tit">车主电话:</div>
+                <div class="tit">{{$t('devicelist.tel')}}:</div>
                 <div class="data">{{ NewDetail.tel }}</div>
-                <div class="tit">车辆厂家:</div>
+                <div class="tit">{{$t('work.vehicleManufacturer')}}:</div>
                 <div class="data">{{ NewDetail.factory }}</div>
             </div>
             <div class="line line3">
                 <div class="tit">车辆型号:</div>
                 <div class="data">{{ NewDetail.model }}</div>
-                <div class="tit">车龄:</div>
+                <div class="tit">{{$t('work.vehicleAge')}}:</div>
                 <div class="data">{{ NewDetail.age }}</div>
                 <div class="tit">向日葵SN:</div>
                 <div class="data">{{ NewDetail.sunFlowerSn }}</div>
             </div>
             <div class="line line3">
-                <div class="tit">创建时间:</div>
+                <div class="tit">{{$t('work.creationTime')}}:</div>
                 <div class="data">{{ NewDetail.createTime }}</div>
-                <div class="tit">更新时间:</div>
+                <div class="tit">{{$t('work.updateTime')}}:</div>
                 <div class="data">{{ NewDetail.updateTime }}</div>
-                <div class="tit">最近上线时间:</div>
+                <div class="tit">{{$t('work.lastOnlineTime')}}:</div>
                 <div class="data">{{ NewDetail.lastOnlineTime }}</div>
             </div>
         </div>
@@ -160,7 +160,7 @@
                 <div class="data">{{ NewDetail.hub }}</div>
                 <div class="tit">Hub_SN:</div>
                 <div class="data">{{ NewDetail.hubSn }}</div>
-                <div class="tit">软件版本:</div>
+                <div class="tit">{{$t('work.softwareVersion')}}:</div>
                 <div class="data">{{ NewDetail.softwareVersion }}</div>
             </div>
 
@@ -175,7 +175,7 @@
                 <div class="data">{{ NewDetail.expirationTime }}</div>
                 <div class="tit">质保过期:</div>
                 <div class="data">{{ NewDetail.warrantyDate }}</div>
-                <div class="tit">罗网过期:</div>
+                <div class="tit">{{$t('work.netting')}}过期:</div>
                 <div class="data">{{ NewDetail.netDate }}</div>
 
             </div>

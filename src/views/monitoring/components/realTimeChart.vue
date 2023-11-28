@@ -15,7 +15,7 @@
         <p style="text-align:center;">差分龄期</p>
         <div id="difference"></div>
         <div class="judgeLevel">
-          <span :class="['level' + judgeLevel]">等级:{{ judgeLevel }} </span>
+          <span :class="['level' + judgeLevel]">{{$t('work.level')}}:{{ judgeLevel }} </span>
           <el-tooltip effect="dark" content="所有3min展示的点中，横向偏差在（-3，3）占总点比，<br />>=90%为优、>=70%为中、&lt;70%为差">
             <el-icon>
               <InfoFilled />

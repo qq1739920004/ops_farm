@@ -6,16 +6,16 @@
                     <el-icon>
                         <Back @click="back" />
                     </el-icon>
-                    <span>详情</span>
+                    <span>{{$t  ('work.details')}}</span>
                 </div>
                 <div class="btn_area">
                     <el-button type="primary" plain :disabled="baseInfo.onlineTcp === 0 ? false : true"
-                        @click="remoteManage">远程管理</el-button>
-                    <el-button type="primary" plain @click="handle">处理</el-button>
+                        @click="remoteManage">{{$t('work.remoteManagement')}}</el-button>
+                    <el-button type="primary" plain @click="handle">{{$t('work.processed2')}}</el-button>
                 </div>
             </div>
             <div class="card1">
-                <div class="card_title">基本信息
+                <div class="card_title">{{$t('work.basicInformation')}}
                     <span class="downIcon" @click="clickOpen">
                         {{ openContent }}
                         <el-icon v-if="isShow">
@@ -29,19 +29,19 @@
 
                 <ul class="base_info">
                     <li>
-                        <span>类型：</span>
+                        <span>{{$t('devicelist.type')}}:</span>
                         <span class="time">{{ baseInfo.model }}</span>
                     </li>
                     <li>
-                        <span>软件版本：</span>
+                        <span>{{$t('work.softwareVersion')}}：</span>
                         <span class="time">{{ baseInfo.softwareVersion }}</span>
                     </li>
                     <li>
-                        <span>更新时间：</span>
+                        <span>{{$t('work.updateTime')}}：</span>
                         <span class="time">{{ baseInfo.updateTime }}</span>
                     </li>
                     <li>
-                        <span>车辆厂家：</span>
+                        <span>{{$t('work.vehicleManufacturer')}}：</span>
                         <span class="time">{{ baseInfo.factory }}</span>
                     </li>
                     <li>
@@ -55,36 +55,36 @@
                             <span class="time">{{ baseInfo.name }}</span>
                         </li>
                         <li>
-                            <span>车主姓名：</span>
+                            <span>{{$t('devicelist.name')}}：</span>
                             <span class="time">{{ baseInfo.factory }}</span>
                         </li>
                         <li>
-                            <span>车主电话：</span>
+                            <span>{{$t('devicelist.tel')}}：</span>
                             <span class="time">{{ baseInfo.tel }}</span>
                         </li>
 
                         <li>
-                            <span>车龄：</span>
+                            <span>{{$t('work.vehicleAge')}}：</span>
                             <span class="time">{{ baseInfo.age }}</span>
                         </li>
                         <li>
-                            <span>创建人：</span>
+                            <span>{{$t('work.creator')}}：</span>
                             <span class="time">{{ baseInfo.creatorName }}</span>
                         </li>
                         <li>
-                            <span>创建人电话：</span>
+                            <span>{{$t('work.creator')}}电话：</span>
                             <span class="time">{{ baseInfo.creatorTel }}</span>
                         </li>
                         <li>
-                            <span>创建时间：</span>
+                            <span>{{$t('work.creationTime')}}：</span>
                             <span class="time">{{ baseInfo.createTime }}</span>
                         </li>
                         <li>
-                            <span>最近上线时间：</span>
+                            <span>{{$t('work.lastOnlineTime')}}：</span>
                             <span class="time">{{ baseInfo.lastOnlineTime }}</span>
                         </li>
                         <li>
-                            <span>最近自动驾驶时间：</span>
+                            <span>{{$t('work.lastAutonomousDrivingTime')}}：</span>
                             <span class="time">{{ baseInfo.lastAutoDriveTime }}</span>
                         </li>
                     </a>
@@ -93,22 +93,22 @@
 
             </div>
             <div class="card2">
-                <div class="card_title">报警信息</div>
+                <div class="card_title">{{$t('work.alarmInformation')}}</div>
                 <div class="alarm" v-for="(item, index)  in alarmRecord" :key="index">
-                    <span>等级：<span class="info">{{ item.grade }}</span></span>
-                    <span>时间：<span class="info">{{ item.time }}</span></span>
-                    <span>内容：<span class="info">{{ item.content }}</span></span>
+                    <span>{{$t('work.level')}}：<span class="info">{{ item.grade }}</span></span>
+                    <span>{{$t('work.time')}}：<span class="info">{{ item.time }}</span></span>
+                    <span>{{$t('work.content')}}：<span class="info">{{ item.content }}</span></span>
                 </div>
 
             </div>
             <div class="card3">
-                <div class="card_title">参数变更记录</div>
+                <div class="card_title">{{$t('work.parameterChangeRecord')}}</div>
                 <div class="sub_title">
-                    <span>变更时间</span>
-                    <span>参数名称</span>
+                    <span>{{$t('work.changeTime')}}</span>
+                    <span>{{$t('work.parameterName')}}</span>
                 </div>
                 <div class="change" v-for="(value, key, index) in paramChange" :key="index">
-                    <span class="change_time">时间：<span class="time">{{ tsToStr(key) }}</span></span>
+                    <span class="change_time">{{$t('work.time')}}：<span class="time">{{ tsToStr(key) }}</span></span>
                     <div class='change_area'><span style="color: #8c8c8c;">{{ value[0].name }}</span>:(
                         <span style="color: red;">{{ value[0].newParam }}</span>
                         <span style="margin: 8px ;">→</span>
@@ -118,21 +118,21 @@
                 </div>
             </div>
             <div class="card4">
-                <div class="card_title">参数信息</div>
+                <div class="card_title">{{$t('work.parameterInformation')}}</div>
                 <div class="secondTitle">
                     <span>|</span>
-                    <span>差分信息</span>
+                    <span>{{$t('work.differentialInformation')}}</span>
                 </div>
                 <div class="message">
-                    <div> <span>工作模式：</span>
-                        <span>罗网</span>
+                    <div> <span>{{$t('work.workingMode')}}：</span>
+                        <span>{{$t('work.netting')}}</span>
                     </div>
 
                 </div>
 
                 <div class="secondTitle">
                     <span>|</span>
-                    <span>车辆参数</span>
+                    <span>{{$t('work.vehicleParameters')}}</span>
                 </div>
                 <div class="message">
                     <div v-for="(value, name, index)  in carParam.value" :key="index">
@@ -142,7 +142,7 @@
                 </div>
                 <div class="secondTitle">
                     <span>|</span>
-                    <span>校准参数</span>
+                    <span>{{$t('work.calibrationParameters')}}</span>
                 </div>
                 <div class="message">
                     <div v-for="(value, name, index)  in calibParam.value" :key="index">
@@ -152,7 +152,7 @@
                 </div>
                 <div class="secondTitle">
                     <span>|</span>
-                    <span>PID参数</span>
+                    <span>{{$t('work.pidParameters')}}</span>
                 </div>
                 <div class="message">
                     <div v-for="(value, name, index)  in PIDParam.value" :key="index">
@@ -163,7 +163,7 @@
 
                 <div class="secondTitle">
                     <span>|</span>
-                    <span>PID曲线参数</span>
+                    <span>{{$t('work.pidParameters')}}</span>
                 </div>
                 <div class="message">
                     <div v-for="(value, name, index)  in PidCurveParam.value" :key="index">
@@ -174,7 +174,7 @@
 
                 <div class="secondTitle">
                     <span>|</span>
-                    <span>PID超低速参数</span>
+                    <span>{{$t('work.pidUltraLowSpeedParameters')}}</span>
                 </div>
                 <div class="message">
                     <div v-for="(value, name, index)  in PidSlsParam.value" :key="index">
@@ -184,13 +184,13 @@
                 </div>
             </div>
             <!-- 处理对话框 -->
-            <el-dialog v-model="dialogFormVisible" title="指派">
+            <el-dialog v-model="dialogFormVisible" :title="$t('work.assign')">
                 <el-form :model="helpList" :rules="rules" ref="formRef">
-                    <el-form-item label="备注：" label-width="140px" prop="info">
-                        <el-input v-model="helpList.info" type="textarea" autocomplete="off" placeholder="请输入备注" />
+                    <el-form-item :label="$t('work.assign')+'：'" label-width="140px" prop="info">
+                        <el-input v-model="helpList.info" type="textarea" autocomplete="off" :placeholder="$t('work.enterRemark')" />
                     </el-form-item>
-                    <el-form-item label="继续指派：" label-width="140px" clearable>
-                        <el-select v-model="helpList.handlerName" placeholder="请选择" @change="changeHanlder">
+                    <el-form-item :label="$t('work.continueAssignment')+'：'" label-width="140px" clearable>
+                        <el-select v-model="helpList.handlerName" :placeholder="$t('work.pleaseSelect')" @change="changeHanlder">
                             <el-option v-for="(item, index) in handlerList" :key="index" :label="item.name" :value="item">
                                 <span style="float: left;">{{ item.name }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px;">{{ item.tel }}</span>
@@ -201,9 +201,9 @@
                 </el-form>
                 <template #footer>
                     <span class="dialog-footer">
-                        <el-button v-auth="499" ref="finish" @click="finishConfirm">完成处理</el-button>
+                        <el-button v-auth="499" ref="finish" @click="finishConfirm">{{ $t('work.completeProcessing') }}</el-button>
                         <el-button v-auth="499" ref="assign" type="primary" @click="assignConfirm">
-                            指派
+                          {{ $t('work.assign') }}
                         </el-button>
                     </span>
                 </template>

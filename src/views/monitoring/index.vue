@@ -556,7 +556,7 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="l">
-              <div class="label">车主姓名:</div>
+              <div class="label">{{$t('devicelist.name')}}:</div>
               <div class="value">${item.carOwnerName}</div>
             </div>
             <div class="r">
@@ -653,7 +653,7 @@ function createMarkerPopup(item: any) {
               !openRemote ? "disabled" : ""
             }" onclick='openRemote_markerPopup(${JSON.stringify(
     item
-  )})'>远程管理</div>
+  )})'>{{$t('work.remoteManagement')}}</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
               item
             )})'>历史轨迹</div>
