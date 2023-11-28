@@ -12,7 +12,11 @@ const zh = {
     Alarms:'告警',
     Poordrivingperformance:'驾驶效果差',
     SNLabelSNcarName:'SN、铭牌SN、车辆名、公司、电话',
-    carName:'车辆名称'
+    carName:'车辆名称',
+    Realtimedrivingtrendchart:'实时驾驶趋势图',
+    labelSN:'铭牌号',
+    companyName:'公司名称',
+    workingcondition:'工作状态'
   },
   sinoMap:{
     SatellitesMap:'卫星地图',
