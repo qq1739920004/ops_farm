@@ -13,6 +13,10 @@ const en = {
     Poordrivingperformance: "Poor driving performance",
     SNLabelSNcarName: "SN、LabelSN、carName、company、phone",
     carName: "carName",
+    Realtimedrivingtrendchart:'Real time driving trend chart',
+    labelSN:'LabelSN',
+    companyName:'Company Name',
+    workingcondition:'workingcondition'
   },
   sinoMap: {
     SatellitesMap: "Satellites map",

@@ -556,11 +556,11 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="l">
-              <div class="label">{{$t('devicelist.name')}}:</div>
+              <div class="label">${t('devicelist.name')}:</div>
               <div class="value">${item.carOwnerName}</div>
             </div>
             <div class="r">
-              <div class="label">铭牌号:</div>
+              <div class="label">${t('messages.labelSN')}:</div>
               <div class="value">${item.npn || "/"}</div>
             </div>
           </li>
@@ -572,7 +572,7 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="l">
-              <div class="label">工作状态:</div>
+              <div class="label">${t('messages.workingcondition')}:</div>
               <div class="value">
                 <span class='status ${workingStatus[item.judgeLevel]}'></span>
                 <span>${item.judgeLevel || "无"}</span>
@@ -653,20 +653,20 @@ function createMarkerPopup(item: any) {
               !openRemote ? "disabled" : ""
             }" onclick='openRemote_markerPopup(${JSON.stringify(
     item
-  )})'>{{$t('work.remoteManagement')}}</div>
+  )})'>${t('work.remoteManagement')}</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
               item
-            )})'>历史轨迹</div>
+            )})'>${t('menus.historyTrack')}</div>
           </li>
           <li>
             <div class="btn ${
               item.driveState == 0 ? "disabled" : ""
             }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
     item
-  )})'>实时驾驶趋势图</div>
+  )})'>${t('messages.Realtimedrivingtrendchart')}</div>
             <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
               item
-            )})'>历史驾驶趋势图</div>
+            )})'>${t('menus.historicaldrivingtrendchart')}</div>
           </li>
         </ul>
       </div>`;
