@@ -4,7 +4,7 @@
     <div>
         <el-dialog style="border-radius: 8px;" v-model="dialogVisible" title="车型模版" width="847px" height="336px" center>
             <div class="content">
-                车辆类型：<el-select v-model="selectValue" class="m-2" placeholder="Select"
+                {{$t('work.vehicleType')}}：<el-select v-model="selectValue" class="m-2" placeholder="Select"
                     style="width: 170px;height: 32px;border-radius: 2px;background: rgba(255, 255, 255, 1);border: 1px solid rgba(220, 223, 230, 1);">
                     <el-option label="东方红" value="东方红" />
                     <el-option label="东风" value="东风" />

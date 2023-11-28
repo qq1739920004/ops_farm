@@ -1,19 +1,19 @@
 <!--  -->
 <template>
     <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" @close="closeRemoteAdjust" v-model="dialogVisible"
-        title="远程管理" width="1012px" height="516px" center>
+        :title="$t('work.remoteManagement')" width="1012px" height="516px" center>
         <div class="top">
-            <span style="margin-right: 20px;">车辆名称：{{ props.name || '/' }}</span>
-            <span>车辆类型：{{ props.terminalType }}</span>
+            <span style="margin-right: 20px;">{{$t('work.vehicleName')}}：{{ props.name || '/' }}</span>
+            <span>{{$t('work.vehicleType')}}：{{ props.terminalType }}</span>
         </div>
         <div class="menuArea">
             <el-tabs stretch v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-                <el-tab-pane label="车辆参数" name="1"></el-tab-pane>
-                <el-tab-pane label="校准参数" name="2"></el-tab-pane>
+                <el-tab-pane :label="$t('work.vehicleParameters')" name="1"></el-tab-pane>
+                <el-tab-pane :label="$t('work.calibrationParameters')" name="2"></el-tab-pane>
                 <el-tab-pane label="基本参数" name="3"></el-tab-pane>
                 <el-tab-pane label="高级参数1" name="4"></el-tab-pane>
-                <el-tab-pane label="在线升级" name="6"></el-tab-pane>
-                <el-tab-pane label="远程设置" name="5" @click="gotoChafen"></el-tab-pane>
+                <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane>
+                <el-tab-pane :label="$t('work.remoteSetting')" name="5" @click="gotoChafen"></el-tab-pane>
                 <!-- <el-tab-pane label="日志回传" name="7"></el-tab-pane> -->
             </el-tabs>
 
@@ -29,11 +29,11 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                        无数据
+                      {{$t('work.noData')}}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button v-if="carParamsData" type="primary" @click="updateCarParams">确定</el-button>
+                    <el-button v-if="carParamsData" type="primary" @click="updateCarParams">{{$t('work.submit')}}</el-button>
                 </div>
             </el-form>
             <el-form :validate-on-rule-change="false" ref="calibFormRef" v-show="activeName == '2'" :rules="CalibParamRules"
@@ -46,11 +46,11 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                        无数据
+                      {{$t('work.noData')}}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button v-if="CalibTitleData" type="primary" @click="updateCalibParams">确定</el-button>
+                    <el-button v-if="CalibTitleData" type="primary" @click="updateCalibParams">{{$t('work.submit')}}</el-button>
                 </div>
             </el-form>
             <el-form :validate-on-rule-change="false" ref="pidFormRef" v-show="activeName == '3'" :rules="pibParamRules"
@@ -63,11 +63,11 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                        无数据
+                      {{$t('work.noData')}}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button v-if="CalibTitleData" type="primary" @click="updatebasicParams">确定</el-button>
+                    <el-button v-if="CalibTitleData" type="primary" @click="updatebasicParams">{{$t('work.submit')}}</el-button>
                 </div>
             </el-form>
             <el-form :validate-on-rule-change="false" ref="advanceFormRef" v-show="activeName == '4'"
@@ -81,11 +81,11 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                        无数据
+                      {{$t('work.noData')}}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button v-if="advance1TitleData" type="primary" @click="updateAdvanced1Params">确定</el-button>
+                    <el-button v-if="advance1TitleData" type="primary" @click="updateAdvanced1Params">{{$t('work.submit')}}</el-button>
                 </div>
             </el-form>
             <el-form ref="moudleRef" :validate-on-rule-change="false" v-show="activeName == '5'" :rules="rules"
@@ -96,8 +96,8 @@
                         <el-form-item class="item" label="差分设置：" prop="type">
                             <el-select v-model="workPattern.type" style=" width: 187px;
                 height: 32px;">
-                                <el-option label="内置网络" :value="'1'" />
-                                <el-option label="罗网" :value="'3'" disabled />
+                                <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
+                                <el-option :label="$t('work.netting')" :value="'3'" disabled />
                                 <!-- <el-option label="外置网络" :value="2"></el-option> -->
                             </el-select>
                             <el-button :disabled="workPattern.type === '3' ? true : false" style="margin-left: 20px;"

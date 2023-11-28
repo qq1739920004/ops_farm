@@ -1,18 +1,18 @@
 <!--  -->
 <template>
     <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" @close="closeRemoteAdjust" v-model="dialogVisible"
-        title="远程管理" width="1012px" height="596px" center>
+        :title="$t('work.remoteManagement')" width="1012px" height="596px" center>
         <div class="top">
-            <span style="margin-right: 20px;">车辆名称：{{ props.name || '/' }}</span>
-            <span>车辆类型：{{ props.terminalType }}</span>
+            <span style="margin-right: 20px;">{{$t('work.vehicleName')}}：{{ props.name || '/' }}</span>
+            <span>{{$t('work.vehicleType')}}：{{ props.terminalType }}</span>
         </div>
         <div class="menuArea">
             <el-tabs stretch v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-                <el-tab-pane label="车辆参数" name="1"></el-tab-pane>
-                <el-tab-pane label="校准参数" name="2"></el-tab-pane>
-                <el-tab-pane label="PID参数" name="3"></el-tab-pane>
-                <el-tab-pane label="在线升级" name="6"></el-tab-pane>
-                <el-tab-pane label="远程设置" name="5" @click="gotoChafen"></el-tab-pane>
+                <el-tab-pane :label="$t('work.vehicleParameters')" name="1"></el-tab-pane>
+                <el-tab-pane :label="$t('work.calibrationParameters')" name="2"></el-tab-pane>
+                <el-tab-pane :label="$t('work.pidParameters')" name="3"></el-tab-pane>
+                <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane>
+                <el-tab-pane :label="$t('work.remoteSetting')" name="5" @click="gotoChafen"></el-tab-pane>
                 <!-- <el-tab-pane label="日志回传" name="7"></el-tab-pane> -->
             </el-tabs>
         </div>
@@ -27,11 +27,11 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                        无数据
+                      {{$t('work.noData')}}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button v-if="carParamsData" type="primary" @click="updateCarParams">确定</el-button>
+                    <el-button v-if="carParamsData" type="primary" @click="updateCarParams">{{$t('work.submit')}}</el-button>
                 </div>
             </el-form>
             <el-form ref="calibFormRef" :validate-on-rule-change="false" v-show="activeIndex == '2'"
@@ -44,11 +44,11 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                        无数据
+                      {{$t('work.noData')}}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" v-if="CalibTitleData" @click="updateCalibParams">确定</el-button>
+                    <el-button type="primary" v-if="CalibTitleData" @click="updateCalibParams">{{$t('work.submit')}}</el-button>
                 </div>
             </el-form>
             <el-form ref="pidFormRef" :validate-on-rule-change="false" v-show="activeIndex == '3'" :rules="pibParamRules"
@@ -61,11 +61,11 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                        无数据
+                      {{$t('work.noData')}}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" v-if="PidTitleData" @click="updatePidParams">确定</el-button>
+                    <el-button type="primary" v-if="PidTitleData" @click="updatePidParams">{{$t('work.submit')}}</el-button>
                 </div>
             </el-form>
 
@@ -77,8 +77,8 @@
                         <el-form-item class="item" label="差分设置：" prop="type">
                             <el-select v-model="workPattern.type" style=" width: 225px;
                 height: 32px;">
-                                <el-option label="内置网络" :value="'1'" />
-                                <el-option label="罗网" :value="'3'" disabled />
+                                <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
+                                <el-option :label="$t('work.netting')" :value="'3'" disabled />
                                 <!-- <el-option label="外置网络" :value="2"></el-option> -->
                             </el-select>
                             <el-button type="primary" :disabled="workPattern.type === '3' ? true : false"

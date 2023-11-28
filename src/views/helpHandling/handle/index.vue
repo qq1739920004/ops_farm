@@ -51,7 +51,7 @@
                     <a href="" v-show="isShow">
 
                         <li>
-                            <span>车辆名称：</span>
+                            <span>{{$t('work.vehicleName')}}：</span>
                             <span class="time">{{ baseInfo.name }}</span>
                         </li>
                         <li>
