@@ -2,17 +2,17 @@
 <template>
     <div>
         <el-dialog @close="closeInputList" @open="getInputList" style="border-radius: 8px;" v-model="dialogVisible"
-            title="录入经销商设备" width="30%" center>
+            :title="$t('devicelist.inputDealerDevice')" width="30%" center>
             <div class="content">
                 <el-form style="width: 100%" ref="formRef" label-width="140px">
                     <el-form-item :label="$t('work.dealer')+':'">
-                        <el-select v-model="uploadData.id" class="m-2" placeholder="请选择经销商">
+                        <el-select v-model="uploadData.id" class="m-2" :placeholder="$t('messages.Pleasedistributor')">
                             <el-option v-for="item in carDealerList" :label="item.name" :value="item.id"
                                 :key="item.id"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="文件：" prop="date">
-                        <el-input class="inputel" placeholder="请输入文件名" v-model="fileName">
+                    <el-form-item :label="$t('messages.file') + ':'" prop="date">
+                        <el-input class="inputel" :placeholder="$t('messages.Pleaseenterafilename')" v-model="fileName">
                             <template #append>
                                 <el-upload style="height:30px;width: 10px; margin-right: 3px;" ref="uploadRef"
                                     class="upload-demo" :action="actionUrl" :data="uploadData"
@@ -20,7 +20,7 @@
                                     :on-change="handleChange" :on-success="successResult" :before-upload="beforeUploadFile"
                                     :before-remove="beforeRemove">
                                     <template #trigger>
-                                        <el-button>浏览</el-button>
+                                        <el-button>{{ $t('messages.browse') }}</el-button>
                                     </template>
                                 </el-upload>
                             </template>
@@ -30,11 +30,11 @@
             </div>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button v-auth="567" style="color:var(--el-color-primary)" text @click="getTemplate">下载模版</el-button>
+                    <el-button v-auth="567" style="color:var(--el-color-primary)" text @click="getTemplate">{{ $t('messages.Downloadtemplate') }}</el-button>
                     <el-button v-auth="568" type="primary"
                         style="background-color:var(--el-color-primary);color:'#fff'; width: 100px;height: 38px;margin-left:50px"
                         @click="submitBtn">
-                        录入
+                        {{ $t('messages.enter') }}
                     </el-button>
                 </span>
             </template>

@@ -56,6 +56,8 @@
 
 
 <script setup lang='ts'>
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 import snTable from './components/sn-table.vue'
 // import vLoadMore from '@/utils/loadData'
 import { reactive, ref, watch } from 'vue'
@@ -126,7 +128,7 @@ const dealerList = ref<carDealerObj[]>([])
 const getDealerList = async () => {
     const res: carDealerResponseData = await carDealer_API()
     if (res.data.length > 1) {
-        dealerList.value = [{ 'id': '', 'name': '全部经销商' }, ...res.data]
+        dealerList.value = [{ 'id': '', 'name': t('devicelist.totalDealer') }, ...res.data]
         pageInfo.companyId = ''
     } else {
         dealerList.value = res.data

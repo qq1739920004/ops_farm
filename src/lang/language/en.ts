@@ -16,7 +16,13 @@ const en = {
     Realtimedrivingtrendchart:'Real time driving trend chart',
     labelSN:'LabelSN',
     companyName:'Company Name',
-    workingcondition:'workingcondition'
+    workingcondition:'workingcondition',
+    enter:'enter',
+    Downloadtemplate:'Download template',
+    file:'file',
+    Pleaseenterafilename:'Please enter a file name',
+    browse:'browse',
+    Pleasedistributor:'Please select a distributor'
   },
   sinoMap: {
     SatellitesMap: "Satellites map",

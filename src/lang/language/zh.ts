@@ -16,7 +16,13 @@ const zh = {
     Realtimedrivingtrendchart:'实时驾驶趋势图',
     labelSN:'铭牌号',
     companyName:'公司名称',
-    workingcondition:'工作状态'
+    workingcondition:'工作状态',
+    enter:'录入',
+    Downloadtemplate:'下载模版',
+    file:'文件',
+    Pleaseenterafilename:'请输入文件名',
+    browse:'浏览',
+    Pleasedistributor:'请选择经销商'
   },
   sinoMap:{
     SatellitesMap:'卫星地图',

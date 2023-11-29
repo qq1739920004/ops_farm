@@ -41,6 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 import { useRoute } from "vue-router";
 import InputDia from "./components/inputDia.vue";
 import Pagination from "@/components/Pagination/index.vue";
@@ -102,7 +104,7 @@ const getDealerList = async () => {
   if (res.data == null) {
   } else {
     if (res.data.length > 1) {
-      dealerList.value = [{ id: "", name: "全部经销商" }, ...res.data];
+      dealerList.value = [{ id: "", name:  t('devicelist.totalDealer') }, ...res.data];
       pageInfo.companyId = dealerList.value[0].id;
     } else {
       dealerList.value = res.data;
