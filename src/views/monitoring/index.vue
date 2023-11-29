@@ -579,7 +579,7 @@ function createMarkerPopup(item: any) {
               </div>
             </div>
             <div class="r">
-              <div class="label">{{$t('work.drivingStatus')}}:</div>
+              <div class="label">${t('work.drivingStatus')}:</div>
               <div class="value">
                 <span class='status ${onlineStatus[item.driveState]}'></span>
                 <span>${driveState[item.driveState]}</span>
