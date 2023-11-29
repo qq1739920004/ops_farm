@@ -566,7 +566,7 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="l">
-              <div class="label">{{$t('work.companyName')}}:</div>
+              <div class="label">${t('work.companyName')}:</div>
               <div class="value">${item.companyName}</div>
             </div>
           </li>
