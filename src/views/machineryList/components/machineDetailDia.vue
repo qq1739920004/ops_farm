@@ -274,7 +274,7 @@ const getNewDetail = async () => {
         background-color: var(--el-fill-color-lighter);
 
         .tit {
-            height: 41px;
+            height: 51px;
             width: 130px;
             background-color: rgba(233, 242, 242, 1);
         }
@@ -285,7 +285,7 @@ const getNewDetail = async () => {
             display: flex;
             align-items: center;
             padding-left: 10px;
-            height: 41px;
+            height: 51px;
             width: 130px;
             font-size: 12px;
             font-weight: 400;
@@ -295,7 +295,7 @@ const getNewDetail = async () => {
 
     .line3 {
         width: 100%;
-        height: 41px;
+        height: 51px;
         opacity: 1;
         display: flex;
         align-items: center;

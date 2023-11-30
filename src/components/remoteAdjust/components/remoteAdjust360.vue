@@ -92,7 +92,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="18" :offset="6">
-                        <el-form-item class="item" label="差分设置：" prop="type">
+                        <el-form-item class="item" label="差分设置：">
                             <el-select v-model="workPattern.type" style=" width: 225px;
                 height: 32px;">
                                 <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
