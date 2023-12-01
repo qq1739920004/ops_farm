@@ -257,7 +257,7 @@
             </el-form>
 
             <el-form ref="formLabelAlignRef" :validate-on-rule-change="false" v-show="activeIndex == '6'" :rules="rules"
-                :inline="true" :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
+                :inline="true" :label-position="labelPosition" label-width="180px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
                 <div class="mktitle">
                     {{$t('work.dualAntennaOneMachine')}}
@@ -275,7 +275,7 @@
 
                 </el-row>
                 <el-row style="margin-bottom: 20px;">
-                    <el-col :span="12" :offset="6">
+                    <el-col :span="14" :offset="6">
                         <el-form-item class="item" :label="$t('work.versionSelection')+'：'" prop="name">
                             <el-select v-if="productList.length >= 1" style=" width: 187px;
                 height: 32px;" v-model="formLabelAlign.filename">

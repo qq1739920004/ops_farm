@@ -162,13 +162,13 @@
             </el-form>
 
             <el-form ref="formLabelAlignRef" :validate-on-rule-change="false" v-show="activeIndex == '6'" :rules="rules"
-                :inline="true" :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
+                :inline="true" :label-position="labelPosition" label-width="180px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
                 <div class="mktitle">
                     {{$t('work.dualAntennaOneMachine')}}
                 </div>
                 <el-row style="margin-top:40px ;">
-                    <el-col :span="12" :offset="6">
+                    <el-col :span="14" :offset="6">
                         <el-form-item class="item" label="模块选择：" prop="radio1">
                             <el-radio-group @change="changeRadio1" text-color="var(--el-color-primary)"
                                 style="transform: translateY(-5px);" v-model="formLabelAlign.radio1" class="ml-4">
@@ -180,7 +180,7 @@
 
                 </el-row>
                 <el-row>
-                    <el-col :span="12" :offset="6">
+                    <el-col :span="14" :offset="6">
                         <el-form-item class="item" :label="$t('work.versionType')" prop="radio2">
                             <el-radio-group @change="changeRadio2" text-color="var(--el-color-primary)"
                                 style="transform: translateY(-5px);" v-model="formLabelAlign.radio2" class="ml-4">
@@ -192,7 +192,7 @@
 
                 </el-row>
                 <el-row style="margin-bottom: 20px;">
-                    <el-col :span="12" :offset="6">
+                    <el-col :span="14" :offset="6">
                         <el-form-item class="item" :label="$t('work.versionSelection')+'：'" prop="filename">
                             <el-select style=" width: 187px;
                 height: 32px;" v-model="formLabelAlign.filename">
