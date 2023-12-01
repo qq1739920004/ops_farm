@@ -8,8 +8,8 @@
                 </el-select>
                 <el-input style="width:179px;margin-right: 20px;" v-if="dealerList.length === 1"
                     v-model="dealerList[0].name" disabled />
-                <el-select-v2 style="width: 350px;" filterable v-model="pageInfo.carId" :options="options" :placeholder="$t('work.pleaseSelect')"
-                    @change="changeBlur2">
+                <el-select-v2 style="width: 350px;" filterable v-model="pageInfo.carId" :options="options"
+                    :placeholder="$t('work.pleaseSelect')" @change="changeBlur2">
                 </el-select-v2>
                 <!-- <el-select v-load-more="loadmore" filterable  v-model="pageInfo.carId"
                     class="m-2" :placeholder="$t('work.pleaseSelect')" remote-show-suffix @change="changeBlur2">
@@ -20,18 +20,20 @@
 
             </div>
             <div class="time">
-                <p :class="isActive == 1 ? 'active' : ''" @click="onDayClick">{{$t('work.today')}}</p>
-                <p :class="isActive == 2 ? 'active' : ''" @click="onMonthClick">{{$t('work.thisMonth')}}</p>
-                <p :class="isActive == 3 ? 'active' : ''" @click="onYearClick">{{$t('work.thisYear')}}</p>
+                <p :class="isActive == 1 ? 'active' : ''" @click="onDayClick">{{ $t('work.today') }}</p>
+                <p :class="isActive == 2 ? 'active' : ''" @click="onMonthClick">{{ $t('work.thisMonth') }}</p>
+                <p :class="isActive == 3 ? 'active' : ''" @click="onYearClick">{{ $t('work.thisYear') }}</p>
                 <div class="demo-date-picker">
                     <div class="block">
                         <el-date-picker style="width: 144px;" class=".date_picker1" v-model="value1" type="date"
-                            :placeholder="$t('work.startDate')" size="default" :disabled-date="disabledDate" @change="changeA()" />
+                            :placeholder="$t('work.startDate')" size="default" :disabled-date="disabledDate"
+                            @change="changeA()" />
                     </div>
                     <div class="gang">--</div>
                     <div class="block">
                         <el-date-picker style="width: 144px;" class=".date_picker2" v-model="value2" type="date"
-                            :placeholder="$t('work.endDate')" :disabled-date="disabledDate" size="default" @change="changeA()" />
+                            :placeholder="$t('work.endDate')" :disabled-date="disabledDate" size="default"
+                            @change="changeA()" />
                     </div>
                 </div>
             </div>
@@ -68,6 +70,7 @@ import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, deale
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 import router from '@/router'
 import axios from 'axios';
+import jsonp from 'axios-jsonp'
 
 
 
@@ -178,20 +181,32 @@ const getPaddyWorkList = async () => {
 
     paddyWorkList.value.forEach((item: any) => {
         if (item.lineptax && item.lineptay) {
-            axios({
-                url: `${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`,
-                method: 'get',
+            // axios({
+            //     url: `${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`,
+            //     method: 'get',
+            //     params: {
+            //         'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
+            //         'output': 'json',
+            //         'coordtype': 'wgs84ll',
+            //         'location': item.lineptay + ',' + item.lineptax
+            //     }
+            // }).then((res: any) => {
+            //     item.position = res.data.result.formatted_address
+            // })
+
+            // const res = getTrueLocation_API()
+            axios.get(`${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`, {
+
                 params: {
                     'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
                     'output': 'json',
                     'coordtype': 'wgs84ll',
                     'location': item.lineptay + ',' + item.lineptax
-                }
+                },
+                adapter: jsonp
             }).then((res: any) => {
                 item.position = res.data.result.formatted_address
             })
-
-            // const res = getTrueLocation_API()
 
         }
     })
