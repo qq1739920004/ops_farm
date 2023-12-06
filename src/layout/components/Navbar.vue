@@ -9,7 +9,7 @@
       <SvgIcon icon="theme" size="20" @click="drawer = true" />
     </div>
     <el-dropdown class="lang-dropdown">
-      <SvgIcon icon="language" size="22" />
+      <SvgIcon icon="language" size="18" />
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item
