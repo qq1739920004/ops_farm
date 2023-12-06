@@ -4,8 +4,8 @@
         <el-dialog @close="closeInputList" @open="getInputList" style="border-radius: 8px;" v-model="dialogVisible"
             :title="$t('devicelist.inputDealerDevice')" width="30%" center>
             <div class="content">
-                <el-form style="width: 100%" ref="formRef" label-width="140px">
-                    <el-form-item :label="$t('work.dealer')+':'">
+                <el-form style="width: 100%" ref="formRef" label-width="120px">
+                    <el-form-item :label="$t('work.dealer') + ':'">
                         <el-select v-model="uploadData.id" class="m-2" :placeholder="$t('messages.Pleasedistributor')">
                             <el-option v-for="item in carDealerList" :label="item.name" :value="item.id"
                                 :key="item.id"></el-option>
@@ -14,14 +14,14 @@
                     <el-form-item :label="$t('messages.file') + ':'" prop="date">
                         <el-input class="inputel" :placeholder="$t('messages.Pleaseenterafilename')" v-model="fileName">
                             <template #append>
-                                <el-upload style="height:30px;width: 10px; margin-right: 3px;" ref="uploadRef"
+                                <el-upload  style="height:30px; " ref="uploadRef"
                                     class="upload-demo" :action="actionUrl" :data="uploadData"
                                     :headers="{ 'Authorization': userStore.Authorization }" :limit="1" :auto-upload="false"
                                     :on-change="handleChange" :on-success="successResult" :before-upload="beforeUploadFile"
                                     :before-remove="beforeRemove">
-                                    <template #trigger>
-                                        <el-button>{{ $t('messages.browse') }}</el-button>
-                                    </template>
+
+                                    <el-button >{{ $t('messages.browse') }}</el-button>
+
                                 </el-upload>
                             </template>
                         </el-input>
@@ -30,7 +30,8 @@
             </div>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button v-auth="567" style="color:var(--el-color-primary)" text @click="getTemplate">{{ $t('messages.Downloadtemplate') }}</el-button>
+                    <el-button v-auth="567" style="color:var(--el-color-primary)" text @click="getTemplate">{{
+                        $t('messages.Downloadtemplate') }}</el-button>
                     <el-button v-auth="568" type="primary"
                         style="background-color:var(--el-color-primary);color:'#fff'; width: 100px;height: 38px;margin-left:50px"
                         @click="submitBtn">
@@ -175,15 +176,15 @@ watch(
     .inputel {
         margin-left: 10px;
         width: 270px;
+
+       
     }
 
 }
-
 
 .dialog-footer {
     display: flex;
     justify-content: center;
     margin-top: -20px;
 }
-
 </style>

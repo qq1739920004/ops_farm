@@ -72,18 +72,18 @@
                     <div class="righttitle">{{$t('work.component')}}</div>
                     <div class="rightcontent">
                         <el-form :model="topvalue" ref="formRef" :rules="rules" hide-required-asterisk>
-                            <el-form-item :label="$t('work.labelSN')+':'" label-width="110px">
+                            <el-form-item :label="$t('work.labelSN')+':'" label-width="125px">
                                 <span style="color: var(--el-input-text-color,var(--el-text-color-regular))"> {{
                                     topvalue.npn || '/' }}</span>
                             </el-form-item>
-                            <el-form-item :label="$t('work.PlateSN')+':'" label-width="110px" prop="sn">
+                            <el-form-item :label="$t('work.PlateSN')+':'" label-width="125px" prop="sn">
                                 <el-input v-model="topvalue.sn">
                                     <template #append>
                                         <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item :label="$t('work.MotorSN')+':'" label-width="110px" prop="motorSn">
+                            <el-form-item :label="$t('work.MotorSN')+':'" label-width="125px" prop="motorSn">
                                 <el-input v-model="topvalue.motorSn">
                                     <template #append>
                                         <el-button @click="changeMotorSnBtn(topvalue.motorSn)"
@@ -91,7 +91,7 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence != '1'" :label="$t('work.BodySN')+':'" label-width="110px" prop="carImuSn">
+                            <el-form-item v-if="scence != '1'" :label="$t('work.BodySN')+':'" label-width="125px" prop="carImuSn">
                                 <el-input v-model="topvalue.carImuSn">
                                     <template #append>
                                         <el-button @click="changeCarImuSnBtn(topvalue.carImuSn)"
@@ -99,7 +99,7 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence != '1'" :label="$t('work.frontWheelSN')+':'" label-width="110px" prop="wheelImuSn">
+                            <el-form-item v-if="scence != '1'" :label="$t('work.frontWheelSN')+':'" label-width="125px" prop="wheelImuSn">
                                 <el-input v-model="topvalue.wheelImuSn">
                                     <template #append>
                                         <el-button @click="changeWheelImuSnBtn(topvalue.wheelImuSn)"
@@ -107,7 +107,7 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence != '1'" :label="$t('work.Antenna1_SN')+':'" label-width="110px" prop="antennaOne">
+                            <el-form-item v-if="scence != '1'" :label="$t('work.Antenna1_SN')+':'" label-width="125px" prop="antennaOne">
                                 <el-input v-model="topvalue.antennaOne">
                                     <template #append>
                                         <el-button @click="changeAntennaOneBtn(topvalue.antennaOne)"
@@ -115,7 +115,7 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence == '2'" :label="$t('work.Antenna2_SN')+':'" label-width="110px" prop="antennaTwo">
+                            <el-form-item v-if="scence == '2'" :label="$t('work.Antenna2_SN')+':'" label-width="125px" prop="antennaTwo">
                                 <el-input v-model="topvalue.antennaTwo">
                                     <template #append>
                                         <el-button @click="changeAntennaTwoBtn(topvalue.antennaTwo)"
@@ -123,14 +123,14 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence == '1'" label="HUB_SN:" label-width="110px" prop="hubSn">
+                            <el-form-item v-if="scence == '1'" label="HUB_SN:" label-width="125px" prop="hubSn">
                                 <el-input v-model="topvalue.hubSn">
                                     <template #append>
                                         <el-button @click="changeHubSnBtn(topvalue.hubSn)" class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence == '1'" :label="$t('work.gnssPoleSN')+':'" label-width="110px" prop="sn">
+                            <el-form-item v-if="scence == '1'" :label="$t('work.gnssPoleSN')+':'" label-width="125px" prop="sn">
                                 <el-input v-model="topvalue.sn">
                                     <template #append>
                                         <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">{{$t('work.replace')}}</el-button>
@@ -310,7 +310,7 @@ const changeHubSnBtn = async (val: string) => {
     try {
         await carModuleInfoUpdate_API({ 'hubSn': val, 'type': '', 'id': topvalue.id })
         ElMessage({ type: 'success', message: '编辑成功' })
-        getTopInfo
+        getTopInfo 
     }
     catch {
        // ElMessage({ type: 'error', message: '编辑失败' })
@@ -361,6 +361,7 @@ const changeHubSnBtn = async (val: string) => {
             width: 50%;
 
             .righttitle {
+                margin-left: 15px;
                 margin-bottom: 10px;
                 font-size: 18px;
                 font-weight: 400;
@@ -370,9 +371,8 @@ const changeHubSnBtn = async (val: string) => {
 
             .rightcontent {
                 margin-bottom: 20px;
-
+ 
                 .change_btn {
-                    width: 74px;
                     height: 32px;
                     background: var(--el-color-primary);
                     color: #fff
@@ -430,7 +430,7 @@ const changeHubSnBtn = async (val: string) => {
         }
 
         .el-button {
-            width: 104px;
+            width: 114px;
             height: 32px;
             opacity: 1;
             border-radius: 4px;

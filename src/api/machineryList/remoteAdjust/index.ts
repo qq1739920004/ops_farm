@@ -108,7 +108,7 @@ export function getSourceNode_path(params: SourceObj) {
 // 差分设置参数更新
 export function updateCar_API(params: updateCarObj) {
     return request<any, updateCarResponseData>({
-        url: '/farm/car/update',
+        url: '/farm/car/new/update',
         method: 'post',
         params
     })
