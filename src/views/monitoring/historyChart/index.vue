@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from "vue-router";
 import { driveTendency_API } from '@/api/monitoring/index'
 import { ElMessage } from 'element-plus'
@@ -546,6 +546,18 @@ onMounted(() => {
     dateStart.setHours(0, 0, 0)
     timeRange.value = [dateStart, new Date()]
     refreshData()
+})
+onBeforeUnmount(() => {
+
+    if (history_hDiffChart) {
+        history_hDiffChart.dispose()
+    }
+    if (history_speedChart) {
+        history_speedChart.dispose()
+    }
+    if (history_azimuthChart) {
+        history_azimuthChart.dispose()
+    }
 })
 </script>
 
