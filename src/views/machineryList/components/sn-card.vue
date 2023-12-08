@@ -26,8 +26,8 @@
                 </el-row>
                 <div style="cursor: pointer" @click="handleProCardClick(item)">
                     <el-row class="item_text">
-                        <el-col :span="10">{{$t('work.onlineTotalVehicles')}}</el-col>
-                        <el-col :span="14">{{$t('work.todayTotalOperation')}}</el-col>
+                        <el-col :span="10">{{ $t('work.onlineTotalVehicles') }}</el-col>
+                        <el-col :span="14">{{ $t('work.todayTotalOperation') }}</el-col>
                     </el-row>
                     <el-row class="item_count">
                         <el-col :span="10" class="item_count_each">
@@ -39,7 +39,7 @@
                         </el-col>
                         <el-col :span="14">
                             <span class="bold">{{
-                                item.todayArea ? (item.todayArea ).toFixed(2) : "--"
+                                item.todayArea ? (item.todayArea).toFixed(2) : "--"
                             }}</span>
                             <span style="padding: 0 5px">/</span>
                             <span>{{
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div v-if="provinceCountData.length === 0" style="margin: auto; padding-top: 50px">
-              {{$t('work.noData')}}
+                {{ $t('work.noData') }}
             </div>
         </div>
         <!-- 地级市卡片容器 -->
@@ -65,8 +65,8 @@
                 </el-row>
                 <div style="cursor: pointer" @click="handleCityCardClick(item)">
                     <el-row class="item_text">
-                        <el-col :span="10">{{$t('work.onlineTotalVehicles')}}</el-col>
-                        <el-col :span="14">{{$t('work.todayTotalOperation')}}</el-col>
+                        <el-col :span="10">{{ $t('work.onlineTotalVehicles') }}</el-col>
+                        <el-col :span="14">{{ $t('work.todayTotalOperation') }}</el-col>
                     </el-row>
                     <el-row class="item_count">
                         <el-col :span="10">
@@ -112,7 +112,7 @@ const provinceCountData = reactive<ProvinceDataNewListObj[]>([])
 // 地级市数据列表
 const cityCountData = reactive<CityDataNewListObj[]>([])
 // 城市数组
-const formData = reactive<newListObj[]>([])
+const formData = ref<newListObj[]>([])
 const statusStark = ref([
     {
         provinceShow: true,
@@ -203,7 +203,7 @@ const pageTitle = computed(() => {
 const goBack = () => {
     // 使用栈记录状态
     currentPage.value = 1;
-    Object.assign(formData, [])
+    formData.value = []
     statusStark.value.pop();
     const iStatus = statusStark.value[statusStark.value.length - 1];
     Object.assign(status, iStatus)
@@ -226,7 +226,7 @@ const getListData = async () => {
         ...code
     }))
     total.value = res.data.total
-    Object.assign(formData, res.data.records)
+    formData.value = res.data.records
 
     // registerAuthority.value = res.data.records
 }
