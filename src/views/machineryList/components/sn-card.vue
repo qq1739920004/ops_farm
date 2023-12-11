@@ -101,18 +101,27 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { getProvinceDataNewList_API, getCityDataNewList_API } from '@/api/machineryList/sn-card/index'
-import { ProvinceDataNewListObj, ProvinceDataNewListResponseData, CityDataNewListResponseData, CityDataNewListObj } from '@/api/machineryList/sn-card/type'
+import { getCityDataNewList_API } from '@/api/machineryList/sn-card/index'
+import { CityDataNewListResponseData, CityDataNewListObj } from '@/api/machineryList/sn-card/type'
 import { carNewList_API } from '@/api/machineryList/index'
 import { newListObj, carNewListResponseData } from '@/api/machineryList/type'
 import snTable from './sn-table.vue'
 import Pagination from '@/components/Pagination/index.vue'
 // 省份数据列表
-const provinceCountData = reactive<ProvinceDataNewListObj[]>([])
+const provinceCountData = ref<any>([])
 // 地级市数据列表
 const cityCountData = reactive<CityDataNewListObj[]>([])
 // 城市数组
 const formData = ref<newListObj[]>([])
+const props = defineProps({
+    provinceCountData: {
+        type: Array,
+        default: [],
+    },
+});
+provinceCountData.value = props.provinceCountData
+console.log(provinceCountData);
+
 const statusStark = ref([
     {
         provinceShow: true,
@@ -139,11 +148,6 @@ const total = ref<number>(10)
 // const registerAuthority = ref<boolean>(false)
 const order = ref('1')
 // 获取省份数据
-const getProvinceDataNewList = async () => {
-    const res: ProvinceDataNewListResponseData = await getProvinceDataNewList_API()
-    Object.assign(provinceCountData, res.data)
-}
-getProvinceDataNewList()
 // 获取地级市数据
 const getCityDataNewList = async (val: string) => {
     const res: CityDataNewListResponseData = await getCityDataNewList_API(val)
@@ -218,7 +222,6 @@ const getListData = async () => {
         ? (code.provinceCode = status.provinceCode)
         : '';
     status.cityCode ? (code.cityCode = status.cityCode) : '';
-    console.log(code);
     const res: carNewListResponseData = await carNewList_API(JSON.stringify({
         currentPage: currentPage.value,
         pageSize: pageSize.value,

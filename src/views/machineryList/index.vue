@@ -16,8 +16,8 @@
         </el-input>
       </div>
       <div class="button_area">
-        <el-button style="margin-right: 20px" type="primary"
-          @click="gotoInput">{{ $t('devicelist.inputDealerDevice') }}</el-button>
+        <el-button style="margin-right: 20px" type="primary" @click="gotoInput">{{ $t('devicelist.inputDealerDevice')
+        }}</el-button>
         <el-button-group class="button_group2">
           <el-button icon="Expand" :class="{ tab_active: tableShow }" @click="switchTabShow(true)" />
           <el-button icon="menu" :class="{ tab_active: !tableShow }" @click="switchTabShow(false)" />
@@ -34,7 +34,7 @@
       </sn-table>
     </div>
     <div class="table_container app_card" v-show="!tableShow">
-      <sn-card />
+      <sn-card :provinceCountData="provinceCountData" />
     </div>
     <InputDia ref="inputD"></InputDia>
   </div>
@@ -57,6 +57,8 @@ import snTable from "./components/sn-table.vue";
 import snCard from "./components/sn-card.vue";
 import { carDealer_API } from "@/api/machineryList/index";
 import { carDealerResponseData, carDealerObj } from "@/api/machineryList/type";
+import { ProvinceDataNewListResponseData, ProvinceDataNewListObj } from '@/api/machineryList/sn-card/type'
+import { getProvinceDataNewList_API } from '@/api/machineryList/sn-card/index'
 let $route = useRoute();
 // 控制table显示与否
 const tableShow = ref<boolean>(true);
@@ -75,6 +77,7 @@ const pageInfo = reactive<pageInfo>({
 const inputD = ref();
 // 车辆列表
 const carNewList = ref<newListObj[]>([]);
+const provinceCountData = reactive<ProvinceDataNewListObj[]>([])
 // 车辆ID
 const search = () => {
   tableShow.value = true;
@@ -97,6 +100,10 @@ const changeSort = (val: string) => {
   pageInfo.order = val;
   getCarList();
 };
+const getProvinceDataNewList = async () => {
+  const res: ProvinceDataNewListResponseData = await getProvinceDataNewList_API()
+  Object.assign(provinceCountData, res.data)
+}
 
 // 获取公司列表
 const getDealerList = async () => {
@@ -104,7 +111,7 @@ const getDealerList = async () => {
   if (res.data == null) {
   } else {
     if (res.data.length > 1) {
-      dealerList.value = [{ id: "", name:  t('devicelist.totalDealer') }, ...res.data];
+      dealerList.value = [{ id: "", name: t('devicelist.totalDealer') }, ...res.data];
       pageInfo.companyId = dealerList.value[0].id;
     } else {
       dealerList.value = res.data;
@@ -147,6 +154,12 @@ const getCarList = async () => {
 };
 const switchTabShow = (val: boolean) => {
   tableShow.value = val;
+  if (val == false) {
+    if (provinceCountData.length === 0) {
+      getProvinceDataNewList()
+
+    }
+  }
 };
 
 onMounted(() => {
