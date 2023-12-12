@@ -60,6 +60,7 @@ const en = {
     sn: "SN",
     location: "Location",
     type: "Type",
+    state:'State',
     expiredTime: "Expired time",
     lastOnlineTime: "Last online time",
     operation: "Operation",

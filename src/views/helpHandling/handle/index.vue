@@ -6,7 +6,7 @@
                     <el-icon>
                         <Back @click="back" />
                     </el-icon>
-                    <span>{{$t  ('work.details')}}</span>
+                    <span>{{$t('devicelist.details')}}</span>
                 </div>
                 <div class="btn_area">
                     <el-button type="primary" plain :disabled="baseInfo.onlineTcp === 0 ? false : true"

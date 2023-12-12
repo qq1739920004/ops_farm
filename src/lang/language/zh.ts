@@ -61,6 +61,7 @@ const zh = {
     sn: "SN",
     location: "设备所在地",
     type: "类型",
+    state:'状态',
     expiredTime: "软件过期",
     lastOnlineTime: "最近上线时间",
     operation: "操作",
