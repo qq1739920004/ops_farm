@@ -118,7 +118,6 @@ const initHDiffChart = () => {
                 show: false
                 // startValue: this.formatHour(this.startTime)
             },
-            
             {
                 type: 'inside'
             }
