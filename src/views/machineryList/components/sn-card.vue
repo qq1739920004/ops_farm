@@ -100,7 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { getCityDataNewList_API } from '@/api/machineryList/sn-card/index'
 import { CityDataNewListResponseData, CityDataNewListObj } from '@/api/machineryList/sn-card/type'
 import { carNewList_API } from '@/api/machineryList/index'
@@ -110,7 +110,7 @@ import Pagination from '@/components/Pagination/index.vue'
 // 省份数据列表
 const provinceCountData = ref<any>([])
 // 地级市数据列表
-const cityCountData = reactive<CityDataNewListObj[]>([])
+const cityCountData = ref<CityDataNewListObj[]>([])
 // 城市数组
 const formData = ref<newListObj[]>([])
 const props = defineProps({
@@ -133,7 +133,7 @@ const statusStark = ref([
         formShow: false
     }
 ])
-const status = reactive({
+const status = ref({
     provinceShow: true,
     provinceName: '',
     provinceCode: null,
@@ -151,7 +151,7 @@ const order = ref('1')
 // 获取地级市数据
 const getCityDataNewList = async (val: string) => {
     const res: CityDataNewListResponseData = await getCityDataNewList_API(val)
-    Object.assign(cityCountData, res.data)
+    cityCountData.value=res.data
 }
 // 点击...
 const handleProButClick = (item: any) => {
@@ -166,22 +166,22 @@ const handleProButClick = (item: any) => {
         cityCode: null,
         formShow: false
     };
-    Object.assign(status, iStatus)
-    statusStark.value.push(status);
+    status.value = iStatus
+    statusStark.value.push(status.value);
 }
 // 点击城市
 const handleCityCardClick = (item: any) => {
     let iStatus = {
         provinceShow: false,
-        provinceName: status.provinceName,
-        provinceCode: status.provinceCode,
+        provinceName: status.value.provinceName,
+        provinceCode: status.value.provinceCode,
         cityShow: false,
         cityName: item.name,
         cityCode: item.code,
         formShow: true
     };
-    Object.assign(status, iStatus)
-    statusStark.value.push(status);
+    status.value=iStatus
+    statusStark.value.push(status.value);
     getListData()
 }
 // 点击省份
@@ -195,14 +195,14 @@ const handleProCardClick = (item: any) => {
         cityCode: null,
         formShow: true
     };
-    Object.assign(status, iStatus)
-    statusStark.value.push(status);
+    status.value = iStatus
+    statusStark.value.push(status.value);
     getListData()
 
 }
 // 计算
 const pageTitle = computed(() => {
-    return status.provinceName + ' ' + status.cityName;
+    return status.value.provinceName + ' ' + status.value.cityName;
 })
 const goBack = () => {
     // 使用栈记录状态
@@ -210,7 +210,7 @@ const goBack = () => {
     formData.value = []
     statusStark.value.pop();
     const iStatus = statusStark.value[statusStark.value.length - 1];
-    Object.assign(status, iStatus)
+    status.value=iStatus
 }
 // 获取列表
 const getListData = async () => {
@@ -218,10 +218,10 @@ const getListData = async () => {
         provinceCode: '',
         cityCode: ''
     };
-    status.provinceCode
-        ? (code.provinceCode = status.provinceCode)
+    status.value.provinceCode
+        ? (code.provinceCode = status.value.provinceCode)
         : '';
-    status.cityCode ? (code.cityCode = status.cityCode) : '';
+    status.value.cityCode ? (code.cityCode = status.value.cityCode) : '';
     const res: carNewListResponseData = await carNewList_API(JSON.stringify({
         currentPage: currentPage.value,
         pageSize: pageSize.value,

@@ -6,7 +6,7 @@
                     <el-icon>
                         <Back @click="back" />
                     </el-icon>
-                    <span>{{$t  ('work.details')}}</span>
+                    <span>{{$t('devicelist.details')}}</span>
                 </div>
                 <div class="btn_area">
                     <el-button type="primary" plain :disabled="baseInfo.onlineTcp === 0 ? false : true"
@@ -189,7 +189,7 @@
                     <el-form-item :label="$t('work.assign')+'：'" label-width="140px" prop="info">
                         <el-input v-model="helpList.info" type="textarea" autocomplete="off" :placeholder="$t('work.enterRemark')" />
                     </el-form-item>
-                    <el-form-item :label="$t('work.continueAssignment')+'：'" label-width="140px" clearable>
+                    <el-form-item :label="$t('work.continueAssignment')+'：'" label-width="140px" prop="handlerName" clearable>
                         <el-select v-model="helpList.handlerName" :placeholder="$t('work.pleaseSelect')" @change="changeHanlder">
                             <el-option v-for="(item, index) in handlerList" :key="index" :label="item.name" :value="item">
                                 <span style="float: left;">{{ item.name }}</span>
@@ -232,7 +232,8 @@ let openContent = ref<string>('展开')
 let formRef = ref()
 
 const rules = {
-    info: [{ required: true, message: '请输入备注', trigger: 'blur' }]
+    info: [{ required: true, message: '请输入备注', trigger: 'blur' }],
+    handlerName: [{ required: true, message: '请选择', trigger: 'blur' }]
 }
 const helpList = ref<RecordsObj>({
     "id": 0,

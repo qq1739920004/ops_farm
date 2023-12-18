@@ -14,7 +14,7 @@
         </el-input>
       </div>
       <div class="state">
-        <span>{{$t('work.type')}}：</span>
+        <span>{{$t('devicelist.state')}}：</span>
         <el-select
           v-model="helpHandling.status"
           :placeholder="$t('work.pleaseSelect')"
