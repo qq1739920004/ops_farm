@@ -88,7 +88,7 @@
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
                                 :disabled="row.warrantyDate ? true : false">{{$t('work.edit')}}
                             </el-button>
-                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button>
+                            <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
                             <el-button v-auth="505" class="aftersale_btn" type="primary" link
                                 @click="gotoAfterSale(row)">{{$t('work.afterSale')}}</el-button>
                         </div>
@@ -154,7 +154,7 @@
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
                                 :disabled="row.warrantyDate ? true : false">{{$t('work.edit')}}
                             </el-button>
-                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button>
+                            <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
                             <el-button v-auth="505" class="aftersale_btn" type="primary" link
                                 @click="gotoAfterSale(row)">{{$t('work.afterSale')}}</el-button>
                         </div>
@@ -219,7 +219,7 @@
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
                                 :disabled="row.warrantyDate ? true : false">{{$t('work.edit')}}
                             </el-button>
-                            <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button>
+                            <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
                             <el-button v-auth="505" type="primary" link @click="gotoAfterSale(row)"
                                 class="aftersale_btn">{{$t('work.afterSale')}}</el-button>
                         </div>
@@ -287,8 +287,10 @@ import G502Dia from './components/G502Dia.vue'
 import G501Dia from './components/G501Dia.vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { reactive, ref, nextTick, watch } from 'vue'
-import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API, carModuleInfoOperationDelete_API, CarModuleInfoExport_API } from '@/api/infoManagement/index'
-import { ElMessage, ElMessageBox } from 'element-plus'
+// carModuleInfoOperationDelete_API
+import { carModuleInfo_API, carModuleInfoSave_API, carModuleInfoUpdate_API, CarModuleInfoExport_API } from '@/api/infoManagement/index'
+// import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { RecordsObj, carModuleInfoResponseData, PageObj, newRecordsObj } from "@/api/infoManagement/type"
 import { useRouter } from 'vue-router'
 import SvgIcon from '@/components/SvgIcon/index.vue'
@@ -468,32 +470,32 @@ const openDialog = () => {
     })
 
 }
-const removeTradeMark = (id: any) => {
-    ElMessageBox.confirm(
-        '此操作将永久删除，是否继续?',
-        'Warning',
-        {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-        }
-    ).then(async () => {
-        try {
-            await carModuleInfoOperationDelete_API(id)
-            ElMessage({ type: 'success', message: '删除成功' })
-            pageInfo.key = ''
-            getInfoMangementInfo()
-        }
-        catch {
-            // ElMessage({ type: 'error', message: '删除失败' })
-        }
-    }).catch(() => {
-        ElMessage({
-            message: '取消删除',
-        })
-    })
+//  const removeTradeMark = (id: any) => {
+//     ElMessageBox.confirm(
+//         '此操作将永久删除，是否继续?',
+//         'Warning',
+//         {
+//             confirmButtonText: '确定',
+//             cancelButtonText: '取消',
+//             type: 'warning',
+//         }
+//     ).then(async () => {
+//         try {
+//             await carModuleInfoOperationDelete_API(id)
+//             ElMessage({ type: 'success', message: '删除成功' })
+//             pageInfo.key = ''
+//             getInfoMangementInfo()
+//         }
+//         catch {
+//             // ElMessage({ type: 'error', message: '删除失败' })
+//         }
+//     }).catch(() => {
+//         ElMessage({
+//             message: '取消删除',
+//         })
+//     })
 
-}
+// }
 const submit = async () => {
     await formRef.value.validate()
     dialogVisible.value = false
