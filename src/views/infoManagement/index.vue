@@ -9,9 +9,10 @@
                     </template>
                 </el-input>
                 <div class="kind">
-                    {{$t('work.deviceType')}}：
+                    {{ $t('work.deviceType') }}：
                 </div>
-                <el-select  v-model="pageInfo.terminalType" class="m-2" :placeholder="$t('work.deviceType')" @change="changeBlur">
+                <el-select v-model="pageInfo.terminalType" class="m-2" :placeholder="$t('work.deviceType')"
+                    @change="changeBlur">
                     <el-option value="AG360" label="AG360" />
                     <el-option value="AG502" label="AG502" />
                     <el-option value="AG501" label="AG501" />
@@ -21,8 +22,8 @@
                 <el-button type="primary" @click="openExportDia">
                     <el-icon class="el-icon--left">
                         <SvgIcon icon="export" size="16" />
-                    </el-icon>{{$t('work.export')}}</el-button>
-                <el-button v-auth="448" type="primary" icon="Plus" @click="openDialog">{{$t('work.new')}}</el-button>
+                    </el-icon>{{ $t('work.export') }}</el-button>
+                <el-button v-auth="448" type="primary" icon="Plus" @click="openDialog">{{ $t('work.new') }}</el-button>
             </div>
         </div>
         <div class="table_container app_card">
@@ -42,7 +43,7 @@
                         <div v-if="!row.warrantyDate">
                             <el-tag
                                 style="color:rgba(255, 112, 112, 1);width: 78px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
-                                class="mx-1" type="danger" effect="dark">{{$t('work.noactive')}}</el-tag>
+                                class="mx-1" type="danger" effect="dark">{{ $t('work.noactive') }}</el-tag>
                         </div>
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
@@ -86,11 +87,11 @@
                     <template #="{ row }">
                         <div class="edit-btn">
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
-                                :disabled="row.warrantyDate ? true : false">{{$t('work.edit')}}
+                                :disabled="row.warrantyDate ? true : false">{{ $t('work.edit') }}
                             </el-button>
                             <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
                             <el-button v-auth="505" class="aftersale_btn" type="primary" link
-                                @click="gotoAfterSale(row)">{{$t('work.afterSale')}}</el-button>
+                                @click="gotoAfterSale(row)">{{ $t('work.afterSale') }}</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -98,7 +99,7 @@
             </el-table>
             <el-table @selection-change="handleSelectionChange" :data="records" v-show="scence == '2'" stripe>
                 <el-table-column type="selection" width="55" />
-                <el-table-column type="index" width="80" :label="$t('work.item')+':'" align="center" />
+                <el-table-column type="index" width="80" :label="$t('work.item') + ':'" align="center" />
                 <el-table-column :label="$t('work.labelSN')" align="center">
                     <template #="{ row }">
                         {{ row.npn || '/' }}
@@ -152,11 +153,11 @@
                     <template #="{ row }">
                         <div class="edit-btn">
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
-                                :disabled="row.warrantyDate ? true : false">{{$t('work.edit')}}
+                                :disabled="row.warrantyDate ? true : false">{{ $t('work.edit') }}
                             </el-button>
                             <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
                             <el-button v-auth="505" class="aftersale_btn" type="primary" link
-                                @click="gotoAfterSale(row)">{{$t('work.afterSale')}}</el-button>
+                                @click="gotoAfterSale(row)">{{ $t('work.afterSale') }}</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -178,13 +179,13 @@
                         <div v-if="!row.warrantyDate">
                             <el-tag
                                 style="color:rgba(255, 112, 112, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(255, 212, 212, 1);border:1px solid rgba(255, 212, 212, 1)"
-                                class="mx-1" type="danger" effect="dark">{{$t('work.noactive')}}</el-tag>
+                                class="mx-1" type="danger" effect="dark">{{ $t('work.noactive') }}</el-tag>
                         </div>
                         <div
                             v-if="row.warrantyDate && Date.parse(row.warrantyDate.toString()) <= Date.parse(new Date().toString())">
                             <el-tag
                                 style=" color:rgba(42, 130, 228, 1);width: 68px;height: 26px;opacity: 1;border-radius: 4px;background: rgba(171, 210, 255, 1);border:1px solid rgba(171, 210, 255, 1)"
-                                class="mx-1" effect="dark">{{$t('work.due')}}</el-tag>
+                                class="mx-1" effect="dark">{{ $t('work.due') }}</el-tag>
                         </div>
                     </template>
                 </el-table-column>
@@ -217,11 +218,11 @@
                     <template #="{ row }">
                         <div class="edit-btn">
                             <el-button v-auth="446" type="primary" link @click="edit(row)"
-                                :disabled="row.warrantyDate ? true : false">{{$t('work.edit')}}
+                                :disabled="row.warrantyDate ? true : false">{{ $t('work.edit') }}
                             </el-button>
                             <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
                             <el-button v-auth="505" type="primary" link @click="gotoAfterSale(row)"
-                                class="aftersale_btn">{{$t('work.afterSale')}}</el-button>
+                                class="aftersale_btn">{{ $t('work.afterSale') }}</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -231,12 +232,12 @@
             </Pagination>
         </div>
         <div class="dialog">
-            <el-dialog style="border-radius: 8px;" v-model="dialogVisible" :title="newRecords.id ? $t('work.edit') : $t('work.new')"
-                width="544px" height="580px">
+            <el-dialog style="border-radius: 8px;" v-model="dialogVisible"
+                :title="newRecords.id ? $t('work.edit') : $t('work.new')" width="544px" height="580px">
                 <el-form label-width="140px" style="width: 90%" ref="formRef" :model="newRecords" :rules="rules">
                     <el-form-item :label="$t('work.deviceType')" prop="terminalType">
-                        <el-select v-model="newRecords.terminalType" class="m-2" :placeholder="$t('work.pleaseSelect')" width="120px"
-                            style="width:100%" prop="terminalType">
+                        <el-select v-model="newRecords.terminalType" class="m-2" :placeholder="$t('work.pleaseSelect')"
+                            width="120px" style="width:100%" prop="terminalType">
                             <el-option value="AG360" label="AG360" />
                             <el-option value="AG502" label="AG502" />
                             <el-option value="AG501" label="AG501" />
@@ -268,10 +269,10 @@
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button type="primary" v-if="!newRecords.id" @click="submit">
-                          {{$t('work.frontSN')}}
+                            {{ $t('work.frontSN') }}
                         </el-button>
                         <el-button type="primary" v-else @click="editSubmit">
-                          {{$t('work.frontSN')}}
+                            {{ $t('work.frontSN') }}
                         </el-button>
                     </span>
                 </template>
@@ -601,4 +602,5 @@ const openExportDia = () => {
         border: 1px solid rgba(220, 223, 230, 1);
     }
 
-}</style>
+}
+</style>

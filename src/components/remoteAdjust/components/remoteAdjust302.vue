@@ -112,7 +112,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="18" :offset="6">
-                        <el-form-item class="item" :label="$t('work.workingMode')" prop="type">
+                        <el-form-item class="item" :label="$t('work.workingMode')" >
                             <el-select v-model="workPattern.type" style=" width: 187px;
                 height: 32px;">
                                 <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
@@ -849,7 +849,7 @@ const updateProductListBtn = () => {
 
 
 const rules = {
-    type: [{ required: true, message: '请输入值', trigger: 'blur' }],
+    type: [{  message: '请输入值', trigger: 'blur' }],
     insideHost: [{ required: true, message: '请输入值', trigger: 'blur' }],
     insidePort: [{ required: true, message: '请输入值', trigger: 'blur' }],
     insideSourceNode: [{ required: true, message: '请输入值', trigger: 'blur' }],
