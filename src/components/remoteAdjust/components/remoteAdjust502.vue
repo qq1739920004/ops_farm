@@ -397,6 +397,7 @@ const getParamParams = async () => {
     res.data ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
 }
 const closeRemoteAdjust = () => {
+    workPattern.value.type ='3'
     carFormRef.value.resetFields()
     calibFormRef.value.resetFields()
     pidFormRef.value.resetFields()

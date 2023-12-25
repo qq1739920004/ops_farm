@@ -188,7 +188,7 @@ export const constantRoutes = [ // 静态路由数据
   //     {
   //       path: 'handle',
   //       name: 'handle',
-  //       component: () => import("@/views/helpHandling/handle/index.vue"),
+  //       component: () => import("@/views/helpHandling/handle/index.vue")
   //       meta: {
   //         title: '处理详情',
   //         icon: 'Suitcase',

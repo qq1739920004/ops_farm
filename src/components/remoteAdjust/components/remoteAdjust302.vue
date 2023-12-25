@@ -526,6 +526,7 @@ const getPidSupLowList = async () => {
     res.data.paramJson ? Object.assign(pidSupLowList, JSON.parse(res.data.paramJson)) : ''
 }
 const closeRemoteAdjust = () => {
+    workPattern.value.type ='3'
     carFormRef.value.resetFields()
     calibFormRef.value.resetFields()
     pidFormRef.value.resetFields()
