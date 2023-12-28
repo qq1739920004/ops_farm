@@ -59,7 +59,7 @@ const getFileList = async () => {
 }
 getFileList()
 const toBackFile = () => {
-    router.push({ path: `/machineryList/backFile`,query:{sn:parentSn}})
+    router.push({ path: `/machineryList/backFile`,query:{sn:parentSn,pid:parentPid}})
 }  
 </script>
 

@@ -9,7 +9,7 @@ export function carNewList_API(data: string) {
     })
 }
 // 车辆详情/car/new/detail
-export function carNewDetail_API(carId: Number,type:number) {
+export function carNewDetail_API(carId: Number, type: number) {
     return request<any, carNewDetailResponseData>({
         url: `/farm/car/new/detail?carId=${carId}&type=${type}`,
         method: 'get',
@@ -65,12 +65,21 @@ export function getSingleCarTrick_API(params: PageInfoObj) {
 // 文件存储
 export function getChildrenFileList_API(params: any) {
     return request<any, any>({
-        url: 'https://cloud.sinognss.com/lu/log/filesForSn',
+        url: '/lu/log/filesForSn',
         method: 'post',
         data: params,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }
     })
 }
+export function getBackFileSnList(params: any) {
+    return request<any, any>({
+        url: '/lu/log/ftpDirListFiles',
+        method: 'post',
+        data: params,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }
+    })
+}
+
 // 下载模板
 export function getDownTemplate_API() {
     return request<any, any>({

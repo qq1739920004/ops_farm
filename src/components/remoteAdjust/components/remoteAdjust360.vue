@@ -365,7 +365,7 @@ const formLabelAlign = reactive({
 const toFileList = () => {
     router.push({
         path: 'machineryList/file', query: {
-            pid: chaFenlist.value.paramType == 4 ? 9004 : "",
+            pid: chaFenlist.value.paramType === 4 ? 9004 : "",
             sn: props.sn,
         }
     })

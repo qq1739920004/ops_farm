@@ -2,17 +2,17 @@
 <template>
     <div>
         <el-table :data="fileListData" style="width:100%" v-loading="loading">
-            <el-table-column type="index" :label="$t('work.item')+':'" :width="60">
+            <el-table-column type="index" :label="$t('work.item') + ':'" :width="60">
             </el-table-column>
             <el-table-column label="文件名称">
                 <template #="{ row }">
                     <div class="fileName">
-                        <a :href="baseUrl + '/log_download/' + parentSn + '/' + row" >{{ row }}</a>
+                        <a :href="baseUrl + '/log_download/' + parentSn + '/' + row">{{ row.name }}</a>
                     </div>
                 </template>
             </el-table-column>
 
-            <el-table-column :label="$t('work.operation')+':'">
+            <el-table-column :label="$t('work.operation') + ':'">
                 <template #="{ row }">
                     <el-button type="text" v-if="!row.isBack">
                         <a :href="baseUrl + '/log_download/' + parentSn + '/' + row">下载</a>
@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from "vue-router";
-import { getChildrenFileList_API } from '@/api/machineryList/index'
+import { getBackFileSnList } from '@/api/machineryList/index'
 
 const route = useRoute()
 const fileListData = ref<any>([])
@@ -34,6 +34,7 @@ const total = ref(0)
 const current = ref(1)
 const pageSize = ref(10)
 const parentSn = route.query.sn
+// const parentPid = route.query.pid
 const baseUrl = import.meta.env.VITE_APP_BASE_API
 const loading = ref(false)
 
@@ -42,9 +43,10 @@ const getFileList = async () => {
     let postData = {
         current: current.value,
         size: pageSize.value,
-        sn: parentSn
+        sn: parentSn,
+        pid: 9004
     }
-    const res = await getChildrenFileList_API(postData)
+    const res = await getBackFileSnList(postData)
     loading.value = false;
     fileListData.value = []
     res.data.records.forEach((item: any) => {
