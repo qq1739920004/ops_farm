@@ -155,7 +155,7 @@ const en = {
     projectTime: "Project time",
     location: "Location",
     labelSN: "Label SN",
-    plzSN: 'Please enter SN number, nameplate SN',
+    plzSN: 'Please enter SN number, nameplate SN,parts SN',
     vehicle: "Vehicle",
     today: "Today",
     thisMonth: "This month",

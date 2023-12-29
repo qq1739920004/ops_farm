@@ -203,7 +203,7 @@ const zh = {
     custom: "自定义",
     mode: "模式",
     power: "功率",
-    plzSN:'请输入SN号,铭牌SN',
+    plzSN:'请输入SN号,铭牌SN,部件SN',
     dualAntennaOneMachine: "双天线一体机",
     moduleSelection: "模块选择",
     versionType: "版本类型",
