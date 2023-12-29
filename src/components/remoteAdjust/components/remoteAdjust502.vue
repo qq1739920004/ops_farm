@@ -3,8 +3,8 @@
     <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" @close="closeRemoteAdjust" v-model="dialogVisible"
         :title="$t('work.remoteManagement')" width="1012px" height="516px" center>
         <div class="top">
-            <span style="margin-right: 20px;">{{$t('work.vehicleName')}}：{{ props.name || '/' }}</span>
-            <span>{{$t('work.vehicleType')}}：{{ props.terminalType }}</span>
+            <span style="margin-right: 20px;">{{ $t('work.vehicleName') }}：{{ props.name || '/' }}</span>
+            <span>{{ $t('work.vehicleType') }}：{{ props.terminalType }}</span>
         </div>
         <div class="menuArea">
             <el-tabs stretch v-model="activeName" class="demo-tabs" @tab-click="handleClick">
@@ -29,11 +29,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                      {{$t('work.noData')}}
+                        {{ $t('work.noData') }}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button v-if="carParamsData" type="primary" @click="updateCarParams">{{$t('work.submit')}}</el-button>
+                    <el-button v-if="carParamsData" type="primary" @click="updateCarParams">{{ $t('work.submit')
+                    }}</el-button>
                 </div>
             </el-form>
             <el-form :validate-on-rule-change="false" ref="calibFormRef" v-show="activeName == '2'" :rules="CalibParamRules"
@@ -46,11 +47,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                      {{$t('work.noData')}}
+                        {{ $t('work.noData') }}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button v-if="CalibTitleData" type="primary" @click="updateCalibParams">{{$t('work.submit')}}</el-button>
+                    <el-button v-if="CalibTitleData" type="primary" @click="updateCalibParams">{{ $t('work.submit')
+                    }}</el-button>
                 </div>
             </el-form>
             <el-form :validate-on-rule-change="false" ref="pidFormRef" v-show="activeName == '3'" :rules="pibParamRules"
@@ -63,11 +65,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                      {{$t('work.noData')}}
+                        {{ $t('work.noData') }}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button v-if="CalibTitleData" type="primary" @click="updatebasicParams">{{$t('work.submit')}}</el-button>
+                    <el-button v-if="CalibTitleData" type="primary" @click="updatebasicParams">{{ $t('work.submit')
+                    }}</el-button>
                 </div>
             </el-form>
             <el-form :validate-on-rule-change="false" ref="advanceFormRef" v-show="activeName == '4'"
@@ -81,11 +84,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                      {{$t('work.noData')}}
+                        {{ $t('work.noData') }}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button v-if="advance1TitleData" type="primary" @click="updateAdvanced1Params">{{$t('work.submit')}}</el-button>
+                    <el-button v-if="advance1TitleData" type="primary" @click="updateAdvanced1Params">{{ $t('work.submit')
+                    }}</el-button>
                 </div>
             </el-form>
             <el-form ref="moudleRef" :validate-on-rule-change="false" v-show="activeName == '5'" :rules="rules"
@@ -93,7 +97,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="18" :offset="6">
-                        <el-form-item class="item" label="差分设置：" >
+                        <el-form-item class="item" label="差分设置：">
                             <el-select v-model="workPattern.type" style=" width: 187px;
                 height: 32px;">
                                 <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
@@ -101,9 +105,9 @@
                                 <!-- <el-option label="外置网络" :value="2"></el-option> -->
                             </el-select>
                             <el-button :disabled="workPattern.type === '3' ? true : false" style="margin-left: 20px;"
-                                type="primary" @click="updateChafenData">{{$t('work.settings')}}</el-button>
-                            <el-button v-show="workPattern.type == '1'"  type="primary" text class="btn3" style=""
-                                @click="getExtendSourceNode">{{$t('work.getSourceNode')}}</el-button>
+                                type="primary" @click="updateChafenData">{{ $t('work.settings') }}</el-button>
+                            <el-button v-show="workPattern.type == '1'" type="primary" text class="btn3" style=""
+                                @click="getExtendSourceNode">{{ $t('work.getSourceNode') }}</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -178,8 +182,47 @@
                 </el-row>
 
             </el-form>
+            <el-form ref="formLabelAlignRef" :validate-on-rule-change="false" v-show="activeName == '6'" :rules="rules"
+                :inline="true" :label-position="labelPosition" label-width="180px" :model="formLabelAlign"
+                style="max-width: 1012px;margin-bottom:20px">
+                <!-- <div class="mktitle">
+                    {{$t('work.dualAntennaOneMachine')}}
+                </div> -->
+                <el-row>
+                    <el-col :span="12" :offset="6">
+                        <el-form-item class="item" :label="$t('work.versionType')" prop="name" style="margin-top: 20px;">
+                            <el-radio-group @change="changeRadio2" text-color="var(--el-color-primary)"
+                                style="transform: translateY(-5px);" v-model="formLabelAlign.radio2" class="ml-4">
+                                <el-radio label="1" size="large" style="margin-right: 30px;">{{ $t('work.officialVersion')
+                                }}</el-radio>
+                                <el-radio label="2" size="large" style="margin-right: 30px;">{{ $t('work.betaVersion')
+                                }}</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
 
-            <el-form :validate-on-rule-change="false" ref="formLabelAlignRef" v-show="activeName == '6'" :rules="rules"
+                </el-row>
+                <el-row style="margin-bottom: 20px;">
+                    <el-col :span="14" :offset="6">
+                        <el-form-item class="item" :label="$t('work.versionSelection') + '：'" prop="name">
+                            <el-select v-if="productList.length >= 1" style=" width: 187px;
+                height: 32px;" v-model="formLabelAlign.filename">
+                                <el-option v-for="(item, index) in productList" :key="index" :value="index"
+                                    :label="item.filename"></el-option>
+                            </el-select>
+                            <div v-else style=" width: 187px;height: 32px;">
+                                {{ $t('work.noFirmwarePackageForDevice') }}
+                            </div>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <div class="buttonarea">
+                    <el-button type="danger" :disabled="productList.length >= 1 ? false : true"
+                        @click="updateProductListBtn">{{ $t('work.forceUpgrade') }}</el-button>
+                </div>
+            </el-form>
+            <!-- <el-form :validate-on-rule-change="false" ref="formLabelAlignRef" v-show="activeName == '6'" :rules="rules"
                 :inline="true" :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
@@ -187,7 +230,8 @@
                         AG502以及AG502_Android的升级功能暂未开放
                     </el-col>
                 </el-row>
-            </el-form>
+            </el-form> -->
+
             <!-- <el-form :validate-on-rule-change="false" v-show="activeName == '7'" :rules="rules" :inline="true"
                 :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
@@ -205,7 +249,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, paramsParamObj, paramCarParamResponseData, paramcalibParamData, paramAdvanced1ParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
-import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, getSourceNode_path, updateCar_API, updateBasicParm_API, updateCalibParam_API, GetcarProductpackage_API, basicParam_API, getAdvanced1Param_API, advanced1ParamUpdate_API } from '@/api/machineryList/remoteAdjust/index'
+import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, getSourceNode_path, updateCar_API, updateBasicParm_API, updateCalibParam_API, GetcarProductpackage_API, basicParam_API, getAdvanced1Param_API, advanced1ParamUpdate_API,packageUpgradeCar_API } from '@/api/machineryList/remoteAdjust/index'
 import { carNewDetail_API, logOpen_API } from '@/api/machineryList/index'
 import type { TabsPaneContext } from 'element-plus'
 
@@ -302,9 +346,22 @@ const formLabelAlign = reactive({
     type: '',
     radio1: '11',
     radio2: '2',
-    pid: '11001',
+    pid: '9010',
     filename: 0
 })
+// 在线升级更新数据
+const updateProductList = async () => {
+    try {
+        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'upgradeWay': 1, 'updateModel': '9' })
+        ElMessage({ type: 'success', message: '修改成功' })
+    }
+    catch {
+        // ElMessage({ type: 'error', message: '修改失败' })
+    }
+}
+const updateProductListBtn = () => {
+    updateProductList()
+}
 
 const paramDescribeList = ref<paramDescribeObj>({
     paramVersionnum: '',
@@ -357,6 +414,9 @@ const beforeSwitchChange = () => {
     switchStatus.value = true;
     return switchStatus.value;
 }
+const changeRadio2 = () => {
+    getProductList()
+}
 // 获取车辆参数
 const getCarParams = async (val: string) => {
     paramDescribeList.value.paramType = val
@@ -397,7 +457,7 @@ const getParamParams = async () => {
     res.data ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
 }
 const closeRemoteAdjust = () => {
-    workPattern.value.type ='3'
+    workPattern.value.type = '3'
     carFormRef.value.resetFields()
     calibFormRef.value.resetFields()
     pidFormRef.value.resetFields()
@@ -581,7 +641,7 @@ const updateAdvanced1Params = async () => {
 
 // 情况差分数据
 const getChafenList = async () => {
-    const res: any = await carNewDetail_API(props.carId,2)
+    const res: any = await carNewDetail_API(props.carId, 2)
     chaFenlist.value = res.data
 
 }

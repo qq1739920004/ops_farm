@@ -259,9 +259,9 @@
             <el-form ref="formLabelAlignRef" :validate-on-rule-change="false" v-show="activeIndex == '6'" :rules="rules"
                 :inline="true" :label-position="labelPosition" label-width="180px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
-                <div class="mktitle">
+                <!-- <div class="mktitle">
                     {{$t('work.dualAntennaOneMachine')}}
-                </div>
+                </div> -->
                 <el-row>
                     <el-col :span="12" :offset="6">
                         <el-form-item class="item" :label="$t('work.versionType')" prop="name" style="margin-top: 20px;">

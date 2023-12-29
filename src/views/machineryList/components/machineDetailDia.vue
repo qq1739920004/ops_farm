@@ -345,7 +345,7 @@ const getNewDetail = async () => {
     }
     .line3 {
         width: 100%;
-        height: 40px;
+        height: 40px; 
         opacity: 1;
         display: flex;
         align-items: center;
