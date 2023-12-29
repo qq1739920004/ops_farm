@@ -6,13 +6,13 @@
         <span>仅显示最新3分钟数据</span>
       </p>
       <div class="charts_container">
-        <p style="text-align:center;">橫向偏差</p>
+      
         <div id="xoffset"></div>
-        <p style="text-align:center;">车速</p>
+       
         <div id="speed"></div>
-        <p style="text-align:center;">车航向</p>
+       
         <div id="direction"></div>
-        <p style="text-align:center;">差分龄期</p>
+       
         <div id="difference"></div>
         <div class="judgeLevel">
           <span :class="['level' + judgeLevel]">{{$t('work.level')}}:{{ judgeLevel }} </span>
@@ -469,19 +469,19 @@ watch(
   position: relative;
 
   #xoffset {
-    height: 220px;
+    height: 200px;
   }
 
   #difference {
-    height: 220px;
+    height: 170px;
   }
 
   #direction {
-    height: 220px;
+    height: 180px;
   }
 
   #speed {
-    height: 220px;
+    height: 180px;
   }
 
   .judgeLevel {

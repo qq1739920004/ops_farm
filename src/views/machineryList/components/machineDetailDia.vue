@@ -148,12 +148,12 @@
                 <div class="tit">{{$t('work.MotorSN')}}:</div>
                 <div class="data">{{ NewDetail.motorSn }}</div>
             </div>
-            <div class="line line3">
-                <div class="tit">{{$t('work.multifunctionSteeringWheelFirmwareNumber')}}:</div>
+            <div class="line line4">
+                <div class="tit1">{{$t('work.multifunctionSteeringWheelFirmwareNumber')}}:</div>
                 <div class="data">{{ NewDetail.steeringWheel }}</div>
-                <div class="tit">{{$t('work.steeringSN')}}:</div>
+                <div class="tit1">{{$t('work.steeringSN')}}:</div>
                 <div class="data">{{ NewDetail.steeringWheelSn }}</div>
-                <div class="tit">{{$t('work.hubBluetoothFirmwareNumber')}}:</div>
+                <div class="tit1">{{$t('work.hubBluetoothFirmwareNumber')}}:</div>
                 <div class="data">{{ NewDetail.hubBluetooth }}</div>
             </div>
             <div class="line line3">
@@ -266,7 +266,7 @@ const getNewDetail = async () => {
 }
 
 .tableData {
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 
     .line:nth-child(2n-1) {
         // background: rgba(233, 242, 242, 1);
@@ -274,14 +274,25 @@ const getNewDetail = async () => {
         background-color: var(--el-fill-color-lighter);
 
         .tit {
-            height: 51px;
+            height: 35px;
             width: 130px;
             background-color: rgba(233, 242, 242, 1);
         }
+      
     }
 
     .line {
         .tit {
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            height: 35px;
+            width: 130px;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0px;
+        }
+        .tit1 {
             display: flex;
             align-items: center;
             padding-left: 10px;
@@ -292,10 +303,49 @@ const getNewDetail = async () => {
             letter-spacing: 0px;
         }
     }
-
-    .line3 {
+    .line4 {
         width: 100%;
         height: 51px;
+        opacity: 1;
+        display: flex;
+        align-items: center;
+
+
+        .circle {
+            width: 10px;
+            height: 10px;
+            background-color: var(--el-color-primary);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .circle2 {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(123, 138, 138, 0.425);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .data {
+            display: block;
+            width: 224px;
+            margin-left: 10px;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0px;
+        }
+
+        .circlearea {
+            color: var(--el-color-primary);
+        }
+
+    }
+    .line3 {
+        width: 100%;
+        height: 40px;
         opacity: 1;
         display: flex;
         align-items: center;
