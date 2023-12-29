@@ -8,7 +8,7 @@
     />
     <div class="search_box">
       <el-autocomplete
-        :style="{width: labelWidth}"
+        :style="{ width: labelWidth }"
         v-model="searchSn"
         :fetch-suggestions="querySearch"
         :placeholder="$t('messages.SNLabelSNcarName')"
@@ -154,8 +154,8 @@
     <RemoteControl
       :isChange="isChange"
       :terminalType="terminalType"
-      :version="version"
-      :type="type"
+      :paramVersionnum="version"
+      :paramType="type"
       :carId="carId"
       :sn="sn"
       :name="name"
@@ -530,7 +530,8 @@ function createMarkerPopup(item: any) {
     if (
       item.terminalType == "AG320" ||
       item.terminalType.includes("AG360") ||
-      item.terminalType == "AG502"
+      item.terminalType == "AG502" ||
+      item.terminalType == "AG302"
     ) {
       openRemote = true; // 可用
     } else {
@@ -544,7 +545,7 @@ function createMarkerPopup(item: any) {
         <ul class="popup_container">
           <li>
             <div class="l">
-              <div class="label">${t('messages.carName')}:</div>
+              <div class="label">${t("messages.carName")}:</div>
               <div class="value">${item.carName}</div>
             </div>
             <div class="r">
@@ -556,30 +557,30 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="l">
-              <div class="label">${t('devicelist.name')}:</div>
+              <div class="label">${t("devicelist.name")}:</div>
               <div class="value">${item.carOwnerName}</div>
             </div>
             <div class="r">
-              <div class="label">${t('messages.labelSN')}:</div>
+              <div class="label">${t("messages.labelSN")}:</div>
               <div class="value">${item.npn || "/"}</div>
             </div>
           </li>
           <li>
             <div class="l">
-              <div class="label">${t('work.companyName')}:</div>
+              <div class="label">${t("work.companyName")}:</div>
               <div class="value">${item.companyName}</div>
             </div>
           </li>
           <li>
             <div class="l">
-              <div class="label">${t('messages.workingcondition')}:</div>
+              <div class="label">${t("messages.workingcondition")}:</div>
               <div class="value">
                 <span class='status ${workingStatus[item.judgeLevel]}'></span>
                 <span>${item.judgeLevel || "无"}</span>
               </div>
             </div>
             <div class="r">
-              <div class="label">${t('work.drivingStatus')}:</div>
+              <div class="label">${t("work.drivingStatus")}:</div>
               <div class="value">
                 <span class='status ${onlineStatus[item.driveState]}'></span>
                 <span>${driveState[item.driveState]}</span>
@@ -651,22 +652,22 @@ function createMarkerPopup(item: any) {
           <li>
             <div class="btn ${
               !openRemote ? "disabled" : ""
-            }" onclick='openRemote_markerPopup(${JSON.stringify(
-    item
-  )})'>${t('work.remoteManagement')}</div>
+            }" onclick='openRemote_markerPopup(${JSON.stringify(item)})'>${t(
+    "work.remoteManagement"
+  )}</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
               item
-            )})'>${t('menus.historyTrack')}</div>
+            )})'>${t("menus.historyTrack")}</div>
           </li>
           <li>
             <div class="btn ${
               item.driveState == 0 ? "disabled" : ""
             }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
     item
-  )})'>${t('messages.Realtimedrivingtrendchart')}</div>
+  )})'>${t("messages.Realtimedrivingtrendchart")}</div>
             <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
               item
-            )})'>${t('menus.historicaldrivingtrendchart')}</div>
+            )})'>${t("menus.historicaldrivingtrendchart")}</div>
           </li>
         </ul>
       </div>`;
