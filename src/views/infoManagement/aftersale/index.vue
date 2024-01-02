@@ -66,6 +66,15 @@
                             </el-col>
 
                         </el-row>
+                        <el-row :gutter="16">
+                            <el-col :span="10" :offset="2">
+                                <el-descriptions title="">
+                                    <el-descriptions-item :label="$t('work.activationTime')+':'">{{ topvalue.activationTime?.split(' ')[0]
+                                    }}</el-descriptions-item>
+                                </el-descriptions>
+                            </el-col>
+
+                        </el-row>
                     </div>
                 </div>
                 <div class="right">

@@ -90,5 +90,6 @@ export interface MoudleInfoGetLeftObj {
     tel: string,
     creatorName: string,
     creatorId: number,
-    code: string
+    code: string,
+    activationTime?:string
 }

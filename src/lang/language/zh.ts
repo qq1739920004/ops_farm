@@ -262,6 +262,7 @@ const zh = {
     warrantyPeriod: "质保期限",
     softwareDuration: "软件期限",
     satelliteBaseDuration: "星基期限",
+    activationTime:'激活时间',
     component: "部件",
     replace: "更换",
     changeInformation: "变更信息",

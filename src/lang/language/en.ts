@@ -93,6 +93,7 @@ const en = {
     warrantyPeriod: "Warranty Period",
     softwareDuration: "Software Duration",
     satelliteBaseDuration: "Satellite Base Duration",
+    activationTime:'Activation Time',
     component: "Component",
     replace: "Replace",
     changeInformation: "Change Information",
