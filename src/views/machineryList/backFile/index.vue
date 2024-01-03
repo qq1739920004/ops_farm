@@ -35,7 +35,7 @@ const current = ref(1)
 const pageSize = ref(10)
 const parentSn = route.query.sn
 // const parentPid = route.query.pid
-const baseUrl = import.meta.env.VITE_APP_BASE_API
+const baseUrl = import.meta.env.VITE_APP_BASE_DOWNLOAD
 const loading = ref(false)
 
 const getFileList = async () => {

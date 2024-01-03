@@ -7,7 +7,7 @@
             <el-table-column label="文件名称">
                 <template #="{ row }">
                     <div class="fileName">
-                        <a :href="baseUrl + '/log_download/' + parentPid + '/' + parentSn + '/' + row.name"
+                        <a :href="baseUrl + '/log_download/' + '9004' + '/' + parentSn + '/' + row.name"
                             v-if="!row.isBack">{{ row.name }}</a>
                         <span @click="toBackFile" v-else>{{ row.name }}</span>
                     </div>
@@ -17,7 +17,7 @@
             <el-table-column :label="$t('work.operation')+':'">
                 <template #="{ row }">
                     <el-button type="text" v-if="!row.isBack">
-                        <a :href="baseUrl + '/log_download/' + parentPid + '/' + parentSn + '/' + '/' + row.name">下载</a>
+                        <a :href="baseUrl + '/log_download/' + '9004' + '/' + parentSn + '/' + '/' + row.name">下载</a>
                     </el-button>
                 </template>
             </el-table-column>
@@ -38,7 +38,7 @@ const current = ref(1)
 const pageSize = ref(10)
 const parentSn = route.query.sn
 const parentPid = route.query.pid
-const baseUrl = import.meta.env.VITE_APP_BASE_API
+const baseUrl = import.meta.env.VITE_APP_BASE_DOWNLOAD
 const loading = ref(false)
 const getFileList = async () => {
     loading.value = true;
