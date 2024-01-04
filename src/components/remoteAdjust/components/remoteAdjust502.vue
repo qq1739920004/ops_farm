@@ -345,8 +345,8 @@ const formLabelAlign = reactive({
     region: '',
     type: '',
     radio1: '11',
-    radio2: '2',
-    pid: '9010',
+    radio2: '1',
+    pid: '9023',
     filename: 0
 })
 // 在线升级更新数据

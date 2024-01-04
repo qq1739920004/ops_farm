@@ -163,7 +163,7 @@ const switchTabShow = (val: boolean) => {
 };
 
 onMounted(() => {
-  getCarList();
+  // getCarList();
   getRouterParam();
   getDealerList();
 });

@@ -44,13 +44,13 @@
         stripe
       >
         <el-table-column
-          :label="$t('work.type')"
+          :label="$t('devicelist.item')"
           type="index"
           align="center"
           width="60px"
         />
         <el-table-column label="SN" prop="sn" align="center" />
-        <el-table-column :label="$t('work.type')" prop="status" align="center">
+        <el-table-column :label="$t('devicelist.state')" prop="status" align="center">
           <template #="{ row }">
             <div v-if="row.status == 0">
               <el-tag
@@ -143,7 +143,7 @@ const helpHandling = reactive<HelpHandlingObj>({
   assignTimeOrder: 0,
 });
 onMounted(() => {
-  getHelpHandling();
+  // getHelpHandling();
 });
 
 const changeTableSort = (column: any) => {
