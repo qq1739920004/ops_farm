@@ -9,6 +9,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import topLevelAwait from 'vite-plugin-top-level-await'
 
 const baiduUrl = `https://api.map.baidu.com`;
+const nogateway = `http://140.207.166.210:9030`;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -60,11 +61,17 @@ export default defineConfig({
         rewrite: (path) =>
           path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
       },
+      '/dev-apino': {
+        target: `http://140.207.166.210:9030`,
+        changeOrigin: true,
+        rewrite: (path) =>
+          path.replace(new RegExp("^/dev-apino"), ""), // 替换 /dev-api 为 target 接口地址
+      },
       '/dev-api': {
         // target: "http://127.0.0.1:4523/m1/2885822-0-default",
         // target: 'http://140.207.166.210:9030',
-        //target: 'http://140.207.166.210:9030/gateway',
-        target: 'https://cloud.sinognss.com/gateway',
+        target: 'http://140.207.166.210:9030/gateway',
+        //target: 'https://cloud.sinognss.com/gateway',
         //target: 'http://140.207.166.210:9030/gateway/farm',
         changeOrigin: true,
         rewrite: (path) =>
@@ -94,6 +101,11 @@ export default defineConfig({
         target: baiduUrl,
         changeOrigin: true,
         rewrite: (path) => `${path.replace(/^\/api-baidu/, '')}`
+      },
+      '/no-gateway': {
+        target: nogateway,
+        changeOrigin: true,
+        rewrite: (path) => `${path.replace(/^\/no-gateway/, '')}`
       }
     },
   },

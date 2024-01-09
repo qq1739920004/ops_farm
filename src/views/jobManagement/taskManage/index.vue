@@ -52,7 +52,8 @@
                             :class="item.checked ? 'infinite-list-item' : 'infinite-list-item2'">
                             <div class="li_title">
                                 <el-tooltip class="box-item" effect="dark" :content="item.name" placement="left-start">
-                                  {{$t('work.operationWork')}}{{ item.name }}
+                                  <!-- {{$t('work.operationWork')}} -->
+                                  {{ item.name }}
                                 </el-tooltip>
                             </div>
                             {{ item.workedArea }}{{$t('work.are')}}
@@ -369,7 +370,7 @@ const loadWorkData = async (workId: any) => {
                 <div class="rightArea">${workTypeReflect[machine[workId].worktype] || '/'}</div>
             </div>
             </div>
-            <div class="popupArea2"> <span class="left">农具：</span> <span class="right">${machine[workId].toolName}</span></div>
+            <div class="popupArea2"> <span class="left">农具：</span> <span class="right">${machine[workId].toolName || '/'}</span></div>
             <div class="popupBottom"> <div class="leftt">${machine[workId].createtime}</div> <span class="left"></span><span class="left"></span><span class="left"></span></div>
             <div class="popupBottom"><span class="right"></span><span class="right"></span><span class="right"></span> <span class="rightt">${machine[workId].updatetime}</span></div>
             </div>`).addTo(map).openPopup()
@@ -1191,8 +1192,8 @@ watch(() => paddyWorkList.value,
 
 :deep(.leaflet-marker-icon) {
     .map-circle-name {
-        width: 80px;
-        height: 80px;
+        width: 50px;
+        height: 50px;
         opacity: 1;
         border-radius: 50%;
         background-image: url("../taskManage/image.png@3x.png");

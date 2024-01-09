@@ -249,7 +249,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, paramsParamObj, paramCarParamResponseData, paramcalibParamData, paramAdvanced1ParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
-import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, getSourceNode_path, updateCar_API, updateBasicParm_API, updateCalibParam_API, GetcarProductpackage_API, basicParam_API, getAdvanced1Param_API, advanced1ParamUpdate_API,packageUpgradeCar_API } from '@/api/machineryList/remoteAdjust/index'
+import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, getSourceNode_path, updateCar_API, updateBasicParm_API, updateCalibParam_API, GetcarProductpackage_API, basicParam_API, getAdvanced1Param_API, advanced1ParamUpdate_API, packageUpgradeCar_API } from '@/api/machineryList/remoteAdjust/index'
 import { carNewDetail_API, logOpen_API } from '@/api/machineryList/index'
 import type { TabsPaneContext } from 'element-plus'
 
@@ -706,8 +706,21 @@ const gotoChafen = () => {
 
 // 获取在线升级数据
 const getProductList = async () => {
-    const res: GetcarProductpackageResponseData = await GetcarProductpackage_API({ 'pid': formLabelAlign.pid, 'versionType': formLabelAlign.radio2 })
-    productList.value = res.data
+
+    // const res: GetcarProductpackageResponseData = await GetcarProductpackage_API({ 'pid': formLabelAlign.pid, 'versionType': formLabelAlign.radio2 })
+    // if(res.code ===0) {
+    //     productList.value = res.data
+
+    // } else {
+    //     console.log('222');
+
+    // }
+    GetcarProductpackage_API({ 'pid': formLabelAlign.pid, 'versionType': formLabelAlign.radio2 }).then((res: GetcarProductpackageResponseData) => {
+        productList.value = res.data
+    }).catch(() => {
+        productList.value = []
+    })
+
 }
 const rules = {
     type: [{ required: true, message: '请输入值', trigger: 'blur' }],

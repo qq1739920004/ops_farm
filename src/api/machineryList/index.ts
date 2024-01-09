@@ -88,5 +88,29 @@ export function getDownTemplate_API() {
         responseType: 'blob',
     })
 }
+// 软件版本
+export function getsoftList_API() {
+    return request<any, any>({
+        url: `/farm/car/softList`,
+        method: 'get',
+    })
+}
+// 软件sn列表
+export function getTypeSnList_API(data:any) {
+    return request<any,any>({
+        url:`/farm/car/getTypeSnBySoft`,
+        method:'post',
+        data
+
+    })
+}
+// 批量升级
+export function upgradeList_API(data:any) {
+    return request<any,any>({
+        url:`/farm/car/new/packageUpgradeList`,
+        method:'post',
+        data
+    })
+}
 
 

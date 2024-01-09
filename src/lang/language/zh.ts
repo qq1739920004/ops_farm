@@ -51,6 +51,7 @@ const zh = {
     
   },
   devicelist:{
+    upgrade:'批量升级',
     pleaseInput: "请输入SN号,铭牌SN",
     totalDealer: "全部经销商",
     inputDealerDevice: "录入经销商设备",
@@ -110,6 +111,8 @@ const zh = {
     basicInformation: "基本信息",
     moduleInformation: "模块信息",
     softwareVersion: "软件版本",
+    selectAll:'全选',
+    cancelSelectAll:'取消全选',
     updateTime: "更新时间",
     vehicleManufacturer: "车辆厂家",
     vehicleAge: "车龄",

@@ -16,6 +16,8 @@
         </el-input>
       </div>
       <div class="button_area">
+        <el-button v-auth="652" style="margin-right: 5px" type="primary" @click="gotoUpgrade">{{ $t('devicelist.upgrade')
+        }}</el-button>
         <el-button style="margin-right: 20px" type="primary" @click="gotoInput">{{ $t('devicelist.inputDealerDevice')
         }}</el-button>
         <el-button-group class="button_group2">
@@ -37,6 +39,7 @@
       <sn-card :provinceCountData="provinceCountData" />
     </div>
     <InputDia ref="inputD"></InputDia>
+    <upGradeDia ref="upgradeD"></upGradeDia>
   </div>
 </template>
 
@@ -45,6 +48,7 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 import { useRoute } from "vue-router";
 import InputDia from "./components/inputDia.vue";
+import upGradeDia from "./components/upgradeDia.vue";
 import Pagination from "@/components/Pagination/index.vue";
 import { reactive, ref, onMounted } from "vue";
 import { carNewList_API } from "@/api/machineryList/index";
@@ -74,6 +78,7 @@ const pageInfo = reactive<pageInfo>({
   provinceCode: "",
   cityCode: "",
 });
+const upgradeD = ref()
 const inputD = ref();
 // 车辆列表
 const carNewList = ref<newListObj[]>([]);
@@ -95,6 +100,9 @@ const currentChange = (val: any) => {
 
 const gotoInput = () => {
   inputD.value.dialogVisible = true;
+};
+const gotoUpgrade= () => {
+  upgradeD.value.dialogVisible = true;
 };
 const changeSort = (val: string) => {
   pageInfo.order = val;

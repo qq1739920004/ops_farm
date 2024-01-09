@@ -69,7 +69,7 @@
                         <el-row :gutter="16">
                             <el-col :span="10" :offset="2">
                                 <el-descriptions title="">
-                                    <el-descriptions-item :label="$t('work.activationTime')+':'">{{ topvalue.expirationTime?.split(' ')[0]
+                                    <el-descriptions-item :label="$t('work.activationTime')+':'">{{ topvalue.activationTime?.split(' ')[0]
                                     }}</el-descriptions-item>
                                 </el-descriptions>
                             </el-col>
@@ -204,7 +204,8 @@ const topvalue = reactive<MoudleInfoGetLeftObj>({
     tel: '',
     creatorName: '',
     creatorId: 0,
-    code: ''
+    code: '',
+    activationTime:''
 })
 const rules = {
     sn: [{ required: true, message: '请输入平板SN', trigger: 'blur' }],

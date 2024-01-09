@@ -49,6 +49,7 @@ const en = {
     processingDetails: "Processing details",
   },
   devicelist: {
+    upgrade:'Batch upgrades',
     pleaseInput: "SN,Label SN",
     totalDealer: "Total dealer",
     inputDealerDevice: "Input dealer device",
@@ -107,6 +108,8 @@ const en = {
     versionSelection: "Version Selection",
     basicInformation: "Basic Information",
     softwareVersion: "Software Version",
+    selectAll:'Select All',
+    cancelSelectAll:'Unselect all',
     updateTime: "Update Time",
     vehicleManufacturer: "Vehicle Manufacturer",
     vehicleAge: "Vehicle Age",
