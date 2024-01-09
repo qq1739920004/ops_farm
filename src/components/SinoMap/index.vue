@@ -128,6 +128,7 @@ watch(
     updateMarkerVisible(markerDataHidden);
   },
   { deep: true }
+  
 );
 watch(
   () => props.markerDataHandle,
