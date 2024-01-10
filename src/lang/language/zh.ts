@@ -52,7 +52,7 @@ const zh = {
   },
   devicelist:{
     upgrade:'批量升级',
-    pleaseInput: "请输入SN号,铭牌SN",
+    pleaseInput: "请输入SN号,铭牌SN,车主姓名,电话",
     totalDealer: "全部经销商",
     inputDealerDevice: "录入经销商设备",
     item: "序号",
@@ -288,7 +288,8 @@ const zh = {
     enterModel: "请输入型号",
     deleteSuccess: "删除成功",
     deleteFailed: "删除失败",
-    ratedPower: "额定功率"
+    ratedPower: "额定功率",
+    p3000:'P300操作系统版本号'
   },
   perception:{
     activeToday: "今日活跃数",
