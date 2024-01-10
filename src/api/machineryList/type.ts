@@ -107,10 +107,11 @@ export interface carNewDetailObj {
     hubBluetooth: string,
     hub: string,
     hubSn: string,
-    expirationTime:string,
-    warrantyDate:string,
-    netDate:string,
-    satelliteDate:string
+    expirationTime: string,
+    warrantyDate: string,
+    netDate: string,
+    satelliteDate: string,
+    p300Version: string
 
 
 }

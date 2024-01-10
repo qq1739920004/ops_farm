@@ -50,7 +50,7 @@ const en = {
   },
   devicelist: {
     upgrade:'Batch upgrades',
-    pleaseInput: "SN,Label SN",
+    pleaseInput: "SN,Label SN,Owner Name,Phone number",
     totalDealer: "Total dealer",
     inputDealerDevice: "Input dealer device",
     item: "Item",
@@ -290,6 +290,7 @@ const en = {
     deleteFailed: "Delete failed",
     assigned: "Assigned",
     processed: "Processed",
+    p3000:'P300 operating system version number',
     snPlaceholder: "Please enter SN",
   },
   perception: {
