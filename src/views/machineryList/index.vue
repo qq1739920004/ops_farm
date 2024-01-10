@@ -101,7 +101,7 @@ const currentChange = (val: any) => {
 const gotoInput = () => {
   inputD.value.dialogVisible = true;
 };
-const gotoUpgrade= () => {
+const gotoUpgrade = () => {
   upgradeD.value.dialogVisible = true;
 };
 const changeSort = (val: string) => {
