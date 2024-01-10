@@ -31,7 +31,7 @@
           v-if="rangingArray.length > 0"
           @click="clearMapRanging"
           type="danger"
-          >{{$t('work.clear')}}</el-button
+          >{{ $t("work.clear") }}</el-button
         >
       </div>
     </div>
@@ -50,7 +50,7 @@ import { mapTileLayers } from "./utils/mapTileLayers";
 import { ref, reactive, onMounted, watch } from "vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import { useI18n } from "vue-i18n";
-
+import fixed_icon from "./assets/fixed.png";
 
 const { t } = useI18n();
 
@@ -128,7 +128,6 @@ watch(
     updateMarkerVisible(markerDataHidden);
   },
   { deep: true }
-  
 );
 watch(
   () => props.markerDataHandle,
@@ -535,9 +534,11 @@ function mapzoomChange() {
         }
         // 特殊处理
         let icon = item.getIcon();
-        if(icon.options.className) {
-          zoom <= 10 ? icon.options.iconSize = [50,10] : icon.options.iconSize = [300,20];
-          item.setIcon(icon)
+        if (icon.options.className) {
+          zoom <= 10
+            ? (icon.options.iconSize = [50, 10])
+            : (icon.options.iconSize = [300, 20]);
+          item.setIcon(icon);
         }
       });
     }
@@ -565,9 +566,15 @@ function clearMapRanging() {
 function initRanging() {
   map.on("click", function (event: any) {
     if (pickupMode) {
+      let icon = L.icon({
+        iconUrl: fixed_icon, // SVG图标的路径
+        iconSize: [32, 32], // 图标的大小 [宽度, 高度]
+        iconAnchor: [16, 32], // 图标的锚点位置 [水平, 垂直]
+        popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
+      });
       let point = event.latlng;
       pickedPoints.push(point);
-      let marker = L.marker(point).addTo(map);
+      let marker = L.marker(point, { icon }).addTo(map);
       rangingArray.push(marker);
       if (pickedPoints.length === 2) {
         let distance = pickedPoints[0].distanceTo(pickedPoints[1]); //算距离
