@@ -10,19 +10,20 @@
         </div>
         <el-button style="color:rgba(76, 176, 79, 1);" @click="clearDistance" class="map_button"> <el-icon>
                 <Delete />
-            </el-icon>{{$t('work.clear')}}</el-button>
+            </el-icon>{{ $t('work.clear') }}</el-button>
         <el-button class="map_button2" @click="calculateDistance">
             <SvgIcon icon="ruler" size="16" />
         </el-button>
         <div class="head_top">
             <div class="left">
-                <el-button style="color:rgba(76, 176, 79, 1)" icon="back" @click="router.go(-1)">{{$t('work.goBack')}}</el-button>
+                <el-button style="color:rgba(76, 176, 79, 1)" icon="back" @click="router.go(-1)">{{ $t('work.goBack')
+                }}</el-button>
             </div>
             <div class="right">
-                <el-select style="width: 270px; margin-right: 10px;" v-model="pageInfo.companyId" :placeholder="$t('work.pleaseSelect')"
-                    @change="changeBlur1">
+                <el-select style="width: 270px; margin-right: 10px;" v-model="pageInfo.companyId"
+                    :placeholder="$t('work.pleaseSelect')" @change="changeBlur1">
                     <template #prefix>
-                        <span class="select_title">{{$t('work.unit')}}:</span>
+                        <span class="select_title">{{ $t('work.unit') }}:</span>
                     </template>
                     <el-option style="width: 230px;" v-for="item in dealerList" :label="item.name" :value="item.id"
                         :key="item.id"></el-option>
@@ -36,8 +37,9 @@
                     <el-option style="width: 200px;" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
                         :key="item.id"></el-option>
                 </el-select> -->
-                <el-select-v2 :style="{ width: '250px', '--content-text': '\'' + $t('work.currentVehicle') + '\'' }"  filterable v-model="pageInfo.carId" :options="optionsList"
-                    :placeholder="$t('work.pleaseSelect')" @change="changeBlur2">
+                <el-select-v2 :style="{ width: '250px', '--content-text': '\'' + $t('work.currentVehicle') + '\'' }"
+                    filterable v-model="pageInfo.carId" :options="optionsList" :placeholder="$t('work.pleaseSelect')"
+                    @change="changeBlur2">
                 </el-select-v2>
                 <div :class="isShow ? 'infiniteMenu' : 'infiniteMenu2'">
                     <div class="el_icon" v-show="isShow" @click="changeisShow(false)">
@@ -46,17 +48,18 @@
                     <div class="el_icon" v-show="!isShow" @click="changeisShow(true)">
                         <SvgIcon icon="minus-square" size="16" />
                     </div>
-                    <div :class="isShow ? 'empty_list' : 'empty_list2'" v-if='!paddyWorkList.length'>{{$t('work.noData')}}</div>
+                    <div :class="isShow ? 'empty_list' : 'empty_list2'" v-if='!paddyWorkList.length'>{{ $t('work.noData') }}
+                    </div>
                     <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
                         <li v-for="(item, index) in paddyWorkList" :key="index"
                             :class="item.checked ? 'infinite-list-item' : 'infinite-list-item2'">
                             <div class="li_title">
                                 <el-tooltip class="box-item" effect="dark" :content="item.name" placement="left-start">
-                                  <!-- {{$t('work.operationWork')}} -->
-                                  {{ item.name }}
+                                    <!-- {{$t('work.operationWork')}} -->
+                                    {{ item.name }}
                                 </el-tooltip>
                             </div>
-                            {{ item.workedArea }}{{$t('work.are')}}
+                            {{ item.workedArea }}{{ $t('work.are') }}
                             <el-checkbox-group v-model="ids">
                                 <el-checkbox :label="item.id">
                                     <br />
@@ -106,7 +109,7 @@ const pageInfo = reactive<PageObj>({
     name: '',
     companyId: parseInt($route.query.companyId as string) || '',
     currentPage: 1,
-    pageSize: 7,
+    pageSize: 5000,
     st: '',
     et: ''
 })
@@ -301,7 +304,7 @@ const saveMarker2 = (workId: any, markerObj: any) => {
 }
 // 农业分类
 const workTypeReflect = reactive<any>({
-  1: t('devicelist.status1'),
+    1: t('devicelist.status1'),
     2: t('devicelist.status2'),
     3: t('devicelist.status3'),
     4: t('devicelist.status4'),
@@ -408,66 +411,70 @@ const coorTransform = (point = [], mapType = 1) => {
 }
 // 地图绘制方法
 const addPathAB = (item: any) => {
-    try {
-        let pointA = coorTransform(
-            [item.lineptay as never, item.lineptax as never],
-            mapId.value
-        )
-        let pointB = coorTransform(
-            [item.lineptby as never, item.lineptbx as never],
-            mapId.value
-        )
-        let l1 = L.latLng(item.lineptax, item.lineptay)
-        let l2 = L.latLng(item.lineptbx, item.lineptby)
-        let distance = l1.distanceTo(l2).toFixed(0)
-        let iconA = L.icon({
-            iconUrl: a,
-            iconAnchor: [12, 30],
-            popupAnchor: [0, -30],
-        })
-        let iconB = L.icon({
-            iconUrl: b,
-            iconAnchor: [12, 30],
-            popupAnchor: [0, -30],
-        })
-        let markerA = L.marker(pointA as never, { icon: iconA }).addTo(map)
-        let markerB = L.marker(pointB as never, { icon: iconB }).addTo(map)
-        let line = L.polyline([pointA, pointB], {
-            color: 'red',
-            dashArray: [9, 9],
-        })
-            .bindTooltip(`AB点距离 ${distance} 米`, { permanent: true })
-            .addTo(map)
-        map.fitBounds([pointA, pointB])
-        let temMarkers = [
-            {
-                markerObj: markerA,
-                name: 'markerA',
-            },
-            {
-                markerObj: markerB,
-                name: 'markerB',
-            },
-            {
-                markerObj: line,
-                name: 'lineAB',
-            },
-        ]
-        saveMarker2(item.id, temMarkers)
+    if (item.lineptax && item.lineptay && item.lineptbx && item.lineptby) {
+        try {
+            let pointA = coorTransform(
+                [item.lineptay as never, item.lineptax as never],
+                mapId.value
+            )
+            let pointB = coorTransform(
+                [item.lineptby as never, item.lineptbx as never],
+                mapId.value
+            )
+            let l1 = L.latLng(item.lineptax, item.lineptay)
+            let l2 = L.latLng(item.lineptbx, item.lineptby)
+            let distance = l1.distanceTo(l2).toFixed(0)
+            let iconA = L.icon({
+                iconUrl: a,
+                iconAnchor: [12, 30],
+                popupAnchor: [0, -30],
+            })
+            let iconB = L.icon({
+                iconUrl: b,
+                iconAnchor: [12, 30],
+                popupAnchor: [0, -30],
+            })
+            let markerA = L.marker(pointA as never, { icon: iconA }).addTo(map)
+            let markerB = L.marker(pointB as never, { icon: iconB }).addTo(map)
+            let line = L.polyline([pointA, pointB], {
+                color: 'red',
+                dashArray: [9, 9],
+            })
+                .bindTooltip(`AB点距离 ${distance} 米`, { permanent: true })
+                .addTo(map)
+            map.fitBounds([pointA, pointB])
+            // let temMarkers = [
+            //     {
+            //         markerObj: markerA,
+            //         name: 'markerA',
+            //     },
+            //     {
+            //         markerObj: markerB,
+            //         name: 'markerB',
+            //     },
+            //     {
+            //         markerObj: line,
+            //         name: 'lineAB',
+            //     },
+            // ]
 
-        //绘制田块边界(全部上传GCJ02坐标，对应全部GCJ02地图，无需相互转换！！！)
-        // if (item.borderpoints) {
-        //     let latlngs = JSON.parse(item.borderpoints)
-        //     let polygon = L.polygon(latlngs, { color: '#388BFE' }).addTo(map)
-        //     let tem = {
-        //         name: 'border',
-        //         markerObj: polygon,
-        //     }
-        //     saveMarker(item.id, [tem])
-        // }
-    } catch (err) {
-        console.log(err)
+            saveMarker2(item.id, [{ markerObj1: markerA, name: 'markerA', markerObj2: markerB, name2: 'markerB', markerObj3: line, name3: 'lines' }])
+
+            //绘制田块边界(全部上传GCJ02坐标，对应全部GCJ02地图，无需相互转换！！！)
+            // if (item.borderpoints) {
+            //     let latlngs = JSON.parse(item.borderpoints)
+            //     let polygon = L.polygon(latlngs, { color: '#388BFE' }).addTo(map)
+            //     let tem = {
+            //         name: 'border',
+            //         markerObj: polygon,
+            //     }
+            //     saveMarker(item.id, [tem])
+            // }
+        } catch (err) {
+            console.log(err)
+        }
     }
+
 }
 // 删除区域
 const removeMarker = (workId: any) => {
@@ -475,6 +482,7 @@ const removeMarker = (workId: any) => {
         if (markerCollect[workId]['marker'].length) {
             let a = markerCollect[workId]['marker']
             a.forEach((item: any) => {
+                console.log(item)
                 if (item.markerObj) {
                     map.removeLayer(item.markerObj)
                     // map.removeLayer(item.markerObj2)
@@ -488,10 +496,18 @@ const removeMarker = (workId: any) => {
         if (markerCollect2[workId]['marker'].length) {
             let a = markerCollect2[workId]['marker']
             a.forEach((item: any) => {
-                if (item.markerObj) {
-                    map.removeLayer(item.markerObj)
+                console.log(item)
+                if (item.markerObj1) {
+                    map.removeLayer(item.markerObj1)
                     // map.removeLayer(item.markerObj2)
                 }
+                if (item.markerObj2) {
+                    map.removeLayer(item.markerObj2)
+                }
+                if (item.markerObj3) {
+                    map.removeLayer(item.markerObj3)
+                }
+                // map.removeLayer(item.markerObj)
             })
             markerCollect2[workId]['marker'] = []
         }
@@ -499,9 +515,9 @@ const removeMarker = (workId: any) => {
         console.log(err)
     }
 }
-const hasMarker = (workId: any) => {
-    return markerCollect[workId]['marker'].length > 0
-}
+// const hasMarker = (workId: any) => {
+//     return markerCollect[workId]['marker'].length > 0
+// }
 const machine = reactive<any>({})
 const getMachineInfo = () => {
     paddyWorkList.value.forEach((element: any) => {
@@ -510,16 +526,16 @@ const getMachineInfo = () => {
         }
     })
 }
-const hasMarkerField = (workId: any, field: any) => {
-    let a = markerCollect[workId]['marker'].find(
-        (element: any) => element.name === field
-    )
-    if (a && a[field] !== null) {
-        return true
-    } else {
-        return false
-    }
-}
+// const hasMarkerField = (workId: any, field: any) => {
+//     let a = markerCollect[workId]['marker'].find(
+//         (element: any) => element.name === field
+//     )
+//     if (a && a[field] !== null) {
+//         return true
+//     } else {
+//         return false
+//     }
+// }
 // 清除全部
 const clearAllMarkers = () => {
     try {
@@ -541,8 +557,14 @@ const clearAllMarkers = () => {
             if (Object.keys(markerCollect2).length) {
                 if (markerCollect2[key]['marker'].length) {
                     markerCollect2[key]['marker'].forEach((item: any) => {
-                        if (item) {
-                            map.removeLayer(item)
+                        if (item && item.markerObj1) {
+                            map.removeLayer(item.markerObj1)
+                            if (item && item.markerObj2) {
+                                map.removeLayer(item.markerObj2)
+                                if (item && item.markerObj3) {
+                                    map.removeLayer(item.markerObj3)
+                                }
+                            }
                         }
                     })
                 }
@@ -597,18 +619,26 @@ const getPaddyWorkList = async (flag: Boolean) => {
 
     let tem = res.data.records
     tem.forEach((element) => {
+        // console.log(element)
+        // paddyWorkList.value.push(element)
         markerCollect[element.id] = { marker: [] }
         markerCollect2[element.id] = { marker: [] }
         element.checked = false
     })
     if (paddyWorkList.value.length) {
         total.value = res.data.total
-        if (flag == true) {
+        if (flag === true) {
             ids.value.push(paddyWorkList.value[0].id as never)
             paddyWorkList.value[0].checked = true
+            loadWorkData(paddyWorkList.value[0].id)
+                let subItem = paddyWorkList.value.find(data => {
+                    if (data.id === paddyWorkList.value[0].id) {
+                        return data
+                    }
+                })
+                addPathAB(subItem)
         }
     }
-
 }
 const changeBlur1 = () => {
     getDealerCarList()
@@ -618,17 +648,16 @@ const changeBlur1 = () => {
     ids.value = []
     paddyWorkList.value = []
     pageInfo.currentPage = 1
-    pageInfo.pageSize = 7
+    pageInfo.pageSize = 5000
     pageInfo.carId = '请选择'
 
 }
 const changeBlur2 = () => {
-
     clearAllMarkers()
     Object.assign(markerCollect, {})
     Object.assign(markerCollect2, {})
     pageInfo.currentPage = 1
-    pageInfo.pageSize = 7
+    pageInfo.pageSize = 5000
     ids.value = []
     paddyWorkList.value = []
     getPaddyWorkList(true)
@@ -640,9 +669,12 @@ const changeBlur2 = () => {
 //     ids.value = []
 // }
 const load = () => {
-    pageInfo.pageSize < total.value ? pageInfo.pageSize += 2 : ''
+    // pageInfo.pageSize < total.value ? pageInfo.pageSize += 2 : ''
+    // if (total.value > 7) {
+    //     pageInfo.pageSize * pageInfo.currentPage < total.value + 7 ? pageInfo.currentPage += 1 : ''
+    // }
 }
-watch(() => pageInfo.pageSize,
+watch(() => pageInfo.currentPage,
     () => {
         getPaddyWorkList(false)
     }
@@ -656,7 +688,17 @@ watch(() => ids.value,
                 item.checked = false
             }
         })
-
+        newVal.forEach((item: any) => {
+            if (!oldVal.includes(item)) {
+                loadWorkData(item)
+                let subItem = paddyWorkList.value.find(data => {
+                    if (data.id === item) {
+                        return data
+                    }
+                })
+                addPathAB(subItem)
+            }
+        })
         oldVal.forEach((item: any) => {
             if (!newVal.includes(item)) {
                 removeMarker(item)
@@ -670,11 +712,11 @@ watch(() => paddyWorkList.value,
             Object.assign(machine, {})
             newData.forEach((subItem) => {
                 if (subItem.checked) {
-                    if (!hasMarker(subItem.id)) {
-                        addPathAB(subItem)
-                    } if (!hasMarkerField(subItem.id, 'lines')) {
-                        loadWorkData(subItem.id)
-                    }
+                    // if (!hasMarker(subItem.id)) {
+                    //     addPathAB(subItem)
+                    // } if (!hasMarkerField(subItem.id, 'lines')) {
+                    //      loadWorkData(subItem.id)
+                    // }
                 } else {
                     removeMarker(subItem.id)
                 }
@@ -686,9 +728,8 @@ watch(() => paddyWorkList.value,
 </script>
 
 <style lang="scss" scoped>
-
 :deep(.el-select-v2__placeholder::before) {
-    content:var( --content-text);
+    content: var(--content-text);
     margin-right: 2px;
     font-size: 14px;
     font-weight: 400;

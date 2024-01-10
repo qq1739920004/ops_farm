@@ -16,7 +16,7 @@
         </el-input>
       </div>
       <div class="button_area">
-        <el-button v-auth="652" style="margin-right: 5px" type="primary" @click="gotoUpgrade">{{ $t('devicelist.upgrade')
+        <el-button v-auth="787" style="margin-right: 5px" type="primary" @click="gotoUpgrade">{{ $t('devicelist.upgrade')
         }}</el-button>
         <el-button style="margin-right: 20px" type="primary" @click="gotoInput">{{ $t('devicelist.inputDealerDevice')
         }}</el-button>
