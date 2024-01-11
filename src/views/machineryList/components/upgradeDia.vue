@@ -36,9 +36,9 @@
         </div>
         <template #footer>
             <div v-show="isUpgrade === false">
-                <el-button type="danger" @click="gotoUpgrade()"
+                <el-button v-auth="787" type="danger" @click="gotoUpgrade()"
                     :disabled="exportIds.length > 0 || allSelected ? false : true">
-                    {{ $t('work.forceUpgrade') }}
+                    {{ $t('devicelist.upgrade') }}
                 </el-button>
                 <span class="dialog-footer">
                     <Pagination :total="total" :currentPage="currentPage" :pageSize="pageSize" @pageChange="currentChange">
