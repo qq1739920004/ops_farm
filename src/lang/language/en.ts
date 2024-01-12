@@ -299,7 +299,7 @@ const en = {
     totalVehicle: "Total Vehicle",
     workingAreaMu: "Vehicle Working/acre",
     todayWorkingAreaMu: "Today working/acre",
-    WanMu: "Today working/10,000 acre",
+    WanMu: "Year working/10,000 acre",
     numberOfAgriculturalMachineryOnline: "Online Agricultural Machinery",
     online: "Online",
     assigned: "Assigned",

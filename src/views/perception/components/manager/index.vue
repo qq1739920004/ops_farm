@@ -20,6 +20,7 @@
             v-if="carAreas.length"
             @mapFinish="mapFinish"
             :provinceCars="provinceCars"
+            :markerDataHandle="markerDataHandle"
           ></Carmap>
         </div>
         <div class="right">
@@ -46,6 +47,8 @@ import Online from "./online.vue";
 import { getMonitorAPI,getUserAuth } from "@/api/perception/index.ts";
 import type { MonitorObj, recordsType } from "@/api/perception/type";
 import socket from "@/store/socket";
+import type { onlineMaker } from "@/api/perception/type";
+
 
 defineProps({
   companyName:{
@@ -66,6 +69,8 @@ const monitorData = ref<MonitorObj>();
 let stateObj = ref<recordsType>();
 // 各车辆作业面积
 const carAreas = ref<Array<object>>([]);
+//设备位置marker
+let markerDataHandle = ref<onlineMaker>();
 
 const todayArea = ref<number>();
 const totalArea = ref<number>();
@@ -129,8 +134,50 @@ function handleSocketData(data: any) {
   //     }
   //   }
   } 
+ else if (data.module == "farm" && data.type == "farmPt") {
+    markerDataHandle.value={...data.data,action:data.action};
+    //upline是上线，offline是下线，online是在线
+  //   if (action == "upline") {
+  //     const markerId = data.data.sn;
+  //     const markerLng = data.data.posY;
+  //     const markerLat = data.data.posX;
+  //     const markerType = createMarkerType(data.data);
+  //     const markerIcon = createMarkerIcon(data.data);
+  //     markerDataHandle.value = {
+  //       markerId,
+  //       markerLng,
+  //       markerLat,
+  //       markerType,
+  //       markerIcon,
+  //       markerHandle: "add",
+  //     };
+  //   }
+  //   if (action == "offline") {
+  //     const markerId = data.data.sn;
+  //     markerDataHandle.value = {
+  //       markerId,
+  //       markerHandle: "delete",
+  //     };
+  //   }
+  //   if (action == "online") {
+  //     const markerId = data.data.sn;
+  //     const markerLng = data.data.posY;
+  //     const markerLat = data.data.posX;
+  //     const markerType = createMarkerType(data.data);//设备类型
+  //     const markerIcon = createMarkerIcon(data.data);//设备图标
+  //     markerDataHandle.value = {
+  //       markerId,
+  //       markerLng,
+  //       markerLat,
+  //       markerType,
+  //       markerIcon,
+  //       markerHandle: "update",
+  //     };
+  //   }
+  }
 }
 onUnmounted(() => {
+  console.log(112)
   realTime.close()
 })
 </script>

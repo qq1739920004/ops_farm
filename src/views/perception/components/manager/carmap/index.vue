@@ -27,10 +27,13 @@ import { purifyBaiduData, purifyCityArr } from './utils';
 import { poly3d } from "./polygon3d";
 import { setMarker,updateChart } from "./setMarker";
 import { mapEvent } from './mapEvent';
+import type { onlineMaker } from "@/api/perception/type";
 import { useI18n } from "vue-i18n";
+import {starDeviceLocation,updateDeviceMarker} from './deviceLocation.ts';
 const { t } = useI18n();
 interface Props {
   provinceCars: MonitorObj["provinceCars"];
+  markerDataHandle?:onlineMaker
 }
 const emits = defineEmits(["mapFinish"]);
 const map = ref();
@@ -72,7 +75,8 @@ function startDraw(AMap: any,cityArr: string[]) {
   //边框
   poly3d(AMap, maskPoly, map, polylines);
   //标注
-  setMarker(AMap, map, dataList,cityArr.length,t);
+  // setMarker(AMap, map, dataList,cityArr.length,t);
+  starDeviceLocation(AMap, map)
   //注册的所有时间
   mapEvent(map);
   // 使用setFitView自动调整视图以适应所有的折线
@@ -118,6 +122,10 @@ onMounted(() => {
 watch(() =>props.provinceCars, () => {
   updateChart(props.provinceCars)
 }, { deep: true })
+
+watch(() =>props.markerDataHandle, () => {
+  updateDeviceMarker(props.markerDataHandle)
+})
 </script>
 
 <style scoped lang="scss">
