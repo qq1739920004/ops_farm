@@ -5,20 +5,21 @@ const userStore = useUserStore()
 const useSocketStore = defineStore("socket", () => {
     let ws: any = null
     let socketData = ref({})
-    function connect() {
+    function connect() {        
         ws = new WebSocket(`${import.meta.env.VITE_APP_BASE_WSURL}/websocket?Authorization=${userStore.Authorization}`);
         ws.onopen = () => {
-            console.log('socket连接成功');
+            console.warn('socket连接成功');
         };
         ws.onmessage = (e: any) => {
             const data = JSON.parse(e.data);
             socketData.value = data
         };
         ws.onclose = () => {
-            console.log('socket连接关闭');
+            console.warn('socket连接关闭');
         };
     }
-    function close() {
+
+    function close() {       
         ws.close()
     }
 

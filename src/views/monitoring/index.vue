@@ -189,7 +189,7 @@ import SinoMap from "@/components/SinoMap/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import realTimeChart from "./components/realTimeChart.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
-import { reactive, ref, watch, onUnmounted, computed } from "vue";
+import { reactive, ref, watch, onBeforeUnmount, computed} from "vue";
 import useSocketStore from "@/store/socket";
 import { useRouter, useRoute } from "vue-router";
 import {
@@ -244,7 +244,7 @@ watch(
   },
   { deep: true }
 );
-onUnmounted(() => {
+onBeforeUnmount(() => {
   socketStore.close();
 });
 const labelWidth = computed(() => {
@@ -256,6 +256,7 @@ getOnlineFarmPosition();
 getCarLogList();
 
 socketStore.connect();
+
 //查询设备地图定位
 function searchDevicePosition(id: any) {
   mapCenter.markerId = id;
