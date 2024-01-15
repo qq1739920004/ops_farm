@@ -184,7 +184,7 @@ defineExpose({
   justify-content: center;
   align-items: center;
     left: 10px;
-    bottom: 95px;
+    bottom: 45px;
     .t-shadow{
       text-shadow: -6px 0px 10px #fff,6px 0px 10px #fff;
     }
@@ -233,7 +233,7 @@ defineExpose({
   .map-bar-info {
     position: absolute;
     right: 10px;
-    bottom: 95px;
+    bottom: 45px;
     width: 78px;
     padding:6px 0px 6px 10px;
     height: 66px;

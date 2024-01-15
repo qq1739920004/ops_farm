@@ -139,44 +139,6 @@ function handleSocketData(data: any) {
   } 
  else if (data.module == "farm" && data.type == "farmPt") {
     markerDataHandle.value={...data.data,action:data.action};
-    //upline是上线，offline是下线，online是在线
-  //   if (action == "upline") {
-  //     const markerId = data.data.sn;
-  //     const markerLng = data.data.posY;
-  //     const markerLat = data.data.posX;
-  //     const markerType = createMarkerType(data.data);
-  //     const markerIcon = createMarkerIcon(data.data);
-  //     markerDataHandle.value = {
-  //       markerId,
-  //       markerLng,
-  //       markerLat,
-  //       markerType,
-  //       markerIcon,
-  //       markerHandle: "add",
-  //     };
-  //   }
-  //   if (action == "offline") {
-  //     const markerId = data.data.sn;
-  //     markerDataHandle.value = {
-  //       markerId,
-  //       markerHandle: "delete",
-  //     };
-  //   }
-  //   if (action == "online") {
-  //     const markerId = data.data.sn;
-  //     const markerLng = data.data.posY;
-  //     const markerLat = data.data.posX;
-  //     const markerType = createMarkerType(data.data);//设备类型
-  //     const markerIcon = createMarkerIcon(data.data);//设备图标
-  //     markerDataHandle.value = {
-  //       markerId,
-  //       markerLng,
-  //       markerLat,
-  //       markerType,
-  //       markerIcon,
-  //       markerHandle: "update",
-  //     };
-  //   }
   }
 }
 onUnmounted(() => {
@@ -204,7 +166,7 @@ onUnmounted(() => {
 
   .screen {
     width: 1920px;
-    height: 937px;
+    height: 100%;
     position: fixed;
     left: 50%;
     top: 50%;
@@ -213,14 +175,14 @@ onUnmounted(() => {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      height: 223px;
+      height: 23.7%;
       .top_time {
         align-self: flex-start;
       }
     }
     .bottom {
       display: flex;
-      height: 779px;
+      height: 83.1%;
       width: 100%;
       .left {
         flex: 1;
@@ -229,10 +191,10 @@ onUnmounted(() => {
 
         flex-direction: column;
         .workarea {
-          height: 400px;
+          height: 54.8%;
         }
         .year {
-          height: 270px;
+          height: 36.8%;
         }
       }
       .middle {
@@ -241,16 +203,16 @@ onUnmounted(() => {
       }
 
       .right {
-        transform: translateY(-40px);
+        transform: translateY(-4.6%);
         flex: 1;
         height: 100%;
         display: flex;
         flex-direction: column;
         .online {
-          height: 300px;
+          height:41.1%;
         }
         .state {
-          height: 400px;
+          height: 54.6%;
         }
       }
     }
