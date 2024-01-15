@@ -9,6 +9,7 @@ let height=ref(280);
 let fontSize=ref(15);
 let marginTop=ref(140);
 let numCurent=ref(0)
+const deviceMarkers=ref<Map<HTMLElement,Object>>(new Map())//柱状图数组
 let chartList=shallowRef<any>([]);
 let chartContainerList=ref<any>([]);
 let optionsList=ref<any>([]);
@@ -22,7 +23,18 @@ function updateChart(dataList:MonitorObj["provinceCars"]){
     chartList.value[index].setOption(item,true)
   })
 }
-
+//清除设备标记
+function clearBarMarker(){
+  deviceMarkers.value.forEach((item:any)=>{
+    item.setMap(null)
+  })
+}
+//设备标记回到地图中心
+function BarMarkerCenter(map:any){
+  deviceMarkers.value.forEach((item:any)=>{
+    item.setMap(map.value)
+  })
+}
 function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:number,t:any){
   for(let i=0;i<length;i++){
         const markerContent = document.createElement('div');
@@ -31,11 +43,13 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
         chartContainer.style.height = `${height.value}px`;
         chartContainer.style.marginTop = `-${marginTop.value}px`;
         markerContent.appendChild(chartContainer);
-        new AMap.Marker({
+       const marker= new AMap.Marker({
             position: [dataList[i].lng,dataList[i].lat],
             content: markerContent,
             map: map.value
         });
+    deviceMarkers.value.set(chartContainer,marker)
+
         // 使用ECharts初始化柱状图容器并设置数据
         const chart = echarts.init(chartContainer);
         chartList.value.push(chart);
@@ -203,4 +217,4 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
       }
       isUpdata.value=true;
 }
-export {setMarker,updateChart,width,height,fontSize,marginTop,chartContainerList,chartList}
+export {setMarker,updateChart,width,height,fontSize,marginTop,chartContainerList,chartList,BarMarkerCenter,clearBarMarker}

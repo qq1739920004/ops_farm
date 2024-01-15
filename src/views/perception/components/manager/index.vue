@@ -10,17 +10,19 @@
           <Workarea
             class="workarea"
             :carAreas="carAreas"
-            v-if="carAreas.length"
+            v-if="provinceCars?.length"
+
           />
           <Year class="year" :totalArea="totalArea" :todayArea="todayArea" />
         </div>
 
         <div class="middle">
           <Carmap
-            v-if="carAreas.length"
+            v-if="provinceCars?.length"
             @mapFinish="mapFinish"
             :provinceCars="provinceCars"
             :markerDataHandle="markerDataHandle"
+            :markerSelect="markerSelect"
           ></Carmap>
         </div>
         <div class="right">
@@ -62,7 +64,8 @@ getUserAuth().then(res=>{
 })
 const realTime = socket();
 realTime.connect();
-
+//marker选项，1.总览，2.详情
+const markerSelect = ref<string>("1");
 // 监测数据
 const monitorData = ref<MonitorObj>();
 //状态通知
@@ -81,7 +84,7 @@ const provinceCars = ref<MonitorObj["provinceCars"]>();
 const getMonitor = async () => {
   const res = await getMonitorAPI();
   monitorData.value = res.data;
-  carAreas.value = res.data.carAreas;
+  carAreas.value = res.data.carAreas.filter(item=>item.carArea)
   todayArea.value = res.data.todayArea;
   totalArea.value = res.data.totalArea;
   typeCounts.value = res.data.typeCounts;

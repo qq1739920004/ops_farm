@@ -33,7 +33,9 @@ export interface geojsonObj extends ResponseData{
       }
     ],
     carAreas: [
-      {key: number}
+      {carName: string;
+        carArea: number;
+        userNameCar: string;}
   ]
   
   }
@@ -97,6 +99,8 @@ export interface onlineMaker {
   markerType?:string;
   markerIcon?:string;
   markerPopup?:string;
+  setPosition?:any;
+  setMap?:any;
 }
 export interface recordsType
   {

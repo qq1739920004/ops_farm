@@ -26,6 +26,9 @@ const deviceMarkers=ref<Map<string,onlineMaker>>(new Map())
 let AMap:any
 let map:any
 function starDeviceLocation(myAMap:any,mymap:any){
+  if(deviceMarkers.value.size>0) {
+    return deviceMarkerCenter()
+  }
   AMap=myAMap
   map=mymap
   getOnlineFarmPosition()
@@ -72,10 +75,22 @@ async function getOnlineFarmPosition() {
   onlineFarmMachines.forEach((item: onlineMaker) => {
     deviceList.value.set(item.sn, item);
   })
-  deviceList.value.forEach((item: onlineMaker,key:string) => {
+  deviceList.value.forEach((item: onlineMaker) => {
     // updateDeviceMarker(item)
     const marker= newMarker(item)
     deviceMarkers.value.set(item.sn,marker)
+  })
+}
+//清除设备标记
+function clearDeviceMarker(){
+  deviceMarkers.value.forEach((item:onlineMaker)=>{
+    item.setMap(null)
+  })
+}
+//设备标记回到地图中心
+function deviceMarkerCenter(){
+  deviceMarkers.value.forEach((item:onlineMaker)=>{
+    item.setMap(map.value)
   })
 }
 function newMarker(item:onlineMaker){
@@ -142,4 +157,4 @@ function createMarkerType(item: any) {
   }
 }
 
-export {createMarkerType,createMarkerIcon,starDeviceLocation,updateDeviceMarker,deviceList}
+export {createMarkerType,createMarkerIcon,starDeviceLocation,updateDeviceMarker,deviceList,deviceMarkerCenter,clearDeviceMarker}
