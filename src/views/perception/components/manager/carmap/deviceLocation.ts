@@ -1,5 +1,4 @@
-import type { MonitorObj } from "@/api/perception/type";
-import { ref,shallowRef } from 'vue';
+import { ref } from 'vue';
 import AG302 from "@/assets/icons/AG302.svg";
 import AG302_warn from "@/assets/icons/AG302_warn.svg";
 import AG360 from "@/assets/icons/AG360.svg";
