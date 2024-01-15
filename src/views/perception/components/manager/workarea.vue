@@ -206,8 +206,10 @@ onMounted(() => {
     clearInterval(dataZoomMoveTimer);
     dataZoomMoveTimer = undefined;
   });
+  window.addEventListener("resize", () => {
+    mycharts.resize();
+  });
 });
-
 watch(props, (newValue) => {
   isDataUpdated.value = true;
   option.yAxis.data = newValue.carAreas.map((item: any) => item.userNameCar);
@@ -220,6 +222,9 @@ watch(props, (newValue) => {
 
 onUnmounted(() => {
   mycharts.dispose;
+  window.removeEventListener("resize", () => {
+    mycharts.resize();
+  });
 });
 </script>
 

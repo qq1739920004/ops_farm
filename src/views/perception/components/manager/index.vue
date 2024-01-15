@@ -10,16 +10,19 @@
           <Workarea
             class="workarea"
             :carAreas="carAreas"
-            v-if="carAreas.length"
+            v-if="provinceCars?.length"
+
           />
           <Year class="year" :totalArea="totalArea" :todayArea="todayArea" />
         </div>
 
         <div class="middle">
           <Carmap
-            v-if="carAreas.length"
+            v-if="provinceCars?.length"
             @mapFinish="mapFinish"
             :provinceCars="provinceCars"
+            :markerDataHandle="markerDataHandle"
+            :markerSelect="markerSelect"
           ></Carmap>
         </div>
         <div class="right">
@@ -46,6 +49,8 @@ import Online from "./online.vue";
 import { getMonitorAPI,getUserAuth } from "@/api/perception/index.ts";
 import type { MonitorObj, recordsType } from "@/api/perception/type";
 import socket from "@/store/socket";
+import type { onlineMaker } from "@/api/perception/type";
+
 
 defineProps({
   companyName:{
@@ -59,13 +64,16 @@ getUserAuth().then(res=>{
 })
 const realTime = socket();
 realTime.connect();
-
+//marker选项，1.总览，2.详情
+const markerSelect = ref<string>("1");
 // 监测数据
 const monitorData = ref<MonitorObj>();
 //状态通知
 let stateObj = ref<recordsType>();
 // 各车辆作业面积
 const carAreas = ref<Array<object>>([]);
+//设备位置marker
+let markerDataHandle = ref<onlineMaker>();
 
 const todayArea = ref<number>();
 const totalArea = ref<number>();
@@ -76,7 +84,7 @@ const provinceCars = ref<MonitorObj["provinceCars"]>();
 const getMonitor = async () => {
   const res = await getMonitorAPI();
   monitorData.value = res.data;
-  carAreas.value = res.data.carAreas;
+  carAreas.value = res.data.carAreas.filter(item=>item.carArea)
   todayArea.value = res.data.todayArea;
   totalArea.value = res.data.totalArea;
   typeCounts.value = res.data.typeCounts;
@@ -129,8 +137,12 @@ function handleSocketData(data: any) {
   //     }
   //   }
   } 
+ else if (data.module == "farm" && data.type == "farmPt") {
+    markerDataHandle.value={...data.data,action:data.action};
+  }
 }
 onUnmounted(() => {
+  console.log(112)
   realTime.close()
 })
 </script>
@@ -154,7 +166,7 @@ onUnmounted(() => {
 
   .screen {
     width: 1920px;
-    height: 937px;
+    height: 100%;
     position: fixed;
     left: 50%;
     top: 50%;
@@ -163,14 +175,14 @@ onUnmounted(() => {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      height: 223px;
+      height: 23.7%;
       .top_time {
         align-self: flex-start;
       }
     }
     .bottom {
       display: flex;
-      height: 779px;
+      height: 83.1%;
       width: 100%;
       .left {
         flex: 1;
@@ -179,10 +191,10 @@ onUnmounted(() => {
 
         flex-direction: column;
         .workarea {
-          height: 400px;
+          height: 54.8%;
         }
         .year {
-          height: 270px;
+          height: 36.8%;
         }
       }
       .middle {
@@ -191,16 +203,16 @@ onUnmounted(() => {
       }
 
       .right {
-        transform: translateY(-40px);
+        transform: translateY(-4.6%);
         flex: 1;
         height: 100%;
         display: flex;
         flex-direction: column;
         .online {
-          height: 300px;
+          height:41.1%;
         }
         .state {
-          height: 400px;
+          height: 54.6%;
         }
       }
     }

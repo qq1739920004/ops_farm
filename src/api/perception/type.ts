@@ -33,7 +33,9 @@ export interface geojsonObj extends ResponseData{
       }
     ],
     carAreas: [
-      {key: number}
+      {carName: string;
+        carArea: number;
+        userNameCar: string;}
   ]
   
   }
@@ -49,6 +51,56 @@ export interface StateObj{
 export interface timeParams {
   st: string,
   et: string,
+}
+export interface onlineMaker {
+	id?: any;
+	deviceId?: any;
+  action:string;
+	posX: number;
+	posY: number;
+	posZ: number;
+	coordType: string;
+	solStat: number;
+	heading: number;
+	speed: number;
+	driveState: number;
+	satNum: number;
+	baseDist: number;
+	diffSource: number;
+	xOffset: number;
+	headingOffset: number;
+	netSignal: number;
+	gnssTime: number;
+	diffAge: number;
+	dirSolState: number;
+	cardUsage: number;
+	sn: string;
+	workName?: any;
+	carId: number;
+	carName: string;
+	carOwnerName: string;
+	companyName: string;
+	companyId: number;
+	judgeLevel?: any;
+	judgeLevelRatio?: any;
+	lateralOffset: number;
+	version: number;
+	type: number;
+	tel: string;
+	terminalType: string;
+	addrcode: string;
+	creatorId: number;
+	distance?: any;
+	sunFlowerSn?: any;
+	npn: string;
+  markerId?:string;
+  markerLng?:number;
+  markerLat?:number;
+  markerType?:string;
+  markerIcon?:string;
+  markerPopup?:string;
+  setPosition?:any;
+  setMap?:any;
 }
 export interface recordsType
   {

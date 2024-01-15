@@ -296,7 +296,7 @@ const zh = {
     todayWorkingArea: "今日作业面积",
     todayWorkingAreaMu:"今日作业面积/亩",
     workingAreaMu:"各车辆作业面积/亩",
-    WanMu:"今日作业面积/万亩",
+    WanMu:"今年作业面积/万亩",
     totalVehicle: "农机总数",
     soldVehicle:"已售农机",
     online: "在线农机数",
