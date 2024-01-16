@@ -33,7 +33,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     loadingInstance.close()
-    const { code, message } = response.data;
+    let { code, message } = response.data;
     if (code === 0 || code === 200 || code === 'ok') {
       return response.data;
     }
