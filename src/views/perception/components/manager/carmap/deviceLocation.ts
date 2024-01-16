@@ -19,21 +19,21 @@ import {
   onlineFarmMachinePosition_API,
 } from "@/api/monitoring";
 import type { onlineMaker } from "@/api/perception/type";
-const deviceList=ref<Map<string,onlineMaker>>(new Map())
 const deviceMarkers=ref<Map<string,onlineMaker>>(new Map())
 
 let AMap:any
 let map:any
+let isOne=ref(false)//是否已经初始化
 function starDeviceLocation(myAMap:any,mymap:any){
-  if(deviceMarkers.value.size>0) {
-    return deviceMarkerCenter()
-  }
+  if(isOne.value) return deviceMarkerCenter()
+  isOne.value=true
+  console.log(334);
   AMap=myAMap
   map=mymap
   getOnlineFarmPosition()
 }
 // 更新设备标记的位置
-function updateDeviceMarker(item:onlineMaker) {
+function updateDeviceMarker(item:onlineMaker,selectOption:number) {
     item.markerId = item.sn;
     item.markerLng = item.posY;
     item.markerLat = item.posX;
@@ -43,7 +43,13 @@ function updateDeviceMarker(item:onlineMaker) {
     if(item.action=="online"){
       const tempMarker=deviceMarkers.value.get(item.sn)
       if(tempMarker){
-        tempMarker.setPosition(new AMap.LngLat(item.markerLng, item.markerLat));
+        tempMarker.setMap(null)
+        deviceMarkers.value.delete(item.sn)
+        const marker= newMarker(item)
+        deviceMarkers.value.set(item.sn,marker)
+        if(selectOption==1){
+          marker.setMap(null)
+        }
       }
     }else if(item.action=="offline"){
       const tempMarker=deviceMarkers.value.get(item.sn)
@@ -54,6 +60,9 @@ function updateDeviceMarker(item:onlineMaker) {
     }else if(item.action=="upline"){
       const marker= newMarker(item)
       deviceMarkers.value.set(item.sn,marker)
+      if(selectOption==1){
+        marker.setMap(null)
+      }
     }
 }
 // 初始化获取设备数据
@@ -72,10 +81,6 @@ async function getOnlineFarmPosition() {
     (item: any) => item.markerLng || item.markerLng == 0
   );
   onlineFarmMachines.forEach((item: onlineMaker) => {
-    deviceList.value.set(item.sn, item);
-  })
-  deviceList.value.forEach((item: onlineMaker) => {
-    // updateDeviceMarker(item)
     const marker= newMarker(item)
     deviceMarkers.value.set(item.sn,marker)
   })
@@ -85,9 +90,12 @@ function clearDeviceMarker(){
   deviceMarkers.value.forEach((item:onlineMaker)=>{
     item.setMap(null)
   })
+
 }
 //设备标记回到地图中心
 function deviceMarkerCenter(){
+  console.log(deviceMarkers.value);
+  console.log(33);
   deviceMarkers.value.forEach((item:onlineMaker)=>{
     item.setMap(map.value)
   })
@@ -156,4 +164,4 @@ function createMarkerType(item: any) {
   }
 }
 
-export {createMarkerType,createMarkerIcon,starDeviceLocation,updateDeviceMarker,deviceList,deviceMarkerCenter,clearDeviceMarker}
+export {createMarkerType,createMarkerIcon,starDeviceLocation,updateDeviceMarker,deviceMarkerCenter,clearDeviceMarker,isOne}

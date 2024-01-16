@@ -29,7 +29,7 @@ function purifyCityArr(data: MonitorObj["provinceCars"]) {
   let codeArr: string[] = [];
   let location: locationType[] = [];
   data.forEach((item) => {
-    if (item.code&&item.lat&&item.lng) {
+    if (item.code&&item.lat&&item.lng&&item.cityName) {
       codeArr.push(item.code.padEnd(6, "0"));
       location.push({lat:item.lat,lng:item.lng})
     }

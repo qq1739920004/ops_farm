@@ -106,6 +106,62 @@ function mapFinish() {
 onMounted(() => {
   getMonitor();
   screen.value.style.transform = `scale(${getScale()}) translate(-50%,-50%)`;
+//       setTimeout(() => {
+// //         provinceCars.value=[
+// //     {
+// //         "name": "吉林",
+// //         "cityName": "四平市",
+// //         "totalNum": 8,
+// //         "onlineNum": 1,
+// //         "code": "220000",
+// //         "cityCode": "220300",
+// //         "lng": "124.35648",
+// //         "lat": "43.171993"
+// //     },
+// //     {
+// //         "name": "未知省份",
+// //         "cityName": "",
+// //         "totalNum": 0,
+// //         "onlineNum": 0
+// //     }
+// // ]
+// // markerDataHandle.value={
+// //         "carId": 10005,
+// //         "carName": "yujiangjun",
+// //         "carOwnerName": "zm",
+// //         "companyName": "任命的公司",
+// //         "companyId": 342,
+// //         "lateralOffset": 65.7,
+// //         "version": 7,
+// //         "type": 4,
+// //         "tel": "18351806109",
+// //         "terminalType": "AG502",
+// //         "addrcode": "220322",
+// //         "creatorId": 15,
+// //         "npn": "S10001097000",
+// //         "posX": 43.29361085037895,
+// //         "posY": 124.36168581450472,
+// //         "posZ": 18.145,
+// //         "coordType": "WGS84",
+// //         "solStat": 1,
+// //         "heading": 0.1844,
+// //         "speed": 10,
+// //         "driveState": 0,
+// //         "satNum": 32,
+// //         "baseDist": 1500,
+// //         "diffSource": 1,
+// //         "xOffset": 65.7,
+// //         "headingOffset": 0.157,
+// //         "netSignal": 0,
+// //         "gnssTime": 1705367997344,
+// //         "diffAge": 2,
+// //         "dirSolState": 1,
+// //         "cardUsage": 1,
+// //         "sn": "S10001097000",
+// //     "action": "upline",
+// // };
+//     }, 10000);
+
 });
 
 
@@ -142,7 +198,6 @@ function handleSocketData(data: any) {
   }
 }
 onUnmounted(() => {
-  console.log(112)
   realTime.close()
 })
 </script>

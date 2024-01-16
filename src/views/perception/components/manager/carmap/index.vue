@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 // 导入Vue相关的库
-import { onMounted, ref ,watch,shallowRef,} from "vue";
+import { onMounted,onUnmounted, ref ,watch,shallowRef,} from "vue";
 // 导入类型定义
 import type { MonitorObj } from "@/api/perception/type";
 import { getGeojson } from '@/api/perception/index.ts';
@@ -37,7 +37,7 @@ import { setMarker,updateChart,clearBarMarker,BarMarkerCenter } from "./setMarke
 import { mapEvent } from './mapEvent';
 import type { onlineMaker } from "@/api/perception/type";
 import { useI18n } from "vue-i18n";
-import {starDeviceLocation,updateDeviceMarker,clearDeviceMarker} from './deviceLocation.ts';
+import {starDeviceLocation,updateDeviceMarker,clearDeviceMarker,isOne} from './deviceLocation.ts';
 const { t } = useI18n();
 interface Props {
   provinceCars: MonitorObj["provinceCars"];
@@ -68,6 +68,7 @@ let dataList = props.provinceCars;
 let polylines: any = [];
 let mask: any = [];
 let maskPoly: any = [];
+let watchOne=ref(false)
 //开始画出来
 function startDraw(AMap: any) {
   map.value = new AMap.Map("container", {
@@ -101,6 +102,9 @@ function selectChange(value:number){
     barShow()
   }else{
     deviceShow()
+    if(watchOne.value) return
+    watchOne.value=true
+    startDeviceWatch()
   }
 }
 //总览选项
@@ -153,15 +157,20 @@ onMounted(() => {
   cityArr.value = codeArr;
   initMap(codeArr);
 });
+onUnmounted(()=>{
+  isOne.value=false
+})
 watch(() =>props.provinceCars, () => {
   updateChart(props.provinceCars)
 }, { deep: true })
-
-watch(() =>props.markerDataHandle, () => {
+function startDeviceWatch(){
+  watch(() =>props.markerDataHandle, () => {
   if(props.markerDataHandle){
-    updateDeviceMarker(props.markerDataHandle)
+    updateDeviceMarker(props.markerDataHandle,selectOption.value)
   }
 })
+}
+
 defineExpose({
   selectChange,
   barShow,
@@ -186,7 +195,10 @@ defineExpose({
     left: 10px;
     bottom: 45px;
     .t-shadow{
-      text-shadow: -6px 0px 10px #fff,6px 0px 10px #fff;
+      text-shadow: -6px 0px 15px #fff,6px 0px 15px #fff;
+      background: url('@/assets/perceptionImage/mapArrow.png') no-repeat;
+      background-size: contain;
+      background-position: center;
     }
     .select-text{
       width: 100%;
@@ -249,14 +261,14 @@ defineExpose({
 .carmap::after {
   content: '';
   position: absolute;
-  top: -10px;
+  top: -30px;
   left: 0;
   width: 100%;
   height: 100%;
   background: url('@/assets/perceptionImage/mapBack.png') no-repeat;
   background-position: center;
   background-origin: content-box;
-  background-size: 749px;
+  background-size: contain;
   animation: rotate 30s linear infinite;
   z-index: -999;
 }
