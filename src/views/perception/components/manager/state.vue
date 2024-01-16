@@ -75,7 +75,6 @@ onMounted(() => {
     pageSize:5
   }).then((res)=>{
     res.data.records.map((item)=>{
-      console.log(item);
       if(item){
       dataArr.value.push({
         time:getTime(item),
