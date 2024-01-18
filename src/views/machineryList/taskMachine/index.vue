@@ -70,7 +70,7 @@ onMounted(() => {
     Object.assign(pageInfoData, route.query)
     value2.value = new Date();
     const start = new Date();
-    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
     value1.value = start
     pageInfoData.st = formartDate(value1.value)
     pageInfoData.et = formartDate(value2.value)

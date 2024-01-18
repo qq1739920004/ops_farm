@@ -182,12 +182,10 @@
                 </el-row>
 
             </el-form>
-            <el-form ref="formLabelAlignRef" :validate-on-rule-change="false" v-show="activeName == '6'" :rules="rules"
+            <!-- <el-form ref="formLabelAlignRef" :validate-on-rule-change="false" v-show="activeName == '6'" :rules="rules"
                 :inline="true" :label-position="labelPosition" label-width="180px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
-                <!-- <div class="mktitle">
-                    {{$t('work.dualAntennaOneMachine')}}
-                </div> -->
+
                 <el-row>
                     <el-col :span="12" :offset="6">
                         <el-form-item class="item" :label="$t('work.versionType')" prop="name" style="margin-top: 20px;">
@@ -221,8 +219,8 @@
                     <el-button type="danger" :disabled="productList.length >= 1 ? false : true"
                         @click="updateProductListBtn">{{ $t('work.forceUpgrade') }}</el-button>
                 </div>
-            </el-form>
-            <!-- <el-form :validate-on-rule-change="false" ref="formLabelAlignRef" v-show="activeName == '6'" :rules="rules"
+            </el-form> -->
+            <el-form :validate-on-rule-change="false" ref="formLabelAlignRef" v-show="activeName == '6'" :rules="rules"
                 :inline="true" :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
@@ -230,7 +228,7 @@
                         AG502以及AG502_Android的升级功能暂未开放
                     </el-col>
                 </el-row>
-            </el-form> -->
+            </el-form>
 
             <!-- <el-form :validate-on-rule-change="false" v-show="activeName == '7'" :rules="rules" :inline="true"
                 :label-position="labelPosition" label-width="160px" :model="formLabelAlign"
@@ -249,7 +247,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive, computed } from 'vue'
 import { paramDescribeObj, paramDescribeResponseData, paramsParamObj, paramCarParamResponseData, paramcalibParamData, paramAdvanced1ParamData, CalibParamsDataObj, updateInfoObj, paramSourceNodeREsponseData, chaFenObj, GetcarProductpackageResponseData, GetcarProductpackageObj } from '@/api/machineryList/remoteAdjust/type'
-import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, getSourceNode_path, updateCar_API, updateBasicParm_API, updateCalibParam_API, GetcarProductpackage_API, basicParam_API, getAdvanced1Param_API, advanced1ParamUpdate_API, packageUpgradeCar_API } from '@/api/machineryList/remoteAdjust/index'
+import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCarParamUpdate_API, getSourceNode_path, updateCar_API, updateBasicParm_API, updateCalibParam_API, GetcarProductpackage_API, basicParam_API, getAdvanced1Param_API, advanced1ParamUpdate_API } from '@/api/machineryList/remoteAdjust/index'
 import { carNewDetail_API, logOpen_API } from '@/api/machineryList/index'
 import type { TabsPaneContext } from 'element-plus'
 
@@ -349,19 +347,19 @@ const formLabelAlign = reactive({
     pid: '9023',
     filename: 0
 })
-// 在线升级更新数据
-const updateProductList = async () => {
-    try {
-        await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'upgradeWay': 1, 'updateModel': '9' })
-        ElMessage({ type: 'success', message: '修改成功' })
-    }
-    catch {
-        // ElMessage({ type: 'error', message: '修改失败' })
-    }
-}
-const updateProductListBtn = () => {
-    updateProductList()
-}
+// // 在线升级更新数据
+// const updateProductList = async () => {
+//     try {
+//         await packageUpgradeCar_API({ 'installPackageId': productList.value[formLabelAlign.filename].id, 'sn': props.sn, 'upgradeWay': 1, 'updateModel': '9' })
+//         ElMessage({ type: 'success', message: '修改成功' })
+//     }
+//     catch {
+//         // ElMessage({ type: 'error', message: '修改失败' })
+//     }
+// }
+// const updateProductListBtn = () => {
+//     updateProductList()
+// }
 
 const paramDescribeList = ref<paramDescribeObj>({
     paramVersionnum: '',
@@ -414,9 +412,9 @@ const beforeSwitchChange = () => {
     switchStatus.value = true;
     return switchStatus.value;
 }
-const changeRadio2 = () => {
-    getProductList()
-}
+// const changeRadio2 = () => {
+//     getProductList()
+// }
 // 获取车辆参数
 const getCarParams = async (val: string) => {
     paramDescribeList.value.paramType = val
