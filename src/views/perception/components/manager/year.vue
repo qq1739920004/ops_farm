@@ -59,54 +59,54 @@ function numPurify(value:number){
 .box {
     background: url(@/assets/perceptionImage/border_green.png) no-repeat;
     background-size: 100% 100%;
-    margin: 0px 10px 10px 15px;
+    margin: 0px calc(10 / 1920 * 100vw) calc(10 / 937 * 100vh) calc(15 / 1920 * 100vw);
 
     .title {
-        height: 40px;
-        line-height: 27px;
+        height: calc(40 / 937 * 100vh);
+        line-height: calc(27 / 937 * 100vh);
 
         background: linear-gradient(to right, rgba(31, 61, 43, 1), rgba(48, 117, 76, 0));
-        border: 0.8px solid;
+        border: calc(0.8 / 1920 * 100vw) solid;
         border-image: linear-gradient(to right, rgb(63, 255, 140, 0.8), rgba(48, 117, 76, 0)) 1;
         border-left-style: none;
         border-right-style: none;
 
         span {
-            font-size: 20px;
+            font-size: 1.25rem; /* 20px 转换为 rem */
         }
 
         span:first-child {
-            font-size: 30px;
+            font-size: 1.875rem; /* 30px 转换为 rem */
             font-weight: 900;
         }
     }
 
     .charts {
         font-family: 'perceptionFont';
-        height: calc(100% - 80px);
+        height: calc(100% - calc(80 / 937 * 100vh));
         display: flex;
         >div {
-            background-color:  rgba(196, 204, 158, 0.8);
-            flex:1;
-            background:url(@/assets/perceptionImage/year_bg.png) no-repeat 0;
-            background-size:cover;      
-            display: flex;  
-            justify-content: center;  
-            align-items: center; 
+            background-color: rgba(196, 204, 158, 0.8);
+            flex: 1;
+            background: url(@/assets/perceptionImage/year_bg.png) no-repeat 0;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background-position: center;
             background-size: 120%;
-            font-size: 30px;
+            font-size: 1.875rem; /* 30px 转换为 rem */
         }
     }
-.charts_title{
-    height: 30px; 
-    display: flex;
-    justify-content: center;
-    >div{
-        width: 50%;
-        text-align: center;
-        font-size: 18px;
+    .charts_title{
+        height: calc(30 / 937 * 100vh); 
+        display: flex;
+        justify-content: center;
+        >div{
+            width: 50%;
+            text-align: center;
+            font-size: 1.125rem; /* 18px 转换为 rem */
+        }
     }
-}
 }
 </style>

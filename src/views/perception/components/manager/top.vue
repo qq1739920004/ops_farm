@@ -124,35 +124,33 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
 <style scoped lang="scss">
 .top {
   font-family: 'perceptionFont';
-
   box-sizing: border-box;
   display: flex;
   width: 100%;
-  height: 223px;
+  height: calc(223 / 937 * 100vh);
   justify-content: space-between;
 
   .top_left {
     flex: 2.2;
-    height: 223px;
+    height: calc(223 / 937 * 100vh);
 
     .top_tittle {
-      height: 83px;
+      height: calc(83 / 937 * 100vh);
       padding: 0;
       display: flex;
       justify-content: start;
       align-items: center;
 
       img {
-        width: 60px;
-        margin:0 20px 0 15px;
-
+        width: 60px; // 图标大小保持不变
+        margin: 0 calc(20 / 1920 * 100vw) 0 calc(15 / 1920 * 100vw);
       }
 
       h1 {
-        text-shadow: 0px 2px 32px  rgba(153, 255, 194, 0.8);
-        font-size: 40px;
+        text-shadow: 0px calc(2 / 937 * 100vh) calc(32 / 937 * 100vh) rgba(153, 255, 194, 0.8);
+        font-size: 2.5rem; /* 40px 转换为 rem */
         font-weight: 600;
-        letter-spacing: 10px;
+        letter-spacing: calc(10 / 1920 * 100vw);
       }
 
       a {
@@ -162,59 +160,58 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
     }
 
     .top_num {
-      height: 140px;
-      margin-left: 15px;
-      // background-color: rgb(210, 149, 159, 0.2);
+      height: calc(140 / 937 * 100vh);
+      margin-left: calc(15 / 1920 * 100vw);
       display: flex;
       justify-content: start;
-      padding-top: 10px;
+      padding-top: calc(10 / 937 * 100vh);
       >div {
-        height: 140px;
+        height: calc(100 / 937 * 100vh);
         display: flex;
-
+        align-items: center;
         .top-left {
           width: 82px;
           height: 85.5px;
         }
 
         .word {
-          margin-left: 19px;
+          margin-left: calc(19 / 1920 * 100vw);
 
           :first-child {
             margin: 0px;
-            line-height: 60px;
-            font-size: 50px;
+            line-height: calc(60 / 937 * 100vh);
+            font-size: 3.125rem; /* 50px 转换为 rem */
             color: rgba(67, 207, 124, 1);
           }
 
           :last-child {
             margin: 0px;
-            font-size: 16px;
+            font-size: 1rem; /* 16px 转换为 rem */
             font-weight: 600;
             color: rgba(255, 255, 255, 0.9);
           }
         }
 
         .word2 {
-          min-width: 80px;
+          min-width: calc(80 / 1920 * 100vw);
 
           .yellow-text {
             color: #ffc300;
           }
 
-          padding-top: 12px;
+          padding-top: calc(12 / 937 * 100vh);
 
           :first-child {
             margin: 0px;
           }
 
           color: rgba(67, 207, 124, 1);
-          font-size: 36px;
+          font-size: 2.25rem; /* 36px 转换为 rem */
 
           :last-child {
             margin: 0px;
-            margin-top: -8px;
-            font-size: 16px;
+            margin-top: calc(-8 / 937 * 100vh);
+            font-size: 1rem; /* 16px 转换为 rem */
             font-weight: 500;
             color: rgba(255, 255, 255, 0.9);
           }
@@ -224,38 +221,38 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
   }
 
   .top_time {
-    height: 168px;
+    height: calc(168 / 937 * 100vh);
     display: flex;
     flex: 1;
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    font-size: 20px;
+    font-size: 1.25rem; /* 20px 转换为 rem */
 
     span {
-      padding-right: 15px;
+      padding-right: calc(15 / 1920 * 100vw);
     }
 
     .temp {
       .top_time_pic {
         vertical-align: middle;
-        padding-right: 15px;
+        padding-right: calc(15 / 1920 * 100vw);
       }
     }
 
     .time {
       :nth-child(2) {
-        font-size: 34.87px;
+        font-size: 2.179375rem; /* 34.87px 转换为 rem */
       }
     }
   }
 
   .rotate {
     position: absolute;
-    width: 64px;
-    height: 64px;
+    width: 64px; // 图标大小保持不变
+    height: 64px; // 图标大小保持不变
     border-top: 2px solid #40b971;
-    box-shadow: 0px -10px 4px rgba(255, 255, 255, 0.039);
+    box-shadow: 0px calc(-10 / 937 * 100vh) 4px rgba(255, 255, 255, 0.039);
     border-radius: 50%;
     content: "";
     display: block;
@@ -267,13 +264,13 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
     align-items: center;
 
     .top-rigth {
-      width: 64px !important;
-      height: 64px !important;
+      width: 64px !important; // 图标大小保持不变
+      height: 64px !important; // 图标大小保持不变
     }
 
     .rotate-content {
-      width: 24px;
-      height: 24px !important;
+      width: 24px; // 图标大小保持不变
+      height: 24px !important; // 图标大小保持不变
       position: absolute;
       left: 50% !important;
       top: 50% !important;
@@ -281,8 +278,8 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
     }
 
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: calc(100 / 1920 * 100vw);
+    height: calc(100 / 937 * 100vh);
 
     &::after {
       @extend .rotate;
@@ -291,7 +288,6 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
 
     &::before {
       @extend .rotate;
-      //反着运行动画
       animation: rotate-danc 3s linear infinite reverse;
     }
   }
@@ -300,8 +296,8 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
     @extend .rotate-dance;
 
     .rotate-content {
-      width: 22px;
-      height: 20px !important;
+      width: 22px; // 图标大小保持不变
+      height: 20px !important; // 图标大小保持不变
     }
 
     &::after {
@@ -323,4 +319,5 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
     }
   }
 }
+
 </style>

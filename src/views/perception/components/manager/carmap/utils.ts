@@ -12,13 +12,12 @@ function purifyBaiduData(AMap: any, data: any, _cityName: string) {
   let poly = wktToMask(AMap, data.districts[0].polyline);
   if (poly.length) {
     if (poly[0].length > 1) {
-      let tempPoly: any = [];
       poly[0].forEach((item: any) => {
-        tempPoly.push(...item);
+        mask.push([item])
+
       });
-      mask = [...mask, [tempPoly]];
     } else {
-      mask = [...mask, ...poly];
+      mask.push([poly[0][0]])
     }
     maskPoly = [...maskPoly, ...poly];
   }
