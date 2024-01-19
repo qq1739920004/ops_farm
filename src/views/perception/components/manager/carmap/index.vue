@@ -3,11 +3,11 @@
     <div class="map-bar-info">
       <div class='map-info'>
         <div class="yellow"></div>
-        <span>{{$t('perception.total')}}</span>
+        <span>{{selectOption==1?$t('perception.total'):$t('messages.Standby')}}</span>
       </div>
       <div class='map-info'>
         <div class="gree"></div>
-        <span>{{$t('perception.tonline')}}</span>
+        <span>{{selectOption==1?$t('perception.tonline'):$t('messages.InOperation')}}</span>
       </div>
 
     </div>
@@ -244,6 +244,7 @@ defineExpose({
 
   .map-bar-info {
     position: absolute;
+  z-index: 999;
     right: calc(10 / 1920 * 100vw);
     bottom: calc(30 / 937 * 100vh);
     width: calc(88 / 1920 * 100vw);

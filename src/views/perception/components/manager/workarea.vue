@@ -286,8 +286,8 @@ onUnmounted(() => {
       height: 100%;
     }
     .charts-null{
-      filter: grayscale(100%);
-      background-color: #0211093c;
+      filter: grayscale(100%) brightness(60%);
+      position: relative;
     }
     .charts-null::after{
       content: var(--nullText);
