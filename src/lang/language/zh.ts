@@ -297,6 +297,7 @@ const zh = {
     todayWorkingAreaMu:"今日作业面积/亩",
     workingAreaMu:"各车辆今日作业面积/亩",
     WanMu:"今年作业面积/万亩",
+    nullDeviceArea:"今日暂无车辆作业",
     altogether:"总览",
     detail:"详情",
     totalVehicle: "农机总数",

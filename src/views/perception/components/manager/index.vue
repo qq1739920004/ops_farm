@@ -84,7 +84,7 @@ const provinceCars = ref<MonitorObj["provinceCars"]>();
 const getMonitor = async () => {
   const res = await getMonitorAPI();
   monitorData.value = res.data;
-  carAreas.value = res.data.carAreas.filter(item=>item.carArea)
+  carAreas.value = res.data.carAreas
   todayArea.value = res.data.todayArea;
   totalArea.value = res.data.totalArea;
   typeCounts.value = res.data.typeCounts;
@@ -180,7 +180,7 @@ function handleSocketData(data: any) {
       provinceCars.value = data.data.provinceCars;
       stateObj.value = data.data.wsNowCar;
   } else if (data.type == "monitorArea") {
-      carAreas.value = data.data.carAreas;
+      carAreas.value = data.data.carAreas
       todayArea.value = data.data.todayArea;
       totalArea.value = data.data.totalArea;
   // }else if (data.type == "notification") {

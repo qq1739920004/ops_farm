@@ -298,6 +298,7 @@ const en = {
     todayWorkingArea: "Today working area",
     totalVehicle: "Total Vehicle",
     workingAreaMu: "Vehicles working today/acre",
+    nullDeviceArea:"No vehicles operating today",
     todayWorkingAreaMu: "Today working/acre",
     WanMu: "Year working/10,000 acre",
     soldVehicle:"Farm machinery sold",
