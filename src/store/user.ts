@@ -10,14 +10,26 @@ const useUserStore = defineStore("use", () => {
     }
 
     let Authorization = useStorage('Authorization', locationHrefAuthorization)
+    let refresh_token = useStorage('refresh_token', '')
+
+    function updateAuthorization(arg: string) {
+        Authorization.value =arg
+    }
+    function updateRefreshToken(arg: string) {
+        refresh_token.value = arg
+    }
 
     function clearUserInfo() {
         Authorization.value = ''
         localStorage.removeItem("userInfo")
     }
+    
     return {
         userInfo,
         Authorization,
+        refresh_token,
+        updateAuthorization,
+        updateRefreshToken,
         clearUserInfo
     }
 })

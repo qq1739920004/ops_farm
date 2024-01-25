@@ -33,6 +33,10 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     loadingInstance.close()
+    if (response.headers["token-expire"]) {
+      tokenRenewal();
+    }
+
     let { code, message } = response.data;
     if (code === 0 || code === 200 || code === 'ok') {
       return response.data;
@@ -62,6 +66,28 @@ service.interceptors.response.use(
     return Promise.reject(error.message);
   }
 );
+
+let tokenRenewalFlag = true;
+async function tokenRenewal() {
+  if (!tokenRenewalFlag) return;
+  tokenRenewalFlag = false;
+  let data = {
+    grant_type: "refresh_token",
+    client_id: "client",
+    client_secret: 123123,
+    scope: "all",
+    refresh_token: userStore.refresh_token,
+  };
+  const res = await service({
+    url: "/auth/oauth/token",
+    method: "post",
+    data,
+  });
+
+  tokenRenewalFlag = true;
+  userStore.updateAuthorization(`bearer ${res.data.access_token}`)
+  userStore.updateRefreshToken(`${res.data.refresh_token}`)
+}
 
 declare module "axios" {
   interface AxiosResponse<T = any> {
