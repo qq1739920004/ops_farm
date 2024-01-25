@@ -206,14 +206,13 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .box {
-
   background: url(@/assets/perceptionImage/border_green.png) no-repeat;
   background-size: 100% 100%;
-  margin: 0px 10px 30px 15px;
+  margin: 0px calc(10 / 1920 * 100vw) calc(30 / 937 * 100vh) calc(15 / 1920 * 100vw);
 
   .title {
-    height: 40px;
-    line-height: 27px;
+    height: calc(40 / 937 * 100vh);
+    line-height: calc(27 / 937 * 100vh);
 
     background: linear-gradient(
       to right,
@@ -231,17 +230,17 @@ onUnmounted(() => {
     border-right-style: none;
 
     span {
-      font-size: 20px;
+      font-size: 1.25rem; /* 20px 转换为 rem */
     }
 
     span:first-child {
-      font-size: 30px;
+      font-size: 1.875rem; /* 30px 转换为 rem */
       font-weight: 900;
     }
   }
 
   .charts {
-    height: calc(100% - 40px);
+    height: calc(100% - calc(40 / 937 * 100vh));
   }
 }
 </style>

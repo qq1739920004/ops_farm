@@ -72,44 +72,44 @@ weatherService();
 
 <style scoped lang="scss">
 .top_time {
-  height: 168px;
-  padding-right: 25px;
-  margin-top: 10px;
-  font-size: 20px;
+  height: calc(168 / 937 * 100vh);
+  padding-right: calc(25 / 1920 * 100vw);
+  margin-top: calc(10 / 1920 * 100vw);
+  font-size: 1.25rem;
   span {
-    padding-right: 15px;
+    padding-right: calc(15 / 1920 * 100vw);
   }
 
   .temp {
     .top_time_pic {
-      width: 41px;
+      width: calc(41 / 1920 * 100vw);
       vertical-align: middle;
-      padding-right: 15px;
+      padding-right: calc(15 / 1920 * 100vw);
     }
   }
   .manager-name {
     text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
-    font-size: 24px;
+    font-size: 1.5rem;
     letter-spacing: 2px;
-    line-height: 34.75px;
+    line-height: 2.171875rem;
     color: rgba(255, 255, 255, 1);
-    margin-bottom: 22px;
+    margin-bottom: calc(22 / 937 * 100vh);
   }
 
   .time {
     color: #64cc77;
     :nth-child(2) {
-      font-size: 34.87px;
+      font-size: 2.179375rem;
     }
   }
   .logo-text {
-    font-size: 22px;
+    font-size: 1.375rem;
     display: flex;
     align-items: center;
     .zoom {
-      width: 24px;
-height: 24px;
-      margin-right: 16px;
+      width: calc(24 / 1920 * 100vw);
+      height: calc(24 / 937 * 100vh);
+      margin-right: calc(16 / 1920 * 100vw);
       cursor: pointer;
     }
   }

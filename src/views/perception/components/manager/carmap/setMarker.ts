@@ -9,17 +9,20 @@ let height=ref(280);
 let fontSize=ref(15);
 let marginTop=ref(140);
 let numCurent=ref(0)
-const deviceMarkers=ref<Map<HTMLElement,Object>>(new Map())//柱状图数组
+const deviceMarkers=ref<Map<any,Object>>(new Map())//柱状图数组
 let chartList=shallowRef<any>([]);
 let chartContainerList=ref<any>([]);
 let optionsList=ref<any>([]);
 let isUpdata=ref(false);
 function updateChart(dataList:MonitorObj["provinceCars"]){
   if(!isUpdata.value) return
+  dataList.filter((item)=>{
+    return item.cityName
+  })
   optionsList.value.forEach((item:any,index:number)=>{
-    item.xAxis.data[0]=dataList[index+1].cityName
-    item.series[0].data[0]=dataList[index+1].onlineNum
-    item.series[1].data[0]=dataList[index+1].totalNum-dataList[index+1].onlineNum
+    item.xAxis.data[0]=dataList[index].cityName
+    item.series[0].data[0]=dataList[index].onlineNum
+    item.series[1].data[0]=dataList[index].totalNum-dataList[index].onlineNum
     chartList.value[index].setOption(item,true)
   })
 }
@@ -36,6 +39,9 @@ function BarMarkerCenter(map:any){
   })
 }
 function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:number,t:any){
+  dataList.filter((item)=>{
+    return item.cityName
+  })
   for(let i=0;i<length;i++){
         const markerContent = document.createElement('div');
         const chartContainer = document.createElement('div');
@@ -48,7 +54,6 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
             content: markerContent,
             map: map.value
         });
-    deviceMarkers.value.set(chartContainer,marker)
 
         // 使用ECharts初始化柱状图容器并设置数据
         const chart = echarts.init(chartContainer);
@@ -72,6 +77,7 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
               container.style.opacity = '1';
           });
       });
+
         const option = {
           tooltip: {
             show: true, // 显示提示框,
@@ -214,6 +220,8 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
 
       optionsList.value.push(option);
       chart.setOption(option);
+    deviceMarkers.value.set(chart,marker)
+
       }
       isUpdata.value=true;
 }

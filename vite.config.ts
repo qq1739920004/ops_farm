@@ -51,7 +51,7 @@ export default defineConfig({
     },
   },
   server: {
-    host: "127.0.0.1",
+    host: "0.0.0.0",
     port: 8088,
     open: true, // 运行是否自动打开浏览器
     proxy: {

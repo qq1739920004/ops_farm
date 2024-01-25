@@ -13,10 +13,10 @@
     </div>
     <div class="select-box">
             <div @click="selectChange(1)" :class="['select-text',selectOption==1?'t-shadow':'']">
-              总览
+              {{$t('perception.altogether')}}
             </div>
             <div @click="selectChange(2)" :class="['select-text',selectOption==2?'t-shadow':'']">
-              详情
+              {{$t('perception.detail')}}
             </div>
           </div>
     <div id="container"></div>
@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 // 导入Vue相关的库
-import { onMounted, ref ,watch,shallowRef,} from "vue";
+import { onMounted,onUnmounted, ref ,watch,shallowRef,} from "vue";
 // 导入类型定义
 import type { MonitorObj } from "@/api/perception/type";
 import { getGeojson } from '@/api/perception/index.ts';
@@ -37,7 +37,7 @@ import { setMarker,updateChart,clearBarMarker,BarMarkerCenter } from "./setMarke
 import { mapEvent } from './mapEvent';
 import type { onlineMaker } from "@/api/perception/type";
 import { useI18n } from "vue-i18n";
-import {starDeviceLocation,updateDeviceMarker,clearDeviceMarker} from './deviceLocation.ts';
+import {starDeviceLocation,updateDeviceMarker,clearDeviceMarker,isOne} from './deviceLocation.ts';
 const { t } = useI18n();
 interface Props {
   provinceCars: MonitorObj["provinceCars"];
@@ -68,6 +68,7 @@ let dataList = props.provinceCars;
 let polylines: any = [];
 let mask: any = [];
 let maskPoly: any = [];
+let watchOne=ref(false)
 //开始画出来
 function startDraw(AMap: any) {
   map.value = new AMap.Map("container", {
@@ -101,6 +102,9 @@ function selectChange(value:number){
     barShow()
   }else{
     deviceShow()
+    if(watchOne.value) return
+    watchOne.value=true
+    startDeviceWatch()
   }
 }
 //总览选项
@@ -153,15 +157,20 @@ onMounted(() => {
   cityArr.value = codeArr;
   initMap(codeArr);
 });
+onUnmounted(()=>{
+  isOne.value=false
+})
 watch(() =>props.provinceCars, () => {
   updateChart(props.provinceCars)
 }, { deep: true })
-
-watch(() =>props.markerDataHandle, () => {
+function startDeviceWatch(){
+  watch(() =>props.markerDataHandle, () => {
   if(props.markerDataHandle){
-    updateDeviceMarker(props.markerDataHandle)
+    updateDeviceMarker(props.markerDataHandle,selectOption.value)
   }
 })
+}
+
 defineExpose({
   selectChange,
   barShow,
@@ -173,40 +182,45 @@ defineExpose({
 
 .select-box{
   z-index: 999;
-  width: 106px;
-  height:80px;
-  background-image:url('@/assets/perceptionImage/mapSelectBg.png');
+  width: calc(126 / 1920 * 100vw);
+  height: calc(80 / 937 * 100vh);
+  background-image: url('@/assets/perceptionImage/mapSelectBg.png');
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-    left: 10px;
-    bottom: 45px;
-    .t-shadow{
-      text-shadow: -6px 0px 10px #fff,6px 0px 10px #fff;
-    }
-    .select-text{
-      width: 100%;
-      cursor: pointer;
-      flex:1;
-      font-size: 18px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-    }
+  left: calc(10 / 1920 * 100vw);
+  bottom: calc(30 / 937 * 100vh);
+  .t-shadow{
+    text-shadow: calc(-6 / 1920 * 100vw) 0px calc(15 / 1920 * 100vw) #fff, calc(6 / 1920 * 100vw) 0px calc(15 / 1920 * 100vw) #fff;
+    background: url('@/assets/perceptionImage/mapArrow.png') no-repeat;
+    background-size:  100% 100%;
+    background-position: center;
+  }
+  .select-text{
+    width: 100%;
+    cursor: pointer;
+    flex: 1;
+    font-size: 1rem; // 18px 转换为 rem
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
 }
+
 .carmap {
+  overflow: hidden;
   position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-
+  z-index: 9;
   #container {
     background-color: transparent;
     background: none;
@@ -221,24 +235,22 @@ defineExpose({
 
   /* 隐藏地图的版权信息 */
   :deep(#container) {
-
     .amap-scale,
     .amap-copyright,
     .amap-logo {
       display: none !important;
-
     }
   }
 
   .map-bar-info {
     position: absolute;
-    right: 10px;
-    bottom: 45px;
-    width: 78px;
-    padding:6px 0px 6px 10px;
-    height: 66px;
+    right: calc(10 / 1920 * 100vw);
+    bottom: calc(30 / 937 * 100vh);
+    width: calc(88 / 1920 * 100vw);
+    padding: calc(6 / 937 * 100vh) 0 calc(6 / 937 * 100vh) calc(10 / 1920 * 100vw);
+    height: calc(66 / 937 * 100vh);
     background: url('@/assets/perceptionImage/mapBarInfoNew.png') no-repeat;
-    background-size: contain;
+    background-size: 100% 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -249,23 +261,22 @@ defineExpose({
 .carmap::after {
   content: '';
   position: absolute;
-  top: -10px;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 93%;
   background: url('@/assets/perceptionImage/mapBack.png') no-repeat;
   background-position: center;
   background-origin: content-box;
-  background-size: 749px;
+  background-size: contain;
   animation: rotate 30s linear infinite;
-  z-index: -999;
+  z-index: -9;
 }
 
 @keyframes rotate {
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
   }
@@ -273,25 +284,22 @@ defineExpose({
 
 .map-info {
   z-index: 999;
-  font-size: 14px;
+  font-size: 0.875rem; // 14px 转换为 rem
   display: flex;
   width: 100%;
-  justify-content:start;
+  justify-content: start;
   align-items: center;
-
   >span {
-    padding-left: 5px;
+    padding-left: calc(5 / 1920 * 100vw);
   }
-
-  .gree,
-  .yellow {
-    width: 16px;
-height: 16px;
+  .gree, .yellow {
+    width: calc(16 / 1920 * 100vw); // 图标背景大小保持不变
+    height: calc(16 / 937 * 100vh); // 图标背景大小保持不变
     background-color: #ffeb3b;
   }
-
   .gree {
     background-color: #40b971;
   }
 }
+
 </style>
