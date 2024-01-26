@@ -182,7 +182,7 @@ defineExpose({
 
 .select-box{
   z-index: 999;
-  width: calc(126 / 1920 * 100vw);
+  width: calc(136 / 1920 * 100vw);
   height: calc(80 / 937 * 100vh);
   background-image: url('@/assets/perceptionImage/mapSelectBg.png');
   background-repeat: no-repeat;
@@ -244,14 +244,15 @@ defineExpose({
 
   .map-bar-info {
     position: absolute;
-  z-index: 999;
+    z-index: 999;
     right: calc(10 / 1920 * 100vw);
     bottom: calc(30 / 937 * 100vh);
-    width: calc(88 / 1920 * 100vw);
-    padding: calc(6 / 937 * 100vh) 0 calc(6 / 937 * 100vh) calc(10 / 1920 * 100vw);
+    width: calc(136 / 1920 * 100vw);
+    padding: calc(6 / 937 * 100vh) 0 calc(6 / 937 * 100vh) calc(20 / 1920 * 100vw);
     height: calc(66 / 937 * 100vh);
     background: url('@/assets/perceptionImage/mapBarInfoNew.png') no-repeat;
     background-size: 100% 100%;
+    font-size: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
