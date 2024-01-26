@@ -554,7 +554,7 @@ function clearMapRanging() {
     rangingArray.length = 0;
   }
   pickupMode = false;
-  pickedPoints = [];
+  pickedPoints.length = 0
   try {
     // @ts-ignore
     document.getElementById("_map").style.cursor = "grab";
@@ -583,7 +583,7 @@ function initRanging() {
           .bindPopup(`相距:${distance.toFixed(3)}米`)
           .openPopup(); //划线
         rangingArray.push(polyline);
-        map.fitBounds(pickedPoints); //适应视野
+          map.fitBounds(pickedPoints); //适应视野
         //恢复状态
         pickupMode = false;
         pickedPoints = [];
