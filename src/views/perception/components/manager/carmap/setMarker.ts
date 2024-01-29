@@ -170,7 +170,7 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
                   fontWeight: 800,
                   fontSize:16,
                   textShadow: 'black',
-                  position: 'top',
+                  position: 'inside',//设置显示位置,top是显示在上面，还有bottom、left、right,显示在圆柱体内部是inside
                   formatter: function(params:EChartsParams) {
                     // 如果在线数为0，则不显示
                     if (params.value === 0) {

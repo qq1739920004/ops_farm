@@ -25,7 +25,7 @@
     <el-table-column :label="$t('devicelist.location')" align="center">
       <template #="{ row }">
         <div style="color: rgba(130, 130, 130, 1)">
-          {{ row.addrcode.substring(0, 4) }}
+          {{ cityCodeList[row.addrcode] || cityCodeList[row.addrcode.substring(0, 4)+'00'] }}
         </div>
       </template>
     </el-table-column>

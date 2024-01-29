@@ -8,7 +8,7 @@
     </div>
 
     <div class="state" :style="{
-      '--lineHeight':(dataArr.length-1)*70+'px'
+      '--lineHeight':`calc((${(dataArr.length-1)*70} / 937 * 100vh)`
     }">
       <img class="state-line" src="@/assets/perceptionImage/stateLine.png" alt="">
     <TransitionGroup name="list" tag="ul">
@@ -81,7 +81,6 @@ onMounted(() => {
         ...item
       })
     }
-
     })
   })
 watch(()=>props.stateObj,(newValue)=>{
@@ -109,7 +108,7 @@ watch(()=>props.stateObj,(newValue)=>{
 
 </script>
 <style lang="scss" scoped>
-.list-move, /* 对移动中的元素应用的过渡 */
+.list-move,
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;
@@ -118,26 +117,28 @@ watch(()=>props.stateObj,(newValue)=>{
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateX(calc(30 / 1920 * 100vw));
 }
+
 .list-leave-active {
   position: absolute;
 }
+
 .box {
   background: url(@/assets/perceptionImage/border_green.png) no-repeat;
   background-size: 100% 100%;
-  margin: 0px 10px 10px 15px;
+  margin: 0px calc(10 / 1920 * 100vw) calc(10 / 937 * 100vh) calc(15 / 1920 * 100vw);
 
   .title {
-    height: 40px;
-    line-height: 27px;
+    height: calc(40 / 937 * 100vh);
+    line-height: calc(27 / 937 * 100vh);
 
     background: linear-gradient(
       to right,
       rgba(31, 61, 43, 1),
       rgba(48, 117, 76, 0)
     );
-    border: 0.8px solcarId;
+    border: calc(0.8 / 1920 * 100vw) solid;
     border-image: linear-gradient(
         to right,
         rgb(63, 255, 140, 0.8),
@@ -148,106 +149,96 @@ watch(()=>props.stateObj,(newValue)=>{
     border-right-style: none;
 
     span {
-      font-size: 20px;
+      font-size: 1.25rem; /* 20px 转换为 rem */
     }
 
     span:first-child {
-      font-size: 30px;
+      font-size: 1.875rem; /* 30px 转换为 rem */
       font-weight: 900;
     }
   }
 
   .state {
     position: relative;
-    .state-line{
+    .state-line {
       position: absolute;
       height: var(--lineHeight);
       width: 1px;
       transition: all 1s;
-      left: 14px;
-      top: 48px;
+      left: calc(14 / 1920 * 100vw);
+      top: calc(48 / 937 * 100vh);
       z-index: -9;
       opacity: 0.6;
     }
-    height: calc(100% - 40px);
+    height: calc(100% - calc(40 / 937 * 100vh));
     overflow: auto;
-    //影藏滚动条
     &::-webkit-scrollbar {
       display: none;
     }
     -ms-overflow-style: scrollbar;
     ul > li {
-      margin-top: 10px;
-      padding-top: 10px;
-
-      height: 60px;
-      font-size: 12px;
+      margin-top: calc(10 / 937 * 100vh);
+      padding-top: calc(10 / 937 * 100vh);
+      height: calc(60 / 937 * 100vh);
+      font-size: 0.75rem; /* 12px 转换为 rem */
     }
 
     .state_time {
       display: flex;
       justify-content: space-between;
-      padding-left: 40px;
-      padding-right: 35px;
-
+      padding-left: calc(40 / 1920 * 100vw);
+      padding-right: calc(35 / 1920 * 100vw);
     }
 
     .state_main {
-      padding-left: 5px;
-
-      // height: 40px;
-      height: calc(100% - 20px);
+      padding-left: calc(5 / 1920 * 100vw);
+      height: calc(100% - calc(20 / 937 * 100vh));
       display: flex;
 
       .circle-out {
-        font-size:16px ;
-        padding-left: 5px;
+        font-size:1rem; /* 16px 转换为 rem */
+        padding-left: calc(5 / 1920 * 100vw);
         flex: 1;
         color: rgb(243, 19, 19);
       }
-      .circle-login{
+      .circle-login {
         @extend .circle-out;
         color: rgb(103, 194, 58);
       }
 
       .state_bar {
-        .state-tips{
+        .state-tips {
           position: absolute;
-          right: 26px;
+          right: calc(26 / 1920 * 100vw);
           top: -1px;
-          img{
-            width: 45px;
-            height: 30px;
+          img {
+            width: 45px; // 图标背景大小保持不变
+            height: 30px; // 图标背景大小保持不变
           }
-          
-          
         }
         position: relative;
-        background-size: 100% 100%;
+        background-size: 100% 100%; // 背景大小保持不变
         flex: 20;
-        line-height: 30px;
-        padding: 0 15px;
+        line-height: calc(30 / 937 * 100vh);
+        padding: 0 calc(15 / 1920 * 100vw);
         span:first-child {
           position: absolute;
-          left: 20px;
+          left: calc(20 / 1920 * 100vw);
         }
 
         span:nth-child(2) {
           position: absolute;
-          right: 80px;
+          right: calc(80 / 1920 * 100vw);
         }
-
-     
       }
-      .state_bar_login{
-        background: url(@/assets/perceptionImage/rectangle_green.png) no-repeat;
-
+      .state_bar_login {
+        background: url(@/assets/perceptionImage/rectangle_green.png) no-repeat; // 背景大小保持不变
       }
-      .state_bar_out{
-        background: url(@/assets/perceptionImage/rectangle_red.png) no-repeat;
-
+      .state_bar_out {
+        background: url(@/assets/perceptionImage/rectangle_red.png) no-repeat; // 背景大小保持不变
       }
     }
   }
 }
+
 </style>
