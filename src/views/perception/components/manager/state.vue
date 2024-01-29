@@ -31,10 +31,10 @@
       <span>{{ nameOut(item.name||item.position||'未知')  }}</span>
 
       </el-tooltip>
-              <span class="state-tips">
+              <div class="state-tips">
                   <img v-if="!item.onlineTcp" src="@/assets/perceptionImage/stateOut.png" alt="">
                   <img v-else src="@/assets/perceptionImage/stateIn.png" alt="">
-                </span>
+              </div>
             </div>
           </div>
         </li>
@@ -207,10 +207,13 @@ watch(()=>props.stateObj,(newValue)=>{
       }
 
       .state_bar {
+        display: flex;
+        align-items: center;
         .state-tips {
           position: absolute;
           right: calc(26 / 1920 * 100vw);
-          top: -1px;
+          display: flex;
+          align-items: center;
           img {
             width: 45px; // 图标背景大小保持不变
             height: 30px; // 图标背景大小保持不变
@@ -232,10 +235,12 @@ watch(()=>props.stateObj,(newValue)=>{
         }
       }
       .state_bar_login {
-        background: url(@/assets/perceptionImage/rectangle_green.png) no-repeat; // 背景大小保持不变
+        background: url(@/assets/perceptionImage/rectangle_green.png) no-repeat; 
+        background-size: 100% 100%;
       }
       .state_bar_out {
-        background: url(@/assets/perceptionImage/rectangle_red.png) no-repeat; // 背景大小保持不变
+        background: url(@/assets/perceptionImage/rectangle_red.png) no-repeat; 
+        background-size: 100% 100%;
       }
     }
   }
