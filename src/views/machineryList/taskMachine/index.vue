@@ -229,7 +229,7 @@ const saveMarker = (markerObj: any) => {
 const getSingleCarTrick = async () => {
     loading.value = true
     removeMarker()
-    const res: singleCarTrackResponseData = await getSingleCarTrick_API(pageInfoData)
+    const res: singleCarTrackResponseData = await getSingleCarTrick_API(pageInfoData) 
     if (!res.data.length || res.data === null) {
         loading.value = false
         ElMessage.warning(`${route.query.sn}暂无作业数据,请选择其他时间！`);

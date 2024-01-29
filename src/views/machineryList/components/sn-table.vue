@@ -25,7 +25,7 @@
     <el-table-column :label="$t('devicelist.location')" align="center">
       <template #="{ row }">
         <div style="color: rgba(130, 130, 130, 1)">
-          {{ cityCodeList[row.addrcode] }}
+          {{ row.addrcode.substring(0, 4) }}
         </div>
       </template>
     </el-table-column>
@@ -152,7 +152,7 @@
     <el-table-column :label="$t('devicelist.operation')" width="375" align="center">
       <template #="{ row }">
         <el-button :disabled="row.onlineTcp === 1 ? false : true" v-auth="476" style="width: 85px" type="primary" text
-          @click="gotoRegister(row.id, row.sn, row.deviceId)">{{$t('devicelist.swRegistration')  }}</el-button>
+          @click="gotoRegister(row.id, row.sn, row.deviceId)">{{ $t('devicelist.swRegistration') }}</el-button>
         <el-tooltip style="margin-right: 6px" :disabled="row.openRemote
           ? true
           : false
@@ -167,12 +167,13 @@
               row.sn,
               row.name
             )
-            ">{{$t('devicelist.remoteMgt')}}</el-button>
+            ">{{ $t('devicelist.remoteMgt') }}</el-button>
         </el-tooltip>
         <!-- <el-button v-auth="531" style="width: 62px;margin-right: 6px;" type="primary" text
                     @click="toFileList(row)">文件存储</el-button> -->
 
-        <el-button v-auth="503" style="width: 75px;" type="primary" text @click="gotoMap(row.sn, row.npn)">{{$t('devicelist.historyTrack')}}</el-button>
+        <el-button v-auth="503" style="width: 75px;" type="primary" text @click="gotoMap(row.sn, row.npn)">{{
+          $t('devicelist.historyTrack') }}</el-button>
         <el-button v-auth="458" style="width: 40px" type="primary" text @click="
           gotoMachineDetail(
             row.id,
@@ -182,7 +183,7 @@
             row.satelliteDate?.split(' ')[0],
             row.warrantyDate?.split(' ')[0]
           )
-          ">{{$t('devicelist.details')}}</el-button>
+          ">{{ $t('devicelist.details') }}</el-button>
       </template>
     </el-table-column>
   </el-table>
