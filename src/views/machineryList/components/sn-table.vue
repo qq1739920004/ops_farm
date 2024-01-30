@@ -25,7 +25,8 @@
     <el-table-column :label="$t('devicelist.location')" align="center">
       <template #="{ row }">
         <div style="color: rgba(130, 130, 130, 1)">
-          {{ cityCodeList[row.addrcode] || cityCodeList[row.addrcode.substring(0, 4)+'00'] }}
+          {{ cityCodeList[row.addrcode] || cityCodeList[row.addrcode.substring(0, 4) + '00']
+            || cityCodeList[row.addrcode.substring(0, 2) + '0000'] }}
         </div>
       </template>
     </el-table-column>
@@ -206,7 +207,7 @@ import MachineDetailDia from "./machineDetailDia.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
 import RegisterDia from "./registerDia.vue";
 import { useRouter } from "vue-router"
-import { cityCodeList } from './citycode'
+import { cityCodeList } from './citycode2'
 
 
 const router = useRouter();
