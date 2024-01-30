@@ -10,7 +10,7 @@
                 </div>
                 <div class="search_area">
                     {{ $t('work.softwareVersion') }}：
-                    <el-select v-model="softVersion" class="m-2" placeholder="Select" @change="getSnList">
+                    <el-select filterable  v-model="softVersion" class="m-2" placeholder="Select" @change="getSnList">
                         <el-option v-for="(item, index) in softList" :key="index" :label="item" :value="item"
                             size="small" />
                     </el-select>
