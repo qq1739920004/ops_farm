@@ -21,8 +21,12 @@ function updateChart(dataList:MonitorObj["provinceCars"]){
   })
   optionsList.value.forEach((item:any,index:number)=>{
     item.xAxis.data[0]=dataList[index].cityName
+    //在线数
     item.series[0].data[0]=dataList[index].onlineNum
+    //离线数
     item.series[1].data[0]=dataList[index].totalNum-dataList[index].onlineNum
+    //总数
+    item.series[2].data[0]=dataList[index].totalNum
     chartList.value[index].setOption(item,true)
   })
 }
