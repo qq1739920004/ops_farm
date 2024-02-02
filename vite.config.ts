@@ -9,7 +9,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import topLevelAwait from 'vite-plugin-top-level-await'
 
 const baiduUrl = `https://api.map.baidu.com`;
-const nogateway = `http://140.207.166.210:9030`;
+const nogateway = `https://cloud.sinognss.com/gateway`;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -70,8 +70,8 @@ export default defineConfig({
       '/dev-api': {
         // target: "http://127.0.0.1:4523/m1/2885822-0-default",
         // target: 'http://140.207.166.210:9030',
-        target: 'http://140.207.166.210:9030/gateway',
-         //target: 'https://cloud.sinognss.com/gateway',
+        //target: 'http://140.207.166.210:9030/gateway',
+         target: 'https://cloud.sinognss.com/gateway',
         //target: 'http://140.207.166.210:9030/gateway/farm',
         changeOrigin: true,
         rewrite: (path) =>
@@ -103,7 +103,7 @@ export default defineConfig({
         rewrite: (path) => `${path.replace(/^\/api-baidu/, '')}`
       },
       '/no-gateway': {
-        target: nogateway,
+        target:'https://cloud.sinognss.com',
         changeOrigin: true,
         rewrite: (path) => `${path.replace(/^\/no-gateway/, '')}`
       }

@@ -6,7 +6,7 @@
             <div class="content">
                 <el-form style="width: 100%" ref="formRef" label-width="120px">
                     <el-form-item :label="$t('work.dealer') + ':'">
-                        <el-select v-model="uploadData.id" class="m-2" :placeholder="$t('messages.Pleasedistributor')">
+                        <el-select v-model="uploadData.id" class="m-2" :placeholder="$t('messages.Pleasedistributor')" filterable>
                             <el-option v-for="item in carDealerList" :label="item.name" :value="item.id"
                                 :key="item.id"></el-option>
                         </el-select>

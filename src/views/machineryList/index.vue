@@ -21,7 +21,7 @@
         <el-button style="margin-right: 20px" type="primary" @click="gotoInput">{{ $t('devicelist.inputDealerDevice')
         }}</el-button>
         <el-button-group class="button_group2">
-          <el-button icon="Expand" :class="{ tab_active: tableShow }" @click="switchTabShow(true)" />
+          <el-button icon="Expand" :class="{ tab_active: tableShow }" @click="switchTabShow(true)" /> 
           <el-button icon="menu" :class="{ tab_active: !tableShow }" @click="switchTabShow(false)" />
         </el-button-group>
       </div>

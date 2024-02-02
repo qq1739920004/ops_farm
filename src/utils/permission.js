@@ -74,6 +74,7 @@ function formatRoute(menuPermissions) {
 
   addRouteList.forEach((item) => {
     router.addRoute(item);
+    
   });
 
   router.options.routes.push(...addRouteList);

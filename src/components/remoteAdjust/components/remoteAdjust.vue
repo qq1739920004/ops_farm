@@ -3,8 +3,8 @@
     <el-dialog style="border-radius: 8px;" @open="openRemoteAdjust" @close="closeRemoteAdjust" v-model="dialogVisible"
         :title="$t('work.remoteManagement')" width="1012px" height="596px" center>
         <div class="top">
-            <span style="margin-right: 20px;">{{$t('work.vehicleName')}}：{{ props.name || '/' }}</span>
-            <span>{{$t('work.vehicleType')}}：{{ props.terminalType }}</span>
+            <span style="margin-right: 20px;">{{ $t('work.vehicleName') }}：{{ props.name || '/' }}</span>
+            <span>{{ $t('work.vehicleType') }}：{{ props.terminalType }}</span>
         </div>
         <div class="menuArea">
             <el-tabs stretch v-model="activeName" class="demo-tabs" @tab-click="handleClick">
@@ -27,11 +27,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                      {{$t('work.noData')}}
+                        {{ $t('work.noData') }}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button v-if="carParamsData" type="primary" @click="updateCarParams">{{$t('work.submit')}}</el-button>
+                    <el-button v-if="carParamsData" type="primary" @click="updateCarParams">{{ $t('work.submit')
+                    }}</el-button>
                 </div>
             </el-form>
             <el-form ref="calibFormRef" :validate-on-rule-change="false" v-show="activeIndex == '2'"
@@ -44,11 +45,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                      {{$t('work.noData')}}
+                        {{ $t('work.noData') }}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" v-if="CalibTitleData" @click="updateCalibParams">{{$t('work.submit')}}</el-button>
+                    <el-button type="primary" v-if="CalibTitleData" @click="updateCalibParams">{{ $t('work.submit')
+                    }}</el-button>
                 </div>
             </el-form>
             <el-form ref="pidFormRef" :validate-on-rule-change="false" v-show="activeIndex == '3'" :rules="pibParamRules"
@@ -61,11 +63,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col v-else :span="24" align="center">
-                      {{$t('work.noData')}}
+                        {{ $t('work.noData') }}
                     </el-col>
                 </el-row>
                 <div class="buttonarea">
-                    <el-button type="primary" v-if="PidTitleData" @click="updatePidParams">{{$t('work.submit')}}</el-button>
+                    <el-button type="primary" v-if="PidTitleData" @click="updatePidParams">{{ $t('work.submit')
+                    }}</el-button>
                 </div>
             </el-form>
 
@@ -74,7 +77,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row style="margin-bottom: 10px;">
                     <el-col :span="18" :offset="6">
-                        <el-form-item class="item" label="差分设置：" >
+                        <el-form-item class="item" label="差分设置：">
                             <el-select v-model="workPattern.type" style=" width: 225px;
                 height: 32px;">
                                 <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
@@ -82,9 +85,9 @@
                                 <!-- <el-option label="外置网络" :value="2"></el-option> -->
                             </el-select>
                             <el-button type="primary" :disabled="workPattern.type === '3' ? true : false"
-                                style="margin-left: 20px;" @click="updateChafenData">{{$t('work.settings')}}</el-button>
+                                style="margin-left: 20px;" @click="updateChafenData">{{ $t('work.settings') }}</el-button>
                             <el-button v-show="workPattern.type == '1'" type="primary" text class="btn3" style=""
-                                @click="getExtendSourceNode">{{$t('work.getSourceNode')}}</el-button>
+                                @click="getExtendSourceNode">{{ $t('work.getSourceNode') }}</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -143,8 +146,10 @@
                                 height: 32px;" v-model="dateValue" type="daterange" range-separator="-"
                                 @change="changeDate" :disabled-date="disabledDate" start-placeholder="Start date"
                                 end-placeholder="End date" size="large" />
-                            <el-button type="primary"  v-auth= '532' style="margin-left: 20px;">回传</el-button>
-                            <el-button type="primary" v-auth="531" text class="btn3" style="" @click="toFileList">文件查看</el-button>
+                            <el-button type="primary" v-auth='532' style="margin-left: 20px;"
+                                @click="uploadBack(props.sn)">回传</el-button>
+                            <el-button type="primary" v-auth="531" text class="btn3" style=""
+                                @click="toFileList">文件查看</el-button>
                         </el-form-item>
 
                     </el-col>
@@ -165,7 +170,7 @@
                 :inline="true" :label-position="labelPosition" label-width="180px" :model="formLabelAlign"
                 style="max-width: 1012px;margin-bottom:20px">
                 <div class="mktitle">
-                    {{$t('work.dualAntennaOneMachine')}}
+                    {{ $t('work.dualAntennaOneMachine') }}
                 </div>
                 <el-row style="margin-top:40px ;">
                     <el-col :span="14" :offset="6">
@@ -184,8 +189,10 @@
                         <el-form-item class="item" :label="$t('work.versionType')" prop="radio2">
                             <el-radio-group @change="changeRadio2" text-color="var(--el-color-primary)"
                                 style="transform: translateY(-5px);" v-model="formLabelAlign.radio2" class="ml-4">
-                                <el-radio label="1" size="large" style="margin-right: 30px;">{{$t('work.officialVersion')}}</el-radio>
-                                <el-radio label="2" size="large" style="margin-right: 30px;">{{$t('work.betaVersion')}}</el-radio>
+                                <el-radio label="1" size="large" style="margin-right: 30px;">{{ $t('work.officialVersion')
+                                }}</el-radio>
+                                <el-radio label="2" size="large" style="margin-right: 30px;">{{ $t('work.betaVersion')
+                                }}</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
@@ -193,7 +200,7 @@
                 </el-row>
                 <el-row style="margin-bottom: 20px;">
                     <el-col :span="14" :offset="6">
-                        <el-form-item class="item" :label="$t('work.versionSelection')+'：'" prop="filename">
+                        <el-form-item class="item" :label="$t('work.versionSelection') + '：'" prop="filename">
                             <el-select style=" width: 187px;
                 height: 32px;" v-model="formLabelAlign.filename">
                                 <el-option v-for="(item, index) in productList" :key="index" :value="index"
@@ -204,7 +211,7 @@
                 </el-row>
 
                 <div class="buttonarea">
-                    <el-button type="danger" @click="updateProductListBtn">{{$t('work.forceUpgrade')}}</el-button>
+                    <el-button type="danger" @click="updateProductListBtn">{{ $t('work.forceUpgrade') }}</el-button>
                 </div>
             </el-form>
 
@@ -241,6 +248,7 @@ import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCa
 import { carNewDetail_API, logOpen_API } from '@/api/machineryList/index'
 import type { TabsPaneContext } from 'element-plus'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 const router = useRouter();
 const activeName = ref('1')
@@ -349,6 +357,17 @@ const toFileList = () => {
         }
     })
 }
+
+function date(date: any) {
+    let result = new Date(date).getTime();
+    return result;
+}
+
+const uploadBack = (val: any) => {
+    axios.post(`${import.meta.env.VITE_APP_BASE_NGW}/lu/ftp/upload`, { start: date(dateValue.value[0]), end: date(dateValue.value[1]), sn: val }, { headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' } }).then(() => {
+        ElMessage({ type: 'success', message: '回传成功', duration: 1000 })
+    })
+}
 const switchStatus = ref<boolean>(false)
 const paramDescribeList = ref<paramDescribeObj>({
     paramVersionnum: '',
@@ -451,8 +470,8 @@ const getParamParams = async () => {
     res.data.paramJson ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
 }
 const closeRemoteAdjust = () => {
-    workPattern.value.type ='3'
-    carFormRef.value.resetFields()  
+    workPattern.value.type = '3'
+    carFormRef.value.resetFields()
     calibFormRef.value.resetFields()
     pidFormRef.value.resetFields()
     moudleRef.value.resetFields()

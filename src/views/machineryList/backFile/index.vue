@@ -26,8 +26,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from "vue-router";
-import { getBackFileSnList } from '@/api/machineryList/index'
-
+// import { getBackFileSnList } from '@/api/machineryList/index'
+import axios from 'axios'
 const route = useRoute()
 const fileListData = ref<any>([])
 const total = ref(0)
@@ -38,22 +38,28 @@ const parentSn = route.query.sn
 const baseUrl = import.meta.env.VITE_APP_BASE_DOWNLOAD
 const loading = ref(false)
 
-const getFileList = async () => {
+const getFileList = () => {
     loading.value = true;
-    let postData = {
+    let postData: any = {
         current: current.value,
         size: pageSize.value,
         sn: parentSn,
         pid: 9004
     }
-    const res = await getBackFileSnList(postData)
-    loading.value = false;
-    fileListData.value = []
-    res.data.records.forEach((item: any) => {
-        fileListData.value.push({ isBack: false, name: item })
+    // const res = await getBackFileSnList(postData)
+    axios.post(`${import.meta.env.VITE_APP_BASE_NGW}/lu/log/ftpDirListFiles`, postData, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }
+    }).then((res: any) => {
+        loading.value = false;
+        fileListData.value = []
+        res.data.records?
+        res.data.records.forEach((item: any) => {
+            fileListData.value.push({ isBack: false, name: item })
+        }) : ''
+        // fileListData.value.push({ isBack: true, name: '回传文件' })
+        total.value = res.data.total
     })
-    // fileListData.value.push({ isBack: true, name: '回传文件' })
-    total.value = res.data.total
+
 
 }
 getFileList()

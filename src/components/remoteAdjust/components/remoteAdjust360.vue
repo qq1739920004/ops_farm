@@ -161,7 +161,7 @@
                                 height: 32px;" v-model="dateValue" type="daterange" range-separator="-"
                                 @change="changeDate" :disabled-date="disabledDate" start-placeholder="Start date"
                                 end-placeholder="End date" size="large" />
-                            <el-button type="primary" v-auth='532' style="margin-left: 20px;">回传</el-button>
+                            <el-button type="primary" v-auth='532' style="margin-left: 20px;" @click="uploadBack">回传</el-button>
                             <el-button type="primary" v-auth="531" text class="btn3" style=""
                                 @click="toFileList">文件查看</el-button>
                         </el-form-item>
@@ -260,7 +260,7 @@ import { paramParamDescribe_API, paramCarParam_API, paramCalibParam_API, paramCa
 import { carNewDetail_API, logOpen_API } from '@/api/machineryList/index'
 import type { TabsPaneContext } from 'element-plus'
 import { useRouter } from 'vue-router'
-
+import axios from 'axios'
 const router = useRouter();
 const basicTitleData = ref<any | null>([])
 const activeName = ref('1')
@@ -477,6 +477,16 @@ const getCarParams = async (val: string) => {
 const getParamParams = async () => {
     const res: paramCarParamResponseData = await paramCarParam_API(props.carId)
     res.data.paramJson ? Object.assign(paramParamsData, JSON.parse(res.data.paramJson)) : ''
+}
+
+function date(date: any) {
+    let result = new Date(date).getTime();
+    return result;
+}
+const uploadBack = (val: any) => {
+    axios.post(`${import.meta.env.VITE_APP_BASE_NGW}/lu/ftp/upload`, { start: date(dateValue.value[0]), end: date(dateValue.value[1]), sn: val }, { headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' } }).then(() => {
+        ElMessage({ type: 'success', message: '回传成功', duration: 1000 })
+    })
 }
 const closeRemoteAdjust = () => {
     workPattern.value.type ='3'
