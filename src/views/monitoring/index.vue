@@ -371,6 +371,8 @@ function handleSocketData(socketData: any) {
     const { data } = socketData;
     dataStatistics.value.drive.driving = data.driving;
     dataStatistics.value.drive.standbyDevice = data.standbyDevice;
+    dataStatistics.value.device.onlineDevice =
+      data.driving + data.standbyDevice;
   }
   if (socketData.module == "farm" && socketData.type == "notification") {
     const { data } = socketData;
