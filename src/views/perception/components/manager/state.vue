@@ -84,7 +84,6 @@ onMounted(() => {
     })
   })
 watch(()=>props.stateObj,(newValue)=>{
-  console.log(newValue);
   if(newValue && !newValue.judgeLevel){
   dataArr.value.unshift({
     time:getTime(newValue),

@@ -174,11 +174,11 @@ onMounted(() => {
 //   return ww < wh ? ww : wh;
 // }
 function handleSocketData(data: any) {
+  if(!data.data) return 
   if (data.type == "monitor") {
       monitorData.value = data.data;
       typeCounts.value = data.data.typeCounts;
       provinceCars.value = data.data.provinceCars;
-      stateObj.value = data.data.wsNowCar;
   } else if (data.type == "monitorArea") {
       carAreas.value = data.data.carAreas
       todayArea.value = data.data.todayArea;
@@ -195,6 +195,9 @@ function handleSocketData(data: any) {
   } 
  else if (data.module == "farm" && data.type == "farmPt") {
     markerDataHandle.value={...data.data,action:data.action};
+  }
+  else if (data.type == "monitorNotification") {
+    stateObj.value = data.data.wsNowCar;
   }
 }
 onUnmounted(() => {

@@ -103,26 +103,20 @@ function mapFinish() {
   );
 }
 function handleSocketData(data: any) {
+  if(!data.data) return 
   if (data.type == "monitor") {
-    if (data.data) {
       monitorData.value = { ...data.data, ...monitorData.value };
       typeCounts.value = data.data.typeCounts;
       provinceCars.value = data.data.provinceCars;
       carAreas.value = data.data.provinceCars;
-      stateObj.value = data.data.wsNowCar;
-    }
   } else if (data.type == "monitorArea") {
-    if (data.data) {
       todayArea.value = data.data.todayArea;
       totalArea.value = data.data.totalArea;
-    }
   } else if (data.type == "monitorCarNum") {
-    if (data.data) {
       let tempTodayAcDevice=monitorData.value?.todayAcDevice
       let tempDataNow=dataNow.value
       monitorData.value!.todayAcDevice = data.data.todayAcDevice|| tempTodayAcDevice;
       dataNow.value = data.data.chart?data.data.chart[0]:tempDataNow;
-    }
   // }else if (data.type == "notification") {
   //   if(data.data.list.some((item:recordsType)=>{
   //     item.judgeLevel
@@ -133,6 +127,9 @@ function handleSocketData(data: any) {
   //     }
   //   }
   } 
+  else if (data.type == "monitorNotification") {
+    stateObj.value = data.data.wsNowCar;
+  }
 }
 onMounted(() => {
   getMonitor();

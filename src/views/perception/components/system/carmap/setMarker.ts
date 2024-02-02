@@ -17,8 +17,8 @@ function updateChart(dataList: MonitorObj["provinceCars"]) {
   optionsList.value.forEach((item: any, index: number) => {
     item.xAxis.data[0] = dataList[index + 1].cityName;
     item.series[0].data[0] = dataList[index + 1].onlineNum;
-    item.series[1].data[0] =
-      dataList[index + 1].totalNum - dataList[index + 1].onlineNum;
+    item.series[1].data[0] =dataList[index + 1].totalNum - dataList[index + 1].onlineNum;
+    item.series[2].data[0] = dataList[index + 1].totalNum;
     chartList.value[index].setOption(item, true);
   });
 }
