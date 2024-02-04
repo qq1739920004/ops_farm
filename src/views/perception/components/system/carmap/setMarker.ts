@@ -1,7 +1,6 @@
 import type { MonitorObj } from "@/api/perception/type";
 import { ref, shallowRef } from "vue";
 import * as echarts from "echarts";
-import { tr } from "element-plus/es/locales.mjs";
 type EChartsParams = {
   value: number;
 };
