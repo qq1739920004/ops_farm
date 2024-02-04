@@ -26,7 +26,10 @@ function updateChart(dataList:MonitorObj["provinceCars"]){
     //离线数
     item.series[1].data[0]=dataList[index].totalNum-dataList[index].onlineNum
     //总数
-    item.series[2].data[0]=dataList[index].totalNum
+    item.series[1].label.formatter=function () {
+      return dataList[index].totalNum;  // 显示总数
+  }
+    item.series[2].data[0]=dataList[index].totalNum// 存储您想要在 tooltip 中显示的值
     chartList.value[index].setOption(item,true)
   })
 }
@@ -157,8 +160,6 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
               name: t('perception.tonline'),
               data: [dataList[i].onlineNum],
               //如果是0，就不显示这个值
-              
-
               type: 'bar',
               itemStyle: {
                   color: '#54d176',

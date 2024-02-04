@@ -1,6 +1,7 @@
 import type { MonitorObj } from "@/api/perception/type";
 import { ref, shallowRef } from "vue";
 import * as echarts from "echarts";
+import { tr } from "element-plus/es/locales.mjs";
 type EChartsParams = {
   value: number;
 };
@@ -11,21 +12,39 @@ let numCurent = ref(0);
 let chartList = shallowRef<any>([]);
 let chartContainerList = ref<any>([]);
 let optionsList = ref<any>([]);
-let isUpdata = ref(false);  
+let isUpdata = ref(false);
 function updateChart(dataList: MonitorObj["provinceCars"]) {
   if (!isUpdata.value) return;
+  dataList.filter((item) => {
+    return item.lat;
+  });
   optionsList.value.forEach((item: any, index: number) => {
-    item.xAxis.data[0] = dataList[index + 1].cityName;
-    item.series[0].data[0] = dataList[index + 1].onlineNum;
-    item.series[1].data[0] =dataList[index + 1].totalNum - dataList[index + 1].onlineNum;
-    item.series[2].data[0] = dataList[index + 1].totalNum;
+    item.xAxis.data[0] = dataList[index].cityName;
+    //在线数
+    item.series[0].data[0] = dataList[index].onlineNum;
+    //离线数
+    item.series[1].data[0] =
+      dataList[index].totalNum - dataList[index].onlineNum;
+    //总数
+    item.series[1].label.formatter = function () {
+      return dataList[index].totalNum; // 显示总数
+    };
+
     chartList.value[index].setOption(item, true);
   });
 }
 
-function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"],t:any) {
+function setMarker(
+  AMap: any,
+  map: any,
+  dataList: MonitorObj["provinceCars"],
+  t: any
+) {
   for (let i = 0; i <= dataList.length; i++) {
-    if (!dataList[i].code) return;
+    if (!dataList[i].code) {
+      isUpdata.value=true
+      return
+    };
     const markerContent = document.createElement("div");
     const markerContent2 = document.createElement("div");
     markerContent2.style.width = `${width.value}px`;
@@ -42,29 +61,29 @@ function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"],t:a
       map: map.value,
       zIndex: 999999,
     });
-   
+
     // 使用ECharts初始化柱状图容器并设置数据
     const chart = echarts.init(chartContainer);
     chartList.value.push(chart);
     chartContainerList.value.push(chartContainer);
-      // 为ECharts容器添加一个类，以应用上面的CSS样式
-      chartContainer.classList.add('echarts-container');
+    // 为ECharts容器添加一个类，以应用上面的CSS样式
+    chartContainer.classList.add("echarts-container");
 
-      chart.on('mouseover', function() {
-          // 将所有ECharts容器的透明度设置为0，从而实现淡出效果
-          chartContainerList.value.forEach((container:any) => {
-              container.style.opacity = '0';
-          });
-          // 将当前的ECharts容器的透明度设置为1，从而实现淡入效果
-          chartContainer.style.opacity = '1';
+    chart.on("mouseover", function () {
+      // 将所有ECharts容器的透明度设置为0，从而实现淡出效果
+      chartContainerList.value.forEach((container: any) => {
+        container.style.opacity = "0";
       });
-  
-      chart.on('mouseout', function() {
-          // 将所有ECharts容器的透明度设置为1，从而实现淡入效果
-          chartContainerList.value.forEach((container:any) => {
-              container.style.opacity = '1';
-          });
+      // 将当前的ECharts容器的透明度设置为1，从而实现淡入效果
+      chartContainer.style.opacity = "1";
+    });
+
+    chart.on("mouseout", function () {
+      // 将所有ECharts容器的透明度设置为1，从而实现淡入效果
+      chartContainerList.value.forEach((container: any) => {
+        container.style.opacity = "1";
       });
+    });
     const option = {
       tooltip: {
         show: true, // 显示提示框,
@@ -90,10 +109,10 @@ function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"],t:a
               param.color +
               ';"></span>';
             // 判断系列名称并显示相应的数据
-            if (param.seriesName === t('perception.tonline')) {
+            if (param.seriesName === t("perception.tonline")) {
               tooltipHtml += " " + param.seriesName + ": " + param.data;
               numCurent.value = param.data;
-            } else if (param.seriesName === t('perception.total')) {
+            } else if (param.seriesName === t("perception.total")) {
               tooltipHtml +=
                 " " + param.seriesName + ": " + (param.data + numCurent.value); // 使用 totalNum
             }
@@ -124,7 +143,7 @@ function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"],t:a
       series: [
         {
           z: 50, // 设置柱状图的层级
-          name: t('perception.tonline'),
+          name: t("perception.tonline"),
           data: [dataList[i].onlineNum],
           type: "bar",
 
@@ -141,19 +160,19 @@ function setMarker(AMap: any, map: any, dataList: MonitorObj["provinceCars"],t:a
           label: {
             show: true,
             color: "#16A157",
-            position: "top",
-            formatter: function(params:EChartsParams) {
+            position: "inside",
+            formatter: function (params: EChartsParams) {
               // 如果在线数为0，则不显示
               if (params.value === 0) {
-                  return '';
+                return "";
               }
               return params.value;
-          },
+            },
           },
         },
         {
           z: 50, // 设置柱状图的层级
-          name: t('perception.total'),
+          name: t("perception.total"),
           data: [dataList[i].totalNum - dataList[i].onlineNum],
           type: "bar",
           itemStyle: {
