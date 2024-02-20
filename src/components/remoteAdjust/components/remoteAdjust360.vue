@@ -212,18 +212,23 @@
                 </el-row>
                 <el-row style="margin-bottom: 20px;">
                     <el-col :span="14" :offset="6">
-                        <el-form-item class="item" :label="$t('work.versionSelection')+'：'" prop="filename">
-                            <el-select style=" width: 187px;
+                        <el-form-item class="item" :label="$t('work.versionSelection') + '：'" prop="filename">
+                            <div v-show="showSelect">
+                                <el-select style=" width: 187px;
                 height: 32px;" v-model="formLabelAlign.filename">
-                                <el-option v-for="(item, index) in productList" :key="index" :value="index"
-                                    :label="item.filename"></el-option>
-                            </el-select>
+                                    <el-option v-for="(item, index) in productList" :key="index" :value="index"
+                                        :label="item.filename"></el-option>
+                                </el-select>
+                            </div>
+                            <div v-show="!showSelect">
+                                {{$t('work.noFirmwarePackageForDevice')}}
+                            </div>
                         </el-form-item>
                     </el-col>
                 </el-row>
 
                 <div class="buttonarea">
-                    <el-button type="danger" @click="updateProductListBtn">{{$t('work.forceUpgrade')}}</el-button>
+                    <el-button :disabled="!showSelect" type="danger" @click="updateProductListBtn">{{$t('work.forceUpgrade')}}</el-button>
                 </div>
             </el-form>
 
@@ -267,6 +272,7 @@ const activeName = ref('1')
 const handleClick = (tab: TabsPaneContext) => {
     activeIndex.value = tab.props.name as never
 }
+const showSelect = ref(true)
 const advanceFormRef = ref()
 const carFormRef = ref()
 const calibFormRef = ref()
@@ -747,8 +753,13 @@ const gotoChafen = () => {
 
 // 获取在线升级数据
 const getProductList = async () => {
+   try {
     const res: GetcarProductpackageResponseData = await GetcarProductpackage_API({ 'pid': formLabelAlign.radio1, 'versionType': formLabelAlign.radio2 })
     productList.value = res.data
+    showSelect.value = true
+   } catch {
+    showSelect.value = false
+   }
 }
 // 在线升级更新数据
 const updateProductList = async () => {
