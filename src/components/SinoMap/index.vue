@@ -177,7 +177,7 @@ let map: any = null; // map实例对象
 let polyline: any = null;
 let mapRenderMode = props.mapRenderMode || "dom";
 let mapRenderModeLength = ref(0);
-let mapRenderModeLengthMax = 500; //数量超过1000，强制转为 polymer 聚合引擎
+let mapRenderModeLengthMax = 1000; //数量超过1000，强制转为 polymer 聚合引擎
 let markerArr: any = []; // marker坐标点数字
 let polygonArr: any = [];
 
