@@ -194,10 +194,14 @@ function handleSocketData(data: any) {
   //   }
   } 
  else if (data.module == "farm" && data.type == "farmPt") {
-    markerDataHandle.value={...data.data,action:data.action};
+    if(data.notification){
+      stateObj.value = data.notification.wsNowCar
+    }else{
+      markerDataHandle.value={...data.data,action:data.action};
+    }
   }
   else if (data.type == "monitorNotification") {
-    stateObj.value = data.data.wsNowCar;
+    // stateObj.value = data.data.wsNowCar;
   }
 }
 onUnmounted(() => {

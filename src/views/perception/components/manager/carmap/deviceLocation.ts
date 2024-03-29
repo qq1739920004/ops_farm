@@ -27,7 +27,6 @@ let isOne=ref(false)//是否已经初始化
 function starDeviceLocation(myAMap:any,mymap:any){
   if(isOne.value) return deviceMarkerCenter()
   isOne.value=true
-  console.log(334);
   AMap=myAMap
   map=mymap
   getOnlineFarmPosition()
@@ -76,6 +75,7 @@ async function getOnlineFarmPosition() {
     item.markerType = createMarkerType(item);
     item.markerIcon = createMarkerIcon(item);
     // item.markerPopup = createMarkerPopup(item);
+    
   });
   onlineFarmMachines = onlineFarmMachines.filter(
     (item: any) => item.markerLng || item.markerLng == 0
@@ -95,7 +95,6 @@ function clearDeviceMarker(){
 //设备标记回到地图中心
 function deviceMarkerCenter(){
   console.log(deviceMarkers.value);
-  console.log(33);
   deviceMarkers.value.forEach((item:onlineMaker)=>{
     item.setMap(map.value)
   })
@@ -106,10 +105,11 @@ function newMarker(item:onlineMaker){
     map: map.value,
     title:item.sn,
     icon: new AMap.Icon({
-      size: new AMap.Size(50, 50), // 图标大小
+      size: new AMap.Size(35, 35), // 图标大小
       image: item.markerIcon, // 使用Data URI
-      imageSize: new AMap.Size(50, 50) // 图标所用图片大小
-  })
+      imageSize: new AMap.Size(35, 35) // 图标所用图片大小
+  }),
+  offset: new AMap.Pixel(-15,-15)
 });
 }
 // marker 图标

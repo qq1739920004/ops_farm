@@ -126,10 +126,15 @@ function handleSocketData(data: any) {
   //       stateObj.value = data.data.list[0]
   //     }
   //   }
-  } 
-  else if (data.type == "monitorNotification") {
-    stateObj.value = data.data.wsNowCar;
   }
+  else if (data.type == "farmPt") {
+        if(data.notification){
+          stateObj.value = data.notification.wsNowCar
+        }
+  } 
+  // else if (data.type == "monitorNotification") {
+  //   stateObj.value = data.data.wsNowCar;
+  // }
 }
 onMounted(() => {
   getMonitor();
