@@ -297,7 +297,7 @@ import { useRouter } from 'vue-router'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 const pageInfo = reactive<PageObj>({
     key: '',
-    terminalType: 'AG360',
+    terminalType: 'AG502',
     currentPage: 1,
     pageSize: 10
 })
