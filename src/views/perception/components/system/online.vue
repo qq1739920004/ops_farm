@@ -105,20 +105,17 @@ const option = {
         interval: 0, //强制显示所有标签
         formatter: function (value: any) {
           // 动态计算 rank 标签的 left 位置，确保不与 title 冲突
-          if (value.length > 6) {
+          if (value.length > 5) {
             value = value.substring(0, 5) + "...";
           }
-          return "{title|"+value+"}";
+          return "{rank|}{title|"+value+"}";
         },
         rich: {
           rank: {
-            color: "#ffffff",
+            width: 3,
+            height: 26,
             align: "left",
-          },
-          rank2: {
-            color: "#ffffff",
-            //右边距
-            padding: [0, 15, 0, 0],
+            borderRadius: 20,
           },
           title: {
             color: "#43cf7c",
@@ -169,18 +166,17 @@ const option = {
       },
       label: {
         show: true,
-        position: "insideRight",
+        position: "right",//标签的位置,分别有：'top', 'left', 'right', 'bottom', 'inside', 'insideLeft', 'insideRight', 'insideTop', 'insideBottom'
         color: "#f5fff5",
         fontSize: '1rem',
-        offset: [5, -10],
         formatter: function (data: { value: number }) {
           // 柱子顶部分隔线样式
-          return [`{value| ${data.value}}{a0| |}`];
+          return [`{a0| |}{value| ${data.value}}`];
         },
         rich: {
           a0: {
-            align: "left",
-            padding: [20, 0, 0, 0], // 仅移动a0
+            align: "left",//分隔线的位置
+            padding:[0,0,0,-11]
           },
           value: {
             color: "#f5fff5",
