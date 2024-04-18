@@ -5,11 +5,11 @@ import request from '@/utils/request'
 
 import { onlineFarmMachinePosition_Type, carLog_Type, driveStatusPathResponseData, paramsObj, driveTendenctResponseData } from './type'
 
-export function onlineFarmMachinePosition_API(data: onlineFarmMachinePosition_Type) {
+export function onlineFarmMachinePosition_API(params: onlineFarmMachinePosition_Type) {
     return request({
         url: "/farm/device/new/onlineFarmMachinePosition",
         method: 'get',
-        data
+        params
     })
 }
 
