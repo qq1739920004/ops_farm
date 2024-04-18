@@ -52,7 +52,7 @@ const gotoRemote = () => {
   if (terminalType.value == "AG302") {
     RemoteD302.value.dialogVisible = true;
   }
-  if (terminalType.value == "AG502") {
+  if (terminalType.value == "AG502" ||terminalType.value == "MT802") {
     RemoteD502.value.dialogVisible = true;
   }
   nextTick(() => {
