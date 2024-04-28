@@ -111,6 +111,7 @@ const pageInfoData = reactive<PageInfoObj>({
   et: "",
 });
 const value1 = ref<Date>();
+let eleDataObject = <any>[];
 const value2 = ref<Date>();
 const a = ref<Date>();
 onMounted(() => {
@@ -192,6 +193,7 @@ const mapOptions = reactive([
 const markerCollect = reactive<any>({
   marker: [],
 });
+
 function initMap() {
   map = L.map("child6_map", {
     attributionControl: false,
@@ -274,6 +276,7 @@ const saveMarker = (markerObj: any) => {
     console.log(err);
   }
 };
+
 // 画线
 const getSingleCarTrick = async () => {
   loading.value = true;
@@ -291,30 +294,33 @@ const getSingleCarTrick = async () => {
     });
     // 取中间点
     ElMessage.success(`${route.query.sn}轨迹获取成功！`);
-    // let line = L.polyline(PointListTransed, { color: "#00ff00" }).addTo(map);
-    let line = PointListTransed.map((item: any, index: any) => {
+    let line = L.polyline(PointListTransed, { color: "#5C5C5C", weight: 1 }).addTo(map);
+    PointListTransed.map((item: any, index: any) => {
       if (solSatList[index] === 4) {
-        L.circle(item, {
+        let line2 = L.circle(item, {
           radius: 1,
           color: "#22B14C",
           fillOpacity: 1,
         }).addTo(map);
+        eleDataObject.push(line2)
       } else if (solSatList[index] === 15) {
-        L.circle(item, {
+        let line2 = L.circle(item, {
           radius: 1,
           color: "#3F48CC",
           fillOpacity: 1,
         }).addTo(map);
+        eleDataObject.push(line2)
       } else {
-        L.circle(item, {
+        let line2 = L.circle(item, {
           radius: 1,
           color: "#ED1C24",
           fillOpacity: 1,
         }).addTo(map);
+        eleDataObject.push(line2)
       }
     });
-
     saveMarker([{ markerObj: line, name: "lines" }]);
+
     map.fitBounds(PointListTransed);
   }
   loading.value = false;
@@ -355,8 +361,12 @@ const removeMarker = () => {
         }
       });
       markerCollect["marker"] = [];
+      eleDataObject.forEach((item:any) => {
+        map.removeLayer(item)
+      })
     } else {
     }
+   
   } catch (err) {
     console.log(err);
   }
@@ -383,33 +393,33 @@ const removeMarker = () => {
     opacity: 1;
     color: black;
     border-radius: 5px;
-    background: rgba(255, 255, 255, 1);
     font-size: 14px;
+    color: white;
     .out_area {
-        height: 33%;
-        width: 100%;
-        display: flex;
-        align-items: center;
+      height: 33%;
+      width: 100%;
+      display: flex;
+      align-items: center;
     }
     .cycle1 {
       height: 15px;
       width: 15px;
       border-radius: 50%;
-      background-color: #22af4b;
+      background-color: #33b838;
       margin: 0 6px 0 5px;
     }
     .cycle2 {
       height: 15px;
       width: 15px;
       border-radius: 50%;
-      background-color: #ED1C24;
+      background-color: #ed1c24;
       margin: 0 6px 0 5px;
     }
     .cycle3 {
       height: 15px;
       width: 15px;
       border-radius: 50%;
-      background-color: #3F48CC;
+      background-color: #3f48cc;
       margin: 0 6px 0 5px;
     }
   }

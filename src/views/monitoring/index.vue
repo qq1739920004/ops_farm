@@ -39,7 +39,20 @@
         </template>
       </el-autocomplete>
     </div>
-    <div class="statistics_box">
+    <div
+      :class="{
+        statistics_box: true,
+        statistics_box_active: statistics_box_isActive,
+      }"
+    >
+      <div class="header" @click="statistics_box_isActive = !statistics_box_isActive">
+        <el-icon v-if="!statistics_box_isActive" color="#fff">
+          <ArrowUpBold />
+        </el-icon>
+        <el-icon v-else color="#fff">
+          <ArrowDownBold />
+        </el-icon>
+      </div>
       <ul class="top">
         <li>
           <span>{{ dataStatistics.device?.totalDevice }}</span>
@@ -79,11 +92,7 @@
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
-            <el-checkbox
-              size="large"
-              v-model="item.checked"
-              @change="markerTypeChange"
-            />
+            <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange" />
             <SvgIcon :icon="item.typeName" size="22" />
             <span class="label">{{ item.typeName }}</span>
           </label>
@@ -146,11 +155,7 @@
     </div>
 
     <!-- 实时趋势驾驶图diaLog -->
-    <realTimeChart
-      ref="realTime"
-      :sn="sn"
-      :socketData="socketStore.socketData"
-    />
+    <realTimeChart ref="realTime" :sn="sn" :socketData="socketStore.socketData" />
     <RemoteControl
       :isChange="isChange"
       :terminalType="terminalType"
@@ -208,7 +213,7 @@ let markerDataHidden = ref<any>([]);
 let markerDataHandle = ref<any>({});
 let dataStatistics = ref<any>({});
 let carLogList: any = ref([]);
-
+const statistics_box_isActive = ref(false);
 let sn = ref();
 let realTime = ref();
 let terminalType = ref();
@@ -371,8 +376,7 @@ function handleSocketData(socketData: any) {
     const { data } = socketData;
     dataStatistics.value.drive.driving = data.driving;
     dataStatistics.value.drive.standbyDevice = data.standbyDevice;
-    dataStatistics.value.device.onlineDevice =
-      data.driving + data.standbyDevice;
+    dataStatistics.value.device.onlineDevice = data.driving + data.standbyDevice;
   }
   if (socketData.module == "farm" && socketData.type == "notification") {
     const { data } = socketData;
@@ -460,19 +464,13 @@ function markerTypeChange() {
 function createMarkerType(item: any) {
   if (item.terminalType.includes("AG360")) {
     return "AG360";
-  } else if (
-    item.terminalType.includes("AG501") &&
-    item.terminalType != "AG501Pro"
-  ) {
+  } else if (item.terminalType.includes("AG501") && item.terminalType != "AG501Pro") {
     return "AG501";
   } else if (item.terminalType == "AG501Pro") {
     return "AG501Pro";
   } else if (item.terminalType.includes("AG502")) {
     return "AG502";
-  } else if (
-    item.terminalType.includes("AG302") &&
-    item.terminalType != "AG302Android"
-  ) {
+  } else if (item.terminalType.includes("AG302") && item.terminalType != "AG302Android") {
     return "AG302";
   } else if (item.terminalType == "AG302Android") {
     return "AG302Android";
@@ -545,8 +543,7 @@ function createMarkerPopup(item: any) {
     }
   }
 
-  const cardUsage =
-    item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
+  const cardUsage = item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
   const popup = `<div class="map_popup">
         <ul class="popup_container">
           <li>
@@ -668,9 +665,9 @@ function createMarkerPopup(item: any) {
           <li>
             <div class="btn ${
               item.driveState == 0 ? "disabled" : ""
-            }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(
-    item
-  )})'>${t("messages.Realtimedrivingtrendchart")}</div>
+            }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(item)})'>${t(
+    "messages.Realtimedrivingtrendchart"
+  )}</div>
             <div class="btn" onclick='gohistoryChart_markerPopup(${JSON.stringify(
               item
             )})'>${t("menus.historicaldrivingtrendchart")}</div>
@@ -787,13 +784,29 @@ function openRemote_markerPopup(arg: any) {
   .statistics_box {
     padding: 10px;
     right: 10px;
+    transition: all 0.3s;
+    height: 397px;
     top: 10px;
     position: absolute;
     z-index: 999;
     width: 320px;
     background: url("@/assets/monitoring/bg_1.png") no-repeat center center;
     background-size: cover;
+    
+    .header {
+      cursor: pointer;
+      display: flex;
+      justify-content: end;
+      align-items: center;
+      height: 30px;
+      padding: 0 12px;
 
+      h3 {
+        color: #fff;
+        margin: 0;
+        font-size: 16px;
+      }
+    }
     .top {
       display: flex;
       flex-wrap: wrap;
@@ -974,6 +987,10 @@ function openRemote_markerPopup(arg: any) {
   }
 
   .notice_box_active {
+    height: 40px;
+    overflow: hidden;
+  }
+  .statistics_box_active {
     height: 40px;
     overflow: hidden;
   }
