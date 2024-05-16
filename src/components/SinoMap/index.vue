@@ -41,17 +41,17 @@
 <script setup lang="ts">
 import gcoord from "gcoord";
 // @ts-ignore
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import "leaflet.markercluster";
-import "leaflet.markercluster/dist/MarkerCluster.css";
-import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+// import L from "leaflet";
+// import "leaflet/dist/leaflet.css";
+// import "leaflet.markercluster";
+// import "leaflet.markercluster/dist/MarkerCluster.css";
+// import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { mapTileLayers } from "./utils/mapTileLayers";
 import { ref, reactive, onMounted, watch } from "vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import { useI18n } from "vue-i18n";
 import fixed_icon from "./assets/fixed.png";
-
+const L = window.L;
 const { t } = useI18n();
 
 const props = defineProps({
@@ -177,10 +177,10 @@ let map: any = null; // map实例对象
 let polyline: any = null;
 let mapRenderMode = props.mapRenderMode || "dom";
 let mapRenderModeLength = ref(0);
-let mapRenderModeLengthMax = 1000; //数量超过1000，强制转为 polymer 聚合引擎
+// let mapRenderModeLengthMax = 1000; //数量超过1000，强制转为 polymer 聚合引擎
 let markerArr: any = []; // marker坐标点数字
 let polygonArr: any = [];
-
+let markerCanvasGroup: any = null;
 //@ts-ignore
 let markerClusterGroup = L.markerClusterGroup();
 let markerGroup = L.featureGroup();
@@ -214,22 +214,22 @@ mapTileOptions.list = mapTileOptions.list.filter((item: any) =>
   props.mapTile.includes(item.id)
 );
 
-watch(
-  () => mapRenderModeLength,
-  (mapRenderModeLength) => {
-    if (
-      mapRenderModeLength.value > mapRenderModeLengthMax &&
-      mapRenderMode == "dom" &&
-      !props.mapRenderMode
-    ) {
-      markerClusterGroup.clearLayers();
-      markerGroup.clearLayers();
-      mapRenderMode = "polymer";
-      updateMarkerVisible(props.markerDataHidden);
-    }
-  },
-  { deep: true }
-);
+// watch(
+//   () => mapRenderModeLength,
+//   (mapRenderModeLength) => {
+//     if (
+//       mapRenderModeLength.value > mapRenderModeLengthMax &&
+//       mapRenderMode == "dom" &&
+//       !props.mapRenderMode
+//     ) {
+//       markerClusterGroup.clearLayers();
+//       markerGroup.clearLayers();
+//       mapRenderMode = "polymer";
+//       updateMarkerVisible(props.markerDataHidden);
+//     }
+//   },
+//   { deep: true }
+// );
 
 onMounted(() => {
   initMap();
@@ -237,6 +237,7 @@ onMounted(() => {
   createMarker(props.markerData);
   createLine(props.lineData);
 });
+
 
 // 创建地图marker点
 function createMarker(list: any) {
@@ -273,6 +274,11 @@ function createMarker(list: any) {
         ? ""
         : markerClusterGroup.addLayer(marker);
     }
+    if (mapRenderMode == "canvas") {
+      props.markerDataHidden.includes(item.markerType)
+        ? ""
+        : markerCanvasGroup.addMarker(marker);
+    }
   });
 }
 // 删除地图marker点
@@ -287,6 +293,11 @@ function removeMarker(list: any) {
         if (mapRenderMode == "polymer") {
           markerClusterGroup.removeLayer(v);
         }
+        if (mapRenderMode == "canvas") {
+          
+          markerCanvasGroup.removeMarker(v, true);
+
+        }
         markerArr.splice(i, 1);
       }
     });
@@ -298,10 +309,7 @@ function updateMarker(list: any) {
     markerArr.forEach((v: any) => {
       if (item.markerId == v.markerId) {
         const icon = createIcon(item);
-        const [markerLng, markerLat] = gcoordLngLat(
-          item.markerLng,
-          item.markerLat
-        );
+        const [markerLng, markerLat] = gcoordLngLat(item.markerLng, item.markerLat);
         if (icon) v.setIcon(icon);
         v.setLatLng([markerLat, markerLng]);
         v.getPopup().setContent(item.markerPopup);
@@ -319,13 +327,19 @@ function updateMarkerVisible(list: any) {
         markerGroup.addLayer(item);
       }
     }
-    if (mapRenderMode == "polymer") {
+    else if (mapRenderMode == "polymer") {
       if (list.includes(item.markerType)) {
         markerClusterGroup.removeLayer(item);
       } else {
         markerClusterGroup.addLayer(item);
       }
-    }
+    } else if(mapRenderMode == "canvas"){
+      if (list.includes(item.markerType)) {
+        markerCanvasGroup.removeLayer(item);
+      } else {
+        markerCanvasGroup.addLayer(item);
+      }
+  }
   });
 }
 // 创建icon图标
@@ -369,11 +383,21 @@ function initMap() {
 
   markerGroup.addTo(map);
   markerClusterGroup.addTo(map);
+  initCanvasGroup();
   mapTileChange();
   initRanging();
   mapzoomChange();
 }
-
+const emit = defineEmits(["marker-click"]);
+function initCanvasGroup() {
+  if (map.hasLayer(markerCanvasGroup)) {
+    map.removeLayer(markerCanvasGroup);
+  }
+  markerCanvasGroup = L.canvasIconLayer({}).addTo(map);
+  markerCanvasGroup.addOnClickListener((_e: any, data: any) => {
+    emit("marker-click", data[0].data);
+  });
+}
 // 创建多面形
 function createPolygon(list: any) {
   polygonArr.forEach((item: any) => {
@@ -422,9 +446,7 @@ function createLine(list: any) {
 
 // 图商发生变化
 function mapTileChange() {
-  const mapTitleOption = mapTileOptions.list.find(
-    (item) => item.id == mapTileOptions.id
-  );
+  const mapTitleOption = mapTileOptions.list.find((item) => item.id == mapTileOptions.id);
   changeTileLayer(mapTitleOption?.mapName, mapTitleOption?.mapType);
 }
 // 处理地图定位
@@ -444,9 +466,7 @@ function handleMapCenter(data: any) {
     return;
   }
   if (data.markerId) {
-    const findMarker = markerArr.find(
-      (item: any) => item.markerId == data.markerId
-    );
+    const findMarker = markerArr.find((item: any) => item.markerId == data.markerId);
     findMarker.openPopup();
     map.fitBounds([findMarker._latlng]);
     map.setZoom(map.getZoom() - 2);
@@ -484,11 +504,7 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
 }
 // 处理经纬度偏差
 function gcoordLngLat(markerLng: number, markerLat: number) {
-  const [lat, lng] = gcoord.transform(
-    [markerLat, markerLng],
-    gcoord.WGS84,
-    gcoord.GCJ02
-  );
+  const [lat, lng] = gcoord.transform([markerLat, markerLng], gcoord.WGS84, gcoord.GCJ02);
   return [lng, lat];
 }
 
@@ -518,10 +534,7 @@ function mapzoomChange() {
     }
     setProperty();
     function setProperty() {
-      document.documentElement.style.setProperty(
-        "--map-font-size",
-        `${fontSize}px`
-      );
+      document.documentElement.style.setProperty("--map-font-size", `${fontSize}px`);
     }
     if (flag1 != flag2) {
       setlatLng();
@@ -554,7 +567,7 @@ function clearMapRanging() {
     rangingArray.length = 0;
   }
   pickupMode = false;
-  pickedPoints.length = 0
+  pickedPoints.length = 0;
   try {
     // @ts-ignore
     document.getElementById("_map").style.cursor = "grab";
@@ -583,7 +596,7 @@ function initRanging() {
           .bindPopup(`相距:${distance.toFixed(3)}米`)
           .openPopup(); //划线
         rangingArray.push(polyline);
-          map.fitBounds(pickedPoints); //适应视野
+        map.fitBounds(pickedPoints); //适应视野
         //恢复状态
         pickupMode = false;
         pickedPoints = [];

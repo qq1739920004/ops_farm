@@ -20,6 +20,7 @@
     "gsap": "^3.12.2",
     "jsonp": "^0.2.1",
     "leaflet": "^1.9.4",
+    "leaflet-canvas-marker": "^0.2.0",
     "leaflet.chinatmsproviders": "^3.0.6",
     "leaflet.markercluster": "^1.5.3",
     "leaflet.pm": "^2.2.0",

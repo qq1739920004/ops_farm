@@ -5,6 +5,8 @@
       :markerDataHandle="markerDataHandle"
       :markerDataHidden="markerDataHidden"
       :mapCenter="mapCenter"
+      mapRenderMode="canvas"
+      @marker-click="markerClick"
     />
     <div class="search_box">
       <el-autocomplete
@@ -230,7 +232,15 @@ const mapCenter = reactive<any>({
   markerId: "",
   mapCenter: [],
 });
-
+async function markerClick(marker:any) {
+  // const sn=marker.markerId.split("_")[1];
+  // const { data } = await mapBaseDetail_API(sn);
+ 
+  // dealBaseMarkerData(data);
+  // markerDataHandle.value.markerHandle="update";
+  console.log(marker)
+  
+}
 // @ts-ignore
 window.goMachineryList_markerPopup = goMachineryList_markerPopup;
 // @ts-ignore
