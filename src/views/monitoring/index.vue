@@ -1,6 +1,7 @@
 <template>
   <div class="map_container">
     <sino-map
+      ref="sinoMapRef"
       :markerData="markerData"
       :markerDataHandle="markerDataHandle"
       :markerDataHidden="markerDataHidden"
@@ -192,6 +193,8 @@ import wifi_1 from "@/assets/monitoring/wifi_1.png";
 import wifi_2 from "@/assets/monitoring/wifi_2.png";
 import wifi_3 from "@/assets/monitoring/wifi_3.png";
 import wifi_4 from "@/assets/monitoring/wifi_4.png";
+import green from "@/assets/monitoring/green.svg";
+import yellow from "@/assets/monitoring/yellow.svg";
 import SinoMap from "@/components/SinoMap/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import realTimeChart from "./components/realTimeChart.vue";
@@ -205,6 +208,7 @@ import {
   carLog_API,
 } from "@/api/monitoring";
 import { useI18n } from "vue-i18n";
+const sinoMapRef = ref();
 const { t } = useI18n();
 const { locale } = useI18n();
 const router = useRouter();
@@ -232,14 +236,13 @@ const mapCenter = reactive<any>({
   markerId: "",
   mapCenter: [],
 });
-async function markerClick(marker:any) {
+async function markerClick(marker: any) {
   // const sn=marker.markerId.split("_")[1];
   // const { data } = await mapBaseDetail_API(sn);
- 
+
   // dealBaseMarkerData(data);
   // markerDataHandle.value.markerHandle="update";
-  console.log(marker)
-  
+  console.log(marker);
 }
 // @ts-ignore
 window.goMachineryList_markerPopup = goMachineryList_markerPopup;
@@ -329,7 +332,7 @@ function handleSocketData(socketData: any) {
       const markerLng = data.posY;
       const markerLat = data.posX;
       const markerType = createMarkerType(data);
-      const markerIcon = createMarkerIcon(data);
+      const markerIcon = sinoMapRef.value.iconChangeLimit?createMarkerIcon(data):createMarkerIconSmall(data)
       const markerPopup = createMarkerPopup(data);
       markerDataHandle.value = {
         markerId,
@@ -353,7 +356,7 @@ function handleSocketData(socketData: any) {
       const markerLng = data.posY;
       const markerLat = data.posX;
       const markerType = createMarkerType(data);
-      const markerIcon = createMarkerIcon(data);
+      const markerIcon = sinoMapRef.value.iconChangeLimit?createMarkerIcon(data):createMarkerIconSmall(data)
       const markerPopup = createMarkerPopup(data);
       markerDataHandle.value = {
         markerId,
@@ -451,8 +454,9 @@ async function getOnlineFarmPosition() {
     item.markerLng = item.posY;
     item.markerLat = item.posX;
     item.markerType = createMarkerType(item);
-    item.markerIcon = createMarkerIcon(item);
+    item.markerIcon = sinoMapRef.value.iconChangeLimit?createMarkerIcon(item):createMarkerIconSmall(item)
     item.markerPopup = createMarkerPopup(item);
+    item.driveState = item.driveState
   });
   onlineFarmMachines = onlineFarmMachines.filter(
     (item: any) => item.markerLng || item.markerLng == 0
@@ -711,6 +715,29 @@ function createMarkerIcon(item: any) {
 
   return icon;
 }
+function createMarkerIconSmall(item: any) {
+  const { terminalType, driveState } = item;
+  let icon: string = "";
+  if (terminalType.includes("AG360")) {
+    icon = driveState == 0 ? yellow : green;
+  } else if (terminalType.includes("AG501") && terminalType != "AG501Pro") {
+    icon = driveState == 0 ? yellow : green;
+  } else if (terminalType == "AG501Pro") {
+    icon = driveState == 0 ? yellow : green;
+  } else if (terminalType.includes("AG502")) {
+    icon = driveState == 0 ? yellow : green;
+  } else if (terminalType.includes("AG302") && terminalType != "AG302Android") {
+    icon = driveState == 0 ? yellow : green;
+  } else if (terminalType == "AG302Android") {
+    icon = driveState == 0 ? yellow : green;
+  } else if (item.terminalType.includes("MC100")) {
+    icon = driveState == 0 ? yellow : green;
+  } else {
+    icon = driveState == 0 ? yellow : green;
+  }
+
+  return icon;
+}
 // 处理经纬度
 function dmsTrans(decimal: any) {
   try {
@@ -802,7 +829,7 @@ function openRemote_markerPopup(arg: any) {
     width: 320px;
     background: url("@/assets/monitoring/bg_1.png") no-repeat center center;
     background-size: cover;
-    
+
     .header {
       cursor: pointer;
       display: flex;

@@ -47,10 +47,29 @@ import gcoord from "gcoord";
 // import "leaflet.markercluster/dist/MarkerCluster.css";
 // import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { mapTileLayers } from "./utils/mapTileLayers";
-import { ref, reactive, onMounted, watch } from "vue";
+import { ref, reactive, onMounted, watch, computed,  defineExpose} from "vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import { useI18n } from "vue-i18n";
 import fixed_icon from "./assets/fixed.png";
+import AG302 from "@/assets/icons/AG302.svg";
+import AG302_warn from "@/assets/icons/AG302_warn.svg";
+import AG360 from "@/assets/icons/AG360.svg";
+import AG360_warn from "@/assets/icons/AG360_warn.svg";
+import AG501 from "@/assets/icons/AG501.svg";
+import AG501_warn from "@/assets/icons/AG501_warn.svg";
+import AG501Pro from "@/assets/icons/AG501Pro.svg";
+import AG501Pro_warn from "@/assets/icons/AG501Pro_warn.svg";
+import AG502 from "@/assets/icons/AG502.svg";
+import AG502_warn from "@/assets/icons/AG502_warn.svg";
+import AG302Android from "@/assets/icons/AG302Android.svg";
+import AG302Android_warn from "@/assets/icons/AG302Android_warn.svg";
+import MC100 from "@/assets/icons/MC100.svg";
+import MC100_warn from "@/assets/icons/MC100_warn.svg";
+import AGunknown from "@/assets/icons/AGunknown.svg";
+import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
+import green from "@/assets/monitoring/green.svg";
+import yellow from "@/assets/monitoring/yellow.svg";
+// import {markerTypeIcon,markerTypeIconSmall} from '@/utils/enumerate'
 const L = window.L;
 const { t } = useI18n();
 
@@ -238,7 +257,6 @@ onMounted(() => {
   createLine(props.lineData);
 });
 
-
 // 创建地图marker点
 function createMarker(list: any) {
   mapRenderModeLength.value += list.length;
@@ -263,6 +281,7 @@ function createMarker(list: any) {
     }
     marker.markerId = item.markerId; // marker对象上设置唯一标识
     marker.markerType = item.markerType; // marker对象上设置唯一标识
+    marker.driveState = item.driveState
     markerArr.push(marker);
     if (mapRenderMode == "dom") {
       props.markerDataHidden.includes(item.markerType)
@@ -294,9 +313,7 @@ function removeMarker(list: any) {
           markerClusterGroup.removeLayer(v);
         }
         if (mapRenderMode == "canvas") {
-          
           markerCanvasGroup.removeMarker(v, true);
-
         }
         markerArr.splice(i, 1);
       }
@@ -326,31 +343,32 @@ function updateMarkerVisible(list: any) {
       } else {
         markerGroup.addLayer(item);
       }
-    }
-    else if (mapRenderMode == "polymer") {
+    } else if (mapRenderMode == "polymer") {
       if (list.includes(item.markerType)) {
         markerClusterGroup.removeLayer(item);
       } else {
         markerClusterGroup.addLayer(item);
       }
-    } else if(mapRenderMode == "canvas"){
+    } else if (mapRenderMode == "canvas") {
       if (list.includes(item.markerType)) {
         markerCanvasGroup.removeLayer(item);
       } else {
         markerCanvasGroup.addLayer(item);
       }
-  }
+    }
   });
 }
 // 创建icon图标
 function createIcon(item: any) {
   if (item.markerIcon) {
-    return L.icon({
-      iconUrl: item.markerIcon, // SVG图标的路径
-      iconSize: [25, 28], // 图标的大小 [宽度, 高度]
-      iconAnchor: [12, 14], // 图标的锚点位置 [水平, 垂直]
-      popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
-    });
+    const markerIcon=getRelativeIcon(item.markerIcon);
+    return markerIcon;
+    // return L.icon({
+    //   iconUrl: item.markerIcon, // SVG图标的路径
+    //   iconSize: [25, 28], // 图标的大小 [宽度, 高度]
+    //   iconAnchor: [12, 14], // 图标的锚点位置 [水平, 垂直]
+    //   popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
+    // });
   }
   if (item.markerTitle) {
     return L.divIcon({
@@ -518,12 +536,102 @@ function mapRanging() {
   }
   pickupMode = true; //开启拾取模式
 }
+const currentZoom = ref<number>(defaultMapZoom);
+const iconChangeLimit = computed<boolean>(() => {
+  return currentZoom.value >= 7;
+});
+function getRelativeIcon(iconUrl:any){
+  return L.icon({
+        iconUrl: iconUrl, // SVG图标的路径     
+        iconSize: iconChangeLimit.value?[26, 28]:[8,8], // 图标的大小 [宽度, 高度]
+        iconAnchor: iconChangeLimit.value?[13, 14]:[4,4], // 图标的锚点位置 [水平, 垂直]
+        popupAnchor: iconChangeLimit.value?[0, -15]:[0,-4],  
+      })
+}
+watch(()=>iconChangeLimit.value,(_value)=>{
+  changeMarkerIcon()
+})
+function createMarkerIcon(item: any) {
+  const { markerType, driveState } = item;
+  let icon: string = "";
+  if (markerType.includes("AG360")) {
+    icon = driveState == 0 ? AG360_warn : AG360;
+  } else if (markerType.includes("AG501") && driveState != "AG501Pro") {
+    icon = driveState == 0 ? AG501_warn : AG501;
+  } else if (markerType == "AG501Pro") {
+    icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
+  } else if (markerType.includes("AG502")) {
+    icon = driveState == 0 ? AG502_warn : AG502;
+  } else if (markerType.includes("AG302") && markerType != "AG302Android") {
+    icon = driveState == 0 ? AG302_warn : AG302;
+  } else if (markerType == "AG302Android") {
+    icon = driveState == 0 ? AG302Android_warn : AG302Android;
+  } else if (item.markerType.includes("MC100")) {
+    icon = driveState == 0 ? MC100_warn : MC100;
+  } else {
+    icon = driveState == 0 ? AGunknown_warn : AGunknown;
+  }
+
+  return icon;
+}
+function createMarkerIconSmall(item: any) {
+  const { markerType, driveState } = item;
+  let icon: string = "";
+  if (markerType.includes("AG360")) {
+    icon = driveState == 0 ? yellow : green;
+  } else if (markerType.includes("AG501") && markerType != "AG501Pro") {
+    icon = driveState == 0 ? yellow : green;
+  } else if (markerType == "AG501Pro") {
+    icon = driveState == 0 ? yellow : green;
+  } else if (markerType.includes("AG502")) {
+    icon = driveState == 0 ? yellow : green;
+  } else if (markerType.includes("AG302") && markerType != "AG302Android") {
+    icon = driveState == 0 ? yellow : green;
+  } else if (markerType == "AG302Android") {
+    icon = driveState == 0 ? yellow : green;
+  } else if (item.markerType.includes("MC100")) {
+    icon = driveState == 0 ? yellow : green;
+  } else {
+    icon = driveState == 0 ? yellow : green;
+  }
+
+  return icon;
+}
+function changeMarkerIcon(){
+  initCanvasGroup();
+  const newMarkers:any=[];
+  if(iconChangeLimit.value){//显示大图标
+    markerArr.forEach((marker:any)=>{
+      // if(!markerTypeIcon[marker.markerType]){return}     
+      const normalIcon=getRelativeIcon(createMarkerIcon(marker))
+      const newMarker=L.marker(marker.getLatLng(),{icon:normalIcon}).bindPopup(marker.getPopup()) as any;
+      newMarker.markerId = marker.markerId;
+      newMarker.markerType = marker.markerType;
+      newMarkers.push(newMarker)
+    })
+   
+  }else{//显示小图标
+    markerArr.forEach((marker:any)=>{
+      // if(!markerTypeIconSmall[marker.markerType]){return}
+      const smallIcon=getRelativeIcon(createMarkerIconSmall(marker))    
+      const newMarker=L.marker(marker.getLatLng(),{icon:smallIcon}).bindPopup(marker.getPopup()) as any;
+      newMarker.markerId = marker.markerId;
+      newMarker.markerType = marker.markerType;
+      newMarkers.push(newMarker)
+    })
+    
+  }
+ 
+  newMarkers.length?markerCanvasGroup.addMarkers(newMarkers):''
+  map.setView(map.getCenter());
+}
 // 地图缩放处理事件
 function mapzoomChange() {
   let flag1 = false;
   let flag2 = false;
   map.on("zoomend", function () {
-    let zoom = map.getZoom();
+    let zoom = map.getZoom();console.log(zoom)
+    currentZoom.value = zoom;
     let fontSize: number;
     if (zoom <= 10) {
       fontSize = zoom / 5;
@@ -555,6 +663,8 @@ function mapzoomChange() {
         }
       });
     }
+    map.setView(map.getCenter());
+    map.fitBounds(map.getBounds());
   });
 }
 
@@ -611,6 +721,11 @@ function initRanging() {
     }
   });
 }
+defineExpose({
+  handleMapCenter,
+  mapTileChange,
+  iconChangeLimit
+});
 </script>
 
 <style lang="scss" scoped>

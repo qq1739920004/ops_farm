@@ -22,7 +22,8 @@ const zh = {
     file:'文件',
     Pleaseenterafilename:'请输入文件名',
     browse:'浏览',
-    Pleasedistributor:'请选择经销商'
+    Pleasedistributor:'请选择经销商',
+    systemName:'司南耕耘'
   },
   sinoMap:{
     SatellitesMap:'卫星地图',

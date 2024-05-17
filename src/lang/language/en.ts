@@ -22,7 +22,8 @@ const en = {
     file:'file',
     Pleaseenterafilename:'Please enter a file name',
     browse:'browse',
-    Pleasedistributor:'Please select a distributor'
+    Pleasedistributor:'Please select a distributor',
+    systemName:'Sino Farm'
   },
   sinoMap: {
     SatellitesMap: "Satellites map",
