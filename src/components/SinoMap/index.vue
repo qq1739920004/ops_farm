@@ -283,21 +283,8 @@ function createMarker(list: any) {
     marker.markerType = item.markerType; // marker对象上设置唯一标识
     marker.driveState = item.driveState
     markerArr.push(marker);
-    if (mapRenderMode == "dom") {
-      props.markerDataHidden.includes(item.markerType)
-        ? ""
-        : markerGroup.addLayer(marker);
-    }
-    if (mapRenderMode == "polymer") {
-      props.markerDataHidden.includes(item.markerType)
-        ? ""
-        : markerClusterGroup.addLayer(marker);
-    }
-    if (mapRenderMode == "canvas") {
-      props.markerDataHidden.includes(item.markerType)
-        ? ""
-        : markerCanvasGroup.addMarker(marker);
-    }
+    markerAddToMap(item.markerType,marker)
+    // changeZoom()
   });
 }
 // 删除地图marker点
@@ -320,19 +307,57 @@ function removeMarker(list: any) {
     });
   });
 }
+function markerAddToMap(markerType:string,marker:any){
+  if (mapRenderMode == "canvas") {
+      props.markerDataHidden.includes(markerType)
+        ? ""
+        : markerCanvasGroup.addMarker(marker);
+    }
+    if (mapRenderMode == "dom") {
+      props.markerDataHidden.includes(markerType)
+        ? ""
+        : markerGroup.addLayer(marker);
+    }
+    if (mapRenderMode == "polymer") {
+      props.markerDataHidden.includes(markerType)
+        ? ""
+        : markerClusterGroup.addLayer(marker);
+    }
+}
 // 修改地图marker点
-function updateMarker(list: any) {
-  list.forEach((item: any) => {
-    markerArr.forEach((v: any) => {
-      if (item.markerId == v.markerId) {
-        const icon = createIcon(item);
-        const [markerLng, markerLat] = gcoordLngLat(item.markerLng, item.markerLat);
-        if (icon) v.setIcon(icon);
-        v.setLatLng([markerLat, markerLng]);
-        v.getPopup().setContent(item.markerPopup);
-      }
-    });
-  });
+function updateMarker(item: any) {
+  const currentMarker=markerArr.find((i:any)=>i.markerId==item.markerId);
+  const currentMarkerIndex=markerArr.findIndex((i:any)=>i.markerId==item.markerId);
+  if(!currentMarker||!item.markerLng||!item.markerLat){return}      
+        const [markerLng, markerLat] = gcoordLngLat(
+          item.markerLng,
+          item.markerLat
+        );
+        currentMarker.setLatLng([markerLat, markerLng]);
+        currentMarker.getPopup().setContent(item.markerPopup);       
+       
+        if(currentMarker.markerType!=item.markerType&&!props.markerDataHidden.includes(item.markerType)){//点的markerType发生变化才更新点的图标                           
+          let icon = createIcon(item);
+          if(mapRenderMode == "canvas"){
+            //要重新建一个marker，不然地图缩放setIcon点会缩放
+            const newMarker=L.marker([markerLat, markerLng],{icon:icon}).bindPopup(item.markerPopup) as any; 
+            newMarker.markerId = currentMarker.markerId;
+            newMarker.markerType = item.markerType;               
+            markerCanvasGroup.removeMarker(currentMarker);                             
+            markerArr.splice(currentMarkerIndex,1,newMarker);
+            props.markerDataHidden.includes(item.markerType)?'':markerCanvasGroup.addMarker(newMarker);  
+          }else{
+            currentMarker.setIcon(icon);
+            removeMarker([currentMarker]);//setIcon操作会使点显示出来,先移除再根据筛选框选中情况是否添加marker
+            props.markerDataHidden.includes(item.markerType)?'':markerAddToMap(currentMarker.markerType,currentMarker);
+          }
+                 
+        };         
+       
+}
+function changeZoom(){
+  map.setZoom(map.getZoom()+1);
+  map.setZoom(map.getZoom()-1);
 }
 // 修改地图marker显隐藏
 function updateMarkerVisible(list: any) {
@@ -350,11 +375,13 @@ function updateMarkerVisible(list: any) {
         markerClusterGroup.addLayer(item);
       }
     } else if (mapRenderMode == "canvas") {
+      initCanvasGroup(); 
       if (list.includes(item.markerType)) {
         markerCanvasGroup.removeLayer(item);
       } else {
         markerCanvasGroup.addLayer(item);
       }
+      map.setView(map.getCenter());
     }
   });
 }
@@ -397,6 +424,9 @@ function initMap() {
     // zoom: props.mapCenter.zoom, //初始缩放值
     zoomControl: false, //是否启用地图缩放控件
     attributionControl: false, //是否启用地图属性控件
+
+    zoomSnap:1,
+    zoomAnimation:mapRenderMode == "canvas"?false:true,
   });
 
   markerGroup.addTo(map);
@@ -601,34 +631,49 @@ function changeMarkerIcon(){
   initCanvasGroup();
   const newMarkers:any=[];
   if(iconChangeLimit.value){//显示大图标
-    markerArr.forEach((marker:any)=>{
+    markerArr.forEach((marker:any,index:number)=>{
       // if(!markerTypeIcon[marker.markerType]){return}     
       const normalIcon=getRelativeIcon(createMarkerIcon(marker))
       const newMarker=L.marker(marker.getLatLng(),{icon:normalIcon}).bindPopup(marker.getPopup()) as any;
       newMarker.markerId = marker.markerId;
       newMarker.markerType = marker.markerType;
       newMarkers.push(newMarker)
+      markerArr.splice(index, 1,newMarker);
+    
+
     })
    
   }else{//显示小图标
-    markerArr.forEach((marker:any)=>{
+    markerArr.forEach((marker:any,index:number)=>{
       // if(!markerTypeIconSmall[marker.markerType]){return}
       const smallIcon=getRelativeIcon(createMarkerIconSmall(marker))    
       const newMarker=L.marker(marker.getLatLng(),{icon:smallIcon}).bindPopup(marker.getPopup()) as any;
       newMarker.markerId = marker.markerId;
       newMarker.markerType = marker.markerType;
       newMarkers.push(newMarker)
+      markerArr.splice(index, 1,newMarker);
+   
     })
     
   }
- 
-  newMarkers.length?markerCanvasGroup.addMarkers(newMarkers):''
+  if(newMarkers.length){
+    newMarkers.forEach((v:any)=>{
+      markerAddToMap(v.markerType,v)
+    })
+  }
+  
   map.setView(map.getCenter());
 }
 // 地图缩放处理事件
 function mapzoomChange() {
   let flag1 = false;
   let flag2 = false;
+  if (mapRenderMode == "canvas"){
+    map.on('mouseup', () => {//解决地图移动时，其他图层和canvas不同步
+      changeZoom()
+    
+    })
+  }
   map.on("zoomend", function () {
     let zoom = map.getZoom();console.log(zoom)
     currentZoom.value = zoom;
