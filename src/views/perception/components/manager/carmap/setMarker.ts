@@ -55,6 +55,7 @@ function setMarker(AMap:any,map:any,dataList:MonitorObj["provinceCars"],length:n
         chartContainer.style.width = `${width.value}px`;
         chartContainer.style.height = `${height.value}px`;
         chartContainer.style.marginTop = `-${marginTop.value}px`;
+        chartContainer.style.transform  = `translateY(${-height.value*0.21}px)`
         markerContent.appendChild(chartContainer);
        const marker= new AMap.Marker({
             position: [dataList[i].lng,dataList[i].lat],
