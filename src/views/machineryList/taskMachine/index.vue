@@ -118,7 +118,7 @@ onMounted(() => {
   Object.assign(pageInfoData, route.query);
   value2.value = new Date();
   const start = new Date();
-  start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
+  start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
   value1.value = start;
   pageInfoData.st = formartDate(value1.value);
   pageInfoData.et = formartDate(value2.value);
@@ -282,47 +282,58 @@ const getSingleCarTrick = async () => {
   loading.value = true;
   removeMarker();
   const solSatList: any = [];
-  const res: singleCarTrackResponseData = await getSingleCarTrick_API(pageInfoData);
-  if (!res.data.length || res.data === null) {
-    loading.value = false;
-    ElMessage.warning(`${route.query.sn}暂无作业数据,请选择其他时间！`);
-    return;
-  } else {
-    let PointListTransed = res.data.map((item2: any) => {
-      solSatList.push(item2.solStat);
-      return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
-    });
-    // 取中间点
-    ElMessage.success(`${route.query.sn}轨迹获取成功！`);
-    let line = L.polyline(PointListTransed, { color: "#5C5C5C", weight: 1 }).addTo(map);
-    PointListTransed.map((item: any, index: any) => {
-      if (solSatList[index] === 4) {
-        let line2 = L.circle(item, {
-          radius: 1,
-          color: "#22B14C",
-          fillOpacity: 1,
-        }).addTo(map);
-        eleDataObject.push(line2)
-      } else if (solSatList[index] === 15) {
-        let line2 = L.circle(item, {
-          radius: 1,
-          color: "#3F48CC",
-          fillOpacity: 1,
-        }).addTo(map);
-        eleDataObject.push(line2)
-      } else {
-        let line2 = L.circle(item, {
-          radius: 1,
-          color: "#ED1C24",
-          fillOpacity: 1,
-        }).addTo(map);
-        eleDataObject.push(line2)
-      }
-    });
-    saveMarker([{ markerObj: line, name: "lines" }]);
 
-    map.fitBounds(PointListTransed);
-  }
+  getSingleCarTrick_API(pageInfoData)
+    .then((res: singleCarTrackResponseData) => {
+      if (!res.data.length || res.data === null) {
+        loading.value = false;
+        ElMessage.warning(`${route.query.sn}暂无作业数据,请选择其他时间！`);
+        return;
+      } else {
+        let PointListTransed = res.data.map((item2: any) => {
+          solSatList.push(item2.solStat);
+          return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
+        });
+        // 取中间点
+        ElMessage.success(`${route.query.sn}轨迹获取成功！`);
+        let line = L.polyline(PointListTransed, { color: "#5C5C5C", weight: 1 }).addTo(
+          map
+        );
+        PointListTransed.map((item: any, index: any) => {
+          if (solSatList[index] === 4) {
+            let line2 = L.circle(item, {
+              radius: 1,
+              color: "#22B14C",
+              fillOpacity: 1,
+            }).addTo(map);
+            eleDataObject.push(line2);
+          } else if (solSatList[index] === 15) {
+            let line2 = L.circle(item, {
+              radius: 1,
+              color: "#3F48CC",
+              fillOpacity: 1,
+            }).addTo(map);
+            eleDataObject.push(line2);
+          } else {
+            let line2 = L.circle(item, {
+              radius: 1,
+              color: "#ED1C24",
+              fillOpacity: 1,
+            }).addTo(map);
+            eleDataObject.push(line2);
+          }
+        });
+        saveMarker([{ markerObj: line, name: "lines" }]);
+
+        map.fitBounds(PointListTransed);
+        loading.value = false;
+      }
+    })
+    .catch(() => {
+      console.log("error");
+      loading.value = false;
+    });
+
   loading.value = false;
 };
 //坐标转换
@@ -361,12 +372,11 @@ const removeMarker = () => {
         }
       });
       markerCollect["marker"] = [];
-      eleDataObject.forEach((item:any) => {
-        map.removeLayer(item)
-      })
+      eleDataObject.forEach((item: any) => {
+        map.removeLayer(item);
+      });
     } else {
     }
-   
   } catch (err) {
     console.log(err);
   }

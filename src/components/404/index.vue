@@ -7,6 +7,7 @@
         <img class="pic-404__child left" src="@/assets/common/404_cloud.png" alt="404" />
         <img class="pic-404__child mid" src="@/assets/common/404_cloud.png" alt="404" />
         <img class="pic-404__child right" src="@/assets/common/404_cloud.png" alt="404" /> -->
+        <!-- <img class="pic-404__parent" src="@/assets/common/404.png"/> -->
       </div>
       <div class="bullshit">
         <div class="bullshit__oops">OOPS!</div>
