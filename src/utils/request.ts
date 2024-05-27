@@ -81,7 +81,7 @@ async function tokenRenewal() {
   const res = await service({
     url: "/auth/oauth/token",
     method: "post",
-    data,
+    params: data,
   });
 
   tokenRenewalFlag = true;
