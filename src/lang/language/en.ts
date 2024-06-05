@@ -23,7 +23,9 @@ const en = {
     Pleaseenterafilename:'Please enter a file name',
     browse:'browse',
     Pleasedistributor:'Please select a distributor',
-    systemName:'Sino Farm'
+    systemName:'Sino Farm',
+    backHome:'back to home',
+    noRequest:'The access address does not exist!'
   },
   sinoMap: {
     SatellitesMap: "Satellites map",

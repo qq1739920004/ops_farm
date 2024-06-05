@@ -211,6 +211,7 @@ import { useI18n } from "vue-i18n";
 const sinoMapRef = ref();
 const { t } = useI18n();
 const { locale } = useI18n();
+let mapRenderModeLengthMax = 500;
 const router = useRouter();
 const route = useRoute();
 const socketStore = useSocketStore();
@@ -328,21 +329,41 @@ function handleSocketData(socketData: any) {
   if (socketData.module == "farm" && socketData.type == "farmPt") {
     let { action, data } = socketData;
     if (action == "upline") {
-      const markerId = data.sn;
-      const markerLng = data.posY;
-      const markerLat = data.posX;
-      const markerType = createMarkerType(data);
-      const markerIcon = sinoMapRef.value.iconChangeLimit?createMarkerIcon(data):createMarkerIconSmall(data)
-      const markerPopup = createMarkerPopup(data);
-      markerDataHandle.value = {
-        markerId,
-        markerLng,
-        markerLat,
-        markerType,
-        markerIcon,
-        markerPopup,
-        markerHandle: "add",
-      };
+      if (sinoMapRef.value.isIconChange) {
+        const markerId = data.sn;
+        const markerLng = data.posY;
+        const markerLat = data.posX;
+        const markerType = createMarkerType(data);
+        const markerIcon = sinoMapRef.value.iconChangeLimit
+          ? createMarkerIcon(data)
+          : createMarkerIconSmall(data);
+        const markerPopup = createMarkerPopup(data);
+        markerDataHandle.value = {
+          markerId,
+          markerLng,
+          markerLat,
+          markerType,
+          markerIcon,
+          markerPopup,
+          markerHandle: "add",
+        };
+      } else {
+        const markerId = data.sn;
+        const markerLng = data.posY;
+        const markerLat = data.posX;
+        const markerType = createMarkerType(data);
+        const markerIcon = createMarkerIcon(data);
+        const markerPopup = createMarkerPopup(data);
+        markerDataHandle.value = {
+          markerId,
+          markerLng,
+          markerLat,
+          markerType,
+          markerIcon,
+          markerPopup,
+          markerHandle: "add",
+        };
+      }
     }
     if (action == "offline") {
       const markerId = data.sn;
@@ -352,21 +373,41 @@ function handleSocketData(socketData: any) {
       };
     }
     if (action == "online") {
-      const markerId = data.sn;
-      const markerLng = data.posY;
-      const markerLat = data.posX;
-      const markerType = createMarkerType(data);
-      const markerIcon = sinoMapRef.value.iconChangeLimit?createMarkerIcon(data):createMarkerIconSmall(data)
-      const markerPopup = createMarkerPopup(data);
-      markerDataHandle.value = {
-        markerId,
-        markerLng,
-        markerLat,
-        markerType,
-        markerIcon,
-        markerPopup,
-        markerHandle: "update",
-      };
+      if (sinoMapRef.value.isIconChange) {
+        const markerIcon = sinoMapRef.value.iconChangeLimit
+          ? createMarkerIcon(data)
+          : createMarkerIconSmall(data);
+        const markerId = data.sn;
+        const markerLng = data.posY;
+        const markerLat = data.posX;
+        const markerType = createMarkerType(data);
+        const markerPopup = createMarkerPopup(data);
+        markerDataHandle.value = {
+          markerId,
+          markerLng,
+          markerLat,
+          markerType,
+          markerIcon,
+          markerPopup,
+          markerHandle: "update",
+        };
+      } else {
+        const markerIcon = createMarkerIcon(data);
+        const markerId = data.sn;
+        const markerLng = data.posY;
+        const markerLat = data.posX;
+        const markerType = createMarkerType(data);
+        const markerPopup = createMarkerPopup(data);
+        markerDataHandle.value = {
+          markerId,
+          markerLng,
+          markerLat,
+          markerType,
+          markerIcon,
+          markerPopup,
+          markerHandle: "update",
+        };
+      }
     }
   }
   if (socketData.module == "farm" && socketData.type == "monitor") {
@@ -449,14 +490,20 @@ async function getFaromDataStatistics() {
 async function getOnlineFarmPosition() {
   const { data } = await onlineFarmMachinePosition_API({});
   let onlineFarmMachines = data.onlineFarmMachines;
+  console.log(onlineFarmMachines.length);
   onlineFarmMachines.forEach((item: any) => {
     item.markerId = item.sn;
     item.markerLng = item.posY;
     item.markerLat = item.posX;
     item.markerType = createMarkerType(item);
-    item.markerIcon = sinoMapRef.value.iconChangeLimit?createMarkerIcon(item):createMarkerIconSmall(item)
+    item.markerIcon =
+      onlineFarmMachines.length > mapRenderModeLengthMax
+        ? sinoMapRef.value.iconChangeLimit
+          ? createMarkerIcon(item)
+          : createMarkerIconSmall(item)
+        : createMarkerIcon(item);
     item.markerPopup = createMarkerPopup(item);
-    item.driveState = item.driveState
+    item.driveState = item.driveState;
   });
   onlineFarmMachines = onlineFarmMachines.filter(
     (item: any) => item.markerLng || item.markerLng == 0

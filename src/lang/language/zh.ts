@@ -23,7 +23,11 @@ const zh = {
     Pleaseenterafilename:'请输入文件名',
     browse:'浏览',
     Pleasedistributor:'请选择经销商',
-    systemName:'司南耕耘'
+    systemName:'司南耕耘',
+    backHome:'返回首页',
+    noRequest:'访问地址不存在！'
+
+
   },
   sinoMap:{
     SatellitesMap:'卫星地图',

@@ -1,54 +1,48 @@
-
 <template>
   <div class="wscn-http404-container">
     <div class="wscn-http404">
       <div class="pic-404">
-        <!-- <img class="pic-404__parent" src="@/assets/common/404.png" alt="404" />
-        <img class="pic-404__child left" src="@/assets/common/404_cloud.png" alt="404" />
-        <img class="pic-404__child mid" src="@/assets/common/404_cloud.png" alt="404" />
-        <img class="pic-404__child right" src="@/assets/common/404_cloud.png" alt="404" /> -->
-        <!-- <img class="pic-404__parent" src="@/assets/common/404.png"/> -->
-      </div>
-      <div class="bullshit">
-        <div class="bullshit__oops">OOPS!</div>
-        <div class="bullshit__info">All rights reserved
-          <a style="color:#20a0ff" href="https://wallstreetcn.com" target="_blank">wallstreetcn</a>
+        <img class="pic-404__parent" src="@/assets/common/404.png" />
+        <div class="title_line">{{ $t("messages.noRequest") }}</div>
+        <div class="a_line">
+          <a href="" class="bullshit__return-home"> {{ $t("messages.backHome") }}</a>
         </div>
-        <div class="bullshit__headline">{{ message }}</div>
-        <div class="bullshit__info">Please check that the URL you entered is correct, or click the button below to return to the homepage.</div>
-        <a href="" class="bullshit__return-home">Back to home</a>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
-export default {
-  name: 'Page404',
-  computed: {
-    message() {
-      return 'The webmaster said that you can not enter this page...'
-    }
-  }
-}
 </script>
 
 <style lang="scss" scoped>
-.wscn-http404-container{
-  transform: translate(-50%,-50%);
-  position: absolute;
-  top: 40%;
-  left: 50%;
+.wscn-http404-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .wscn-http404 {
+  margin-left: 600px;
   position: relative;
   width: 1200px;
-  padding: 0 50px;
+
   overflow: hidden;
   .pic-404 {
-    position: relative;
-    float: left;
+    .a_line {
+      display: flex;
+      justify-content: center;
+    }
+    .title_line {
+      display: flex;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 28px;
+    }
     width: 600px;
     overflow: hidden;
     &__parent {
@@ -88,72 +82,6 @@ export default {
         animation-timing-function: linear;
         animation-fill-mode: forwards;
         animation-delay: 1s;
-      }
-      @keyframes cloudLeft {
-        0% {
-          top: 17px;
-          left: 220px;
-          opacity: 0;
-        }
-        20% {
-          top: 33px;
-          left: 188px;
-          opacity: 1;
-        }
-        80% {
-          top: 81px;
-          left: 92px;
-          opacity: 1;
-        }
-        100% {
-          top: 97px;
-          left: 60px;
-          opacity: 0;
-        }
-      }
-      @keyframes cloudMid {
-        0% {
-          top: 10px;
-          left: 420px;
-          opacity: 0;
-        }
-        20% {
-          top: 40px;
-          left: 360px;
-          opacity: 1;
-        }
-        70% {
-          top: 130px;
-          left: 180px;
-          opacity: 1;
-        }
-        100% {
-          top: 160px;
-          left: 120px;
-          opacity: 0;
-        }
-      }
-      @keyframes cloudRight {
-        0% {
-          top: 100px;
-          left: 500px;
-          opacity: 0;
-        }
-        20% {
-          top: 120px;
-          left: 460px;
-          opacity: 1;
-        }
-        80% {
-          top: 180px;
-          left: 340px;
-          opacity: 1;
-        }
-        100% {
-          top: 200px;
-          left: 300px;
-          opacity: 0;
-        }
       }
     }
   }
@@ -199,15 +127,16 @@ export default {
     }
     &__return-home {
       display: block;
-      float: left;
-      width: 110px;
+
+      padding: 0 10px;
       height: 36px;
+      width: 180px;
       background: #1482f0;
-      border-radius: 100px;
+      border-radius: 4px;
       text-align: center;
       color: #ffffff;
       opacity: 0;
-      font-size: 14px;
+      font-size: 18px;
       line-height: 36px;
       cursor: pointer;
       animation-name: slideUp;
