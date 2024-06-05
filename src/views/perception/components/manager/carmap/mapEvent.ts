@@ -9,11 +9,13 @@ export function mapEvent(map:any){
     }
     timer=setTimeout(() => {
       let zoomV= map.value.getZoom()
-      zoomV=(zoomV/5.76).toFixed(2)
+      zoomV=(zoomV/5.76).toFixed(3)
       chartContainerList.value.forEach((item:any)=>{
         item.style.width = `${width.value*zoomV}px`;
         item.style.height = `${height.value*zoomV}px`;
         item.style.marginTop = `-${marginTop.value*zoomV}px`;
+        item.style.transform = `translateY(${-height.value*zoomV*0.21}px)`
+
       })
       chartList.value.forEach((item:any)=>{
         item.resize()
