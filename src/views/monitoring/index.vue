@@ -7,7 +7,6 @@
       :markerDataHidden="markerDataHidden"
       :mapCenter="mapCenter"
       mapRenderMode="canvas"
-      @marker-click="markerClick"
     />
     <div class="search_box">
       <el-autocomplete
@@ -237,14 +236,7 @@ const mapCenter = reactive<any>({
   markerId: "",
   mapCenter: [],
 });
-async function markerClick(marker: any) {
-  // const sn=marker.markerId.split("_")[1];
-  // const { data } = await mapBaseDetail_API(sn);
 
-  // dealBaseMarkerData(data);
-  // markerDataHandle.value.markerHandle="update";
-  console.log(marker);
-}
 // @ts-ignore
 window.goMachineryList_markerPopup = goMachineryList_markerPopup;
 // @ts-ignore
@@ -496,12 +488,17 @@ async function getOnlineFarmPosition() {
     item.markerLng = item.posY;
     item.markerLat = item.posX;
     item.markerType = createMarkerType(item);
-    item.markerIcon =
-      onlineFarmMachines.length > mapRenderModeLengthMax
-        ? sinoMapRef.value.iconChangeLimit
-          ? createMarkerIcon(item)
-          : createMarkerIconSmall(item)
-        : createMarkerIcon(item);
+    if (onlineFarmMachines.length > mapRenderModeLengthMax) {
+      console.log(sinoMapRef.value.iconChangeLimit);
+      if (sinoMapRef.value.iconChangeLimit) {
+        item.markerIcon = createMarkerIcon(item);
+      } else {
+        item.markerIcon = createMarkerIconSmall(item);
+      }
+    } else {
+      item.markerIcon = createMarkerIcon(item);
+    }
+
     item.markerPopup = createMarkerPopup(item);
     item.driveState = item.driveState;
   });
@@ -537,6 +534,12 @@ function createMarkerType(item: any) {
     return "AG302Android";
   } else if (item.terminalType.includes("MC100")) {
     return "MC100";
+  } else if (item.terminalType.includes("SA200")) {
+    return "SA200";
+  } else if (item.terminalType.includes("MT801")) {
+    return "MT801";
+  } else if (item.terminalType.includes("MT802")) {
+    return "MT802";
   } else {
     return "";
   }

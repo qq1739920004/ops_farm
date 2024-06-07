@@ -69,6 +69,12 @@ import AGunknown from "@/assets/icons/AGunknown.svg";
 import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
 import green from "@/assets/monitoring/green.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
+import MT801 from "@/assets/icons/MT801.svg";
+import MT801_warn from "@/assets/icons/MT801_warn.svg";
+import MT802 from "@/assets/icons/MT802.svg";
+import MT802_warn from "@/assets/icons/MT802_warn.svg";
+import SA200 from "@/assets/icons/SA200.svg";
+import SA200_warn from "@/assets/icons/SA200_warn.svg";
 // import {markerTypeIcon,markerTypeIconSmall} from '@/utils/enumerate'
 const L = window.L;
 const { t } = useI18n();
@@ -196,7 +202,7 @@ let map: any = null; // map实例对象
 let polyline: any = null;
 let mapRenderMode = props.mapRenderMode || "dom";
 let mapRenderModeLength = ref(0);
-let mapRenderModeLengthMax =500; //数量超过1000，强制转为 polymer 聚合引擎
+let mapRenderModeLengthMax = 500; //数量超过1000，强制转为 polymer 聚合引擎
 let markerArr: any = []; // marker坐标点数字
 let polygonArr: any = [];
 let markerCanvasGroup: any = null;
@@ -361,29 +367,47 @@ function changeZoom() {
 }
 // 修改地图marker显隐藏
 function updateMarkerVisible(list: any) {
-  markerArr.forEach((item: any) => {
-    if (mapRenderMode == "dom") {
-      if (list.includes(item.markerType)) {
-        markerGroup.removeLayer(item);
-      } else {
-        markerGroup.addLayer(item);
-      }
-    } else if (mapRenderMode == "polymer") {
-      if (list.includes(item.markerType)) {
-        markerClusterGroup.removeLayer(item);
-      } else {
-        markerClusterGroup.addLayer(item);
-      }
-    } else if (mapRenderMode == "canvas") {
-      initCanvasGroup();
-      if (list.includes(item.markerType)) {
-        markerCanvasGroup.removeLayer(item);
-      } else {
-        markerCanvasGroup.addLayer(item);
-      }
-      map.setView(map.getCenter());
-    }
-  });
+  let includedMarkers = markerArr.filter((j: any) => !list.includes(j.markerType));
+  markerGroup.clearLayers();
+  if (mapRenderMode == "dom") {
+    includedMarkers.forEach((marker: any) => {
+      markerGroup.addLayer(marker);
+    });
+  } else if (mapRenderMode == "polymer") {
+    markerClusterGroup.clearLayers();
+    markerClusterGroup.addLayers(includedMarkers);
+  } else if (mapRenderMode == "canvas") {
+    initCanvasGroup();
+    // includedMarkers.length?markerCanvasGroup.addMarkers(includedMarkers.filter((item:any)=>item.markerType != "line")):''
+    includedMarkers.length ? markerCanvasGroup.addMarkers(includedMarkers) : "";
+    map.setView(map.getCenter()); //缩放也会漂移
+  }
+  // lineMarkers.forEach((makrer:any)=>{
+  //   markerGroup.addLayer(makrer);
+  // })
+  // markerArr.forEach((item: any) => {
+  //   if (mapRenderMode == "dom") {
+  //     if (list.includes(item.markerType)) {
+  //       markerGroup.removeLayer(item);
+  //     } else {
+  //       markerGroup.addLayer(item);
+  //     }
+  //   } else if (mapRenderMode == "polymer") {
+  //     if (list.includes(item.markerType)) {
+  //       markerClusterGroup.removeLayer(item);
+  //     } else {
+  //       markerClusterGroup.addLayer(item);
+  //     }
+  //   } else if (mapRenderMode == "canvas") {
+  //     initCanvasGroup();
+  //     if (list.includes(item.markerType)) {
+  //       markerCanvasGroup.removeLayer(item);
+  //     } else {
+  //       markerCanvasGroup.addLayer(item);
+  //     }
+  //     map.setView(map.getCenter());
+  //   }
+  // });
 }
 // 创建icon图标
 function createIcon(item: any) {
@@ -436,15 +460,11 @@ function initMap() {
   initRanging();
   mapzoomChange();
 }
-const emit = defineEmits(["marker-click"]);
 function initCanvasGroup() {
   if (map.hasLayer(markerCanvasGroup)) {
     map.removeLayer(markerCanvasGroup);
   }
   markerCanvasGroup = L.canvasIconLayer({}).addTo(map);
-  markerCanvasGroup.addOnClickListener((_e: any, data: any) => {
-    emit("marker-click", data[0].data);
-  });
 }
 // 创建多面形
 function createPolygon(list: any) {
@@ -572,7 +592,7 @@ const iconChangeLimit = computed<boolean>(() => {
   return currentZoom.value >= 7;
 });
 function getRelativeIcon(iconUrl: any) {
-  if (mapRenderModeLength.value>mapRenderModeLengthMax) {
+  if (mapRenderModeLength.value > mapRenderModeLengthMax) {
     return L.icon({
       iconUrl: iconUrl, // SVG图标的路径
       iconSize: iconChangeLimit.value ? [26, 28] : [8, 8], // 图标的大小 [宽度, 高度]
@@ -596,11 +616,10 @@ watch(
 );
 function createMarkerIcon(item: any) {
   const { markerType, driveState } = item;
-  console.log(item)
   let icon: string = "";
   if (markerType.includes("AG360")) {
     icon = driveState == 0 ? AG360_warn : AG360;
-  } else if (markerType.includes("AG501") && driveState != "AG501Pro") {
+  } else if (markerType.includes("AG501") && markerType != "AG501Pro") {
     icon = driveState == 0 ? AG501_warn : AG501;
   } else if (markerType == "AG501Pro") {
     icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
@@ -612,6 +631,12 @@ function createMarkerIcon(item: any) {
     icon = driveState == 0 ? AG302Android_warn : AG302Android;
   } else if (item.markerType.includes("MC100")) {
     icon = driveState == 0 ? MC100_warn : MC100;
+  } else if (item.markerType.includes("MT801")) {
+    icon = driveState == 0 ? MT801_warn : MT801;
+  } else if (item.markerType.includes("MT802")) {
+    icon = driveState == 0 ? MT802_warn : MT802;
+  } else if (item.markerType.includes("SA200")) {
+    icon = driveState == 0 ? SA200_warn : SA200;
   } else {
     icon = driveState == 0 ? AGunknown_warn : AGunknown;
   }
@@ -683,6 +708,7 @@ function changeMarkerIcon() {
       ) as any;
       newMarker.markerId = marker.markerId;
       newMarker.markerType = marker.markerType;
+      newMarker.driveState = marker.driveState;
       newMarkers.push(newMarker);
       markerArr.splice(index, 1, newMarker);
     });
@@ -707,7 +733,6 @@ function mapzoomChange() {
   }
   map.on("zoomend", function () {
     let zoom = map.getZoom();
-    console.log(zoom);
     currentZoom.value = zoom;
     let fontSize: number;
     if (zoom <= 10) {
@@ -802,7 +827,7 @@ defineExpose({
   handleMapCenter,
   mapTileChange,
   iconChangeLimit,
-  isIconChange
+  isIconChange,
 });
 </script>
 
