@@ -198,6 +198,12 @@ import SinoMap from "@/components/SinoMap/index.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import realTimeChart from "./components/realTimeChart.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
+import MT801 from "@/assets/icons/MT801.svg";
+import MT801_warn from "@/assets/icons/MT801_warn.svg";
+import MT802 from "@/assets/icons/MT802.svg";
+import MT802_warn from "@/assets/icons/MT802_warn.svg";
+import SA200 from "@/assets/icons/SA200.svg";
+import SA200_warn from "@/assets/icons/SA200_warn.svg";
 import { reactive, ref, watch, onUnmounted, computed, onMounted } from "vue";
 import useSocketStore from "@/store/socket";
 import { useRouter, useRoute } from "vue-router";
@@ -541,6 +547,7 @@ function createMarkerType(item: any) {
   } else if (item.terminalType.includes("MT802")) {
     return "MT802";
   } else {
+    
     return "";
   }
 }
@@ -757,8 +764,14 @@ function createMarkerIcon(item: any) {
     icon = driveState == 0 ? AG302_warn : AG302;
   } else if (terminalType == "AG302Android") {
     icon = driveState == 0 ? AG302Android_warn : AG302Android;
-  } else if (item.terminalType.includes("MC100")) {
+  } else if (item.markerType.includes("MC100")) {
     icon = driveState == 0 ? MC100_warn : MC100;
+  } else if (item.markerType.includes("MT801")) {
+    icon = driveState == 0 ? MT801_warn : MT801;
+  } else if (item.markerType.includes("MT802")) {
+    icon = driveState == 0 ? MT802_warn : MT802;
+  } else if (item.markerType.includes("SA200")) {
+    icon = driveState == 0 ? SA200_warn : SA200;
   } else {
     icon = driveState == 0 ? AGunknown_warn : AGunknown;
   }
