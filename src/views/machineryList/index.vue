@@ -2,35 +2,81 @@
   <div class="app_container">
     <div class="search_container app_card">
       <div class="input_area">
-        <el-input :placeholder="$t('devicelist.pleaseInput')" v-model="pageInfo.key" class="input-with-select"
-          @keyup.enter.native="search" clearable @clear="clearAll">
+        <el-input
+          :placeholder="$t('devicelist.pleaseInput')"
+          v-model="pageInfo.key"
+          class="input-with-select"
+          @keyup.enter.native="search"
+          clearable
+          @clear="clearAll"
+        >
           <template #append>
             <el-button icon="Search" @click="search" />
           </template>
         </el-input>
-        <el-select filterable v-if="dealerList.length > 1" class="m_2" placeholder="公司/经销商" v-model="pageInfo.companyId"
-          @change="changeBlur">
-          <el-option v-for="item in dealerList" :label="item.name" :value="item.id" :key="item.id"></el-option>
+        <el-select
+          filterable
+          v-if="dealerList.length > 1"
+          class="m_2"
+          placeholder="公司/经销商"
+          v-model="pageInfo.companyId"
+          @change="changeBlur"
+        >
+          <el-option
+            v-for="item in dealerList"
+            :label="item.name"
+            :value="item.id"
+            :key="item.id"
+          ></el-option>
         </el-select>
-        <el-input v-if="dealerList.length == 1" class="m_2" v-model="dealerList[0].name" @change="changeBlur" disabled>
+        <el-input
+          v-if="dealerList.length == 1"
+          class="m_2"
+          v-model="dealerList[0].name"
+          @change="changeBlur"
+          disabled
+        >
         </el-input>
       </div>
       <div class="button_area">
-        <el-button v-auth="787" style="margin-right: 5px" type="primary" @click="gotoUpgrade">{{ $t('devicelist.upgrade')
-        }}</el-button>
-        <el-button style="margin-right: 20px" type="primary" @click="gotoInput">{{ $t('devicelist.inputDealerDevice')
+        <el-button
+          v-auth="787"
+          style="margin-right: 5px"
+          type="primary"
+          @click="gotoUpgrade"
+          >{{ $t("devicelist.upgrade") }}</el-button
+        >
+        <el-button style="margin-right: 20px" type="primary" @click="gotoInput">{{
+          $t("devicelist.inputDealerDevice")
         }}</el-button>
         <el-button-group class="button_group2">
-          <el-button icon="Expand" :class="{ tab_active: tableShow }" @click="switchTabShow(true)" /> 
-          <el-button icon="menu" :class="{ tab_active: !tableShow }" @click="switchTabShow(false)" />
+          <el-button
+            icon="Expand"
+            :class="{ tab_active: tableShow }"
+            @click="switchTabShow(true)"
+          />
+          <el-button
+            icon="menu"
+            :class="{ tab_active: !tableShow }"
+            @click="switchTabShow(false)"
+          />
         </el-button-group>
       </div>
     </div>
     <div class="table_container app_card" v-show="tableShow">
-      <sn-table :carNewList="carNewList" @changeSort="changeSort">
+      <sn-table
+        @datachange="dataChange"
+        :carNewList="carNewList"
+        @changeSort="changeSort"
+      >
         <div>
-          <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
-            @pageChange="currentChange" :disabled="dealerList.length == 0 ? true : false">
+          <Pagination
+            :total="total"
+            :currentPage="pageInfo.currentPage"
+            :pageSize="pageInfo.pageSize"
+            @pageChange="currentChange"
+            :disabled="dealerList.length == 0 ? true : false"
+          >
           </Pagination>
         </div>
       </sn-table>
@@ -52,17 +98,16 @@ import upGradeDia from "./components/upgradeDia.vue";
 import Pagination from "@/components/Pagination/index.vue";
 import { reactive, ref, onMounted } from "vue";
 import { carNewList_API } from "@/api/machineryList/index";
-import {
-  newListObj,
-  carNewListResponseData,
-  pageInfo,
-} from "@/api/machineryList/type";
+import { newListObj, carNewListResponseData, pageInfo } from "@/api/machineryList/type";
 import snTable from "./components/sn-table.vue";
 import snCard from "./components/sn-card.vue";
 import { carDealer_API } from "@/api/machineryList/index";
 import { carDealerResponseData, carDealerObj } from "@/api/machineryList/type";
-import { ProvinceDataNewListResponseData, ProvinceDataNewListObj } from '@/api/machineryList/sn-card/type'
-import { getProvinceDataNewList_API } from '@/api/machineryList/sn-card/index'
+import {
+  ProvinceDataNewListResponseData,
+  ProvinceDataNewListObj,
+} from "@/api/machineryList/sn-card/type";
+import { getProvinceDataNewList_API } from "@/api/machineryList/sn-card/index";
 let $route = useRoute();
 // 控制table显示与否
 const tableShow = ref<boolean>(true);
@@ -77,12 +122,13 @@ const pageInfo = reactive<pageInfo>({
   order: "1",
   provinceCode: "",
   cityCode: "",
+  activationStatus:''
 });
-const upgradeD = ref()
+const upgradeD = ref();
 const inputD = ref();
 // 车辆列表
 const carNewList = ref<newListObj[]>([]);
-const provinceCountData = reactive<ProvinceDataNewListObj[]>([])
+const provinceCountData = reactive<ProvinceDataNewListObj[]>([]);
 // 车辆ID
 const search = () => {
   tableShow.value = true;
@@ -109,9 +155,13 @@ const changeSort = (val: string) => {
   getCarList();
 };
 const getProvinceDataNewList = async () => {
-  const res: ProvinceDataNewListResponseData = await getProvinceDataNewList_API()
-  Object.assign(provinceCountData, res.data)
-}
+  const res: ProvinceDataNewListResponseData = await getProvinceDataNewList_API();
+  Object.assign(provinceCountData, res.data);
+};
+const dataChange = (val: any) => {
+  pageInfo.activationStatus = val.activationStatus
+  getCarList()
+};
 
 // 获取公司列表
 const getDealerList = async () => {
@@ -119,7 +169,7 @@ const getDealerList = async () => {
   if (res.data == null) {
   } else {
     if (res.data.length > 1) {
-      dealerList.value = [{ id: "", name: t('devicelist.totalDealer') }, ...res.data];
+      dealerList.value = [{ id: "", name: t("devicelist.totalDealer") }, ...res.data];
       pageInfo.companyId = dealerList.value[0].id;
     } else {
       dealerList.value = res.data;
@@ -135,9 +185,7 @@ const clearAll = () => {
 };
 // 获取车辆列表
 const getCarList = async () => {
-  const res: carNewListResponseData = await carNewList_API(
-    JSON.stringify(pageInfo)
-  );
+  const res: carNewListResponseData = await carNewList_API(JSON.stringify(pageInfo));
   carNewList.value = res.data.records.map((item) => {
     let openRemote: any = true; //是否远程管理
     if (item.onlineTcp === 0 || item.driveState != 0) {
@@ -165,8 +213,7 @@ const switchTabShow = (val: boolean) => {
   tableShow.value = val;
   if (val == false) {
     if (provinceCountData.length === 0) {
-      getProvinceDataNewList()
-
+      getProvinceDataNewList();
     }
   }
 };

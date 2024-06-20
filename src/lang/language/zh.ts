@@ -349,7 +349,10 @@ const zh = {
     remoteCalibration: "远程校准",
     setDataLink: "设置数据链",
     register: "注册",
-    miniProgram: "小程序"
+    miniProgram: "小程序",
+    notActived:'未激活',
+    actived:'已激活',
+    activationStatus:'激活状态'
   },
 }
 export default zh

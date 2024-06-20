@@ -269,10 +269,10 @@
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button type="primary" v-if="!newRecords.id" @click="submit">
-                            {{ $t('work.frontSN') }}
+                            {{ $t('work.submit') }}
                         </el-button>
                         <el-button type="primary" v-else @click="editSubmit">
-                            {{ $t('work.frontSN') }}
+                            {{ $t('work.submit') }}
                         </el-button>
                     </span>
                 </template>

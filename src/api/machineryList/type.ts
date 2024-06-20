@@ -12,6 +12,7 @@ export interface pageInfo {
     order: string,
     cityCode?: string,
     provinceCode?: string
+    activationStatus?:any
 }
 
 export interface newListObj {
