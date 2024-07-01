@@ -29,6 +29,18 @@ const zh = {
 
 
   },
+  code:{
+    notCar:'参数错误,该SN无对应的车辆',
+    noSN:'参数错误,未传入SN号',
+    noCar:'车辆不存在',
+    hasNpn:"铭牌号NPN已经存在",
+    partBounded:'部件已被绑定',
+    chaFenMistake:'差分设置失败',
+    noPackage:'该设备没有固件包',
+    upGradeMis:'在线升级失败',
+    updateMis:'参数更新失败',
+    StarMis:'开启/关闭星基模式失败'
+  },
   sinoMap:{
     SatellitesMap:'卫星地图',
     AMAP:'高德地图',

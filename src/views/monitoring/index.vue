@@ -547,7 +547,6 @@ function createMarkerType(item: any) {
   } else if (item.terminalType.includes("MT802")) {
     return "MT802";
   } else {
-    
     return "";
   }
 }

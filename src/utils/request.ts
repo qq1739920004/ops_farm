@@ -1,5 +1,7 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { ElMessage } from "element-plus";
+import { errorCode } from "./code";
+import i18n from "@/lang/index"
 import useUserStore from '@/store/user'
 const userStore = useUserStore()
 import { ElLoading } from 'element-plus'
@@ -37,15 +39,26 @@ service.interceptors.response.use(
       tokenRenewal();
     }
 
-    let { code, message } = response.data;
-    if (code === 0 || code === 200 || code === 'ok') {
-      return response.data;
-    }
+    let { code, message, type } = response.data;
+
     // 响应数据为二进制流处理(Excel导出)
     if (response.data instanceof ArrayBuffer || response.data instanceof Blob) {
       return response.data;
+    } else {
+      if (code === 0 || code === 200 || code === 'ok') {
+        return response.data;
+      } else {
+        if (errorCode[code]) {
+          type === 'error' ? ElMessage.error(i18n.global.t(errorCode[code])) : ElMessage.warning(i18n.global.t(errorCode[code]));
+        } else {
+          type === 'error' ? ElMessage.error(response.data.message) : ElMessage.warning(response.data.message);
+
+        }
+
+
+      }
     }
-    ElMessage.error(message || '系统错误');
+
     return Promise.reject(new Error(message || 'Error'));
   },
   (error: any) => {

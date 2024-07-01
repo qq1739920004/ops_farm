@@ -225,12 +225,12 @@ let mapTileOptions = reactive({
       mapName: "GaoDe",
       mapType: "Normal",
     },
-    {
-      id: 2,
-      lable: "sinoMap.googleMap",
-      mapName: "Google",
-      mapType: "Normal",
-    },
+    // {
+    //   id: 2,
+    //   lable: "sinoMap.googleMap",
+    //   mapName: "Google",
+    //   mapType: "Normal",
+    // },
     { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
   ],
 });
@@ -782,7 +782,7 @@ function clearMapRanging() {
   pickedPoints.length = 0;
   try {
     // @ts-ignore
-    document.getElementById("_map").style.cursor = "grab";
+    document.getElementById("map").style.cursor = "grab";
   } catch (err) {
     console.log(err);
   }

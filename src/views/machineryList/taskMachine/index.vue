@@ -84,12 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import "leaflet/dist/leaflet.css";
-import "leaflet.markercluster";
-import "leaflet.markercluster/dist/MarkerCluster.css";
-import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+const L = window.L;
 import { PageInfoObj, singleCarTrackResponseData } from "@/api/machineryList/type";
 import { getSingleCarTrick_API } from "@/api/machineryList/index";
 import { ref, reactive, watch, onMounted } from "vue";

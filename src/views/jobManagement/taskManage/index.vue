@@ -1,35 +1,61 @@
 <!--  -->
 <template>
-    <div class="page7_child6_container">
-        <div id="child6_map" class=""></div>
-        <div class="map_selector">
-            <el-select style="width: 99px;height: 32px;opacity: 1;border-radius: 4px;" v-model="mapId" placeholder=""
-                @change="hangleSelectChange">
-                <el-option v-for="(item, index) in mapOptions" :key="index" :label="item.mapName" :value="item.mapId" />
-            </el-select>
-        </div>
-        <el-button style="color:rgba(76, 176, 79, 1);" @click="clearDistance" class="map_button"> <el-icon>
-                <Delete />
-            </el-icon>{{ $t('work.clear') }}</el-button>
-        <el-button class="map_button2" @click="calculateDistance">
-            <SvgIcon icon="ruler" size="16" />
-        </el-button>
-        <div class="head_top">
-            <div class="left">
-                <el-button style="color:rgba(76, 176, 79, 1)" icon="back" @click="router.go(-1)">{{ $t('work.goBack')
-                }}</el-button>
-            </div>
-            <div class="right">
-                <el-select style="width: 270px; margin-right: 10px;" v-model="pageInfo.companyId"
-                    :placeholder="$t('work.pleaseSelect')" @change="changeBlur1">
-                    <template #prefix>
-                        <span class="select_title">{{ $t('work.unit') }}:</span>
-                    </template>
-                    <el-option style="width: 230px;" v-for="item in dealerList" :label="item.name" :value="item.id"
-                        :key="item.id"></el-option>
-                </el-select>
+  <div class="page7_child6_container">
+    <div id="child6_map" class=""></div>
+    <div class="map_selector">
+      <el-select
+        style="width: 99px; height: 32px; opacity: 1; border-radius: 4px"
+        v-model="mapId"
+        placeholder=""
+        @change="hangleSelectChange"
+      >
+        <el-option
+          v-for="(item, index) in mapOptions"
+          :key="index"
+          :label="item.mapName"
+          :value="item.mapId"
+        />
+      </el-select>
+    </div>
+    <el-button
+      style="color: rgba(76, 176, 79, 1)"
+      @click="clearDistance"
+      class="map_button"
+    >
+      <el-icon> <Delete /> </el-icon>{{ $t("work.clear") }}</el-button
+    >
+    <el-button class="map_button2" @click="calculateDistance">
+      <SvgIcon icon="ruler" size="16" />
+    </el-button>
+    <div class="head_top">
+      <div class="left">
+        <el-button
+          style="color: rgba(76, 176, 79, 1)"
+          icon="back"
+          @click="router.go(-1)"
+          >{{ $t("work.goBack") }}</el-button
+        >
+      </div>
+      <div class="right">
+        <el-select
+          style="width: 270px; margin-right: 10px"
+          v-model="pageInfo.companyId"
+          :placeholder="$t('work.pleaseSelect')"
+          @change="changeBlur1"
+        >
+          <template #prefix>
+            <span class="select_title">{{ $t("work.unit") }}:</span>
+          </template>
+          <el-option
+            style="width: 230px"
+            v-for="item in dealerList"
+            :label="item.name"
+            :value="item.id"
+            :key="item.id"
+          ></el-option>
+        </el-select>
 
-                <!-- <el-select filterable style="width: 230px;" v-model="pageInfo.carId" :placeholder="$t('work.pleaseSelect')"
+        <!-- <el-select filterable style="width: 230px;" v-model="pageInfo.carId" :placeholder="$t('work.pleaseSelect')"
                     @change="changeBlur2">
                     <template #prefix>
                         <span class="select_title2">当前车辆：</span>
@@ -37,199 +63,215 @@
                     <el-option style="width: 200px;" v-for="item in CarDealerList" :label="item.nameNpn" :value="item.id"
                         :key="item.id"></el-option>
                 </el-select> -->
-                <el-select-v2 :style="{ width: '250px', '--content-text': '\'' + $t('work.currentVehicle') + '\'' }"
-                    filterable v-model="pageInfo.carId" :options="optionsList" :placeholder="$t('work.pleaseSelect')"
-                    @change="changeBlur2">
-                </el-select-v2>
-                <div :class="isShow ? 'infiniteMenu' : 'infiniteMenu2'">
-                    <div class="el_icon" v-show="isShow" @click="changeisShow(false)">
-                        <SvgIcon icon="plus-square" size="16" />
-                    </div>
-                    <div class="el_icon" v-show="!isShow" @click="changeisShow(true)">
-                        <SvgIcon icon="minus-square" size="16" />
-                    </div>
-                    <div :class="isShow ? 'empty_list' : 'empty_list2'" v-if='!paddyWorkList.length'>{{ $t('work.noData') }}
-                    </div>
-                    <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
-                        <li v-for="(item, index) in paddyWorkList" :key="index"
-                            :class="item.checked ? 'infinite-list-item' : 'infinite-list-item2'">
-                            <div class="li_title">
-                                <el-tooltip class="box-item" effect="dark" :content="item.name" placement="left-start">
-                                    <!-- {{$t('work.operationWork')}} -->
-                                    {{ item.name }}
-                                </el-tooltip>
-                            </div>
-                            {{ item.workedArea }}{{ $t('work.are') }}
-                            <el-checkbox-group v-model="ids">
-                                <el-checkbox :label="item.id">
-                                    <br />
-                                </el-checkbox>
-                            </el-checkbox-group>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <el-select-v2
+          :style="{
+            width: '250px',
+            '--content-text': '\'' + $t('work.currentVehicle') + '\'',
+          }"
+          filterable
+          v-model="pageInfo.carId"
+          :options="optionsList"
+          :placeholder="$t('work.pleaseSelect')"
+          @change="changeBlur2"
+        >
+        </el-select-v2>
+        <div :class="isShow ? 'infiniteMenu' : 'infiniteMenu2'">
+          <div class="el_icon" v-show="isShow" @click="changeisShow(false)">
+            <SvgIcon icon="plus-square" size="16" />
+          </div>
+          <div class="el_icon" v-show="!isShow" @click="changeisShow(true)">
+            <SvgIcon icon="minus-square" size="16" />
+          </div>
+          <div
+            :class="isShow ? 'empty_list' : 'empty_list2'"
+            v-if="!paddyWorkList.length"
+          >
+            {{ $t("work.noData") }}
+          </div>
+          <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
+            <li
+              v-for="(item, index) in paddyWorkList"
+              :key="index"
+              :class="item.checked ? 'infinite-list-item' : 'infinite-list-item2'"
+            >
+              <div class="li_title">
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="item.name"
+                  placement="left-start"
+                >
+                  <!-- {{$t('work.operationWork')}} -->
+                  {{ item.name }}
+                </el-tooltip>
+              </div>
+              {{ item.workedArea }}{{ $t("work.are") }}
+              <el-checkbox-group v-model="ids">
+                <el-checkbox :label="item.id">
+                  <br />
+                </el-checkbox>
+              </el-checkbox-group>
+            </li>
+          </ul>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import "leaflet/dist/leaflet.css";
-import "leaflet.markercluster";
-import "leaflet.markercluster/dist/MarkerCluster.css";
-import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import { ref, reactive, watch, onMounted } from 'vue'
-import { PageObj, dealerCarObj, dealerCarResponseData, paddyWorkObj, paddyWorkListResponsenumber } from '@/api/jobManagement/type'
-import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
+const L = window.L;
+import { ref, reactive, watch, onMounted } from "vue";
+import {
+  PageObj,
+  dealerCarObj,
+  dealerCarResponseData,
+  paddyWorkObj,
+  paddyWorkListResponsenumber,
+} from "@/api/jobManagement/type";
+import { carDealerResponseData, carDealerObj } from "@/api/machineryList/type";
 import { useRoute } from "vue-router";
-import { getCarDealerList_API, paddyWorkList_API } from '@/api/jobManagement/index'
-import { carDealer_API } from '@/api/machineryList/index'
-import { historyList_path } from '@/api/jobManagement/taskManage/index'
-import router from '@/router'
-import { ElMessage } from 'element-plus'
-import gcoord from 'gcoord'
+import { getCarDealerList_API, paddyWorkList_API } from "@/api/jobManagement/index";
+import { carDealer_API } from "@/api/machineryList/index";
+import { historyList_path } from "@/api/jobManagement/taskManage/index";
+import router from "@/router";
+import { ElMessage } from "element-plus";
+import gcoord from "gcoord";
 import { mapTitleLayers } from "./mapTitleLayers";
-import a from '@/assets/jobManage/a.png'
-import b from '@/assets/jobManage/b.png'
-import c from '@/assets/jobManage/c.png'
+import a from "@/assets/jobManage/a.png";
+import b from "@/assets/jobManage/b.png";
+import c from "@/assets/jobManage/c.png";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 // 提交的车辆数组
-const ids = ref<any>([])
-const isShow = ref<boolean>(true)
-const $route = useRoute()
-
+const ids = ref<any>([]);
+const isShow = ref<boolean>(true);
+const $route = useRoute();
 
 // 提交数据
 const pageInfo = reactive<PageObj>({
-    carId: '',
-    name: '',
-    companyId: parseInt($route.query.companyId as string) || '',
-    currentPage: 1,
-    pageSize: 5000,
-    st: '',
-    et: ''
-})
-const total = ref<number>(0)
-const CarDealerList = ref<dealerCarObj[]>([])
-const dealerList = ref<carDealerObj[]>([])
-const paddyWorkList = ref<paddyWorkObj[]>([])
+  carId: "",
+  name: "",
+  companyId: parseInt($route.query.companyId as string) || "",
+  currentPage: 1,
+  pageSize: 5000,
+  st: "",
+  et: "",
+});
+const total = ref<number>(0);
+const CarDealerList = ref<dealerCarObj[]>([]);
+const dealerList = ref<carDealerObj[]>([]);
+const paddyWorkList = ref<paddyWorkObj[]>([]);
 
 onMounted(() => {
-    initMap()
-})
+  initMap();
+});
 
 // 地图相关
-let map = <any>null
-const originPoint = ref<any>([31.172800343248, 121.406021546488])
-const originZoom = ref<any>(5)
+let map = <any>null;
+const originPoint = ref<any>([31.172800343248, 121.406021546488]);
+const originZoom = ref<any>(5);
 // const tileLayer = reactive<any>([])
 // const tileUrl = reactive<any>({})
 // Object.assign(tileUrl, mapTitleLayers)
-const pickupMode = ref<boolean>(false)
-const pickedPoints = ref<any[]>([])
-let calculationObj = <any[]>([])
-const mapId = ref(0)
+const pickupMode = ref<boolean>(false);
+const pickedPoints = ref<any[]>([]);
+let calculationObj = <any[]>[];
+const mapId = ref(0);
 const mapOptions = reactive([
-    {
-        mapName: '卫星地图',
-        mapId: 0,
-    },
-    {
-        mapName: '高德地图',
-        mapId: 1,
-    },
-    // {
-    //     mapName: '谷歌地图',
-    //     mapId: 2
-    // },
-    {
-        mapName: '天地图',
-        mapId: 3
-    }
-])
-const markerCollect = <any>({})
+  {
+    mapName: "卫星地图",
+    mapId: 0,
+  },
+  {
+    mapName: "高德地图",
+    mapId: 1,
+  },
+  // {
+  //     mapName: '谷歌地图',
+  //     mapId: 2
+  // },
+  {
+    mapName: "天地图",
+    mapId: 3,
+  },
+]);
+const markerCollect = <any>{};
 
-const markerCollect2 = <any>({})
+const markerCollect2 = <any>{};
 function initMap() {
-    map = L.map('child6_map',
-        {
-            attributionControl: false,
-            closePopupOnClick: false,
-            zoomControl: false,
-        }
-    ).setView(originPoint.value, originZoom.value)
-    handleMapChange(mapId.value)
-    map.on("click", function (event: any) {
-        if (pickupMode.value) {
-            let point = event.latlng;
-            pickedPoints.value.push(point);
-            let icon = L.icon({
-                iconUrl: c,
-                iconAnchor: [23, 46],
-            })
+  map = L.map("child6_map", {
+    attributionControl: false,
+    closePopupOnClick: false,
+    zoomControl: false,
+  }).setView(originPoint.value, originZoom.value);
+  handleMapChange(mapId.value);
+  map.on("click", function (event: any) {
+    if (pickupMode.value) {
+      let point = event.latlng;
+      pickedPoints.value.push(point);
+      let icon = L.icon({
+        iconUrl: c,
+        iconAnchor: [23, 46],
+      });
 
-            let marker = L.marker(point, { icon: icon }).addTo(map);
-            calculationObj.push(marker);
-            if (pickedPoints.value.length === 2) {
-                let distance = pickedPoints.value[0].distanceTo(
-                    pickedPoints.value[1]
-                ); //算距离
-                let polyline = L.polyline(pickedPoints.value, { color: "red" })
-                    .addTo(map)
-                    .bindPopup(`相距:${distance.toFixed(3)}米`)
-                    .openPopup(); //划线
-                calculationObj.push(polyline);
-                map.fitBounds(pickedPoints.value); //适应视野
-                //恢复状态
-                pickupMode.value = false;
-                pickedPoints.value = [];
-                const mapId = document.getElementById("child6_map")
-                if (mapId) {
-                    mapId.style.cursor = "grab";
-                }
-                return;
-            }
+      let marker = L.marker(point, { icon: icon }).addTo(map);
+      calculationObj.push(marker);
+      if (pickedPoints.value.length === 2) {
+        let distance = pickedPoints.value[0].distanceTo(pickedPoints.value[1]); //算距离
+        let polyline = L.polyline(pickedPoints.value, { color: "red" })
+          .addTo(map)
+          .bindPopup(`相距:${distance.toFixed(3)}米`)
+          .openPopup(); //划线
+        calculationObj.push(polyline);
+        map.fitBounds(pickedPoints.value); //适应视野
+        //恢复状态
+        pickupMode.value = false;
+        pickedPoints.value = [];
+        const mapId = document.getElementById("child6_map");
+        if (mapId) {
+          mapId.style.cursor = "grab";
         }
-    });
+        return;
+      }
+    }
+  });
 }
 const handleMapChange = (mapId: any) => {
-    switch (mapId) {
-        case 0:
-            changeTileLayer('Google', 'Satellite')
-            break
-        case 1:
-            changeTileLayer('GaoDe', 'Normal')
-            break
-        case 2:
-            changeTileLayer('Google', 'Normal')
-            break
-        case 3:
-            changeTileLayer('TianDiTu', 'Normal')
-            break
-    }
-}
+  switch (mapId) {
+    case 0:
+      changeTileLayer("Google", "Satellite");
+      break;
+    case 1:
+      changeTileLayer("GaoDe", "Normal");
+      break;
+    case 2:
+      changeTileLayer("Google", "Normal");
+      break;
+    case 3:
+      changeTileLayer("TianDiTu", "Normal");
+      break;
+  }
+};
 // 设置图商
 function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
-    if (!map) {
-        console.warn("未初始化底图实例");
-        return;
-    }
-    let mapUrl = mapTitleLayers[mapName][mapType];
-    let options: any = {};
-    options.subdomains = mapTitleLayers[mapName]["Subdomains"];
-    if ("tms" in mapTitleLayers[mapName]) {
-        options.tms = mapTitleLayers[mapName]["tms"];
-    }
-    if ("key" in mapTitleLayers[mapName]) {
-        options.key = mapTitleLayers[mapName]["key"];
-    }
-    for (let key in mapUrl) {
-        L.tileLayer(mapUrl[key], options).addTo(map);
-    }
+  if (!map) {
+    console.warn("未初始化底图实例");
+    return;
+  }
+  let mapUrl = mapTitleLayers[mapName][mapType];
+  let options: any = {};
+  options.subdomains = mapTitleLayers[mapName]["Subdomains"];
+  if ("tms" in mapTitleLayers[mapName]) {
+    options.tms = mapTitleLayers[mapName]["tms"];
+  }
+  if ("key" in mapTitleLayers[mapName]) {
+    options.key = mapTitleLayers[mapName]["key"];
+  }
+  for (let key in mapUrl) {
+    L.tileLayer(mapUrl[key], options).addTo(map);
+  }
 }
 // const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
 //     try {
@@ -262,97 +304,100 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
 
 // 测距
 const calculateDistance = () => {
-    const mapId = document.getElementById("child6_map")
-    if (mapId) {
-        mapId.style.cursor = "crosshair";
-    }
-    pickupMode.value = true; //开启拾取模式
-}
+  const mapId = document.getElementById("child6_map");
+  if (mapId) {
+    mapId.style.cursor = "crosshair";
+  }
+  pickupMode.value = true; //开启拾取模式
+};
 // 清除测距
 const clearDistance = () => {
-    if (calculationObj.length) {
-        calculationObj.forEach((item) => {
-            map.removeLayer(item);
-        });
-        calculationObj = [];
-    }
-    pickupMode.value = false;
-    pickedPoints.value = [];
-    const mapId = document.getElementById("child6_map")
-    if (mapId) {
-        mapId.style.cursor = "grab";
-    }
-}
+  if (calculationObj.length) {
+    calculationObj.forEach((item) => {
+      map.removeLayer(item);
+    });
+    calculationObj = [];
+  }
+  pickupMode.value = false;
+  pickedPoints.value = [];
+  const mapId = document.getElementById("child6_map");
+  if (mapId) {
+   
+    mapId.style.cursor = "grab";
+  }
+};
 // 更改底地图
 const hangleSelectChange = () => {
-    handleMapChange(mapId.value)
-}
+  handleMapChange(mapId.value);
+};
 // 保存记录
 const saveMarker = (workId: any, markerObj: any) => {
-    try {
-        markerCollect[workId]['marker'] = markerObj
-    } catch (err) {
-        console.log(err)
-    }
-}
+  try {
+    markerCollect[workId]["marker"] = markerObj;
+  } catch (err) {
+    console.log(err);
+  }
+};
 const saveMarker2 = (workId: any, markerObj: any) => {
-    try {
-        markerCollect2[workId]['marker'] = markerObj
-    } catch (err) {
-        console.log(err)
-    }
-}
+  try {
+    markerCollect2[workId]["marker"] = markerObj;
+  } catch (err) {
+    console.log(err);
+  }
+};
 // 农业分类
 const workTypeReflect = reactive<any>({
-    1: t('devicelist.status1'),
-    2: t('devicelist.status2'),
-    3: t('devicelist.status3'),
-    4: t('devicelist.status4'),
-    5: t('devicelist.status5'),
-    6: t('devicelist.status6'),
-})
+  1: t("devicelist.status1"),
+  2: t("devicelist.status2"),
+  3: t("devicelist.status3"),
+  4: t("devicelist.status4"),
+  5: t("devicelist.status5"),
+  6: t("devicelist.status6"),
+});
 // 画线
-const middlePoint = ref<any>([0, 0])
-const middleKey = ref<number>(0)
-const tranpatrnt = ref<any>([])
-const emptyIds = ref(false)
+const middlePoint = ref<any>([0, 0]);
+const middleKey = ref<number>(0);
+const tranpatrnt = ref<any>([]);
+const emptyIds = ref(false);
 const loadWorkData = async (workId: any) => {
-    const res = await historyList_path(workId)
-    let key = Object.keys(res.data)
-    getMachineInfo()
-    key.map((item) => {
-        if (!item.length || res.data[item] === null || !res.data[item].length) {
-            emptyIds.value = true
-            ElMessage.warning(`${item}暂无作业数据`);
-            return
-        } else {
-            emptyIds.value = false
-            let PointListTransed = res.data[item].map((item2: any) => {
-                return coorTransform([item2.posX as never, item2.posY as never], mapId.value) // 转换坐标
-            })
-            tranpatrnt.value.push(PointListTransed)
-            // 取中间点
-            {
-                middlePoint.value = [0, 0]
-                middleKey.value = 0
-                PointListTransed.forEach((item: any, index: any) => {
-                    middlePoint.value[0] = middlePoint.value[0] + item[0]
-                    middlePoint.value[1] = middlePoint.value[1] + item[1]
-                    middleKey.value = index + 1
-                })
-                middlePoint.value[0] = middlePoint.value[0] / middleKey.value
-                middlePoint.value[1] = middlePoint.value[1] / middleKey.value
-            }
-            let line = L.polyline(PointListTransed, { color: '#00ff00' }).addTo(map)
-            let htmlStr = '<p><div class="map-circle-name"></div><p/>'
-            let icon = L.divIcon({
-                html: htmlStr,
-                iconSize: [98, 98],
-                className: 'iconImage'
-            })
-            let marker = L.marker(middlePoint.value, { icon: icon }).addTo(map)
-            map.setView(middlePoint.value, 5)
-            line.bindPopup(`<div class="popup_outsiders"> 
+  const res = await historyList_path(workId);
+  let key = Object.keys(res.data);
+  getMachineInfo();
+  key.map((item) => {
+    if (!item.length || res.data[item] === null || !res.data[item].length) {
+      emptyIds.value = true;
+      ElMessage.warning(`${item}暂无作业数据`);
+      return;
+    } else {
+      emptyIds.value = false;
+      let PointListTransed = res.data[item].map((item2: any) => {
+        return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
+      });
+      tranpatrnt.value.push(PointListTransed);
+      // 取中间点
+      {
+        middlePoint.value = [0, 0];
+        middleKey.value = 0;
+        PointListTransed.forEach((item: any, index: any) => {
+          middlePoint.value[0] = middlePoint.value[0] + item[0];
+          middlePoint.value[1] = middlePoint.value[1] + item[1];
+          middleKey.value = index + 1;
+        });
+        middlePoint.value[0] = middlePoint.value[0] / middleKey.value;
+        middlePoint.value[1] = middlePoint.value[1] / middleKey.value;
+      }
+      let line = L.polyline(PointListTransed, { color: "#00ff00" }).addTo(map);
+      let htmlStr = '<p><div class="map-circle-name"></div><p/>';
+      let icon = L.divIcon({
+        html: htmlStr,
+        iconSize: [98, 98],
+        className: "iconImage",
+      });
+      let marker = L.marker(middlePoint.value, { icon: icon }).addTo(map);
+      map.setView(middlePoint.value, 5);
+      line
+        .bindPopup(
+          `<div class="popup_outsiders"> 
             <div class="popupTitle"> 
                     ${machine[workId].name}
             </div>
@@ -362,7 +407,9 @@ const loadWorkData = async (workId: any) => {
                 <div><svg t="1693188945416" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6118" width="22" height="22"><path d="M511.913993 941.605241c-255.612968 0-385.311608-57.452713-385.311608-170.810012 0-80.846632 133.654964-133.998992 266.621871-151.88846L393.224257 602.049387c-79.986561-55.904586-118.86175-153.436587-118.86175-297.240383 0-139.33143 87.211154-222.586259 233.423148-222.586259l7.912649 0c146.211994 0 233.423148 83.254829 233.423148 222.586259 0 54.184445 0 214.67361-117.829666 297.412397l-0.344028 16.685369c132.966907 18.061482 266.105829 71.041828 266.105829 151.716445C897.225601 884.152528 767.526961 941.605241 511.913993 941.605241zM507.957668 141.567613c-79.470519 0-174.250294 28.382328-174.250294 163.241391 0 129.698639 34.230808 213.469511 104.584579 255.784982 8.944734 5.332437 14.277171 14.965228 14.277171 25.286074l0 59.344868c0 15.309256-11.524945 28.0383-26.662187 29.414413-144.319839 14.449185-239.959684 67.429531-239.959684 95.983874 0 92.199563 177.346548 111.637158 325.966739 111.637158 148.792206 0 325.966739-19.26558 325.966739-111.637158 0-28.726356-95.639845-81.534688-239.959684-95.983874-15.48127-1.548127-27.006215-14.621199-26.662187-30.102469l1.376113-59.344868c0.172014-10.148833 5.676466-19.437594 14.277171-24.770032 70.525785-42.487485 103.208466-123.678145 103.208466-255.784982 0-135.031077-94.779775-163.241391-174.250294-163.241391L507.957668 141.567613 507.957668 141.567613z" fill="#4ce277" p-id="6119"></path></svg></div>
                 <div>${machine[workId].userName}</div>
             </div>
-            <div class="popupSn"> <div class="popupSn_inner"><div>SN号:</div> <div>${machine[workId].sn}</div></div></div>
+            <div class="popupSn"> <div class="popupSn_inner"><div>SN号:</div> <div>${
+              machine[workId].sn
+            }</div></div></div>
             <div class="popupArea">
             <div class="left">
                 <div class="leftArea">${machine[workId].workedArea}</div>
@@ -370,162 +417,183 @@ const loadWorkData = async (workId: any) => {
             </div>
             <div class="right">
                 <div class="leftArea"></div>
-                <div class="rightArea">${workTypeReflect[machine[workId].worktype] || '/'}</div>
+                <div class="rightArea">${
+                  workTypeReflect[machine[workId].worktype] || "/"
+                }</div>
             </div>
             </div>
-            <div class="popupArea2"> <span class="left">农具：</span> <span class="right">${machine[workId].toolName || '/'}</span></div>
-            <div class="popupBottom"> <div class="leftt">${machine[workId].createtime}</div> <span class="left"></span><span class="left"></span><span class="left"></span></div>
-            <div class="popupBottom"><span class="right"></span><span class="right"></span><span class="right"></span> <span class="rightt">${machine[workId].updatetime}</span></div>
-            </div>`).addTo(map).openPopup()
-            saveMarker(workId, [{ markerObj: line, name: 'lines', markerObj2: marker, name2: 'picture' }])
-        }
-    })
-    if (ids.value.length >= 2 || emptyIds.value === true) {
-        map.fitBounds(tranpatrnt.value)
+            <div class="popupArea2"> <span class="left">农具：</span> <span class="right">${
+              machine[workId].toolName || "/"
+            }</span></div>
+            <div class="popupBottom"> <div class="leftt">${
+              machine[workId].createtime
+            }</div> <span class="left"></span><span class="left"></span><span class="left"></span></div>
+            <div class="popupBottom"><span class="right"></span><span class="right"></span><span class="right"></span> <span class="rightt">${
+              machine[workId].updatetime
+            }</span></div>
+            </div>`
+        )
+        .addTo(map)
+        .openPopup();
+      saveMarker(workId, [
+        { markerObj: line, name: "lines", markerObj2: marker, name2: "picture" },
+      ]);
     }
-}
+  });
+  if (ids.value.length >= 2 || emptyIds.value === true) {
+    map.fitBounds(tranpatrnt.value);
+  }
+};
 //坐标转换
 const coorTransform = (point = [], mapType = 1) => {
-    //经纬度顺序 gcoor 需要 [116.403988, 39.914266] 经度在前
-    // if (!pointInChina(point)) {
-    //     return point
-    // }
-    let p: any = [point[1], point[0]]
-    switch (mapType) {
-        case 0:
-            let [a, b] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-            return [b, a]
-        case 1:
-            let [c, d] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-            return [d, c]
-        case 2:
-            let [e, f] = gcoord.transform(p, gcoord.WGS84, gcoord.BD09)
-            return [f, e]
-        case 3:
-            let [g, h] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-            return [h, g]
-        default:
-            let [i, j] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02)
-            return [j, i]
-    }
-}
+  //经纬度顺序 gcoor 需要 [116.403988, 39.914266] 经度在前
+  // if (!pointInChina(point)) {
+  //     return point
+  // }
+  let p: any = [point[1], point[0]];
+  switch (mapType) {
+    case 0:
+      let [a, b] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+      return [b, a];
+    case 1:
+      let [c, d] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+      return [d, c];
+    case 2:
+      let [e, f] = gcoord.transform(p, gcoord.WGS84, gcoord.BD09);
+      return [f, e];
+    case 3:
+      let [g, h] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+      return [h, g];
+    default:
+      let [i, j] = gcoord.transform(p, gcoord.WGS84, gcoord.GCJ02);
+      return [j, i];
+  }
+};
 // 地图绘制方法
 const addPathAB = (item: any) => {
-    if (item.lineptax && item.lineptay && item.lineptbx && item.lineptby) {
-        try {
-            let pointA = coorTransform(
-                [item.lineptay as never, item.lineptax as never],
-                mapId.value
-            )
-            let pointB = coorTransform(
-                [item.lineptby as never, item.lineptbx as never],
-                mapId.value
-            )
-            let l1 = L.latLng(item.lineptax, item.lineptay)
-            let l2 = L.latLng(item.lineptbx, item.lineptby)
-            let distance = l1.distanceTo(l2).toFixed(0)
-            let iconA = L.icon({
-                iconUrl: a,
-                iconAnchor: [12, 30],
-                popupAnchor: [0, -30],
-            })
-            let iconB = L.icon({
-                iconUrl: b,
-                iconAnchor: [12, 30],
-                popupAnchor: [0, -30],
-            })
-            let markerA = L.marker(pointA as never, { icon: iconA }).addTo(map)
-            let markerB = L.marker(pointB as never, { icon: iconB }).addTo(map)
-            let line = L.polyline([pointA, pointB], {
-                color: 'red',
-                dashArray: [9, 9],
-            })
-                .bindTooltip(`AB点距离 ${distance} 米`, { permanent: true })
-                .addTo(map)
-            map.fitBounds([pointA, pointB])
-            // let temMarkers = [
-            //     {
-            //         markerObj: markerA,
-            //         name: 'markerA',
-            //     },
-            //     {
-            //         markerObj: markerB,
-            //         name: 'markerB',
-            //     },
-            //     {
-            //         markerObj: line,
-            //         name: 'lineAB',
-            //     },
-            // ]
+  if (item.lineptax && item.lineptay && item.lineptbx && item.lineptby) {
+    try {
+      let pointA = coorTransform(
+        [item.lineptay as never, item.lineptax as never],
+        mapId.value
+      );
+      let pointB = coorTransform(
+        [item.lineptby as never, item.lineptbx as never],
+        mapId.value
+      );
+      let l1 = L.latLng(item.lineptax, item.lineptay);
+      let l2 = L.latLng(item.lineptbx, item.lineptby);
+      let distance = l1.distanceTo(l2).toFixed(0);
+      let iconA = L.icon({
+        iconUrl: a,
+        iconAnchor: [12, 30],
+        popupAnchor: [0, -30],
+      });
+      let iconB = L.icon({
+        iconUrl: b,
+        iconAnchor: [12, 30],
+        popupAnchor: [0, -30],
+      });
+      let markerA = L.marker(pointA as never, { icon: iconA }).addTo(map);
+      let markerB = L.marker(pointB as never, { icon: iconB }).addTo(map);
+      let line = L.polyline([pointA, pointB], {
+        color: "red",
+        dashArray: [9, 9],
+      })
+        .bindTooltip(`AB点距离 ${distance} 米`, { permanent: true })
+        .addTo(map);
+      map.fitBounds([pointA, pointB]);
+      // let temMarkers = [
+      //     {
+      //         markerObj: markerA,
+      //         name: 'markerA',
+      //     },
+      //     {
+      //         markerObj: markerB,
+      //         name: 'markerB',
+      //     },
+      //     {
+      //         markerObj: line,
+      //         name: 'lineAB',
+      //     },
+      // ]
 
-            saveMarker2(item.id, [{ markerObj1: markerA, name: 'markerA', markerObj2: markerB, name2: 'markerB', markerObj3: line, name3: 'lines' }])
+      saveMarker2(item.id, [
+        {
+          markerObj1: markerA,
+          name: "markerA",
+          markerObj2: markerB,
+          name2: "markerB",
+          markerObj3: line,
+          name3: "lines",
+        },
+      ]);
 
-            //绘制田块边界(全部上传GCJ02坐标，对应全部GCJ02地图，无需相互转换！！！)
-            // if (item.borderpoints) {
-            //     let latlngs = JSON.parse(item.borderpoints)
-            //     let polygon = L.polygon(latlngs, { color: '#388BFE' }).addTo(map)
-            //     let tem = {
-            //         name: 'border',
-            //         markerObj: polygon,
-            //     }
-            //     saveMarker(item.id, [tem])
-            // }
-        } catch (err) {
-            console.log(err)
-        }
+      //绘制田块边界(全部上传GCJ02坐标，对应全部GCJ02地图，无需相互转换！！！)
+      // if (item.borderpoints) {
+      //     let latlngs = JSON.parse(item.borderpoints)
+      //     let polygon = L.polygon(latlngs, { color: '#388BFE' }).addTo(map)
+      //     let tem = {
+      //         name: 'border',
+      //         markerObj: polygon,
+      //     }
+      //     saveMarker(item.id, [tem])
+      // }
+    } catch (err) {
+      console.log(err);
     }
-
-}
+  }
+};
 // 删除区域
 const removeMarker = (workId: any) => {
-    try {
-        if (markerCollect[workId]['marker'].length) {
-            let a = markerCollect[workId]['marker']
-            a.forEach((item: any) => {
-                console.log(item)
-                if (item.markerObj) {
-                    map.removeLayer(item.markerObj)
-                    // map.removeLayer(item.markerObj2)
-                }
-                if (item.markerObj2) {
-                    map.removeLayer(item.markerObj2)
-                }
-            })
-            markerCollect[workId]['marker'] = []
+  try {
+    if (markerCollect[workId]["marker"].length) {
+      let a = markerCollect[workId]["marker"];
+      a.forEach((item: any) => {
+        console.log(item);
+        if (item.markerObj) {
+          map.removeLayer(item.markerObj);
+          // map.removeLayer(item.markerObj2)
         }
-        if (markerCollect2[workId]['marker'].length) {
-            let a = markerCollect2[workId]['marker']
-            a.forEach((item: any) => {
-                console.log(item)
-                if (item.markerObj1) {
-                    map.removeLayer(item.markerObj1)
-                    // map.removeLayer(item.markerObj2)
-                }
-                if (item.markerObj2) {
-                    map.removeLayer(item.markerObj2)
-                }
-                if (item.markerObj3) {
-                    map.removeLayer(item.markerObj3)
-                }
-                // map.removeLayer(item.markerObj)
-            })
-            markerCollect2[workId]['marker'] = []
+        if (item.markerObj2) {
+          map.removeLayer(item.markerObj2);
         }
-    } catch (err) {
-        console.log(err)
+      });
+      markerCollect[workId]["marker"] = [];
     }
-}
+    if (markerCollect2[workId]["marker"].length) {
+      let a = markerCollect2[workId]["marker"];
+      a.forEach((item: any) => {
+        console.log(item);
+        if (item.markerObj1) {
+          map.removeLayer(item.markerObj1);
+          // map.removeLayer(item.markerObj2)
+        }
+        if (item.markerObj2) {
+          map.removeLayer(item.markerObj2);
+        }
+        if (item.markerObj3) {
+          map.removeLayer(item.markerObj3);
+        }
+        // map.removeLayer(item.markerObj)
+      });
+      markerCollect2[workId]["marker"] = [];
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 // const hasMarker = (workId: any) => {
 //     return markerCollect[workId]['marker'].length > 0
 // }
-const machine = reactive<any>({})
+const machine = reactive<any>({});
 const getMachineInfo = () => {
-    paddyWorkList.value.forEach((element: any) => {
-        if (ids.value.includes(element.id)) {
-            machine[element.id] = element
-        }
-    })
-}
+  paddyWorkList.value.forEach((element: any) => {
+    if (ids.value.includes(element.id)) {
+      machine[element.id] = element;
+    }
+  });
+};
 // const hasMarkerField = (workId: any, field: any) => {
 //     let a = markerCollect[workId]['marker'].find(
 //         (element: any) => element.name === field
@@ -538,130 +606,128 @@ const getMachineInfo = () => {
 // }
 // 清除全部
 const clearAllMarkers = () => {
-    try {
-        for (let key in markerCollect) {
-            if (Object.keys(markerCollect).length) {
-                if (markerCollect[key]['marker'].length) {
-                    markerCollect[key]['marker'].forEach((item: any) => {
-                        if (item && item.markerObj) {
-                            map.removeLayer(item.markerObj)
-                            if (item && item.markerObj2) {
-                                map.removeLayer(item.markerObj2)
-                            }
-                        }
-                    })
-                }
+  try {
+    for (let key in markerCollect) {
+      if (Object.keys(markerCollect).length) {
+        if (markerCollect[key]["marker"].length) {
+          markerCollect[key]["marker"].forEach((item: any) => {
+            if (item && item.markerObj) {
+              map.removeLayer(item.markerObj);
+              if (item && item.markerObj2) {
+                map.removeLayer(item.markerObj2);
+              }
             }
+          });
         }
-        for (let key in markerCollect2) {
-            if (Object.keys(markerCollect2).length) {
-                if (markerCollect2[key]['marker'].length) {
-                    markerCollect2[key]['marker'].forEach((item: any) => {
-                        if (item && item.markerObj1) {
-                            map.removeLayer(item.markerObj1)
-                            if (item && item.markerObj2) {
-                                map.removeLayer(item.markerObj2)
-                                if (item && item.markerObj3) {
-                                    map.removeLayer(item.markerObj3)
-                                }
-                            }
-                        }
-                    })
-                }
-            }
-        }
-        clearDistance()
-    } catch (err) {
-        console.log(err)
+      }
     }
-}
+    for (let key in markerCollect2) {
+      if (Object.keys(markerCollect2).length) {
+        if (markerCollect2[key]["marker"].length) {
+          markerCollect2[key]["marker"].forEach((item: any) => {
+            if (item && item.markerObj1) {
+              map.removeLayer(item.markerObj1);
+              if (item && item.markerObj2) {
+                map.removeLayer(item.markerObj2);
+                if (item && item.markerObj3) {
+                  map.removeLayer(item.markerObj3);
+                }
+              }
+            }
+          });
+        }
+      }
+    }
+    clearDistance();
+  } catch (err) {
+    console.log(err);
+  }
+};
 // 数据相关
 const getDealerList = async () => {
-    const res: carDealerResponseData = await carDealer_API()
-    if (res.data.length > 1) {
-        dealerList.value = [{ 'id': '', 'name': t('devicelist.totalDealer') }, ...res.data]
-        pageInfo.companyId = ''
-    } else {
-        dealerList.value = res.data
-    }
-    getDealerCarList()
-}
+  const res: carDealerResponseData = await carDealer_API();
+  if (res.data.length > 1) {
+    dealerList.value = [{ id: "", name: t("devicelist.totalDealer") }, ...res.data];
+    pageInfo.companyId = "";
+  } else {
+    dealerList.value = res.data;
+  }
+  getDealerCarList();
+};
 const changeisShow = (val: boolean) => {
-    isShow.value = val
-}
-const firRes = ref(true)
-getDealerList()
-let optionsList = <any>[]
+  isShow.value = val;
+};
+const firRes = ref(true);
+getDealerList();
+let optionsList = <any>[];
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
-    const res: dealerCarResponseData = await getCarDealerList_API(pageInfo.companyId)
-    if (res.data == null) {
-        CarDealerList.value = []
+  const res: dealerCarResponseData = await getCarDealerList_API(pageInfo.companyId);
+  if (res.data == null) {
+    CarDealerList.value = [];
+  } else {
+    CarDealerList.value = res.data;
+    optionsList = CarDealerList.value.map((item: any, _idx) => ({
+      value: item.id,
+      label: `${item.nameNpn}`,
+    }));
+    if (firRes.value === false) {
+      pageInfo.carId = res.data[0].id;
+    } else {
+      pageInfo.carId = parseInt($route.query.carId as string);
     }
-    else {
-        CarDealerList.value = res.data
-        optionsList = CarDealerList.value.map((item: any, _idx) => ({
-            value: item.id,
-            label: `${item.nameNpn}`,
-        }))
-        if (firRes.value === false) {
-            pageInfo.carId = res.data[0].id
-        } else {
-            pageInfo.carId = parseInt($route.query.carId as string)
-        }
-        getPaddyWorkList(true)
-        firRes.value = false
-    }
-}
+    getPaddyWorkList(true);
+    firRes.value = false;
+  }
+};
 const getPaddyWorkList = async (flag: Boolean) => {
-    const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo)
-    paddyWorkList.value = res.data.records
+  const res: paddyWorkListResponsenumber = await paddyWorkList_API(pageInfo);
+  paddyWorkList.value = res.data.records;
 
-    let tem = res.data.records
-    tem.forEach((element) => {
-        // console.log(element)
-        // paddyWorkList.value.push(element)
-        markerCollect[element.id] = { marker: [] }
-        markerCollect2[element.id] = { marker: [] }
-        element.checked = false
-    })
-    if (paddyWorkList.value.length) {
-        total.value = res.data.total
-        if (flag === true) {
-            ids.value.push(paddyWorkList.value[0].id as never)
-            paddyWorkList.value[0].checked = true
-            loadWorkData(paddyWorkList.value[0].id)
-                let subItem = paddyWorkList.value.find(data => {
-                    if (data.id === paddyWorkList.value[0].id) {
-                        return data
-                    }
-                })
-                addPathAB(subItem)
+  let tem = res.data.records;
+  tem.forEach((element) => {
+    // console.log(element)
+    // paddyWorkList.value.push(element)
+    markerCollect[element.id] = { marker: [] };
+    markerCollect2[element.id] = { marker: [] };
+    element.checked = false;
+  });
+  if (paddyWorkList.value.length) {
+    total.value = res.data.total;
+    if (flag === true) {
+      ids.value.push(paddyWorkList.value[0].id as never);
+      paddyWorkList.value[0].checked = true;
+      loadWorkData(paddyWorkList.value[0].id);
+      let subItem = paddyWorkList.value.find((data) => {
+        if (data.id === paddyWorkList.value[0].id) {
+          return data;
         }
+      });
+      addPathAB(subItem);
     }
-}
+  }
+};
 const changeBlur1 = () => {
-    getDealerCarList()
-    clearAllMarkers()
-    Object.assign(markerCollect, {})
-    Object.assign(markerCollect2, {})
-    ids.value = []
-    paddyWorkList.value = []
-    pageInfo.currentPage = 1
-    pageInfo.pageSize = 5000
-    pageInfo.carId = '请选择'
-
-}
+  getDealerCarList();
+  clearAllMarkers();
+  Object.assign(markerCollect, {});
+  Object.assign(markerCollect2, {});
+  ids.value = [];
+  paddyWorkList.value = [];
+  pageInfo.currentPage = 1;
+  pageInfo.pageSize = 5000;
+  pageInfo.carId = "请选择";
+};
 const changeBlur2 = () => {
-    clearAllMarkers()
-    Object.assign(markerCollect, {})
-    Object.assign(markerCollect2, {})
-    pageInfo.currentPage = 1
-    pageInfo.pageSize = 5000
-    ids.value = []
-    paddyWorkList.value = []
-    getPaddyWorkList(true)
-}
+  clearAllMarkers();
+  Object.assign(markerCollect, {});
+  Object.assign(markerCollect2, {});
+  pageInfo.currentPage = 1;
+  pageInfo.pageSize = 5000;
+  ids.value = [];
+  paddyWorkList.value = [];
+  getPaddyWorkList(true);
+};
 // 删除全部按钮
 // const BtnClick = () => {
 //     clearAllMarkers()
@@ -669,585 +735,576 @@ const changeBlur2 = () => {
 //     ids.value = []
 // }
 const load = () => {
-    // pageInfo.pageSize < total.value ? pageInfo.pageSize += 2 : ''
-    // if (total.value > 7) {
-    //     pageInfo.pageSize * pageInfo.currentPage < total.value + 7 ? pageInfo.currentPage += 1 : ''
-    // }
-}
-watch(() => pageInfo.currentPage,
-    () => {
-        getPaddyWorkList(false)
-    }
-)
-watch(() => ids.value,
-    (newVal, oldVal) => {
-        paddyWorkList.value.forEach((item: any) => {
-            if (ids.value.includes(item.id as never)) {
-                item.checked = true
-            } else {
-                item.checked = false
-            }
-        })
-        newVal.forEach((item: any) => {
-            if (!oldVal.includes(item)) {
-                loadWorkData(item)
-                let subItem = paddyWorkList.value.find(data => {
-                    if (data.id === item) {
-                        return data
-                    }
-                })
-                addPathAB(subItem)
-            }
-        })
-        oldVal.forEach((item: any) => {
-            if (!newVal.includes(item)) {
-                removeMarker(item)
-            }
-        })
-    }
-)
-watch(() => paddyWorkList.value,
-    (newData) => {
-        if (newData.length) {
-            Object.assign(machine, {})
-            newData.forEach((subItem) => {
-                if (subItem.checked) {
-                    // if (!hasMarker(subItem.id)) {
-                    //     addPathAB(subItem)
-                    // } if (!hasMarkerField(subItem.id, 'lines')) {
-                    //      loadWorkData(subItem.id)
-                    // }
-                } else {
-                    removeMarker(subItem.id)
-                }
-            })
+  // pageInfo.pageSize < total.value ? pageInfo.pageSize += 2 : ''
+  // if (total.value > 7) {
+  //     pageInfo.pageSize * pageInfo.currentPage < total.value + 7 ? pageInfo.currentPage += 1 : ''
+  // }
+};
+watch(
+  () => pageInfo.currentPage,
+  () => {
+    getPaddyWorkList(false);
+  }
+);
+watch(
+  () => ids.value,
+  (newVal, oldVal) => {
+    paddyWorkList.value.forEach((item: any) => {
+      if (ids.value.includes(item.id as never)) {
+        item.checked = true;
+      } else {
+        item.checked = false;
+      }
+    });
+    newVal.forEach((item: any) => {
+      if (!oldVal.includes(item)) {
+        loadWorkData(item);
+        let subItem = paddyWorkList.value.find((data) => {
+          if (data.id === item) {
+            return data;
+          }
+        });
+        addPathAB(subItem);
+      }
+    });
+    oldVal.forEach((item: any) => {
+      if (!newVal.includes(item)) {
+        removeMarker(item);
+      }
+    });
+  }
+);
+watch(
+  () => paddyWorkList.value,
+  (newData) => {
+    if (newData.length) {
+      Object.assign(machine, {});
+      newData.forEach((subItem) => {
+        if (subItem.checked) {
+          // if (!hasMarker(subItem.id)) {
+          //     addPathAB(subItem)
+          // } if (!hasMarkerField(subItem.id, 'lines')) {
+          //      loadWorkData(subItem.id)
+          // }
+        } else {
+          removeMarker(subItem.id);
         }
-
-
-    }, { deep: true })
+      });
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <style lang="scss" scoped>
 :deep(.el-select-v2__placeholder::before) {
-    content: var(--content-text);
-    margin-right: 2px;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    line-height: 23.17px;
-    color: rgba(115, 121, 133, 1);
+  content: var(--content-text);
+  margin-right: 2px;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0px;
+  line-height: 23.17px;
+  color: rgba(115, 121, 133, 1);
 }
 
-
 .page7_child6_container {
-    width: 100%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  #child6_map {
     height: 100%;
-    position: relative;
+    width: 100%;
+  }
 
-    #child6_map {
-        height: 100%;
-        width: 100%;
+  .map_selector {
+    position: absolute;
+    bottom: 10px;
+    right: 135px;
+    z-index: 999;
+    width: 99px;
+    height: 32px;
+    opacity: 1;
+    border-radius: 4px;
+  }
+
+  .map_button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 999;
+    max-width: 110px;
+    height: 32px;
+    opacity: 1;
+    border-radius: 4px;
+  }
+
+  .map_button2 {
+    position: absolute;
+    bottom: 10px;
+    right: 90px;
+    z-index: 999;
+    max-width: 110px;
+    width: 39px;
+    height: 32px;
+    opacity: 1;
+    border-radius: 4px;
+  }
+
+  .head_top {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 10px;
+
+    .left {
+      z-index: 999;
+      position: absolute;
+      left: 10px;
+      top: 10px;
     }
 
-    .map_selector {
-        position: absolute;
-        bottom: 10px;
-        right: 135px;
-        z-index: 999;
-        width: 99px;
-        height: 32px;
-        opacity: 1;
-        border-radius: 4px;
-    }
+    .right {
+      :deep(.el-input__wrapper) {
+        border: none;
+      }
 
-    .map_button {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        z-index: 999;
-        max-width: 110px;
-        height: 32px;
-        opacity: 1;
-        border-radius: 4px;
+      z-index: 999;
+      position: absolute;
+      right: 10px;
+      top: 10px;
 
-    }
+      .select_title {
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0px;
+        line-height: 26.06px;
+      }
 
-    .map_button2 {
-        position: absolute;
-        bottom: 10px;
-        right: 90px;
-        z-index: 999;
-        max-width: 110px;
-        width: 39px;
-        height: 32px;
-        opacity: 1;
-        border-radius: 4px;
-    }
+      .select_title2 {
+        margin-top: 2px;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        line-height: 23.17px;
+        color: rgba(115, 121, 133, 1);
+      }
 
-    .head_top {
+      .el_icon {
+        cursor: pointer;
+        margin-left: auto;
+        margin-right: 10px;
+        margin-bottom: 6px;
         display: flex;
-        justify-content: space-between;
-        padding: 0px 10px;
+        justify-content: center;
+        align-items: center;
+        width: 16px;
+        height: 16px;
+      }
 
-        .left {
-            z-index: 999;
-            position: absolute;
-            left: 10px;
-            top: 10px;
+      .empty_list {
+        transition: 0.5s all;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10px;
+        height: 20px;
+        color: var(--el-text-color);
+        padding-bottom: 5px;
+      }
+
+      .empty_list2 {
+        transition: 0.5s all;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10px;
+        height: 0px;
+        color: var(--el-text-color);
+        overflow: hidden;
+      }
+
+      .infiniteMenu {
+        padding-top: 10px;
+        margin-top: 5px;
+        margin-left: auto;
+        width: 194px;
+        border-radius: 4px;
+        background-color: var(--el-bg-color);
+
+        .li_title {
+          cursor: default;
+          padding: 3px 5px;
+          margin-left: 10px;
+          width: 75px;
+          height: 27px;
+          border-radius: 4px;
+          background-color: rgba(67, 207, 124, 1);
+          color: #fff;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
-        .right {
-            :deep(.el-input__wrapper) {
-                border: none
-            }
+        .infinite-list {
+          max-height: 300px;
+          transition: all 1s;
+          padding: 0;
+          margin: 0;
+          list-style: none;
 
-            z-index: 999;
-            position: absolute;
-            right: 10px;
-            top: 10px;
-
-            .select_title {
-                font-size: 16px;
-                font-weight: 500;
-                letter-spacing: 0px;
-                line-height: 26.06px;
-
-            }
-
-            .select_title2 {
-                margin-top: 2px;
-                font-size: 14px;
-                font-weight: 400;
-                letter-spacing: 0px;
-                line-height: 23.17px;
-                color: rgba(115, 121, 133, 1);
-            }
-
-            .el_icon {
-                cursor: pointer;
-                margin-left: auto;
-                margin-right: 10px;
-                margin-bottom: 6px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width: 16px;
-                height: 16px;
-            }
-
-            .empty_list {
-                transition: 0.5s all;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-size: 10px;
-                height: 20px;
-                color: var(--el-text-color);
-                padding-bottom: 5px;
-            }
-
-            .empty_list2 {
-                transition: 0.5s all;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-size: 10px;
-                height: 0px;
-                color: var(--el-text-color);
-                overflow: hidden;
-            }
-
-            .infiniteMenu {
-                padding-top: 10px;
-                margin-top: 5px;
-                margin-left: auto;
-                width: 194px;
-                border-radius: 4px;
-                background-color: var(--el-bg-color);
-
-                .li_title {
-                    cursor: default;
-                    padding: 3px 5px;
-                    margin-left: 10px;
-                    width: 75px;
-                    height: 27px;
-                    border-radius: 4px;
-                    background-color: rgba(67, 207, 124, 1);
-                    color: #fff;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                }
-
-                .infinite-list {
-                    max-height: 300px;
-                    transition: all 1s;
-                    padding: 0;
-                    margin: 0;
-                    list-style: none;
-
-                    span {
-                        width: 100%;
-                        display: block;
-                        display: flex;
-                        justify-content: center;
-                        font-size: 10px;
-                    }
-                }
-
-                .infinite-list::-webkit-scrollbar {
-                    display: none;
-                }
-
-                .infinite-list .infinite-list-item {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-around;
-                    width: 95%;
-                    height: 50px;
-                    opacity: 1;
-                    border-radius: 4px;
-                    background: rgba(199, 242, 216, 1);
-                    margin: 8px 5px;
-                    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-                    color: #fff;
-                }
-
-                .infinite-list .infinite-list-item2 {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-around;
-                    width: 95%;
-                    height: 50px;
-                    opacity: 1;
-                    border-radius: 4px;
-                    background-color: var(--el-bg-color);
-                    margin: 8px 5px;
-                    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-                    color: var(--el-text-color)
-                }
-
-                .infinite-list .infinite-list-item+.list-item {
-                    margin-top: 10px;
-                }
-            }
-
-            .infiniteMenu2 {
-                padding-top: 10px;
-                margin-top: 5px;
-                margin-left: auto;
-                width: 194px;
-                border-radius: 4px;
-                background-color: var(--el-bg-color);
-
-                .li_title {
-                    cursor: default;
-                    padding: 3px 5px;
-                    margin-left: 10px;
-                    width: 75px;
-                    height: 27px;
-                    border-radius: 4px;
-                    background-color: rgba(67, 207, 124, 1);
-                    color: #fff;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                }
-
-                .infinite-list {
-                    transition: all 1s;
-                    max-height: 0px;
-                    padding: 0;
-                    margin: 0;
-                    list-style: none;
-
-                    span {
-                        width: 100%;
-                        display: block;
-                        display: flex;
-                        justify-content: center;
-                        font-size: 10px;
-                    }
-                }
-
-                .infinite-list::-webkit-scrollbar {
-                    display: none;
-                }
-
-                .infinite-list .infinite-list-item {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-around;
-                    width: 95%;
-                    height: 50px;
-                    opacity: 1;
-                    border-radius: 4px;
-                    background: rgba(199, 242, 216, 1);
-                    margin: 8px 5px;
-                    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-                    color: #fff;
-                }
-
-                .infinite-list .infinite-list-item2 {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-around;
-                    width: 95%;
-                    height: 50px;
-                    opacity: 1;
-                    border-radius: 4px;
-                    background-color: var(--el-bg-color);
-                    margin: 8px 5px;
-                    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-                    color: var(--el-text-color)
-                }
-
-                .infinite-list .infinite-list-item+.list-item {
-                    margin-top: 10px;
-                }
-            }
+          span {
+            width: 100%;
+            display: block;
+            display: flex;
+            justify-content: center;
+            font-size: 10px;
+          }
         }
+
+        .infinite-list::-webkit-scrollbar {
+          display: none;
+        }
+
+        .infinite-list .infinite-list-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          width: 95%;
+          height: 50px;
+          opacity: 1;
+          border-radius: 4px;
+          background: rgba(199, 242, 216, 1);
+          margin: 8px 5px;
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+          color: #fff;
+        }
+
+        .infinite-list .infinite-list-item2 {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          width: 95%;
+          height: 50px;
+          opacity: 1;
+          border-radius: 4px;
+          background-color: var(--el-bg-color);
+          margin: 8px 5px;
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+          color: var(--el-text-color);
+        }
+
+        .infinite-list .infinite-list-item + .list-item {
+          margin-top: 10px;
+        }
+      }
+
+      .infiniteMenu2 {
+        padding-top: 10px;
+        margin-top: 5px;
+        margin-left: auto;
+        width: 194px;
+        border-radius: 4px;
+        background-color: var(--el-bg-color);
+
+        .li_title {
+          cursor: default;
+          padding: 3px 5px;
+          margin-left: 10px;
+          width: 75px;
+          height: 27px;
+          border-radius: 4px;
+          background-color: rgba(67, 207, 124, 1);
+          color: #fff;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .infinite-list {
+          transition: all 1s;
+          max-height: 0px;
+          padding: 0;
+          margin: 0;
+          list-style: none;
+
+          span {
+            width: 100%;
+            display: block;
+            display: flex;
+            justify-content: center;
+            font-size: 10px;
+          }
+        }
+
+        .infinite-list::-webkit-scrollbar {
+          display: none;
+        }
+
+        .infinite-list .infinite-list-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          width: 95%;
+          height: 50px;
+          opacity: 1;
+          border-radius: 4px;
+          background: rgba(199, 242, 216, 1);
+          margin: 8px 5px;
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+          color: #fff;
+        }
+
+        .infinite-list .infinite-list-item2 {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          width: 95%;
+          height: 50px;
+          opacity: 1;
+          border-radius: 4px;
+          background-color: var(--el-bg-color);
+          margin: 8px 5px;
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+          color: var(--el-text-color);
+        }
+
+        .infinite-list .infinite-list-item + .list-item {
+          margin-top: 10px;
+        }
+      }
     }
+  }
 }
 
 :deep(.leaflet-popup-content-wrapper) {
-    background-color: var(--el-bg-color);
-    color: var(--color-scheme);
+  background-color: var(--el-bg-color);
+  color: var(--color-scheme);
 
-    .popup_outsiders {
-        opacity: 1;
-        border-radius: 4px;
-        width: 241px;
+  .popup_outsiders {
+    opacity: 1;
+    border-radius: 4px;
+    width: 241px;
 
-        .popupTitle {
-            line-height: 27px;
-            width: 97px;
-            height: 27px;
-            opacity: 1;
-            border-radius: 8px;
-            color: #fff;
-            background-color: rgba(67, 207, 124, 1);
-            overflow: hidden;
-            margin-left: auto;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            margin-bottom: 5px;
-            padding-left: 10px;
-        }
-
-
-        .popupMain {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            height: 27px;
-            margin-bottom: 10px;
-        }
-
-        .popupSn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            .popupSn_inner {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 33px;
-                width: 222px;
-                opacity: 1;
-                border-radius: 16px;
-                background: rgba(233, 242, 242, 1);
-                font-size: 16px;
-                font-weight: 400;
-                letter-spacing: 0px;
-                color: rgba(0, 186, 173, 1);
-
-                div:nth-child(1) {
-                    margin-right: 20px;
-                }
-            }
-
-
-
-        }
-
-        .popupArea {
-            margin-top: 5px;
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-            height: 40px;
-
-            .left {
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-
-                height: 100%;
-
-                .leftArea {
-                    margin-right: 5px;
-                    font-size: 16px;
-                    font-weight: 600;
-
-                }
-
-                .leftArea::before {
-                    margin-right: 5px;
-                    content: '';
-                    display: inline-block;
-                    width: 20px;
-                    height: 20px;
-                    background: url(@/assets/jobManage/@3x.png);
-                    background-size: cover;
-                    vertical-align: middle;
-                }
-
-                .rightArea {
-                    font-size: 16px;
-                    font-weight: 400;
-                    letter-spacing: 0px;
-                    line-height: 23.17px;
-                    color: rgba(166, 166, 166, 1);
-                    text-align: left;
-                    vertical-align: top;
-                }
-            }
-
-            .right {
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-
-                .leftArea::before {
-                    margin-right: 5px;
-                    content: '';
-                    display: inline-block;
-                    width: 20px;
-                    height: 20px;
-                    background: url(@/assets/jobManage/falsh@3x.png);
-                    background-size: cover;
-                    vertical-align: middle;
-                }
-
-                .rightArea {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    width: 50px;
-                    height: 23px;
-                    opacity: 1;
-                    border-radius: 16px;
-                    background: rgba(0, 186, 173, 0.34);
-                    font-size: 16px;
-                    font-weight: 400;
-                    letter-spacing: 0px;
-                    line-height: 23.17px;
-                    color: rgba(0, 125, 117, 1);
-                }
-            }
-
-        }
-
-        .popupArea2 {
-            margin-bottom: 9px;
-
-            .left {
-                font-size: 16px;
-                font-weight: 400;
-                letter-spacing: 0px;
-                line-height: 23.17px;
-                color: rgba(166, 166, 166, 1);
-                text-align: left;
-                vertical-align: top;
-            }
-
-            .right {
-                font-size: 16px;
-                font-weight: 400;
-                letter-spacing: 0px;
-                line-height: 23.17px;
-
-                text-align: left;
-                vertical-align: top;
-            }
-        }
-
-        .popupBottom {
-            position: relative;
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: nowrap;
-
-            .leftt {
-                white-space: nowrap;
-                font-size: 16px;
-                line-height: 18px;
-
-                margin-right: 5px;
-            }
-
-            .left::after {
-                content: '';
-                display: inline-block;
-                margin-right: 5px;
-                width: 16px;
-                height: 16px;
-                background: url(@/assets/jobManage/right@3x.png);
-                background-size: cover;
-                vertical-align: middle;
-            }
-
-
-            .rightt {
-                white-space: nowrap;
-                margin-left: 5px;
-                font-size: 16px;
-                line-height: 18px;
-
-                text-align: left;
-                vertical-align: top;
-            }
-
-            .right::before {
-                margin-left: 5px;
-                content: '';
-                display: inline-block;
-                width: 16px;
-                height: 16px;
-                background: url(@/assets/jobManage/right@3x.png);
-                background-size: cover;
-                vertical-align: middle;
-            }
-
-        }
+    .popupTitle {
+      line-height: 27px;
+      width: 97px;
+      height: 27px;
+      opacity: 1;
+      border-radius: 8px;
+      color: #fff;
+      background-color: rgba(67, 207, 124, 1);
+      overflow: hidden;
+      margin-left: auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 5px;
+      padding-left: 10px;
     }
 
+    .popupMain {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0px;
+      height: 27px;
+      margin-bottom: 10px;
+    }
+
+    .popupSn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .popupSn_inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 33px;
+        width: 222px;
+        opacity: 1;
+        border-radius: 16px;
+        background: rgba(233, 242, 242, 1);
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        color: rgba(0, 186, 173, 1);
+
+        div:nth-child(1) {
+          margin-right: 20px;
+        }
+      }
+    }
+
+    .popupArea {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      height: 40px;
+
+      .left {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        height: 100%;
+
+        .leftArea {
+          margin-right: 5px;
+          font-size: 16px;
+          font-weight: 600;
+        }
+
+        .leftArea::before {
+          margin-right: 5px;
+          content: "";
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          background: url(@/assets/jobManage/@3x.png);
+          background-size: cover;
+          vertical-align: middle;
+        }
+
+        .rightArea {
+          font-size: 16px;
+          font-weight: 400;
+          letter-spacing: 0px;
+          line-height: 23.17px;
+          color: rgba(166, 166, 166, 1);
+          text-align: left;
+          vertical-align: top;
+        }
+      }
+
+      .right {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        .leftArea::before {
+          margin-right: 5px;
+          content: "";
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          background: url(@/assets/jobManage/falsh@3x.png);
+          background-size: cover;
+          vertical-align: middle;
+        }
+
+        .rightArea {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 50px;
+          height: 23px;
+          opacity: 1;
+          border-radius: 16px;
+          background: rgba(0, 186, 173, 0.34);
+          font-size: 16px;
+          font-weight: 400;
+          letter-spacing: 0px;
+          line-height: 23.17px;
+          color: rgba(0, 125, 117, 1);
+        }
+      }
+    }
+
+    .popupArea2 {
+      margin-bottom: 9px;
+
+      .left {
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        line-height: 23.17px;
+        color: rgba(166, 166, 166, 1);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .right {
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        line-height: 23.17px;
+
+        text-align: left;
+        vertical-align: top;
+      }
+    }
+
+    .popupBottom {
+      position: relative;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+
+      .leftt {
+        white-space: nowrap;
+        font-size: 16px;
+        line-height: 18px;
+
+        margin-right: 5px;
+      }
+
+      .left::after {
+        content: "";
+        display: inline-block;
+        margin-right: 5px;
+        width: 16px;
+        height: 16px;
+        background: url(@/assets/jobManage/right@3x.png);
+        background-size: cover;
+        vertical-align: middle;
+      }
+
+      .rightt {
+        white-space: nowrap;
+        margin-left: 5px;
+        font-size: 16px;
+        line-height: 18px;
+
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .right::before {
+        margin-left: 5px;
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background: url(@/assets/jobManage/right@3x.png);
+        background-size: cover;
+        vertical-align: middle;
+      }
+    }
+  }
 }
 
 :deep(.leaflet-marker-icon) {
-    .map-circle-name {
-        width: 50px;
-        height: 50px;
-        opacity: 1;
-        border-radius: 50%;
-        background-image: url("../taskManage/image.png@3x.png");
-        background-color: #fff;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center
-    }
+  .map-circle-name {
+    width: 50px;
+    height: 50px;
+    opacity: 1;
+    border-radius: 50%;
+    background-image: url("../taskManage/image.png@3x.png");
+    background-color: #fff;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 }
 
-:deep(.el-checkbox__input.is-checked .el-checkbox__inner,
-    .el-checkbox__input.is-indeterminate .el-checkbox__inner) {
-    border-color: rgba(67, 207, 124, 1) !important;
-    background-color: rgba(67, 207, 124, 1) !important;
+:deep(.el-checkbox__input.is-checked
+    .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner) {
+  border-color: rgba(67, 207, 124, 1) !important;
+  background-color: rgba(67, 207, 124, 1) !important;
 }
 </style>

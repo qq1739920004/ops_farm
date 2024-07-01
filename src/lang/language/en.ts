@@ -27,6 +27,18 @@ const en = {
     backHome: 'back to home',
     noRequest: 'The access address does not exist!'
   },
+  code: {
+    notCar: 'Parameter incorrect,the SN does not have a corresponding car',
+    noSN: 'Parameter incorrect, SN number is not passed',
+    noCar: 'The car does not exist',
+    hasNpn: "labelSN already exists",
+    partBounded: 'The part has been bound',
+    chaFenMistake: 'Differential Setting fail',
+    noPackage: 'The device does not have a firmware package',
+    upGradeMis: 'Online upgrade failed',
+    updateMis: 'Parameter update failed',
+    StarMis: 'Failed to enable/disable satelliteBase mode'
+  },
   sinoMap: {
     SatellitesMap: "Satellites map",
     AMAP: "AMAP",
