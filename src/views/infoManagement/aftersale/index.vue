@@ -312,7 +312,7 @@ const changeAntennaTwoBtn = async (val: string) => {
         getTopInfo()
     }
     catch {
-        ElMessage({ type: 'error', message: '编辑失败' })
+        // ElMessage({ type: 'error', message: '编辑失败' })
     }
 }
 const changeHubSnBtn = async (val: string) => {

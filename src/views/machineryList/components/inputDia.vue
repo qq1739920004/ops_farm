@@ -188,8 +188,15 @@ const successResult = (data: any) => {
     });
     uploadRef.value?.clearFiles();
   } else {
-    ElMessage({ type: "success", message: "上传成功!", duration: 1000 });
-    dialogVisible.value = false;
+    if (data.code === 0 && data.data !== null) {
+      if (data.data.errorMessageList) {
+        ElMessage.error(data.data.errorMessageList[0].message);
+        dialogVisible.value = false;
+      }
+    } else {
+      ElMessage({ type: "success", message: "上传成功!", duration: 1000 });
+      dialogVisible.value = false;
+    }
   }
 };
 watch(

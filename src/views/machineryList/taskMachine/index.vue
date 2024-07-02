@@ -289,7 +289,7 @@ const getSingleCarTrick = async () => {
           solSatList.push(item2.solStat);
           return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
         });
-        // 取中间点
+
         ElMessage.success(`${route.query.sn}轨迹获取成功！`);
         let line = L.polyline(PointListTransed, { color: "#5C5C5C", weight: 1 }).addTo(
           map

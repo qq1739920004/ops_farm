@@ -63,7 +63,7 @@ const activationAddBtn = async () => {
         ElMessage({ type: 'success', message: '注册成功' })
     }
     catch {
-        ElMessage({ type: 'error', message: '注册失败' })
+        // ElMessage({ type: 'error', message: '注册失败' })
     }
 }
 </script>

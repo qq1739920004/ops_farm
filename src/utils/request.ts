@@ -39,19 +39,23 @@ service.interceptors.response.use(
       tokenRenewal();
     }
 
-    let { code, message, type } = response.data;
+    let { code, message, type, data } = response.data;
 
     // 响应数据为二进制流处理(Excel导出)
     if (response.data instanceof ArrayBuffer || response.data instanceof Blob) {
       return response.data;
     } else {
       if (code === 0 || code === 200 || code === 'ok') {
-        return response.data;
+        if (data.errorMessageList) {
+          ElMessage.error(data.errorMessageList[0].message)
+        } else {
+          return response.data;
+        }
       } else {
         if (errorCode[code]) {
-          type === 'error' ? ElMessage.error(i18n.global.t(errorCode[code])) : ElMessage.warning(i18n.global.t(errorCode[code]));
+          type === 3 ? ElMessage.error(i18n.global.t(errorCode[code])) : ElMessage.warning(i18n.global.t(errorCode[code]));
         } else {
-          type === 'error' ? ElMessage.error(response.data.message) : ElMessage.warning(response.data.message);
+          type === 3 ? ElMessage.error(response.data.message) : ElMessage.warning(response.data.message);
 
         }
 
