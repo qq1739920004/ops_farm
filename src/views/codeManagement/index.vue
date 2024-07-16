@@ -426,6 +426,7 @@ const openDialog = () => {
 const handleSelect = (selection: any) => {
   try {
     exportIds.value = selection.map((item: any) => item.id);
+    console.log(exportIds.value)
   } catch (error) {
     console.log(error);
   }
@@ -440,8 +441,10 @@ const handleSelectAll = (selection: any) => {
 };
 // 导出文件
 const exportData = () => {
+  const pathValue = exportIds.value.toString()
+  console.log(pathValue)
   sacredCowQrExport_path({
-    ids: exportIds.value,
+    ids: pathValue,
   }).then((res: any) => {
     let name = "二维码管理.xls";
     const type = "application/vnd.ms-excel;charset=utf-8"; //excel文件

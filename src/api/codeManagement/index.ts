@@ -31,11 +31,11 @@ export function sacredCowQrRemove_path(params:any) {
     params
   })
 }
-export function sacredCowQrExport_path(data:any) {
+export function sacredCowQrExport_path(params:any) {
   return request<any, any>({
     url: '/farm/sacredCowQr/export',
-    method: 'post',
+    method: 'get',
     responseType: 'blob',
-    data
+    params
   })
 }
