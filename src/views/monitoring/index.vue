@@ -488,14 +488,13 @@ async function getFaromDataStatistics() {
 async function getOnlineFarmPosition() {
   const { data } = await onlineFarmMachinePosition_API({});
   let onlineFarmMachines = data.onlineFarmMachines;
-  console.log(onlineFarmMachines.length);
   onlineFarmMachines.forEach((item: any) => {
     item.markerId = item.sn;
     item.markerLng = item.posY;
     item.markerLat = item.posX;
     item.markerType = createMarkerType(item);
     if (onlineFarmMachines.length > mapRenderModeLengthMax) {
-      console.log(sinoMapRef.value.iconChangeLimit);
+
       if (sinoMapRef.value.iconChangeLimit) {
         item.markerIcon = createMarkerIcon(item);
       } else {
@@ -512,6 +511,7 @@ async function getOnlineFarmPosition() {
     (item: any) => item.markerLng || item.markerLng == 0
   );
   markerData.value = onlineFarmMachines;
+
   route.query.markerId ? (mapCenter.markerId = route.query.markerId) : "";
   mapCenter.center = onlineFarmMachines.map((item: any) => {
     return [item.posY, item.posX];
@@ -526,25 +526,33 @@ function markerTypeChange() {
 }
 
 function createMarkerType(item: any) {
-  if (item.terminalType.includes("AG360")) {
+  if (item.terminalType && item.terminalType.includes("AG360")) {
     return "AG360";
-  } else if (item.terminalType.includes("AG501") && item.terminalType != "AG501Pro") {
+  } else if (
+    item.terminalType &&
+    item.terminalType.includes("AG501") &&
+    item.terminalType != "AG501Pro"
+  ) {
     return "AG501";
-  } else if (item.terminalType == "AG501Pro") {
+  } else if (item.terminalType && item.terminalType == "AG501Pro") {
     return "AG501Pro";
-  } else if (item.terminalType.includes("AG502")) {
+  } else if (item.terminalType && item.terminalType.includes("AG502")) {
     return "AG502";
-  } else if (item.terminalType.includes("AG302") && item.terminalType != "AG302Android") {
+  } else if (
+    item.terminalType &&
+    item.terminalType.includes("AG302") &&
+    item.terminalType != "AG302Android"
+  ) {
     return "AG302";
-  } else if (item.terminalType == "AG302Android") {
+  } else if (item.terminalType && item.terminalType == "AG302Android") {
     return "AG302Android";
-  } else if (item.terminalType.includes("MC100")) {
+  } else if (item.terminalType && item.terminalType.includes("MC100")) {
     return "MC100";
-  } else if (item.terminalType.includes("SA200")) {
+  } else if (item.terminalType && item.terminalType.includes("SA200")) {
     return "SA200";
-  } else if (item.terminalType.includes("MT801")) {
+  } else if (item.terminalType && item.terminalType.includes("MT801")) {
     return "MT801";
-  } else if (item.terminalType.includes("MT802")) {
+  } else if (item.terminalType && item.terminalType.includes("MT802")) {
     return "MT802";
   } else {
     return "";
@@ -751,30 +759,37 @@ function createMarkerPopup(item: any) {
 function createMarkerIcon(item: any) {
   const { terminalType, driveState } = item;
   let icon: string = "";
-  if (terminalType.includes("AG360")) {
+  if (terminalType && terminalType.includes("AG360")) {
     icon = driveState == 0 ? AG360_warn : AG360;
-  } else if (terminalType.includes("AG501") && terminalType != "AG501Pro") {
+  } else if (
+    terminalType &&
+    terminalType.includes("AG501") &&
+    terminalType != "AG501Pro"
+  ) {
     icon = driveState == 0 ? AG501_warn : AG501;
-  } else if (terminalType == "AG501Pro") {
+  } else if (terminalType && terminalType == "AG501Pro") {
     icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
-  } else if (terminalType.includes("AG502")) {
+  } else if (terminalType && terminalType.includes("AG502")) {
     icon = driveState == 0 ? AG502_warn : AG502;
-  } else if (terminalType.includes("AG302") && terminalType != "AG302Android") {
+  } else if (
+    terminalType &&
+    terminalType.includes("AG302") &&
+    terminalType != "AG302Android"
+  ) {
     icon = driveState == 0 ? AG302_warn : AG302;
-  } else if (terminalType == "AG302Android") {
+  } else if (terminalType && terminalType == "AG302Android") {
     icon = driveState == 0 ? AG302Android_warn : AG302Android;
-  } else if (item.markerType.includes("MC100")) {
+  } else if (item.markerType && item.markerType.includes("MC100")) {
     icon = driveState == 0 ? MC100_warn : MC100;
-  } else if (item.markerType.includes("MT801")) {
+  } else if (item.markerType && item.markerType.includes("MT801")) {
     icon = driveState == 0 ? MT801_warn : MT801;
-  } else if (item.markerType.includes("MT802")) {
+  } else if (item.markerType && item.markerType.includes("MT802")) {
     icon = driveState == 0 ? MT802_warn : MT802;
-  } else if (item.markerType.includes("SA200")) {
+  } else if (item.markerType && item.markerType.includes("SA200")) {
     icon = driveState == 0 ? SA200_warn : SA200;
   } else {
     icon = driveState == 0 ? AGunknown_warn : AGunknown;
   }
-
   return icon;
 }
 function createMarkerIconSmall(item: any) {
