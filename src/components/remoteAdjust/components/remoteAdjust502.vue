@@ -225,7 +225,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
                 <el-row>
                     <el-col align="center">
-                        AG502以及AG502_Android的升级功能暂未开放
+                        MT801，MT802，AG502以及AG502_Android的升级功能暂未开放
                     </el-col>
                 </el-row>
             </el-form>

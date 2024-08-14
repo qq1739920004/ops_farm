@@ -52,8 +52,11 @@ const gotoRemote = () => {
   if (terminalType.value == "AG302") {
     RemoteD302.value.dialogVisible = true;
   }
-  if (terminalType.value == "AG502" ||terminalType.value == "MT802") {
+  if (terminalType.value == "AG502" ) {
     RemoteD502.value.dialogVisible = true;
+  }
+  if(terminalType.value.includes("MT")){
+    RemoteD502.value.dialogVisible = true; RemoteD502.value.dialogVisible = true;
   }
   nextTick(() => {
     RemoteD.value.carFormRef?.clearValidate();

@@ -610,7 +610,7 @@ function createMarkerPopup(item: any) {
     openRemote = false; // 禁用
   } else {
     if (
-      item.terminalType == "AG320" ||
+      item.terminalType.includes("MT")  ||
       item.terminalType.includes("AG360") ||
       item.terminalType == "AG502" ||
       item.terminalType == "AG302"
