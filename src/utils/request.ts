@@ -46,11 +46,11 @@ service.interceptors.response.use(
       return response.data;
     } else {
       if (code === 0 || code === 200 || code === 'ok') {
-        if (data.errorMessageList) {
-          ElMessage.error(data.errorMessageList[0].message)
-        } else {
-          return response.data;
-        }
+        return response.data;
+        // if (data.errorMessageList) {
+        //   ElMessage.error(data.errorMessageList[0].message)
+        // } else {
+        // }
       } else {
         if (errorCode[code]) {
           type === 3 ? ElMessage.error(i18n.global.t(errorCode[code])) : ElMessage.warning(i18n.global.t(errorCode[code]));

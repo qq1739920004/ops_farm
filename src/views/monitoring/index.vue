@@ -61,12 +61,12 @@
           <span>{{ $t("messages.total") }}</span>
         </li>
         <li>
-          <span>{{ dataStatistics.workArea?.todayArea.toFixed(2) }}</span>
-          <span>{{ $t("messages.todaysOperation") }}</span>
-        </li>
-        <li>
           <span>{{ dataStatistics.device?.onlineDevice }}</span>
           <span>{{ $t("messages.onlineCount") }}</span>
+        </li>
+        <li>
+          <span>{{ dataStatistics.workArea?.todayArea.toFixed(2) }}</span>
+          <span>{{ $t("messages.todaysOperation") }}</span>
         </li>
         <li>
           <span>{{
@@ -95,7 +95,7 @@
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
             <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange" />
-            <SvgIcon :icon="item.typeName" size="22" />
+            <!-- <SvgIcon :icon="item.typeName" size="22" /> -->
             <span class="label">{{ item.typeName }}</span>
           </label>
           <span class="value">{{ item.onlineCount }}</span>
@@ -187,6 +187,7 @@ import MC100 from "@/assets/icons/MC100.svg";
 import MC100_warn from "@/assets/icons/MC100_warn.svg";
 import AGunknown from "@/assets/icons/AGunknown.svg";
 import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
+import satelite from "@/assets/monitoring/satelite.png";
 import wifi_0 from "@/assets/monitoring/wifi_0.png";
 import wifi_1 from "@/assets/monitoring/wifi_1.png";
 import wifi_2 from "@/assets/monitoring/wifi_2.png";
@@ -494,7 +495,6 @@ async function getOnlineFarmPosition() {
     item.markerLat = item.posX;
     item.markerType = createMarkerType(item);
     if (onlineFarmMachines.length > mapRenderModeLengthMax) {
-
       if (sinoMapRef.value.iconChangeLimit) {
         item.markerIcon = createMarkerIcon(item);
       } else {
@@ -609,21 +609,36 @@ function createMarkerPopup(item: any) {
   if (item.onlineTcp == 0 || item.driveState != 0) {
     openRemote = false; // 禁用
   } else {
-    if (
-      item.terminalType.includes("MT")  ||
-      item.terminalType.includes("AG360") ||
-      item.terminalType == "AG502" ||
-      item.terminalType == "AG302"
-    ) {
-      openRemote = true; // 可用
-    } else {
-      openRemote = false; // 禁用
-    }
+    // if (
+    //   item.terminalType.includes("MT") ||
+    //   item.terminalType.includes("AG360") ||
+    //   item.terminalType == "AG502" ||
+    //   item.terminalType == "AG302" ||
+    //   item.terminalType.includes("AG501")
+    // ) {
+    //   openRemote = true; // 可用
+    // } else {
+    //   openRemote = false; // 禁用
+    // }
+    openRemote = true;
   }
 
   const cardUsage = item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
   const popup = `<div class="map_popup">
+
         <ul class="popup_container">
+         <li>
+            <div class="le">
+              <span > <img class="sate" src=${satelite}></span>
+             <span class="value">${item.satNum}</span>
+            </div>
+            <div class="re" >
+              <div class="value" style="margin-left: auto;margin-right:20px">
+                <img src=${netSignalImg[item.netSignal]}>
+                <span>4G</span>
+              </div>
+            </div>
+          </li>
           <li>
             <div class="l">
               <div class="label">${t("messages.carName")}:</div>
@@ -638,20 +653,15 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="l">
-              <div class="label">${t("devicelist.name")}:</div>
-              <div class="value">${item.carOwnerName}</div>
+           <div class="label">${t("work.companyName")}:</div>
+              <div class="value">${item.companyName}</div>
             </div>
             <div class="r">
               <div class="label">${t("messages.labelSN")}:</div>
               <div class="value">${item.npn || "/"}</div>
             </div>
           </li>
-          <li>
-            <div class="l">
-              <div class="label">${t("work.companyName")}:</div>
-              <div class="value">${item.companyName}</div>
-            </div>
-          </li>
+        
           <li>
             <div class="l">
               <div class="label">${t("messages.workingcondition")}:</div>
@@ -687,41 +697,30 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="l">
-              <div class="label">卫星数量:</div>
-              <div class="value">${item.satNum}</div>
-            </div>
-            <div class="r">
-              <div class="label">基站距离:</div>
+          <div class="label">基站距离:</div>
               <div class="value">${(item.baseDist / 1000).toFixed(3)} Km</div>
             </div>
-          </li>
-          <li>
-            <div class="l">
-              <div class="label">4G信号:</div>
-              <div class="value">
-                <img src=${netSignalImg[item.netSignal]}>
-                <span>${netSignal[item.netSignal] || "/"}</span>
-              </div>
-            </div>
             <div class="r">
-              <div class="label">终端类型:</div>
+               <div class="label">终端类型:</div>
               <div class="value">${item.terminalType}</div>
             </div>
           </li>
+
           <li>
             <div class="l">
               <div class="label">经度:</div>
               <div class="value">${dmsTrans(item.posY)}</div>
             </div>
             <div class="r">
-              <div class="label">卡状态:</div>
-              <div class="value">${cardUsage}</div>
+              <div class="label">纬度:</div>
+              <div class="value">${dmsTrans(item.posX)}</div>
+           
             </div>
           </li>
           <li>
             <div class="l">
-              <div class="label">纬度:</div>
-              <div class="value">${dmsTrans(item.posX)}</div>
+               <div class="label">卡状态:</div>
+              <div class="value">${cardUsage}</div>
             </div>
             <div class="r">
               <div class="label"></div>
@@ -759,6 +758,7 @@ function createMarkerPopup(item: any) {
 function createMarkerIcon(item: any) {
   const { terminalType, driveState } = item;
   let icon: string = "";
+  // icon = driveState == 0 ? green : yellow;
   if (terminalType && terminalType.includes("AG360")) {
     icon = driveState == 0 ? AG360_warn : AG360;
   } else if (
@@ -892,6 +892,15 @@ function openRemote_markerPopup(arg: any) {
 
     :deep(.el-autocomplete) {
       width: 330px;
+      .el-input__wrapper {
+        color: #fff !important;
+        background: url("@/assets/monitoring/inputBack.png") no-repeat center center;
+        background-size: 105% 100%;
+      }
+      .el-input__inner {
+        color: #fff !important;
+        background-color: transparent;
+      }
     }
   }
 
@@ -960,8 +969,8 @@ function openRemote_markerPopup(arg: any) {
           }
 
           div {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             background-color: #43cf7c;
           }
@@ -1115,26 +1124,36 @@ function openRemote_markerPopup(arg: any) {
 
   .popup_container {
     font-size: 14px;
+    .sate {
+      width: 22px;
+      height: 22px;
+      margin-right: 2px;
+    }
 
     li {
       display: flex;
       line-height: 22px;
 
-      &:nth-child(3) {
-        margin-bottom: 12px;
+      margin-bottom: 12px;
+      .le {
+        width: 50%;
+        display: flex;
       }
 
-      .l {
+      .re {
+        width: 50%;
         display: flex;
+      }
+      .l {
         width: 50%;
       }
 
       .r {
-        display: flex;
         width: 50%;
       }
 
       .label {
+        color: #bebebe;
         width: 66px;
         flex-shrink: 0;
         overflow: hidden;
@@ -1146,7 +1165,7 @@ function openRemote_markerPopup(arg: any) {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-
+        font-size: 16px;
         img {
           width: 12px;
           height: 12px;
@@ -1156,8 +1175,8 @@ function openRemote_markerPopup(arg: any) {
 
       .status {
         display: inline-block;
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         margin-right: 2px;
       }

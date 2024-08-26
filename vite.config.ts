@@ -50,6 +50,17 @@ export default defineConfig({
       "@": path.resolve(process.cwd(), 'src')
     },
   },
+  css: {
+    // css预处理器
+    preprocessorOptions: {
+      scss: {
+        additionalData: `
+          @import "@/styles/variables.scss";
+          @import "@/styles/mixin.scss";
+        `
+      }
+    }
+  },
   server: {
     host: "0.0.0.0",
     port: 8089,

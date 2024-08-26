@@ -1,7 +1,11 @@
 <template>
   <div class="app_container">
     <!-- 搜索 -->
-    <div class="search_container app_card">
+   
+
+    <!-- 表格 -->
+    <div class="table_container app_card">
+      <div class="search_container ">
       <div>
         <el-input
           :placeholder="$t('work.enterSNOrPhone')"
@@ -34,9 +38,6 @@
         </el-tag>
       </div>
     </div>
-
-    <!-- 表格 -->
-    <div class="table_container app_card">
       <el-table
         type="index"
         @sort-change="changeTableSort"
@@ -232,7 +233,7 @@ const chooseStatus = () => {
 .search_container {
   display: flex;
   justify-content: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 
   .state {

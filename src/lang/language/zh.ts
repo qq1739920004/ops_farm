@@ -114,6 +114,7 @@ const zh = {
     companyName: "公司名称",
     sunflowerSN: "向日葵SN",
     boardFirmwareNumber: "板卡固件号",
+    lackVersion:'该车辆缺少版本参数',
     EC20FirmwareNumber: "EC20固件号",
     radioFirmwareNumber: "电台固件号",
     bodyIMUFirmwareNumber: "车身IMU固件号",

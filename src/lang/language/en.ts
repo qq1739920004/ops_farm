@@ -89,6 +89,7 @@ const en = {
     details: "Details",
     device: "Device",
     snPlaceholder: "Input SN here",
+
     time: "Time",
     oneYear: "1 year",
     expiredNow: "Expired now",
@@ -197,6 +198,7 @@ const en = {
     PlateSN: "Plate SN",
     MotorSN: "Motor SN",
     BodySN: "Body SN",
+    lackVersion:'This car lacks version parameters',
     Antenna1_SN: "Antenna1 SN",
     Antenna2_SN: "Antenna2 SN",
     delete: "delete",

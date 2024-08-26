@@ -2,10 +2,6 @@
 <template>
     <el-table :data="props.paddyWorkList" stripe>
         <el-table-column type="index" :label="$t('devicelist.item')" width="80" align="center" />
-        <el-table-column :label="$t('devicelist.name')" prop="userName" align="center">
-        </el-table-column>
-        <el-table-column :label="$t('devicelist.tel')" prop="tel" align="center">
-        </el-table-column>
         <el-table-column :label="$t('work.project')" prop="name" align="center">
         </el-table-column>
         <el-table-column :label="$t('devicelist.type')" align="center">
@@ -19,18 +15,9 @@
             <template #="{ row }">
                 {{ row.workedArea }}{{$t('work.are')}}</template>
         </el-table-column>
-        <el-table-column :label="$t('work.projectTime')" align="center" width="200px">
-            <template #="{ row }">
-                <el-row justify="center">
-                    {{ row.createtime }}
-                </el-row>
-                <el-row justify="center">
-                    {{ row.updatetime }}
-                </el-row>
-            </template>
-        </el-table-column>
         <el-table-column :label="$t('devicelist.location')" prop="position" align="center">
       </el-table-column>
+       
         <el-table-column label="SN" prop="sn" align="center">
         </el-table-column>
         <el-table-column :label="$t('devicelist.labelSN')" prop="npn" align="center">
@@ -42,6 +29,20 @@
           <span style="margin-left: 10px">{{ scope.row.npn }}</span>
         </div>
       </template>
+        </el-table-column>
+        <el-table-column :label="$t('devicelist.name')" prop="userName" align="center">
+        </el-table-column>
+        <el-table-column :label="$t('devicelist.tel')" prop="tel" align="center">
+        </el-table-column>
+        <el-table-column :label="$t('work.projectTime')" align="center" width="200px">
+            <template #="{ row }">
+                <el-row justify="center">
+                    {{ row.createtime }}
+                </el-row>
+                <el-row justify="center">
+                    {{ row.updatetime }}
+                </el-row>
+            </template>
         </el-table-column>
         <el-table-column :label="$t('work.vehicle')" prop="carName" align="center">
         </el-table-column>

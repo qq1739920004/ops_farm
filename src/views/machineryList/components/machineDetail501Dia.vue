@@ -75,6 +75,7 @@
                 </div>
             </div> -->
 <template>
+
     <el-dialog @open="getNewDetail" v-model="dialogVisible" title="详情" center height="600px" width="1108px">
         <div class="titleArea">
             {{ $t('work.basicInformation') }}
@@ -99,17 +100,19 @@
                 <div class="data">{{ NewDetail.userName }}</div>
                 <div class="tit">{{ $t('devicelist.tel') }}:</div>
                 <div class="data">{{ NewDetail.tel }}</div>
-                <div class="tit">{{ $t('work.vehicleManufacturer') }}:</div>
-                <div class="data">{{ NewDetail.factory }}</div>
+                <!-- <div class="tit">{{ $t('work.vehicleManufacturer') }}:</div>
+                <div class="data">{{ NewDetail.factory }}</div> -->
+                <div class="tit">{{ $t('work.vehicleModel') }}:</div>
+                <div class="data">{{ NewDetail.model }}</div>
             </div>
-            <div class="line line3">
+            <!-- <div class="line line3">
                 <div class="tit">{{ $t('work.vehicleModel') }}:</div>
                 <div class="data">{{ NewDetail.model }}</div>
                 <div class="tit">{{ $t('work.vehicleAge') }}:</div>
                 <div class="data">{{ NewDetail.age }}</div>
                 <div class="tit">{{ $t('work.sunflowerSN') }}:</div>
                 <div class="data">{{ NewDetail.sunFlowerSn }}</div>
-            </div>
+            </div> -->
             <div class="line line3">
                 <div class="tit">{{ $t('work.creationTime') }}:</div>
                 <div class="data">{{ NewDetail.createTime }}</div>
@@ -127,7 +130,7 @@
             <div class="line line3">
                 <div class="tit">{{ $t('work.boardFirmwareNumber') }}:</div>
                 <div class="data">{{ NewDetail.board }}</div>
-                <div class="tit">{{ $t('work.EC20FirmwareNumber') }}:</div>
+                <div class="tit">EG25:</div>
                 <div class="data">{{ NewDetail.ec20 }}</div>
                 <div class="tit">{{ $t('work.radioFirmwareNumber') }}:</div>
                 <div class="data">{{ NewDetail.radioStation }}</div>
@@ -148,26 +151,28 @@
                 <div class="tit">{{ $t('work.MotorSN') }}:</div>
                 <div class="data">{{ NewDetail.motorSn }}</div>
             </div>
-            <div class="line line4">
+            <!-- <div class="line line4">
                 <div class="tit1">{{ $t('work.multifunctionSteeringWheelFirmwareNumber') }}:</div>
                 <div class="data">{{ NewDetail.steeringWheel }}</div>
                 <div class="tit1">{{ $t('work.steeringSN') }}:</div>
                 <div class="data">{{ NewDetail.steeringWheelSn }}</div>
                 <div class="tit1">{{ $t('work.hubBluetoothFirmwareNumber') }}:</div>
                 <div class="data">{{ NewDetail.hubBluetooth }}</div>
-            </div>
+            </div> -->
             <div class="line line3">
                 <div class="tit">{{ $t('work.hubFirmwareNumber') }}:</div>
                 <div class="data">{{ NewDetail.hub }}</div>
-                <div class="tit">Hub_SN:</div>
-                <div class="data">{{ NewDetail.hubSn }}</div>
+                <!-- <div class="tit">Hub_SN:</div>
+                <div class="data">{{ NewDetail.hubSn }}</div> -->
+                <div class="tit">{{ $t('work.p3000') }}</div>
+                <div class="data">{{ NewDetail.p300Version }}</div>
                 <div class="tit">{{ $t('work.softwareVersion') }}:</div>
                 <div class="data">{{ NewDetail.softwareVersion }}</div>
             </div>
-            <div class="line line3">
+            <!-- <div class="line line3">
                 <div class="tit">{{ $t('work.p3000') }}</div>
                 <div class="data">{{ NewDetail.p300Version }}</div>
-            </div>
+            </div> -->
 
         </div>
         <div class="titleArea">

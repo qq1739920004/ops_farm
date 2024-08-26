@@ -18,7 +18,7 @@
                 </div>
             </div> -->
             <el-form style="width: 100%" label-width="160px">
-                <el-form-item :label="$t('devicelist.snPlaceholder')" label-width="198px">
+                <el-form-item :label="$t('devicelist.sn')" label-width="198px">
                     <span class="span_title"> {{ props.sn }}</span>
                 </el-form-item>
                 <el-form-item :label="$t('devicelist.time')+':'">
@@ -53,18 +53,18 @@ defineExpose({
 const date = ref(365)
 const activationAddBtn = async () => {
     dialogVisible.value = false
-    try {
-        await activationCodeAdd_API({
+
+       const res =  await activationCodeAdd_API({
             carId: props.carId,
             oemSn: props.sn,
             deviceId: props.deviceId,
             date: date.value
         })
+       if(res.code ===0) {
         ElMessage({ type: 'success', message: '注册成功' })
-    }
-    catch {
-        // ElMessage({ type: 'error', message: '注册失败' })
-    }
+       }
+    
+
 }
 </script>
 

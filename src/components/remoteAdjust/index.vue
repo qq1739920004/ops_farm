@@ -1,16 +1,54 @@
 <template>
   <div>
-    <RemoteAdjustDia360 ref="RemoteD" :terminalType="terminalType" :paramVersionnum="paramVersionnum"
-      :paramType="paramType" :carId="carId" :sn="sn" :name="name">
+    <RemoteAdjustDia360
+      ref="RemoteD"
+      :terminalType="terminalType"
+      :paramVersionnum="paramVersionnum"
+      :paramType="paramType"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    >
     </RemoteAdjustDia360>
-    <RemoteAdjustDia302 ref="RemoteD302" :terminalType="terminalType" :paramVersionnum="paramVersionnum"
-      :paramType="paramType" :carId="carId" :sn="sn" :name="name">
+    <RemoteAdjustDia302
+      ref="RemoteD302"
+      :terminalType="terminalType"
+      :paramVersionnum="paramVersionnum"
+      :paramType="paramType"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    >
     </RemoteAdjustDia302>
-    <RemoteAdjustDia502 ref="RemoteD502" :terminalType="terminalType" :paramVersionnum="paramVersionnum"
-      :paramType="paramType" :carId="carId" :sn="sn" :name="name">
+    <RemoteAdjustDia502
+      ref="RemoteD502"
+      :terminalType="terminalType"
+      :paramVersionnum="paramVersionnum"
+      :paramType="paramType"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    >
     </RemoteAdjustDia502>
-    <RemoteAdjustDia_360 ref="RemoteD360" :terminalType="terminalType" :paramVersionnum="paramVersionnum"
-      :paramType="paramType" :carId="carId" :sn="sn" :name="name">
+    <RemoteAdjustDia501
+      ref="RemoteD501"
+      :terminalType="terminalType"
+      :paramVersionnum="paramVersionnum"
+      :paramType="paramType"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    >
+    </RemoteAdjustDia501>
+    <RemoteAdjustDia_360
+      ref="RemoteD360"
+      :terminalType="terminalType"
+      :paramVersionnum="paramVersionnum"
+      :paramType="paramType"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    >
     </RemoteAdjustDia_360>
   </div>
 </template>
@@ -20,6 +58,7 @@ import { ref, nextTick, watch } from "vue";
 import RemoteAdjustDia360 from "./components/remoteAdjust.vue";
 import RemoteAdjustDia302 from "./components/remoteAdjust302.vue";
 import RemoteAdjustDia502 from "./components/remoteAdjust502.vue";
+import RemoteAdjustDia501 from "./components/remoteAdjust501Pro.vue";
 import RemoteAdjustDia_360 from "./components/remoteAdjust360.vue";
 const props = defineProps([
   "terminalType",
@@ -39,25 +78,34 @@ const sn = ref();
 const RemoteD = ref();
 const RemoteD302 = ref();
 const RemoteD502 = ref();
-const RemoteD360 = ref()
+const RemoteD501 = ref();
+const RemoteD360 = ref();
 const gotoRemote = () => {
   if (terminalType.value.includes("AG360") && Number(paramVersionnum.value) < 100) {
     RemoteD.value.dialogVisible = true;
-    
-  }
-  if (terminalType.value.includes("AG360") && Number(paramVersionnum.value) >= 100) {
+  } else if (
+    terminalType.value.includes("AG360") &&
+    Number(paramVersionnum.value) >= 100
+  ) {
     RemoteD360.value.dialogVisible = true;
-    
-  }
-  if (terminalType.value == "AG302") {
+  } else if (terminalType.value == "AG302") {
     RemoteD302.value.dialogVisible = true;
-  }
-  if (terminalType.value == "AG502" ) {
+  } else if (terminalType.value == "AG501Pro") {
+    RemoteD501.value.dialogVisible = true;
+  } else if (terminalType.value.includes("MT")) {
+    RemoteD501.value.dialogVisible = true;
+  } else {
     RemoteD502.value.dialogVisible = true;
   }
-  if(terminalType.value.includes("MT")){
-    RemoteD502.value.dialogVisible = true; RemoteD502.value.dialogVisible = true;
-  }
+  // if (terminalType.value == "AG502") {
+  //   RemoteD502.value.dialogVisible = true;
+  // }
+  // if (terminalType.value.includes("MT")) {
+  //   RemoteD502.value.dialogVisible = true;
+  // }
+  // if (terminalType.value.includes("AG501")) {
+  //   RemoteD502.value.dialogVisible = true;
+  // }
   nextTick(() => {
     RemoteD.value.carFormRef?.clearValidate();
     RemoteD302.value.carFormRef?.clearValidate();

@@ -290,6 +290,15 @@
     :satelliteDate="satelliteDate"
     :warrantyDate="warrantyDate"
   ></MachineDetailDia>
+  <MachineDetail501Dia
+    ref="Machine501D"
+    :carId="carId"
+    :terminalType="terminalType2"
+    :netDate="netDate"
+    :expirationTime="expirationTime"
+    :satelliteDate="satelliteDate"
+    :warrantyDate="warrantyDate"
+  ></MachineDetail501Dia>
   <RemoteControl
     :isChange="isChange"
     :terminalType="terminalType"
@@ -310,6 +319,7 @@ import { reactive, ref } from "vue";
 // import { pageInfo, carStatusObj } from '@/api/machineryList/type'
 import { pageInfo } from "@/api/machineryList/type";
 import MachineDetailDia from "./machineDetailDia.vue";
+import MachineDetail501Dia from "./machineDetail501Dia.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
 import RegisterDia from "./registerDia.vue";
 import { useRouter } from "vue-router";
@@ -323,6 +333,7 @@ const emits = defineEmits(["changeSort", "datachange"]);
 // const switchStatus = ref<boolean>(false)
 const sn = ref();
 const MachineD = ref();
+const Machine501D = ref()
 const netDate = ref<string>("");
 const expirationTime = ref<string>("");
 const satelliteDate = ref<string>("");
@@ -428,11 +439,16 @@ const gotoMachineDetail = (
 ) => {
   carId.value = val;
   terminalType2.value = val2;
-  MachineD.value.dialogVisible = true;
+
   netDate.value = val7;
   expirationTime.value = val8;
   satelliteDate.value = val9;
   warrantyDate.value = val10;
+  if (val2 === "AG501Pro") {
+    Machine501D.value.dialogVisible = true;
+  } else {
+    MachineD.value.dialogVisible = true;
+  }
 };
 const gotoRegister = (val: any, val2: any, val3: any) => {
   carId.value = val;
@@ -468,7 +484,7 @@ const filterChange = (filterObj: any) => {
 };
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 .sn_area1 {
   display: flex;
   align-items: center;

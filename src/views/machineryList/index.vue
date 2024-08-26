@@ -1,6 +1,7 @@
 <template>
   <div class="app_container">
-    <div class="search_container app_card">
+    <div class="table_container app_card" v-show="tableShow">
+    <div class="search_container ">
       <div class="input_area">
         <el-input
           :placeholder="$t('devicelist.pleaseInput')"
@@ -63,7 +64,6 @@
         </el-button-group>
       </div>
     </div>
-    <div class="table_container app_card" v-show="tableShow">
       <sn-table
         @datachange="dataChange"
         :carNewList="carNewList"
@@ -191,16 +191,18 @@ const getCarList = async () => {
     if (item.onlineTcp === 0 || item.driveState != 0) {
       openRemote = false; // 禁用
     } else {
-      if (
-        item.terminalType == "AG302" ||
-        item.terminalType.includes("AG360") ||
-        item.terminalType == "AG502" ||
-        item.terminalType.includes("MT") 
-      ) {
-        openRemote = true; // 可用
-      } else {
-        openRemote = false; // 禁用
-      }
+      // if (
+      //   item.terminalType == "AG302" ||
+      //   item.terminalType.includes("AG360") ||
+      //   item.terminalType == "AG502" ||
+      //   item.terminalType.includes("MT") ||
+      //   item.terminalType.includes("AG501")
+      // ) {
+      //   openRemote = true; // 可用
+      // } else {
+      //   openRemote = false; // 禁用
+      // }
+      openRemote = true; 
     }
     return {
       ...item,
@@ -232,7 +234,7 @@ const getRouterParam = () => {
 .search_container {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 
   .input_area {

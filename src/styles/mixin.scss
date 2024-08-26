@@ -1,0 +1,62 @@
+//flex布局复用
+
+@mixin flex($hor:flex-start,$col:stretch,$direction:row,$wrap:nowrap){
+    display: flex;
+    flex-direction:$direction ;
+    flex-wrap:$wrap;
+    justify-content: $hor;
+    align-items: $col;   
+}
+@mixin setHeight($height,$lineHeight){
+  height:$height;
+  line-height:$lineHeight
+}
+@mixin setWH($width,$height){
+  width: $width;
+  height:$height ;   
+}
+// @mixin setShape($width,$height,$color,$radius:50%){//默认是圆形
+//   content: '';
+//   display: inline-block;
+//   @include setWH($width,$height);
+//   border-radius: $radius;
+//   background-color: $color;
+  
+// }
+
+@mixin setBackground($url,$size:cover){
+  background: url($url) no-repeat ;
+  background-size: $size;
+}
+@mixin setShape($width,$height,$radius:50%,$color:transparent,$pseudoClass:1){//默认是圆形和伪类
+  @if($pseudoClass){
+    content: '';
+    display: inline-block;
+  }
+ 
+  @include setWH($width,$height);
+  @include setRadiusColor($radius,$color);
+  
+}
+@mixin setCircle($radius,$color:transparent,$pseudoClass:0){//默认非伪类
+  @if($pseudoClass){
+    content: '';
+    display: inline-block;
+  }
+  @include setWH($radius,$radius);
+  @include setRadiusColor(50%,$color);
+ 
+}
+@mixin setRadius($width,$height,$radius){
+  @include setWH($width,$height);
+  border-radius: $radius
+}
+@mixin setRadiusColor($radius,$color){
+  border-radius: $radius;
+  background-color: $color;
+}
+@mixin setColor($color,$backColor){
+  background-color: $backColor;
+  color:$color       
+}
+  

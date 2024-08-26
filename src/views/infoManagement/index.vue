@@ -1,6 +1,7 @@
 <template>
     <div class='app_container'>
-        <div class="search_container app_card">
+        <div class="table_container app_card">
+        <div class="search_container ">
             <div class="input_area">
                 <el-input :placeholder="$t('work.plzSN')" v-model="pageInfo.key" class="input-with-select"
                     @keyup.enter.native="search" clearable @clear="search">
@@ -26,7 +27,6 @@
                 <el-button v-auth="448" type="primary" icon="Plus" @click="openDialog">{{ $t('work.new') }}</el-button>
             </div>
         </div>
-        <div class="table_container app_card">
             <el-table @selection-change="handleSelectionChange" :data="records" v-show="scence == '1'" stripe>
                 <el-table-column type="selection" width="55" />
                 <el-table-column type="index" width="80" :label="$t('work.item')" align="center" />
@@ -529,7 +529,7 @@ const openExportDia = () => {
 .search_container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
     .input_area {
         display: flex;

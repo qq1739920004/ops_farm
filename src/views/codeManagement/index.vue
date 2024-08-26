@@ -1,7 +1,8 @@
 <!--  -->
 <template>
   <div class="app_container">
-    <div class="search_container app_card">
+    <div class="table_container app_card">
+    <div class="search_container ">
       <div class="input_area">
         <el-input
           :placeholder="$t('work.inputFactoryNumber')"
@@ -26,7 +27,6 @@
         }}</el-button>
       </div>
     </div>
-    <div class="table_container app_card">
       <!-- @select="handleSelect" @select-all="handleSelectAll" -->
       <el-table
         :data="tableData"
@@ -469,7 +469,7 @@ const exportData = () => {
 .search_container {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 
   .input_area {
     display: flex;

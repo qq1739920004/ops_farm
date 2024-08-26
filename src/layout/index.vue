@@ -14,7 +14,7 @@
               color="#fff"
               size="24"
             />
-            <Breadcrumb />
+           
           </div>
 
           <Navbar />

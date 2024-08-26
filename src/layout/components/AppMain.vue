@@ -1,15 +1,20 @@
 <template>
   <section class="app-main">
+    <div>
+      <breadcrumb />
+    </div>
     <router-view v-slot="{ Component, route }">
       <transition name="router-fade" mode="out-in">
         <!-- <keep-alive> -->
-          <component :is="Component" :key="route.fullPath" />
+        <component :is="Component" :key="route.fullPath" />
         <!-- </keep-alive> -->
       </transition>
     </router-view>
   </section>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Breadcrumb from "./Breadcrumb/index.vue";
+</script>
 
 <style lang="scss" scoped>
 .app-main {

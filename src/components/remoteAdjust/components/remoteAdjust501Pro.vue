@@ -19,7 +19,7 @@
     <div class="menuArea">
       <el-tabs stretch v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane :label="$t('work.vehicleParameters')" name="1"></el-tab-pane>
-        <el-tab-pane :label="$t('work.calibrationParameters')" name="2"></el-tab-pane>
+        <!-- <el-tab-pane :label="$t('work.calibrationParameters')" name="2"></el-tab-pane> -->
         <el-tab-pane label="基本参数" name="3"></el-tab-pane>
         <el-tab-pane label="高级参数1" name="4"></el-tab-pane>
         <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane>
@@ -67,7 +67,7 @@
           }}</el-button>
         </div>
       </el-form>
-      <el-form
+      <!-- <el-form
         :validate-on-rule-change="false"
         ref="calibFormRef"
         v-show="activeName == '2'"
@@ -101,7 +101,7 @@
             $t("work.submit")
           }}</el-button>
         </div>
-      </el-form>
+      </el-form> -->
       <el-form
         :validate-on-rule-change="false"
         ref="pidFormRef"
@@ -637,7 +637,7 @@ const getParamParams = async () => {
 const closeRemoteAdjust = () => {
   workPattern.value.type = "3";
   carFormRef.value.resetFields();
-  calibFormRef.value.resetFields();
+  // calibFormRef.value.resetFields();
   pidFormRef.value.resetFields();
   moudleRef.value.resetFields();
   formLabelAlignRef.value.resetFields();
@@ -667,10 +667,10 @@ const openRemoteAdjust = () => {
     if (carParamsData.value != null) {
       getParamParams();
     }
-    getCarParams("calib");
-    if (CalibTitleData.value != null) {
-      getCalib();
-    }
+    // getCarParams("calib");
+    // if (CalibTitleData.value != null) {
+    //   getCalib();
+    // }
     getCarParams("basic");
     if (basicTitleData.value != null) {
       getBasic();
@@ -730,33 +730,33 @@ const updatebasicParams = async () => {
     .catch(() => {});
 };
 // 更新校准参数更新校准数据
-const updateCalibParams = async () => {
-  await calibFormRef.value.validate();
-  ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
-  })
-    .then(() => {
-      updateInfo.value.carId = props.carId;
-      updateInfo.value.paramJson = JSON.stringify(CalibParamsData);
-      updateCalibParam_API(updateInfo.value).then(() => {
-        try {
-          ElMessage({ type: "success", message: "修改成功" });
-        } catch {
-          // ElMessage({ type: 'error', message: '修改失败' })
-        }
-      });
-    })
-    .catch(() => {});
-};
+// const updateCalibParams = async () => {
+//   await calibFormRef.value.validate();
+//   ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
+//     confirmButtonText: "确定",
+//     cancelButtonText: "取消",
+//     type: "warning",
+//   })
+//     .then(() => {
+//       updateInfo.value.carId = props.carId;
+//       updateInfo.value.paramJson = JSON.stringify(CalibParamsData);
+//       updateCalibParam_API(updateInfo.value).then(() => {
+//         try {
+//           ElMessage({ type: "success", message: "修改成功" });
+//         } catch {
+//           // ElMessage({ type: 'error', message: '修改失败' })
+//         }
+//       });
+//     })
+//     .catch(() => {});
+// };
 // 获取校准参数对应的值
-const getCalib = async () => {
-  const res: paramcalibParamData = await paramCalibParam_API(props.carId);
-  res.data.paramJson
-    ? Object.assign(CalibParamsData, JSON.parse(res.data.paramJson))
-    : "";
-};
+// const getCalib = async () => {
+//   const res: paramcalibParamData = await paramCalibParam_API(props.carId);
+//   res.data.paramJson
+//     ? Object.assign(CalibParamsData, JSON.parse(res.data.paramJson))
+//     : "";
+// };
 // 基本参数对应的值
 const getBasic = async () => {
   const res: paramcalibParamData = await basicParam_API(props.carId);

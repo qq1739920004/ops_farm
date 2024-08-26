@@ -1,6 +1,7 @@
 <template>
     <div class='app_container'>
-        <div class="search_container app_card">
+        <div class="table_container app_card">
+        <div class="search_container">
             <div class="input_area">
                 <el-select v-if="dealerList.length > 1" filterable v-model="pageInfo.companyId" class="input-with-select"
                     :placeholder="$t('work.pleaseSelect')" @change="changeBlur1">
@@ -44,7 +45,6 @@
                     icon="MapLocation" class="btn2"></el-button>
             </div>
         </div>
-        <div class="table_container app_card">
             <sn-table :paddyWorkList="paddyWorkList">
                 <div>
                     <Pagination :total="total" :currentPage="pageInfo.currentPage" :pageSize="pageInfo.pageSize"
@@ -302,7 +302,7 @@ const changeA = () => {
 .search_container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
 
 

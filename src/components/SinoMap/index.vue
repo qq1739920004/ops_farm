@@ -2,37 +2,48 @@
   <div class="SinoMap_component">
     <div id="map"></div>
     <div class="map_utils">
-      <el-select v-model="mapTileOptions.id" @change="mapTileChange">
-        <el-option
-          v-for="item in mapTileOptions.list"
-          :key="item.id"
-          :label="t(item.lable)"
-          :value="item.id"
-        />
-      </el-select>
+      <div class="map_utils_item flex-align-center">
+        <el-select
+          style="width: 111px"
+          v-model="mapTileOptions.id"
+          @change="mapTileChange"
+        >
+          <el-option
+            v-for="item in mapTileOptions.list"
+            :key="item.id"
+            :label="t(item.lable)"
+            :value="item.id"
+          />
+        </el-select>
+      </div>
       <div class="map_utils_item">
         <el-tooltip
           effect="light"
           :content="t('sinoMap.Clickmetoreturntotheoverallsituation')"
         >
           <el-button @click="handleMapCenter('')">
-            <SvgIcon icon="refresh" />
+            <el-icon size="16"><RefreshRight /></el-icon>
           </el-button>
         </el-tooltip>
       </div>
       <div class="map_utils_item">
         <el-tooltip effect="light" :content="t('sinoMap.ranging')">
           <el-button @click="mapRanging">
-            <SvgIcon icon="ranging" />
+            <SvgIcon icon="ranging" color="white" />
           </el-button>
         </el-tooltip>
-        <el-button
-          class="clear_btn"
-          v-if="rangingArray.length > 0"
-          @click="clearMapRanging"
-          type="danger"
-          >{{ $t("work.clear") }}</el-button
-        >
+        <div class="map_utils_item" v-if="rangingArray.length > 0">
+          <el-tooltip effect="light" :content="t('work.clear')">
+            <el-button
+              class="clear_btn"
+              v-if="rangingArray.length > 0"
+              @click="clearMapRanging"
+              type="danger"
+            >
+              <el-icon> <Delete /> </el-icon
+            ></el-button>
+          </el-tooltip>
+        </div>
       </div>
     </div>
   </div>
@@ -617,6 +628,7 @@ watch(
 function createMarkerIcon(item: any) {
   const { markerType, driveState } = item;
   let icon: string = "";
+  // icon = driveState == 0 ? green : yellow;
   if (markerType.includes("AG360")) {
     icon = driveState == 0 ? AG360_warn : AG360;
   } else if (markerType.includes("AG501") && markerType != "AG501Pro") {
@@ -843,31 +855,103 @@ defineExpose({
 #map {
   height: 100%;
 }
-
 .map_utils {
-  position: absolute;
-  z-index: 999;
-  bottom: 10px;
-  left: 10px;
-  display: flex;
-  align-items: center;
+  background: url("@/assets/monitoring/inputBack.png") no-repeat center center;
+  background-size: 105% 100%;
 
-  .el-select {
-    width: 135px;
-  }
+  border: 1px solid #fff;
+  border-radius: 5px;
+  padding: 6px 10px;
+  color: #fff;
 
   .map_utils_item {
-    margin-left: 6px;
-
-    .clear_btn {
-      margin-left: 6px;
+    height: 15px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    .el-checkbox__label {
+      color: #fff;
     }
+    .item {
+      padding: 0 6px;
+      display: flex;
+      align-items: center;
+
+      p {
+        text-decoration: underline;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+        margin: 0;
+      }
+      .el-dropdown-link {
+        color: #fff;
+        display: flex;
+        align-items: center;
+      }
+    }
+    &:first-child {
+      padding-left: 0;
+    }
+    &:last-child {
+      padding-right: 0;
+    }
+    .el-button {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+    }
+    :deep(.el-input__wrapper) {
+      background: transparent !important;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      .el-input__inner {
+        color: white;
+      }
+    }
+
+    .el-icon {
+      color: #fff;
+    }
+    .el-scrollbar {
+      padding: 0 10px !important;
+    }
+
+    svg {
+      cursor: pointer;
+      use {
+        fill: #fff;
+      }
+    }
+    .el-dropdown-link {
+      color: #fff;
+      display: flex;
+      align-items: center;
+    }
+
+    &:not(:last-child) {
+      border-right: 1px solid #fff;
+    }
+  }
+}
+.map_utils {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 999;
+  display: flex;
+  .map_utils_item {
+    margin-right: 6px;
   }
 }
 
 :deep(.leaflet-popup) {
+  color: white;
   .leaflet-popup-content-wrapper {
-    background-color: var(--el-bg-color);
+    background: url("@/assets/monitoring/Union@.png");
+    background-size: contain;
+    background-size: 100%  103%; 
     color: var(--color-scheme);
   }
 
@@ -876,7 +960,7 @@ defineExpose({
   }
 
   .leaflet-popup-tip {
-    background-color: var(--el-bg-color);
+    background-color: #388874;
   }
 }
 :deep(.custom-icon) {
