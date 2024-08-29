@@ -50,7 +50,14 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column :label="$t('devicelist.type')" prop="terminalType" align="center">
+    <el-table-column
+      :filters="handleTerminalTypeList()"
+      column-key="filterTerminalType"
+      :filter-multiple="false"
+      :label="$t('devicelist.type')"
+      prop="terminalType"
+      align="center"
+    >
     </el-table-column>
     <el-table-column
       :label="t('statisticsReport.activationStatus')"
@@ -212,7 +219,7 @@
             </template>
         </el-table-column> -->
     <!-- 说明  离线和自动驾驶状态不可编辑 -->
-    <el-table-column :label="$t('devicelist.operation')" width="375" align="center">
+    <el-table-column :label="$t('devicelist.operation')" width="475" align="center">
       <template #="{ row }">
         <el-button
           :disabled="row.onlineTcp === 1 ? false : true"
@@ -277,6 +284,13 @@
           "
           >{{ $t("devicelist.details") }}</el-button
         >
+        <el-button
+          :style="isLanguage == 'en' ? 'width: 75px' : 'width:55px'"
+          text
+          type="primary"
+          @click="gotoalarm(row.id, row.sn)"
+          >{{ $t("menus.alarmView") }}</el-button
+        >
       </template>
     </el-table-column>
   </el-table>
@@ -329,11 +343,11 @@ const { t } = useI18n();
 const router = useRouter();
 const props = defineProps(["carNewList"]);
 
-const emits = defineEmits(["changeSort", "datachange"]);
+const emits = defineEmits(["changeSort", "datachange","typechange"]);
 // const switchStatus = ref<boolean>(false)
 const sn = ref();
 const MachineD = ref();
-const Machine501D = ref()
+const Machine501D = ref();
 const netDate = ref<string>("");
 const expirationTime = ref<string>("");
 const satelliteDate = ref<string>("");
@@ -352,6 +366,17 @@ const handleFunctionList = () => {
   ];
   return apiArr;
 };
+const handleTerminalTypeList = () => {
+  let apiArr = [
+    { text: "AG360", value: 'AG360' },
+    { text: "AG502", value: "AG502" },
+    { text: "AG501", value: 'AG501' },
+    { text: "AG302Android", value: 'AG302Android' },
+    { text: "AG302", value: 'AG302' },
+    { text: "AG501Pro", value: 'AG501Pro' },
+  ];
+  return apiArr;
+};
 // 车辆ID
 const carId = ref<number>();
 const terminalType = ref<string>("");
@@ -365,6 +390,9 @@ const terminalType2 = ref<string>("");
 const pageInfo = reactive<any>({
   order: "1",
 });
+const gotoalarm = (id: any, sn: any) => {
+  router.push({ path: "/machineryList/alarmView", query: { id: id, sn: sn } });
+};
 const changesort = (val: any) => {
   switch (val.order) {
     case "ascending":
@@ -473,12 +501,18 @@ const gotoMap = (sn: string, npn: string) => {
 
 const filterChange = (filterObj: any) => {
   let activeValue;
+  let terValue
   if (filterObj.filterfunction) {
     filterObj.filterfunction[0] === undefined
       ? (activeValue = "")
       : (activeValue = filterObj.filterfunction[0]);
     emits("datachange", {
       activationStatus: activeValue,
+    });
+  } if(filterObj.filterTerminalType){
+ (terValue = filterObj.filterTerminalType[0]);
+    emits("typechange", {
+      terminalType: terValue,
     });
   }
 };

@@ -1,56 +1,57 @@
 <template>
   <div class="app_container">
     <div class="table_container app_card" v-show="tableShow">
-    <div class="search_container ">
-      <div class="input_area">
-        <el-input
-          :placeholder="$t('devicelist.pleaseInput')"
-          v-model="pageInfo.key"
-          class="input-with-select"
-          @keyup.enter.native="search"
-          clearable
-          @clear="clearAll"
-        >
-          <template #append>
-            <el-button icon="Search" @click="search" />
-          </template>
-        </el-input>
-        <el-select
-          filterable
-          v-if="dealerList.length > 1"
-          class="m_2"
-          placeholder="公司/经销商"
-          v-model="pageInfo.companyId"
-          @change="changeBlur"
-        >
-          <el-option
-            v-for="item in dealerList"
-            :label="item.name"
-            :value="item.id"
-            :key="item.id"
-          ></el-option>
-        </el-select>
-        <el-input
-          v-if="dealerList.length == 1"
-          class="m_2"
-          v-model="dealerList[0].name"
-          @change="changeBlur"
-          disabled
-        >
-        </el-input>
-      </div>
-      <div class="button_area">
-        <el-button
-          v-auth="787"
-          style="margin-right: 5px"
-          type="primary"
-          @click="gotoUpgrade"
-          >{{ $t("devicelist.upgrade") }}</el-button
-        >
-        <el-button style="margin-right: 20px" type="primary" @click="gotoInput">{{
-          $t("devicelist.inputDealerDevice")
-        }}</el-button>
-        <el-button-group class="button_group2">
+      <div class="search_container">
+        <div class="input_area">
+          <el-input
+            :placeholder="$t('devicelist.pleaseInput')"
+            v-model="pageInfo.key"
+            class="input-with-select"
+            @keyup.enter.native="search"
+            clearable
+            @clear="clearAll"
+          >
+            <template #append>
+              <el-button icon="Search" @click="search" />
+            </template>
+          </el-input>
+          <el-select
+            filterable
+            v-if="dealerList.length > 1"
+            class="m_2"
+            placeholder="公司/经销商"
+            v-model="pageInfo.companyId"
+            @change="changeBlur"
+          >
+            <el-option
+              v-for="item in dealerList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
+          </el-select>
+          <el-input
+            v-if="dealerList.length == 1"
+            class="m_2"
+            v-model="dealerList[0].name"
+            @change="changeBlur"
+            disabled
+          >
+          </el-input>
+        </div>
+        <div class="button_area">
+          <el-button
+            v-auth="787"
+            style="margin-right: 5px"
+            type="primary"
+            @click="gotoUpgrade"
+            >{{ $t("devicelist.upgrade") }}</el-button
+          >
+          <el-button style="margin-right: 20px" type="primary" @click="gotoInput">{{
+            $t("devicelist.inputDealerDevice")
+          }}</el-button>
+
+          <!-- <el-button-group class="button_group2">
           <el-button
             icon="Expand"
             :class="{ tab_active: tableShow }"
@@ -61,13 +62,14 @@
             :class="{ tab_active: !tableShow }"
             @click="switchTabShow(false)"
           />
-        </el-button-group>
+        </el-button-group> -->
+        </div>
       </div>
-    </div>
       <sn-table
         @datachange="dataChange"
         :carNewList="carNewList"
         @changeSort="changeSort"
+        @typechange="dataChange2"
       >
         <div>
           <Pagination
@@ -81,9 +83,9 @@
         </div>
       </sn-table>
     </div>
-    <div class="table_container app_card" v-show="!tableShow">
+    <!-- <div class="table_container app_card" v-show="!tableShow">
       <sn-card :provinceCountData="provinceCountData" />
-    </div>
+    </div> -->
     <InputDia ref="inputD"></InputDia>
     <upGradeDia ref="upgradeD"></upGradeDia>
   </div>
@@ -100,7 +102,7 @@ import { reactive, ref, onMounted } from "vue";
 import { carNewList_API } from "@/api/machineryList/index";
 import { newListObj, carNewListResponseData, pageInfo } from "@/api/machineryList/type";
 import snTable from "./components/sn-table.vue";
-import snCard from "./components/sn-card.vue";
+// import snCard from "./components/sn-card.vue";
 import { carDealer_API } from "@/api/machineryList/index";
 import { carDealerResponseData, carDealerObj } from "@/api/machineryList/type";
 import {
@@ -122,7 +124,8 @@ const pageInfo = reactive<pageInfo>({
   order: "1",
   provinceCode: "",
   cityCode: "",
-  activationStatus:''
+  activationStatus: "",
+  terminalType:''
 });
 const upgradeD = ref();
 const inputD = ref();
@@ -147,6 +150,7 @@ const currentChange = (val: any) => {
 const gotoInput = () => {
   inputD.value.dialogVisible = true;
 };
+
 const gotoUpgrade = () => {
   upgradeD.value.dialogVisible = true;
 };
@@ -159,8 +163,12 @@ const getProvinceDataNewList = async () => {
   Object.assign(provinceCountData, res.data);
 };
 const dataChange = (val: any) => {
-  pageInfo.activationStatus = val.activationStatus
-  getCarList()
+  pageInfo.activationStatus = val.activationStatus;
+  getCarList();
+};
+const dataChange2 = (val: any) => {
+  pageInfo.terminalType = val.terminalType;
+  getCarList();
 };
 
 // 获取公司列表
@@ -202,7 +210,7 @@ const getCarList = async () => {
       // } else {
       //   openRemote = false; // 禁用
       // }
-      openRemote = true; 
+      openRemote = true;
     }
     return {
       ...item,
@@ -211,14 +219,14 @@ const getCarList = async () => {
   });
   total.value = res.data.total;
 };
-const switchTabShow = (val: boolean) => {
-  tableShow.value = val;
-  if (val == false) {
-    if (provinceCountData.length === 0) {
-      getProvinceDataNewList();
-    }
-  }
-};
+// const switchTabShow = (val: boolean) => {
+//   tableShow.value = val;
+//   if (val == false) {
+//     if (provinceCountData.length === 0) {
+//       getProvinceDataNewList();
+//     }
+//   }
+// };
 
 onMounted(() => {
   // getCarList();

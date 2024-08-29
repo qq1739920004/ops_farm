@@ -5,8 +5,10 @@ import router from "@/router";
 import { menusPermissionByUser } from "@/api/permission";
 import Layout from "@/layout/index.vue";
 import { app } from "@/store";
-// const appStore = useAppStore();
 
+// const appStore = useAppStore();
+const loadView = import.meta.glob('@/views/**/*.vue');
+const loadComponents = import.meta.glob('@/components/**/*.vue');
 let params = {
   appid: 1691041354632, // 项目id
 };
@@ -40,20 +42,26 @@ function formatRoute(menuPermissions) {
     if (flag) {
       let path = item.path;
       item.path = "";
-      if (item.crumb) {
         return {
           path,
           component: Layout,
           children: [item],
           isHavePermission: item.isHavePermission,
         };
-      } else {
-        return {
-          path,
-          children: [item],
-          isHavePermission: item.isHavePermission,
-        };
-      }
+      // if (item.crumb) {
+      //   return {
+      //     path,
+      //     component: Layout,
+      //     children: [item],
+      //     isHavePermission: item.isHavePermission,
+      //   };
+      // } else {
+      //   return {
+      //     path,
+      //     children: [item],
+      //     isHavePermission: item.isHavePermission,
+      //   };
+      // }
     } else {
       item.component = Layout;
       item.meta = {
@@ -78,7 +86,6 @@ function formatRoute(menuPermissions) {
   });
 
   router.options.routes.push(...addRouteList);
-
   // appStore.updateRoutes(router.options.routes);
 
   function setFirstRouter(list) {
@@ -128,7 +135,7 @@ function formatRoute(menuPermissions) {
         keepAlive: item.keepAlive,
         activeMenu: item.activeMenu ? item.activeMenu : "",
         breadcrumb: item.breadcrumb ? [{ title: item.breadcrumb,titleEn:item.breadcrumbEn }] : "",
-        // hideTitle: !item.crumb
+        hideTitle: !item.crumb
       };
       item.visible ? (item.meta.hidden = true) : "";
       !item.children ? delete item.children : "";
@@ -155,53 +162,15 @@ function formatRoute(menuPermissions) {
       }
 
       if (item.isHavePermission) {
-        let componentName = item.filePath || item.file_path || "";
-        componentName = componentName.split("/");
-        componentName = componentName.filter((item) => item);
-
-        if (componentName.length == 1) {
-          item.file_path
-            ? (item.component = () =>
-                import(`@/views/${componentName[0]}/index.vue`))
-            : "";
-        }
-        if (componentName.length == 2) {
-          item.file_path
-            ? (item.component = () =>
-                import(
-                  `@/views/${componentName[0]}/${componentName[1]}/index.vue`
-                ))
-            : "";
-        }
-
-        if (componentName.length == 3) {
-          item.file_path
-            ? (item.component = () =>
-                import(
-                  `@/views/${componentName[0]}/${componentName[1]}/${componentName[2]}/index.vue`
-                ))
-            : "";
-        }
-        if (componentName.length == 4) {
-          item.file_path
-            ? (item.component = () =>
-                import(
-                  `@/views/${componentName[0]}/${componentName[1]}/${componentName[2]}/${componentName[3]}/index.vue`
-                ))
-            : "";
-        }
-        if (componentName.length == 5) {
-          item.file_path
-            ? (item.component = () =>
-                import(
-                  `@/views/${componentName[0]}/${componentName[1]}/${componentName[2]}/${componentName[3]}/${componentName[4]}/index.vue`
-                ))
-            : "";
-        }
-      } else {
         item.file_path
-          ? (item.component = () =>
-              import(`@/components/noPermission/index.vue`))
+        ? item.component = loadView[`/src/views${item.file_path}.vue`]||loadView[`/src/views${item.file_path}/index.vue`]
+           
+        : "";
+       
+       } 
+      else {
+        item.file_path
+          ? (item.component = loadComponents[`/src/components/noPermission/index.vue`])
           : "";
       }
 
@@ -227,31 +196,32 @@ function formatRoute(menuPermissions) {
   // 设置默认菜单数据
   function setDefaultRoute() {
     if (serializeRoutes.length > 0) {
-      let character = serializeRoutes[0].children[0].path ? "/" : "";
+      let character = (serializeRoutes[1]||serializeRoutes[0])?.children[0].path ? "/" : "";
       asyncRoutes.unshift({
         path: "/",
         redirect:
-          serializeRoutes[0].path +
+          (serializeRoutes[1]||serializeRoutes[0]).path +
           character +
-          serializeRoutes[0].children[0].path,
+          (serializeRoutes[1]||serializeRoutes[0]).children[0].path,
       });
     } else {
       // 没有权限数据
       asyncRoutes.unshift({
         path: "/",
-        component: () => import("@/components/noPermission/index.vue"),
+        component:  loadComponents[`/src/components/noPermission/index.vue`],
       });
     }
     serializeRoutes.push(
       {
         path: "/404",
-        component: () => import("@/components/404/index.vue"),
+        component: loadComponents[`/src/components/404/index.vue`],
         meta: { hidden: true },
       },
       { path: "/:catchAll(.*)", redirect: "/404", meta: { hidden: true } }
     );
   }
 }
+
 
 // 初始化按钮权限
 function formatButton(buttonPermissions) {

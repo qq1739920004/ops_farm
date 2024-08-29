@@ -1,20 +1,20 @@
 import { ref } from 'vue';
-import AG302 from "@/assets/icons/AG302.svg";
-import AG302_warn from "@/assets/icons/AG302_warn.svg";
 import AG360 from "@/assets/icons/AG360.svg";
 import AG360_warn from "@/assets/icons/AG360_warn.svg";
-import AG501 from "@/assets/icons/AG501.svg";
-import AG501_warn from "@/assets/icons/AG501_warn.svg";
-import AG501Pro from "@/assets/icons/AG501Pro.svg";
-import AG501Pro_warn from "@/assets/icons/AG501Pro_warn.svg";
-import AG502 from "@/assets/icons/AG502.svg";
-import AG502_warn from "@/assets/icons/AG502_warn.svg";
-import AG302Android from "@/assets/icons/AG302Android.svg";
-import AG302Android_warn from "@/assets/icons/AG302Android_warn.svg";
-import MC100 from "@/assets/icons/MC100.svg";
-import MC100_warn from "@/assets/icons/MC100_warn.svg";
-import AGunknown from "@/assets/icons/AGunknown.svg";
-import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
+// import AG302 from "@/assets/icons/AG302.svg";
+// import AG302_warn from "@/assets/icons/AG302_warn.svg";
+// import AG501 from "@/assets/icons/AG501.svg";
+// import AG501_warn from "@/assets/icons/AG501_warn.svg";
+// import AG501Pro from "@/assets/icons/AG501Pro.svg";
+// import AG501Pro_warn from "@/assets/icons/AG501Pro_warn.svg";
+// import AG502 from "@/assets/icons/AG502.svg";
+// import AG502_warn from "@/assets/icons/AG502_warn.svg";
+// import AG302Android from "@/assets/icons/AG302Android.svg";
+// import AG302Android_warn from "@/assets/icons/AG302Android_warn.svg";
+// import MC100 from "@/assets/icons/MC100.svg";
+// import MC100_warn from "@/assets/icons/MC100_warn.svg";
+// import AGunknown from "@/assets/icons/AGunknown.svg";
+// import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
 import {
   onlineFarmMachinePosition_API,
 } from "@/api/monitoring";
@@ -116,23 +116,24 @@ function newMarker(item:onlineMaker){
 function createMarkerIcon(item: any) {
   const { terminalType, driveState } = item;
   let icon: string = "";
-  if (terminalType.includes("AG360")) {
-    icon = driveState == 0 ? AG360_warn : AG360;
-  } else if (terminalType.includes("AG501") && terminalType != "AG501Pro") {
-    icon = driveState == 0 ? AG501_warn : AG501;
-  } else if (terminalType == "AG501Pro") {
-    icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
-  } else if (terminalType.includes("AG502")) {
-    icon = driveState == 0 ? AG502_warn : AG502;
-  } else if (terminalType.includes("AG302") && terminalType != "AG302Android") {
-    icon = driveState == 0 ? AG302_warn : AG302;
-  } else if (terminalType == "AG302Android") {
-    icon = driveState == 0 ? AG302Android_warn : AG302Android;
-  } else if (item.terminalType.includes("MC100")) {
-    icon = driveState == 0 ? MC100_warn : MC100;
-  } else {
-    icon = driveState == 0 ? AGunknown_warn : AGunknown;
-  }
+  icon = driveState == 0 ? AG360_warn : AG360;
+  // if (terminalType.includes("AG360")) {
+  //   icon = driveState == 0 ? AG360_warn : AG360;
+  // } else if (terminalType.includes("AG501") && terminalType != "AG501Pro") {
+  //   icon = driveState == 0 ? AG501_warn : AG501;
+  // } else if (terminalType == "AG501Pro") {
+  //   icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
+  // } else if (terminalType.includes("AG502")) {
+  //   icon = driveState == 0 ? AG502_warn : AG502;
+  // } else if (terminalType.includes("AG302") && terminalType != "AG302Android") {
+  //   icon = driveState == 0 ? AG302_warn : AG302;
+  // } else if (terminalType == "AG302Android") {
+  //   icon = driveState == 0 ? AG302Android_warn : AG302Android;
+  // } else if (item.terminalType.includes("MC100")) {
+  //   icon = driveState == 0 ? MC100_warn : MC100;
+  // } else {
+  //   icon = driveState == 0 ? AGunknown_warn : AGunknown;
+  // }
 
   return icon;
 }

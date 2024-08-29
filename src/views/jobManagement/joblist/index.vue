@@ -60,7 +60,7 @@
 <script setup lang='ts'>
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
-import snTable from './components/sn-table.vue'
+import snTable from '../components/sn-table.vue'
 // import vLoadMore from '@/utils/loadData'
 import { reactive, ref, watch } from 'vue'
 import Pagination from '@/components/Pagination/index.vue'

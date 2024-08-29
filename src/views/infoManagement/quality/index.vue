@@ -284,8 +284,8 @@
 </template>
 
 <script setup lang='ts'>
-import G502Dia from './components/G502Dia.vue'
-import G501Dia from './components/G501Dia.vue'
+import G502Dia from '../components/G502Dia.vue'
+import G501Dia from '../components/G501Dia.vue'
 import Pagination from '@/components/Pagination/index.vue'
 import { reactive, ref, nextTick, watch } from 'vue'
 // carModuleInfoOperationDelete_API
@@ -505,7 +505,7 @@ const submit = async () => {
 
 const gotoAfterSale = (row: any) => {
     $router.push({
-        path: 'infoManagement/aftersale', query: { id: row.id }
+        path: '/infoManagement/quality/aftersale', query: { id: row.id }
     })
 }
 const openExportDia = () => {

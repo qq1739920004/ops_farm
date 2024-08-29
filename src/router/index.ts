@@ -1,7 +1,15 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 // import Layout from '@/layout/index.vue';
 
-export const constantRoutes = [ // 静态路由数据
+export const constantRoutes = [ 
+  {
+    path: '/perception',
+    component: () => import("@/views/perception/index.vue"),
+    hidden: false,
+
+  },
+  
+  // 静态路由数据
   // {
   //   path: '/',
   //   redirect: '/monitoring'

@@ -14,7 +14,11 @@ const i18n = createI18n({
     legacy: false,
     locale: appStore.language,
     messages: messages,
-    globalInjection: true
+    globalInjection: true,
+    silentTranslationWarn:true,
+    missingWarn:false,
+    silentFallbackWarn:true,
+    fallbackWarn:false
 });
 
 export default i18n;

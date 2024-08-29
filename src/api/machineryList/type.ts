@@ -13,6 +13,7 @@ export interface pageInfo {
     cityCode?: string,
     provinceCode?: string
     activationStatus?:any
+    terminalType?:any
 }
 
 export interface newListObj {

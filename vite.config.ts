@@ -81,8 +81,8 @@ export default defineConfig({
       '/dev-api': {
         // target: "http://127.0.0.1:4523/m1/2885822-0-default",
         // target: 'http://140.207.166.210:9030',
-        //target: 'http://140.207.166.210:9030/gateway',
-        target: 'https://cloud.sinognss.com/gateway',
+        target: 'http://140.207.166.210:9030/gateway',
+        //target: 'https://cloud.sinognss.com/gateway',
         //target: 'http://140.207.166.210:9030/gateway/farm',
         changeOrigin: true,
         rewrite: (path) =>

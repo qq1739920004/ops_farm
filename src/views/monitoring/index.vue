@@ -56,26 +56,52 @@
         </el-icon>
       </div>
       <ul class="top">
-        <li>
-          <span>{{ dataStatistics.device?.totalDevice }}</span>
-          <span>{{ $t("messages.total") }}</span>
+        <li class="top_line">
+          <div>{{ dataStatistics.device?.totalDevice }}</div>
+          <div>{{ $t("messages.total") }}</div>
+        </li>
+        <li class="top_line">
+          <div>{{ dataStatistics.device?.onlineDevice }}</div>
+          <div>{{ $t("messages.onlineCount") }}</div>
+        </li>
+        <li class="top_line">
+          <div>{{ dataStatistics.device?.offlineDevice }}</div>
+          <div class="outside">
+            {{ $t("messages.Offline") }}
+            <div class="offline_area"></div>
+          </div>
         </li>
         <li>
-          <span>{{ dataStatistics.device?.onlineDevice }}</span>
-          <span>{{ $t("messages.onlineCount") }}</span>
+          <div>{{ dataStatistics.workArea?.todayArea.toFixed(2) }}</div>
+          <div>{{ $t("messages.todaysOperation") }}</div>
         </li>
         <li>
-          <span>{{ dataStatistics.workArea?.todayArea.toFixed(2) }}</span>
-          <span>{{ $t("messages.todaysOperation") }}</span>
+          <div>
+            {{
+              dataStatistics.workArea
+                ? (dataStatistics.workArea?.totalArea / 10000).toFixed(2)
+                : ""
+            }}
+          </div>
+          <div>{{ $t("messages.cumulativeOperation") }}</div>
         </li>
         <li>
-          <span>{{
-            dataStatistics.workArea
-              ? (dataStatistics.workArea?.totalArea / 10000).toFixed(2)
-              : ""
-          }}</span>
-          <span>{{ $t("messages.cumulativeOperation") }}</span>
+          <div>{{ dataStatistics.workDuration?.todayDuration }}</div>
+          <div>今日作业时长(h)</div>
         </li>
+        <li>
+          <div>
+            {{
+              dataStatistics.workArea
+                ? (dataStatistics.workDuration?.beforeDuration).toFixed(2)
+                : ""
+            }}
+          </div>
+          <div>累计作业时长(h)</div>
+        </li>
+        <div
+          style="height: 2px; width: 100%; background-color:rgba(0, 218, 216, 0.3);margin:15px 0"
+        ></div>
         <li class="bottom_li">
           <span>{{ dataStatistics.drive?.driving }}</span>
           <div>
@@ -171,22 +197,22 @@
 </template>
 
 <script setup lang="ts">
-import AG302 from "@/assets/icons/AG302.svg";
-import AG302_warn from "@/assets/icons/AG302_warn.svg";
 import AG360 from "@/assets/icons/AG360.svg";
 import AG360_warn from "@/assets/icons/AG360_warn.svg";
-import AG501 from "@/assets/icons/AG501.svg";
-import AG501_warn from "@/assets/icons/AG501_warn.svg";
-import AG501Pro from "@/assets/icons/AG501Pro.svg";
-import AG501Pro_warn from "@/assets/icons/AG501Pro_warn.svg";
-import AG502 from "@/assets/icons/AG502.svg";
-import AG502_warn from "@/assets/icons/AG502_warn.svg";
-import AG302Android from "@/assets/icons/AG302Android.svg";
-import AG302Android_warn from "@/assets/icons/AG302Android_warn.svg";
-import MC100 from "@/assets/icons/MC100.svg";
-import MC100_warn from "@/assets/icons/MC100_warn.svg";
-import AGunknown from "@/assets/icons/AGunknown.svg";
-import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
+// import AG302 from "@/assets/icons/AG302.svg";
+// import AG302_warn from "@/assets/icons/AG302_warn.svg";
+// import AG501 from "@/assets/icons/AG501.svg";
+// import AG501_warn from "@/assets/icons/AG501_warn.svg";
+// import AG501Pro from "@/assets/icons/AG501Pro.svg";
+// import AG501Pro_warn from "@/assets/icons/AG501Pro_warn.svg";
+// import AG502 from "@/assets/icons/AG502.svg";
+// import AG502_warn from "@/assets/icons/AG502_warn.svg";
+// import AG302Android from "@/assets/icons/AG302Android.svg";
+// import AG302Android_warn from "@/assets/icons/AG302Android_warn.svg";
+// import MC100 from "@/assets/icons/MC100.svg";
+// import MC100_warn from "@/assets/icons/MC100_warn.svg";
+// import AGunknown from "@/assets/icons/AGunknown.svg";
+// import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
 import satelite from "@/assets/monitoring/satelite.png";
 import wifi_0 from "@/assets/monitoring/wifi_0.png";
 import wifi_1 from "@/assets/monitoring/wifi_1.png";
@@ -489,12 +515,16 @@ async function getFaromDataStatistics() {
 async function getOnlineFarmPosition() {
   const { data } = await onlineFarmMachinePosition_API({});
   let onlineFarmMachines = data.onlineFarmMachines;
+  let trueList = <any>[];
+  onlineFarmMachines.map((item: any) => {
+    if (item.posX !== null) trueList.push(item);
+  });
   onlineFarmMachines.forEach((item: any) => {
     item.markerId = item.sn;
     item.markerLng = item.posY;
     item.markerLat = item.posX;
     item.markerType = createMarkerType(item);
-    if (onlineFarmMachines.length > mapRenderModeLengthMax) {
+    if (trueList.length > mapRenderModeLengthMax) {
       if (sinoMapRef.value.iconChangeLimit) {
         item.markerIcon = createMarkerIcon(item);
       } else {
@@ -758,60 +788,61 @@ function createMarkerPopup(item: any) {
 function createMarkerIcon(item: any) {
   const { terminalType, driveState } = item;
   let icon: string = "";
-  // icon = driveState == 0 ? green : yellow;
-  if (terminalType && terminalType.includes("AG360")) {
-    icon = driveState == 0 ? AG360_warn : AG360;
-  } else if (
-    terminalType &&
-    terminalType.includes("AG501") &&
-    terminalType != "AG501Pro"
-  ) {
-    icon = driveState == 0 ? AG501_warn : AG501;
-  } else if (terminalType && terminalType == "AG501Pro") {
-    icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
-  } else if (terminalType && terminalType.includes("AG502")) {
-    icon = driveState == 0 ? AG502_warn : AG502;
-  } else if (
-    terminalType &&
-    terminalType.includes("AG302") &&
-    terminalType != "AG302Android"
-  ) {
-    icon = driveState == 0 ? AG302_warn : AG302;
-  } else if (terminalType && terminalType == "AG302Android") {
-    icon = driveState == 0 ? AG302Android_warn : AG302Android;
-  } else if (item.markerType && item.markerType.includes("MC100")) {
-    icon = driveState == 0 ? MC100_warn : MC100;
-  } else if (item.markerType && item.markerType.includes("MT801")) {
-    icon = driveState == 0 ? MT801_warn : MT801;
-  } else if (item.markerType && item.markerType.includes("MT802")) {
-    icon = driveState == 0 ? MT802_warn : MT802;
-  } else if (item.markerType && item.markerType.includes("SA200")) {
-    icon = driveState == 0 ? SA200_warn : SA200;
-  } else {
-    icon = driveState == 0 ? AGunknown_warn : AGunknown;
-  }
+  icon = driveState == 0 ? AG360_warn : AG360;
+  // if (terminalType && terminalType.includes("AG360")) {
+  //   icon = driveState == 0 ? AG360_warn : AG360;
+  // } else if (
+  //   terminalType &&
+  //   terminalType.includes("AG501") &&
+  //   terminalType != "AG501Pro"
+  // ) {
+  //   icon = driveState == 0 ? AG501_warn : AG501;
+  // } else if (terminalType && terminalType == "AG501Pro") {
+  //   icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
+  // } else if (terminalType && terminalType.includes("AG502")) {
+  //   icon = driveState == 0 ? AG502_warn : AG502;
+  // } else if (
+  //   terminalType &&
+  //   terminalType.includes("AG302") &&
+  //   terminalType != "AG302Android"
+  // ) {
+  //   icon = driveState == 0 ? AG302_warn : AG302;
+  // } else if (terminalType && terminalType == "AG302Android") {
+  //   icon = driveState == 0 ? AG302Android_warn : AG302Android;
+  // } else if (item.markerType && item.markerType.includes("MC100")) {
+  //   icon = driveState == 0 ? MC100_warn : MC100;
+  // } else if (item.markerType && item.markerType.includes("MT801")) {
+  //   icon = driveState == 0 ? MT801_warn : MT801;
+  // } else if (item.markerType && item.markerType.includes("MT802")) {
+  //   icon = driveState == 0 ? MT802_warn : MT802;
+  // } else if (item.markerType && item.markerType.includes("SA200")) {
+  //   icon = driveState == 0 ? SA200_warn : SA200;
+  // } else {
+  //   icon = driveState == 0 ? AGunknown_warn : AGunknown;
+  // }
   return icon;
 }
 function createMarkerIconSmall(item: any) {
   const { terminalType, driveState } = item;
   let icon: string = "";
-  if (terminalType.includes("AG360")) {
-    icon = driveState == 0 ? yellow : green;
-  } else if (terminalType.includes("AG501") && terminalType != "AG501Pro") {
-    icon = driveState == 0 ? yellow : green;
-  } else if (terminalType == "AG501Pro") {
-    icon = driveState == 0 ? yellow : green;
-  } else if (terminalType.includes("AG502")) {
-    icon = driveState == 0 ? yellow : green;
-  } else if (terminalType.includes("AG302") && terminalType != "AG302Android") {
-    icon = driveState == 0 ? yellow : green;
-  } else if (terminalType == "AG302Android") {
-    icon = driveState == 0 ? yellow : green;
-  } else if (item.terminalType.includes("MC100")) {
-    icon = driveState == 0 ? yellow : green;
-  } else {
-    icon = driveState == 0 ? yellow : green;
-  }
+  icon = driveState == 0 ? yellow : green;
+  // if (terminalType.includes("AG360")) {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (terminalType.includes("AG501") && terminalType != "AG501Pro") {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (terminalType == "AG501Pro") {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (terminalType.includes("AG502")) {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (terminalType.includes("AG302") && terminalType != "AG302Android") {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (terminalType == "AG302Android") {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (item.terminalType.includes("MC100")) {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else {
+  //   icon = driveState == 0 ? yellow : green;
+  // }
 
   return icon;
 }
@@ -908,7 +939,7 @@ function openRemote_markerPopup(arg: any) {
     padding: 10px;
     right: 10px;
     transition: all 0.3s;
-    height: 397px;
+
     top: 10px;
     position: absolute;
     z-index: 999;
@@ -933,23 +964,32 @@ function openRemote_markerPopup(arg: any) {
     .top {
       display: flex;
       flex-wrap: wrap;
-      border-bottom: 2px solid rgba(0, 218, 216, 0.3);
-      padding-bottom: 10px;
-      text-align: center;
-
+      padding-left: 10px;
+      .top_line {
+        width: 33%;
+        .outside {
+          display: flex;
+          align-items: center;
+        }
+        .offline_area {
+          margin-left: 5px;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background-color: #d6d6d6;
+        }
+      }
       li {
         width: 50%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
 
-        span:first-child {
+        div:first-child {
           color: #fff;
           font-size: 24px;
+          font-family: D-DIN-DIN, D-DIN-DIN;
+          font-weight: bold;
         }
 
-        span:last-child {
+        div:last-child {
           color: #00baad;
           font-size: 14px;
           font-weight: 700;
@@ -957,6 +997,12 @@ function openRemote_markerPopup(arg: any) {
       }
 
       .bottom_li {
+        span {
+          font-family: D-DIN-DIN, D-DIN-DIN;
+          font-weight: bold;
+          font-size: 20px;
+          color: #ffffff;
+        }
         div {
           display: flex;
           align-items: center;

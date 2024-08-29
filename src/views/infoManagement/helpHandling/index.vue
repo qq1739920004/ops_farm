@@ -218,7 +218,7 @@ const search = () => {
 const $router = useRouter();
 const handleEdit = (row: RecordsObj) => {
   $router.push({
-    path: "helpHandling/handle",
+    path: "/infoManagement/helpHandling/handle",
     query: { helpList: JSON.stringify(row) },
   });
 };

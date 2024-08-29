@@ -62,30 +62,30 @@ import { ref, reactive, onMounted, watch, computed, defineExpose } from "vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import { useI18n } from "vue-i18n";
 import fixed_icon from "./assets/fixed.png";
-import AG302 from "@/assets/icons/AG302.svg";
-import AG302_warn from "@/assets/icons/AG302_warn.svg";
 import AG360 from "@/assets/icons/AG360.svg";
-import AG360_warn from "@/assets/icons/AG360_warn.svg";
-import AG501 from "@/assets/icons/AG501.svg";
-import AG501_warn from "@/assets/icons/AG501_warn.svg";
-import AG501Pro from "@/assets/icons/AG501Pro.svg";
-import AG501Pro_warn from "@/assets/icons/AG501Pro_warn.svg";
-import AG502 from "@/assets/icons/AG502.svg";
-import AG502_warn from "@/assets/icons/AG502_warn.svg";
-import AG302Android from "@/assets/icons/AG302Android.svg";
-import AG302Android_warn from "@/assets/icons/AG302Android_warn.svg";
-import MC100 from "@/assets/icons/MC100.svg";
-import MC100_warn from "@/assets/icons/MC100_warn.svg";
-import AGunknown from "@/assets/icons/AGunknown.svg";
-import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
+ import AG360_warn from "@/assets/icons/AG360_warn.svg";
 import green from "@/assets/monitoring/green.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
-import MT801 from "@/assets/icons/MT801.svg";
-import MT801_warn from "@/assets/icons/MT801_warn.svg";
-import MT802 from "@/assets/icons/MT802.svg";
-import MT802_warn from "@/assets/icons/MT802_warn.svg";
-import SA200 from "@/assets/icons/SA200.svg";
-import SA200_warn from "@/assets/icons/SA200_warn.svg";
+// import AG302 from "@/assets/icons/AG302.svg";
+// import AG302_warn from "@/assets/icons/AG302_warn.svg";
+// import AG501 from "@/assets/icons/AG501.svg";
+// import AG501_warn from "@/assets/icons/AG501_warn.svg";
+// import AG501Pro from "@/assets/icons/AG501Pro.svg";
+// import AG501Pro_warn from "@/assets/icons/AG501Pro_warn.svg";
+// import AG502 from "@/assets/icons/AG502.svg";
+// import AG502_warn from "@/assets/icons/AG502_warn.svg";
+// import AG302Android from "@/assets/icons/AG302Android.svg";
+// import AG302Android_warn from "@/assets/icons/AG302Android_warn.svg";
+// import MC100 from "@/assets/icons/MC100.svg";
+// import MC100_warn from "@/assets/icons/MC100_warn.svg";
+// import AGunknown from "@/assets/icons/AGunknown.svg";
+// import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
+// import MT801 from "@/assets/icons/MT801.svg";
+// import MT801_warn from "@/assets/icons/MT801_warn.svg";
+// import MT802 from "@/assets/icons/MT802.svg";
+// import MT802_warn from "@/assets/icons/MT802_warn.svg";
+// import SA200 from "@/assets/icons/SA200.svg";
+// import SA200_warn from "@/assets/icons/SA200_warn.svg";
 // import {markerTypeIcon,markerTypeIconSmall} from '@/utils/enumerate'
 const L = window.L;
 const { t } = useI18n();
@@ -628,53 +628,54 @@ watch(
 function createMarkerIcon(item: any) {
   const { markerType, driveState } = item;
   let icon: string = "";
-  // icon = driveState == 0 ? green : yellow;
-  if (markerType.includes("AG360")) {
-    icon = driveState == 0 ? AG360_warn : AG360;
-  } else if (markerType.includes("AG501") && markerType != "AG501Pro") {
-    icon = driveState == 0 ? AG501_warn : AG501;
-  } else if (markerType == "AG501Pro") {
-    icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
-  } else if (markerType.includes("AG502")) {
-    icon = driveState == 0 ? AG502_warn : AG502;
-  } else if (markerType.includes("AG302") && markerType != "AG302Android") {
-    icon = driveState == 0 ? AG302_warn : AG302;
-  } else if (markerType == "AG302Android") {
-    icon = driveState == 0 ? AG302Android_warn : AG302Android;
-  } else if (item.markerType.includes("MC100")) {
-    icon = driveState == 0 ? MC100_warn : MC100;
-  } else if (item.markerType.includes("MT801")) {
-    icon = driveState == 0 ? MT801_warn : MT801;
-  } else if (item.markerType.includes("MT802")) {
-    icon = driveState == 0 ? MT802_warn : MT802;
-  } else if (item.markerType.includes("SA200")) {
-    icon = driveState == 0 ? SA200_warn : SA200;
-  } else {
-    icon = driveState == 0 ? AGunknown_warn : AGunknown;
-  }
+   icon = driveState == 0 ? AG360_warn : AG360;
+  // if (markerType.includes("AG360")) {
+  //   icon = driveState == 0 ? AG360_warn : AG360;
+  // } else if (markerType.includes("AG501") && markerType != "AG501Pro") {
+  //   icon = driveState == 0 ? AG501_warn : AG501;
+  // } else if (markerType == "AG501Pro") {
+  //   icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
+  // } else if (markerType.includes("AG502")) {
+  //   icon = driveState == 0 ? AG502_warn : AG502;
+  // } else if (markerType.includes("AG302") && markerType != "AG302Android") {
+  //   icon = driveState == 0 ? AG302_warn : AG302;
+  // } else if (markerType == "AG302Android") {
+  //   icon = driveState == 0 ? AG302Android_warn : AG302Android;
+  // } else if (item.markerType.includes("MC100")) {
+  //   icon = driveState == 0 ? MC100_warn : MC100;
+  // } else if (item.markerType.includes("MT801")) {
+  //   icon = driveState == 0 ? MT801_warn : MT801;
+  // } else if (item.markerType.includes("MT802")) {
+  //   icon = driveState == 0 ? MT802_warn : MT802;
+  // } else if (item.markerType.includes("SA200")) {
+  //   icon = driveState == 0 ? SA200_warn : SA200;
+  // } else {
+  //   icon = driveState == 0 ? AGunknown_warn : AGunknown;
+  // }
 
   return icon;
 }
 function createMarkerIconSmall(item: any) {
   const { markerType, driveState } = item;
   let icon: string = "";
-  if (markerType.includes("AG360")) {
-    icon = driveState == 0 ? yellow : green;
-  } else if (markerType.includes("AG501") && markerType != "AG501Pro") {
-    icon = driveState == 0 ? yellow : green;
-  } else if (markerType == "AG501Pro") {
-    icon = driveState == 0 ? yellow : green;
-  } else if (markerType.includes("AG502")) {
-    icon = driveState == 0 ? yellow : green;
-  } else if (markerType.includes("AG302") && markerType != "AG302Android") {
-    icon = driveState == 0 ? yellow : green;
-  } else if (markerType == "AG302Android") {
-    icon = driveState == 0 ? yellow : green;
-  } else if (item.markerType.includes("MC100")) {
-    icon = driveState == 0 ? yellow : green;
-  } else {
-    icon = driveState == 0 ? yellow : green;
-  }
+  icon = driveState == 0 ? yellow : green;
+  // if (markerType.includes("AG360")) {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (markerType.includes("AG501") && markerType != "AG501Pro") {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (markerType == "AG501Pro") {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (markerType.includes("AG502")) {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (markerType.includes("AG302") && markerType != "AG302Android") {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (markerType == "AG302Android") {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else if (item.markerType.includes("MC100")) {
+  //   icon = driveState == 0 ? yellow : green;
+  // } else {
+  //   icon = driveState == 0 ? yellow : green;
+  // }
 
   return icon;
 }
