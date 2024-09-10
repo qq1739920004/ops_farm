@@ -41,7 +41,7 @@
             <div class="button_area">
                 <el-button type="primary" @click="openExportDia">{{ $t('work.export') }}</el-button>
                 <el-button
-                    @click="router.push({ path: '/jobManagement/taskManage', query: { companyId: pageInfo.companyId, carId: pageInfo.carId } })"
+                    @click="router.push({ path: '/jobManagement/taskManage', query: { companyId: pageInfo.companyId, carId: +pageInfo.carId } })"
                     icon="MapLocation" class="btn2"></el-button>
             </div>
         </div>
@@ -168,7 +168,7 @@ const getDealerCarList = async () => {
         // dataItems.value = CarDealerList.value.filter((_item, index) => {
         //     return index < 50
         // })
-        pageInfo.carId = res.data[0].id
+        pageInfo.carId = +res.data[0].id
         getPaddyWorkList()
     }
 }
@@ -196,7 +196,7 @@ const getPaddyWorkList = async () => {
 
             // const res = getTrueLocation_API()
             axios.get(`${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`, {
-
+      
                 params: {
                     'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
                     'output': 'json',

@@ -28,7 +28,7 @@
         <SvgIcon v-if="item.meta.icon.includes('_local')" :icon="item.meta.icon.split('_local')[0]"></SvgIcon>
         <component v-else :is="item.meta.icon"></component>
       </el-icon>
-      <span v-if="item.meta && item.meta.title">{{ item.meta.title }}</span>
+      <span v-if="item.meta && item.meta.title">{{ $t(item.meta.titleEn) || item.meta.title}}</span>
     </template>
     <Slidebar-item
       v-for="child in item.children"

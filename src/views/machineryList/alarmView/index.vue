@@ -80,7 +80,7 @@ const route = useRoute();
 const isActive = ref<number>(1);
 const total = ref<number>(0);
 const pageInfo = reactive<any>({
-  carId: route.query.id || "",
+  id: route.query.id || "",
   currentPage: 1,
   pageSize: 10,
 });

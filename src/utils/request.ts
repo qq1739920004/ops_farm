@@ -76,7 +76,7 @@ service.interceptors.response.use(
         : "";
 
     } else if (status == 403) {
-      ElMessage.error('暂无权限');
+      ElMessage.warning(i18n.global.t('messages.noPer'));
     } else {
       ElMessage.error('请求错误,稍后重试');
     }

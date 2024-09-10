@@ -58,14 +58,16 @@ import gcoord from "gcoord";
 // import "leaflet.markercluster/dist/MarkerCluster.css";
 // import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { mapTileLayers } from "./utils/mapTileLayers";
-import { ref, reactive, onMounted, watch, computed, defineExpose } from "vue";
+import { ref, reactive, onMounted, watch, computed } from "vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import { useI18n } from "vue-i18n";
 import fixed_icon from "./assets/fixed.png";
 import AG360 from "@/assets/icons/AG360.svg";
- import AG360_warn from "@/assets/icons/AG360_warn.svg";
+import AG360_warn from "@/assets/icons/AG360_warn.svg";
+import AG360_offline from "@/assets/icons/AG360_offline.svg";
 import green from "@/assets/monitoring/green.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
+import gray from "@/assets/monitoring/gray.svg";
 // import AG302 from "@/assets/icons/AG302.svg";
 // import AG302_warn from "@/assets/icons/AG302_warn.svg";
 // import AG501 from "@/assets/icons/AG501.svg";
@@ -88,6 +90,7 @@ import yellow from "@/assets/monitoring/yellow.svg";
 // import SA200_warn from "@/assets/icons/SA200_warn.svg";
 // import {markerTypeIcon,markerTypeIconSmall} from '@/utils/enumerate'
 const L = window.L;
+
 const { t } = useI18n();
 
 const props = defineProps({
@@ -169,13 +172,13 @@ watch(
   () => props.markerDataHandle,
   (markerDataHandle) => {
     if (markerDataHandle.markerHandle == "add") {
-      createMarker([markerDataHandle]);
+      updateMarker(markerDataHandle);
     }
     if (markerDataHandle.markerHandle == "delete") {
-      removeMarker([markerDataHandle]);
+      updateMarker(markerDataHandle);
     }
     if (markerDataHandle.markerHandle == "update") {
-      updateMarker([markerDataHandle]);
+      updateMarker(markerDataHandle);
     }
   },
   { deep: true }
@@ -214,6 +217,7 @@ let polyline: any = null;
 let mapRenderMode = props.mapRenderMode || "dom";
 let mapRenderModeLength = ref(0);
 let mapRenderModeLengthMax = 500; //数量超过1000，强制转为 polymer 聚合引擎
+const isCanvasMap: boolean = mapRenderMode == "canvas";
 let markerArr: any = []; // marker坐标点数字
 let polygonArr: any = [];
 let markerCanvasGroup: any = null;
@@ -242,7 +246,7 @@ let mapTileOptions = reactive({
     //   mapName: "Google",
     //   mapType: "Normal",
     // },
-    { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
+    // { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
   ],
 });
 
@@ -294,6 +298,7 @@ function createMarker(list: any) {
     marker.markerId = item.markerId; // marker对象上设置唯一标识
     marker.markerType = item.markerType; // marker对象上设置唯一标识
     marker.driveState = item.driveState;
+    marker.onlineTcp = item.onlineTcp;
     markerArr.push(marker);
     markerAddToMap(item.markerType, marker);
     // changeZoom()
@@ -336,6 +341,7 @@ function markerAddToMap(markerType: string, marker: any) {
 }
 // 修改地图marker点
 function updateMarker(item: any) {
+
   const currentMarker = markerArr.find((i: any) => i.markerId == item.markerId);
   const currentMarkerIndex = markerArr.findIndex((i: any) => i.markerId == item.markerId);
   if (!currentMarker || !item.markerLng || !item.markerLat) {
@@ -351,6 +357,7 @@ function updateMarker(item: any) {
   ) {
     //点的markerType发生变化才更新点的图标
     let icon = createIcon(item);
+
     if (mapRenderMode == "canvas") {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
       const newMarker = L.marker([markerLat, markerLng], { icon: icon }).bindPopup(
@@ -358,6 +365,37 @@ function updateMarker(item: any) {
       ) as any;
       newMarker.markerId = currentMarker.markerId;
       newMarker.markerType = item.markerType;
+      newMarker.onlineTcp = item.onlineTcp;
+      newMarker.driveState = item.driveState;
+      markerCanvasGroup.removeMarker(currentMarker);
+      markerArr.splice(currentMarkerIndex, 1, newMarker);
+      props.markerDataHidden.includes(item.markerType)
+        ? ""
+        : markerCanvasGroup.addMarker(newMarker);
+    } else {
+      currentMarker.setIcon(icon);
+      removeMarker([currentMarker]); //setIcon操作会使点显示出来,先移除再根据筛选框选中情况是否添加marker
+      props.markerDataHidden.includes(item.markerType)
+        ? ""
+        : markerAddToMap(currentMarker.markerType, currentMarker);
+    }
+  }
+  if (
+    currentMarker.onlineTcp != item.onlineTcp &&
+    !props.markerDataHidden.includes(item.markerType)
+  ) {
+    //onlineTcp变化
+    let icon = createIcon(item);
+
+    if (mapRenderMode == "canvas") {
+      //要重新建一个marker，不然地图缩放setIcon点会缩放
+      const newMarker = L.marker([markerLat, markerLng], { icon: icon }).bindPopup(
+        item.markerPopup
+      ) as any;
+      newMarker.markerId = currentMarker.markerId;
+      newMarker.markerType = item.markerType;
+      newMarker.onlineTcp = item.onlineTcp;
+      newMarker.driveState = item.driveState;
       markerCanvasGroup.removeMarker(currentMarker);
       markerArr.splice(currentMarkerIndex, 1, newMarker);
       props.markerDataHidden.includes(item.markerType)
@@ -468,14 +506,19 @@ function initMap() {
   markerClusterGroup.addTo(map);
   initCanvasGroup();
   mapTileChange();
-  initRanging();
+  // initRanging();
   mapzoomChange();
 }
+
 function initCanvasGroup() {
   if (map.hasLayer(markerCanvasGroup)) {
     map.removeLayer(markerCanvasGroup);
   }
   markerCanvasGroup = L.canvasIconLayer({}).addTo(map);
+
+  canvasLayerElement = document.getElementsByClassName(
+    "leaflet-canvas-icon-layer"
+  ) as HTMLCollectionOf<HTMLElement>;
 }
 // 创建多面形
 function createPolygon(list: any) {
@@ -586,12 +629,56 @@ function gcoordLngLat(markerLng: number, markerLat: number) {
   const [lat, lng] = gcoord.transform([markerLat, markerLng], gcoord.WGS84, gcoord.GCJ02);
   return [lng, lat];
 }
+let canvasLayerElement: any = [];
+const setRangeStyle = (style: any) => {
+  const mapEelement = document.getElementById("map");
+  if (mapEelement) {
+    mapEelement.style.cursor = style;
+  }
 
+  if (isCanvasMap) {
+    canvasLayerElement[0].style.cursor = style;
+  }
+};
+const mapClick = (event: any) => {
+  if (pickupMode) {
+    let icon = L.icon({
+      iconUrl: fixed_icon, // SVG图标的路径
+      iconSize: [32, 32], // 图标的大小 [宽度, 高度]
+      iconAnchor: [16, 32], // 图标的锚点位置 [水平, 垂直]
+      popupAnchor: [-2, -28], // 弹出窗口的锚点位置 [水平, 垂直]
+    });
+    let point = event.latlng;
+    pickedPoints.push(point);
+    let marker = L.marker(point, { icon, zIndexOffset: 999 }).addTo(map);
+    rangingArray.push(marker);
+    if (pickedPoints.length === 2) {
+      let distance = pickedPoints[0].distanceTo(pickedPoints[1]); //算距离
+      let polyline = L.polyline(pickedPoints, { color: "red" })
+        .addTo(map)
+        .bindPopup(`相距:${distance.toFixed(3)}米`)
+        .openPopup(); //划线
+      rangingArray.push(polyline);
+      map.fitBounds(pickedPoints); //适应视野
+      //恢复状态
+      pickupMode = false;
+      pickedPoints = [];
+      try {
+        setRangeStyle("grab");
+        map.off("click", mapClick);
+      } catch (err) {
+        console.log(err);
+      }
+      return;
+    }
+  }
+};
 // 地图测距
 function mapRanging() {
   try {
     // @ts-ignore
-    document.getElementById("map").style.cursor = "crosshair"; // 改变鼠标状态
+    setRangeStyle("crosshair");
+    map.on("click", mapClick);
   } catch (err) {
     console.log(err);
   }
@@ -626,9 +713,14 @@ watch(
   }
 );
 function createMarkerIcon(item: any) {
-  const { markerType, driveState } = item;
+  const { markerType, driveState, onlineTcp } = item;
   let icon: string = "";
-   icon = driveState == 0 ? AG360_warn : AG360;
+  if (onlineTcp == 0) {
+    icon = AG360_offline;
+  } else {
+    icon = driveState == 0 ? AG360_warn : AG360;
+  }
+
   // if (markerType.includes("AG360")) {
   //   icon = driveState == 0 ? AG360_warn : AG360;
   // } else if (markerType.includes("AG501") && markerType != "AG501Pro") {
@@ -656,9 +748,15 @@ function createMarkerIcon(item: any) {
   return icon;
 }
 function createMarkerIconSmall(item: any) {
-  const { markerType, driveState } = item;
+  const { markerType, driveState, onlineTcp } = item;
+
   let icon: string = "";
-  icon = driveState == 0 ? yellow : green;
+  if (onlineTcp == 0) {
+    icon = gray;
+  } else {
+    icon = driveState == 0 ? yellow : green;
+  }
+
   // if (markerType.includes("AG360")) {
   //   icon = driveState == 0 ? yellow : green;
   // } else if (markerType.includes("AG501") && markerType != "AG501Pro") {
@@ -694,6 +792,7 @@ function changeMarkerIcon() {
         newMarker.markerId = marker.markerId;
         newMarker.markerType = marker.markerType;
         newMarker.driveState = marker.driveState;
+        newMarker.onlineTcp = marker.onlineTcp;
         newMarkers.push(newMarker);
         markerArr.splice(index, 1, newMarker);
       });
@@ -708,6 +807,7 @@ function changeMarkerIcon() {
         newMarker.markerId = marker.markerId;
         newMarker.markerType = marker.markerType;
         newMarker.driveState = marker.driveState;
+        newMarker.onlineTcp = marker.onlineTcp;
         newMarkers.push(newMarker);
         markerArr.splice(index, 1, newMarker);
       });
@@ -722,6 +822,7 @@ function changeMarkerIcon() {
       newMarker.markerId = marker.markerId;
       newMarker.markerType = marker.markerType;
       newMarker.driveState = marker.driveState;
+      newMarker.onlineTcp = marker.onlineTcp;
       newMarkers.push(newMarker);
       markerArr.splice(index, 1, newMarker);
     });
@@ -792,10 +893,11 @@ function clearMapRanging() {
     rangingArray.length = 0;
   }
   pickupMode = false;
+  pickedPoints = [];
   pickedPoints.length = 0;
   try {
-    // @ts-ignore
-    document.getElementById("map").style.cursor = "grab";
+    setRangeStyle("grab");
+    map.off("click", mapClick);
   } catch (err) {
     console.log(err);
   }
@@ -858,7 +960,7 @@ defineExpose({
 }
 .map_utils {
   background: url("@/assets/monitoring/inputBack.png") no-repeat center center;
-  background-size: 105% 100%;
+  background-size: 105% 105%;
 
   border: 1px solid #fff;
   border-radius: 5px;
@@ -952,7 +1054,7 @@ defineExpose({
   .leaflet-popup-content-wrapper {
     background: url("@/assets/monitoring/Union@.png");
     background-size: contain;
-    background-size: 100%  103%; 
+    background-size: 100% 103%;
     color: var(--color-scheme);
   }
 

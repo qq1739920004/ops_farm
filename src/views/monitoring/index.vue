@@ -7,6 +7,7 @@
       :markerDataHidden="markerDataHidden"
       :mapCenter="mapCenter"
       mapRenderMode="canvas"
+
     />
     <div class="search_box">
       <el-autocomplete
@@ -76,18 +77,29 @@
           <div>{{ $t("messages.todaysOperation") }}</div>
         </li>
         <li>
-          <div>
-            {{
-              dataStatistics.workArea
-                ? (dataStatistics.workArea?.totalArea / 10000).toFixed(2)
-                : ""
-            }}
-          </div>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :disabled="isShowTooltip"
+            :content="dataStatistics.workArea?.totalArea / 10000"
+            placement="top"
+          >
+            <div style="text-overflow: ellipsis; overflow: hidden">
+              <span ref="refName" @mouseover="onMouseOver">
+                {{
+                  dataStatistics.workArea
+                    ? (dataStatistics.workArea?.totalArea / 10000).toFixed(2)
+                    : ""
+                }}
+              </span>
+            </div>
+          </el-tooltip>
+
           <div>{{ $t("messages.cumulativeOperation") }}</div>
         </li>
         <li>
           <div>{{ dataStatistics.workDuration?.todayDuration }}</div>
-          <div>今日作业时长(h)</div>
+          <div>{{ $t("messages.todayTime") }}(h)</div>
         </li>
         <li>
           <div>
@@ -97,10 +109,15 @@
                 : ""
             }}
           </div>
-          <div>累计作业时长(h)</div>
+          <div>{{ $t("messages.culTime") }}(h)</div>
         </li>
         <div
-          style="height: 2px; width: 100%; background-color:rgba(0, 218, 216, 0.3);margin:15px 0"
+          style="
+            height: 2px;
+            width: 100%;
+            background-color: rgba(0, 218, 216, 0.3);
+            margin: 15px 0;
+          "
         ></div>
         <li class="bottom_li">
           <span>{{ dataStatistics.drive?.driving }}</span>
@@ -124,12 +141,13 @@
             <!-- <SvgIcon :icon="item.typeName" size="22" /> -->
             <span class="label">{{ item.typeName }}</span>
           </label>
-          <span class="value">{{ item.onlineCount }}</span>
+          <span class="value">{{ item.onlineCount }}</span
+          >/ <span class="value">{{ item.totalCount }}</span>
         </li>
         <br />
       </ul>
     </div>
-    <div
+    <!-- <div
       :class="{
         notice_box: true,
         notice_box_active: notice_box_isActive,
@@ -180,7 +198,7 @@
           </el-timeline-item>
         </el-timeline>
       </div>
-    </div>
+    </div> -->
 
     <!-- 实时趋势驾驶图diaLog -->
     <realTimeChart ref="realTime" :sn="sn" :socketData="socketStore.socketData" />
@@ -199,6 +217,7 @@
 <script setup lang="ts">
 import AG360 from "@/assets/icons/AG360.svg";
 import AG360_warn from "@/assets/icons/AG360_warn.svg";
+import AG360_offline from "@/assets/icons/AG360_offline.svg";
 // import AG302 from "@/assets/icons/AG302.svg";
 // import AG302_warn from "@/assets/icons/AG302_warn.svg";
 // import AG501 from "@/assets/icons/AG501.svg";
@@ -222,27 +241,28 @@ import wifi_4 from "@/assets/monitoring/wifi_4.png";
 import green from "@/assets/monitoring/green.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
 import SinoMap from "@/components/SinoMap/index.vue";
-import SvgIcon from "@/components/SvgIcon/index.vue";
+// import SvgIcon from "@/components/SvgIcon/index.vue";
 import realTimeChart from "./components/realTimeChart.vue";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
-import MT801 from "@/assets/icons/MT801.svg";
-import MT801_warn from "@/assets/icons/MT801_warn.svg";
-import MT802 from "@/assets/icons/MT802.svg";
-import MT802_warn from "@/assets/icons/MT802_warn.svg";
-import SA200 from "@/assets/icons/SA200.svg";
-import SA200_warn from "@/assets/icons/SA200_warn.svg";
+// import MT801 from "@/assets/icons/MT801.svg";
+// import MT801_warn from "@/assets/icons/MT801_warn.svg";
+// import MT802 from "@/assets/icons/MT802.svg";
+// import MT802_warn from "@/assets/icons/MT802_warn.svg";
+// import SA200 from "@/assets/icons/SA200.svg";
+// import SA200_warn from "@/assets/icons/SA200_warn.svg";
 import { reactive, ref, watch, onUnmounted, computed, onMounted } from "vue";
 import useSocketStore from "@/store/socket";
 import { useRouter, useRoute } from "vue-router";
 import {
   onlineFarmMachinePosition_API,
   farmMachineDataStatistics_API,
-  carLog_API,
 } from "@/api/monitoring";
+// carLog_API,
 import { useI18n } from "vue-i18n";
 const sinoMapRef = ref();
 const { t } = useI18n();
 const { locale } = useI18n();
+const refName = ref<any>(null);
 let mapRenderModeLengthMax = 500;
 const router = useRouter();
 const route = useRoute();
@@ -251,7 +271,8 @@ let markerData = ref<any>([]);
 let markerDataHidden = ref<any>([]);
 let markerDataHandle = ref<any>({});
 let dataStatistics = ref<any>({});
-let carLogList: any = ref([]);
+const isShowTooltip = ref(true);
+// let carLogList: any = ref([]);
 const statistics_box_isActive = ref(false);
 let sn = ref();
 let realTime = ref();
@@ -260,7 +281,7 @@ let version = ref();
 let carId = ref();
 let name = ref();
 let type = ref();
-let notice_box_isActive = ref(false);
+// let notice_box_isActive = ref(false);
 let isChange = ref(false);
 // let searchForm = reactive({ sn: "" });
 
@@ -288,6 +309,16 @@ watch(
   },
   { deep: true }
 );
+function onMouseOver() {
+  let parentWidth = refName.value.parentNode.offsetWidth;
+  let contentWidth = refName.value.offsetWidth;
+  // 判断是否开启tooltip功能
+  if (contentWidth > parentWidth) {
+    isShowTooltip.value = false;
+  } else {
+    isShowTooltip.value = true;
+  }
+}
 
 const labelWidth = computed(() => {
   return locale.value == "zh" ? "280px" : "350px";
@@ -302,12 +333,12 @@ onMounted(() => {
 
 getFaromDataStatistics();
 getOnlineFarmPosition();
-getCarLogList();
+// getCarLogList();
 
 //查询设备地图定位
-function searchDevicePosition(id: any) {
-  mapCenter.markerId = id;
-}
+// function searchDevicePosition(id: any) {
+//   mapCenter.markerId = id;
+// }
 
 // sn、车辆名、公司名、电话 搜索
 function querySearch(queryString: string, cb: any) {
@@ -358,6 +389,8 @@ function handleSocketData(socketData: any) {
         const markerId = data.sn;
         const markerLng = data.posY;
         const markerLat = data.posX;
+        const onlineTcp = data.onlineTcp;
+        const driveState = data.driveState;
         const markerType = createMarkerType(data);
         const markerIcon = sinoMapRef.value.iconChangeLimit
           ? createMarkerIcon(data)
@@ -365,6 +398,8 @@ function handleSocketData(socketData: any) {
         const markerPopup = createMarkerPopup(data);
         markerDataHandle.value = {
           markerId,
+          onlineTcp,
+          driveState,
           markerLng,
           markerLat,
           markerType,
@@ -379,8 +414,12 @@ function handleSocketData(socketData: any) {
         const markerType = createMarkerType(data);
         const markerIcon = createMarkerIcon(data);
         const markerPopup = createMarkerPopup(data);
+        const onlineTcp = data.onlineTcp;
+        const driveState = data.driveState;
         markerDataHandle.value = {
           markerId,
+          onlineTcp,
+          driveState,
           markerLng,
           markerLat,
           markerType,
@@ -391,11 +430,49 @@ function handleSocketData(socketData: any) {
       }
     }
     if (action == "offline") {
-      const markerId = data.sn;
-      markerDataHandle.value = {
-        markerId,
-        markerHandle: "delete",
-      };
+      if (sinoMapRef.value.isIconChange) {
+        const markerId = data.sn;
+        const markerLng = data.posY;
+        const markerLat = data.posX;
+        const onlineTcp = data.onlineTcp;
+        const driveState = data.driveState;
+        const markerType = createMarkerType(data);
+        const markerIcon = sinoMapRef.value.iconChangeLimit
+          ? createMarkerIcon(data)
+          : createMarkerIconSmall(data);
+        const markerPopup = createMarkerPopup(data);
+        markerDataHandle.value = {
+          markerId,
+          onlineTcp,
+          driveState,
+          markerLng,
+          markerLat,
+          markerType,
+          markerIcon,
+          markerPopup,
+          markerHandle: "delete",
+        };
+      } else {
+        const markerId = data.sn;
+        const markerLng = data.posY;
+        const markerLat = data.posX;
+        const markerType = createMarkerType(data);
+        const markerIcon = createMarkerIcon(data);
+        const markerPopup = createMarkerPopup(data);
+        const onlineTcp = data.onlineTcp;
+        const driveState = data.driveState;
+        markerDataHandle.value = {
+          markerId,
+          onlineTcp,
+          driveState,
+          markerLng,
+          markerLat,
+          markerType,
+          markerIcon,
+          markerPopup,
+          markerHandle: "delete",
+        };
+      }
     }
     if (action == "online") {
       if (sinoMapRef.value.isIconChange) {
@@ -404,6 +481,8 @@ function handleSocketData(socketData: any) {
           : createMarkerIconSmall(data);
         const markerId = data.sn;
         const markerLng = data.posY;
+        const onlineTcp = data.onlineTcp;
+        const driveState = data.driveState;
         const markerLat = data.posX;
         const markerType = createMarkerType(data);
         const markerPopup = createMarkerPopup(data);
@@ -411,6 +490,8 @@ function handleSocketData(socketData: any) {
           markerId,
           markerLng,
           markerLat,
+          onlineTcp,
+          driveState,
           markerType,
           markerIcon,
           markerPopup,
@@ -421,12 +502,16 @@ function handleSocketData(socketData: any) {
         const markerId = data.sn;
         const markerLng = data.posY;
         const markerLat = data.posX;
+        const onlineTcp = data.onlineTcp;
+        const driveState = data.driveState;
         const markerType = createMarkerType(data);
         const markerPopup = createMarkerPopup(data);
         markerDataHandle.value = {
           markerId,
           markerLng,
           markerLat,
+          onlineTcp,
+          driveState,
           markerType,
           markerIcon,
           markerPopup,
@@ -444,12 +529,15 @@ function handleSocketData(socketData: any) {
     const typeCounts = data.typeCounts;
     dataStatistics.value.type.forEach((item: any, index: number) => {
       item.onlineCount = typeCounts[index].onlineCount;
+      item.totalCount = typeCounts[index].totalCount;
     });
   }
   if (socketData.module == "farm" && socketData.type == "monitorArea") {
     const { data } = socketData;
     dataStatistics.value.workArea.todayArea = data.todayArea;
     dataStatistics.value.workArea.totalArea = data.totalArea;
+    dataStatistics.value.workDuration.todayDuration = data.todayDuration;
+    dataStatistics.value.workDuration.beforeDuration = data.beforeDuration;
   }
   if (socketData.module == "farm" && socketData.type == "monitorCarNum") {
     const { data } = socketData;
@@ -457,52 +545,52 @@ function handleSocketData(socketData: any) {
     dataStatistics.value.drive.standbyDevice = data.standbyDevice;
     dataStatistics.value.device.onlineDevice = data.driving + data.standbyDevice;
   }
-  if (socketData.module == "farm" && socketData.type == "notification") {
-    const { data } = socketData;
-    let list = data.list;
-    list.forEach((item: any) => {
-      if (item.judgeLevel) {
-        // 告警状态
-        item.state = 2;
-        item.color = "#e9c75d";
-      } else if (item.offlineTime !== item.onlineTime) {
-        // 离线状态
-        item.state = 0;
-        item.color = "#919392";
-      } else {
-        // 上线状态
-        item.state = 1;
-        item.color = "#58c15e";
-      }
-    });
-    carLogList.value.splice(0, list.length, ...list);
-  }
+  // if (socketData.module == "farm" && socketData.type == "notification") {
+  //   const { data } = socketData;
+  //   let list = data.list;
+  //   list.forEach((item: any) => {
+  //     if (item.judgeLevel) {
+  //       // 告警状态
+  //       item.state = 2;
+  //       item.color = "#e9c75d";
+  //     } else if (item.offlineTime !== item.onlineTime) {
+  //       // 离线状态
+  //       item.state = 0;
+  //       item.color = "#919392";
+  //     } else {
+  //       // 上线状态
+  //       item.state = 1;
+  //       item.color = "#58c15e";
+  //     }
+  //   });
+  //   carLogList.value.splice(0, list.length, ...list);
+  // }
 }
 
 // 获取车辆列表日志信息
-async function getCarLogList() {
-  let params = {
-    currentPage: 1,
-    pageSize: 100,
-  };
-  const { data } = await carLog_API(params);
-  carLogList.value = data;
-  carLogList.value.forEach((item: any) => {
-    if (item.judgeLevel) {
-      // 告警状态
-      item.state = 2;
-      item.color = "#e9c75d";
-    } else if (item.offlineTime !== item.onlineTime) {
-      // 离线状态
-      item.state = 0;
-      item.color = "#919392";
-    } else {
-      // 上线状态
-      item.state = 1;
-      item.color = "#58c15e";
-    }
-  });
-}
+// async function getCarLogList() {
+//   let params = {
+//     currentPage: 1,
+//     pageSize: 100,
+//   };
+//   const { data } = await carLog_API(params);
+//   carLogList.value = data;
+//   carLogList.value.forEach((item: any) => {
+//     if (item.judgeLevel) {
+//       // 告警状态
+//       item.state = 2;
+//       item.color = "#e9c75d";
+//     } else if (item.offlineTime !== item.onlineTime) {
+//       // 离线状态
+//       item.state = 0;
+//       item.color = "#919392";
+//     } else {
+//       // 上线状态
+//       item.state = 1;
+//       item.color = "#58c15e";
+//     }
+//   });
+// }
 
 // 获取统计数据
 async function getFaromDataStatistics() {
@@ -600,6 +688,7 @@ function createMarkerPopup(item: any) {
     0: "status_1",
     1: "status_2",
     2: "status_3",
+    null: "status_1",
   };
   const workingStatus: any = {
     优: "status_3",
@@ -626,13 +715,13 @@ function createMarkerPopup(item: any) {
     3: wifi_3,
     4: wifi_4,
   };
-  const netSignal: any = {
-    0: "弱",
-    1: "较弱",
-    2: "一般",
-    3: "较强",
-    4: "强",
-  };
+  // const netSignal: any = {
+  //   0: "弱",
+  //   1: "较弱",
+  //   2: "一般",
+  //   3: "较强",
+  //   4: "强",
+  // };
 
   let openRemote: any = true; //是否远程管理
 
@@ -671,11 +760,11 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="l">
-              <div class="label">${t("messages.carName")}:</div>
+              <div class="label">${t("messages.carName")}</div>
               <div class="value">${item.carName}</div>
             </div>
             <div class="r">
-              <div class="label">SN:</div>
+              <div class="label">SN</div>
               <div class="value"  style="cursor: pointer;text-decoration: underline;" onclick='goMachineryList_markerPopup(${JSON.stringify(
                 item
               )})'>${item.sn}</div>
@@ -683,43 +772,43 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="l">
-           <div class="label">${t("work.companyName")}:</div>
+           <div class="label">${t("work.companyName")}</div>
               <div class="value">${item.companyName}</div>
             </div>
             <div class="r">
-              <div class="label">${t("messages.labelSN")}:</div>
+              <div class="label">${t("messages.labelSN")}</div>
               <div class="value">${item.npn || "/"}</div>
             </div>
           </li>
-        
+
           <li>
             <div class="l">
-              <div class="label">${t("messages.workingcondition")}:</div>
+              <div class="label">${t("messages.workingcondition")}</div>
               <div class="value">
                 <span class='status ${workingStatus[item.judgeLevel]}'></span>
                 <span>${item.judgeLevel || "无"}</span>
               </div>
             </div>
             <div class="r">
-              <div class="label">${t("work.drivingStatus")}:</div>
+              <div class="label">${t("work.drivingStatus")}</div>
               <div class="value">
-                <span class='status ${onlineStatus[item.driveState]}'></span>
-                <span>${driveState[item.driveState]}</span>
+                <span class='status ${onlineStatus[item.driveState] || "--"}'></span>
+                <span>${driveState[item.driveState] || "--"}</span>
               </div>
             </div>
           </li>
           <li>
             <div class="l">
-              <div class="label">解状态:</div>
+              <div class="label">${t("work.solStat")}</div>
               <div class="value">
                 <span class='status ${
                   item.solStat == 4 ? "status_3" : "status_0"
                 }'></span>
-                <span>${snTypeReflect[item.solStat] || "未知解"}</span>
+                <span>${snTypeReflect[item.solStat] || t("work.unknown")}</span>
               </div>
             </div>
             <div class="r">
-              <div class="label">差分链:</div>
+              <div class="label">${t("work.differentialChains")}</div>
               <div class="value">${diffSource[item.diffSource] || "/"} (${
     item.diffAge
   }s)</div>
@@ -727,29 +816,29 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="l">
-          <div class="label">基站距离:</div>
+          <div class="label">${t("work.baseDis")}</div>
               <div class="value">${(item.baseDist / 1000).toFixed(3)} Km</div>
             </div>
             <div class="r">
-               <div class="label">终端类型:</div>
+               <div class="label">${t("work.terminalType")}</div>
               <div class="value">${item.terminalType}</div>
             </div>
           </li>
 
           <li>
             <div class="l">
-              <div class="label">经度:</div>
+              <div class="label">${t("work.lon")}</div>
               <div class="value">${dmsTrans(item.posY)}</div>
             </div>
             <div class="r">
-              <div class="label">纬度:</div>
+              <div class="label">${t("work.lat")}</div>
               <div class="value">${dmsTrans(item.posX)}</div>
-           
+
             </div>
           </li>
           <li>
             <div class="l">
-               <div class="label">卡状态:</div>
+               <div class="label">${t("work.CarStatus")}</div>
               <div class="value">${cardUsage}</div>
             </div>
             <div class="r">
@@ -767,7 +856,7 @@ function createMarkerPopup(item: any) {
   )}</div>
             <div class="btn" onclick='goTaskMachine_markerPopup(${JSON.stringify(
               item
-            )})'>${t("menus.historyTrack")}</div>
+            )})'>${t("devicelist.historyTrack")}</div>
           </li>
           <li>
             <div class="btn ${
@@ -786,9 +875,13 @@ function createMarkerPopup(item: any) {
 }
 // marker 图标
 function createMarkerIcon(item: any) {
-  const { terminalType, driveState } = item;
+  const { terminalType, driveState, onlineTcp } = item;
   let icon: string = "";
-  icon = driveState == 0 ? AG360_warn : AG360;
+  if (onlineTcp === 0) {
+    icon = AG360_offline;
+  } else {
+    icon = driveState == 0 ? AG360_warn : AG360;
+  }
   // if (terminalType && terminalType.includes("AG360")) {
   //   icon = driveState == 0 ? AG360_warn : AG360;
   // } else if (
@@ -913,6 +1006,9 @@ function openRemote_markerPopup(arg: any) {
 
 .map_container {
   height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
   position: relative;
 
   .search_box {
@@ -927,10 +1023,16 @@ function openRemote_markerPopup(arg: any) {
         color: #fff !important;
         background: url("@/assets/monitoring/inputBack.png") no-repeat center center;
         background-size: 105% 100%;
+        .is-focus {
+          box-shadow: none;
+        }
       }
       .el-input__inner {
         color: #fff !important;
         background-color: transparent;
+        &::placeholder {
+          color: #fff !important;
+        }
       }
     }
   }
@@ -1178,9 +1280,9 @@ function openRemote_markerPopup(arg: any) {
 
     li {
       display: flex;
-      line-height: 22px;
+      line-height: 19px;
 
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       .le {
         width: 50%;
         display: flex;
@@ -1200,7 +1302,7 @@ function openRemote_markerPopup(arg: any) {
 
       .label {
         color: #bebebe;
-        width: 66px;
+
         flex-shrink: 0;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1246,7 +1348,7 @@ function openRemote_markerPopup(arg: any) {
   }
 
   .btns_container {
-    padding-top: 12px;
+    padding-top: 6px;
 
     li {
       display: flex;
@@ -1273,5 +1375,9 @@ function openRemote_markerPopup(arg: any) {
 
 .bt_1 {
   border-bottom: 1px solid var(--el-color-info-light-7);
+}
+
+:deep(.el-select .el-input.is-focus .el-input__wrapper) {
+  box-shadow: none !important;
 }
 </style>

@@ -180,10 +180,10 @@ const mapOptions = reactive([
   //     mapName: '谷歌地图',
   //     mapId: 2
   // },
-  {
-    mapName: "天地图",
-    mapId: 3,
-  },
+  // {
+  //   mapName: "天地图",
+  //   mapId: 3,
+  // },
 ]);
 const markerCollect = reactive<any>({
   marker: [],

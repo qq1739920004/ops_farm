@@ -33,9 +33,6 @@
         <!-- 省份卡片容器 -->
         <div v-show="status.provinceShow" class="province_card">
           <!-- intro无法选中v-for中渲染的元素 -->
-          <div class="intro">
-            <div class="intro_item"></div>
-          </div>
           <div
             v-for="(item, index) in provinceCountData"
             :key="index"
@@ -70,7 +67,7 @@
               </el-row>
               <el-row class="item_count">
                 <div class="title_data">
-                  <div style="width: 25%">{{ item.onlineCar || "--" }}</div>
+                  <div style="width: 25%">{{ item.onlineNum || "--" }}</div>
                   <div style="width: 50%">
                     {{ item.todayArea ? item.todayArea.toFixed(2) : "--" }}
                   </div>
@@ -82,15 +79,15 @@
               <div class="bottom_data">
                 <div>
                   <div class="l">{{ t("statisticsReport.Cumulativevehicles") }}</div>
-                  <div class="r">{{ item.totalCar }}</div>
+                  <div class="r">{{ item.totalNum||'/' }}</div>
                 </div>
                 <div>
                   <div class="l">{{ t("statisticsReport.jobthousand") }}</div>
-                  <div class="r">{{ item.beforeAreaSum || "/" }}</div>
+                  <div class="r">{{ item.beforeArea || "/" }}</div>
                 </div>
                 <div>
                   <div class="l2">{{ t("statisticsReport.CumulativeDuration") }}(h)</div>
-                  <div class="r2">{{ item.beforeDurationSum || "/" }}</div>
+                  <div class="r2">{{ item.beforeDuration || "/" }}</div>
                 </div>
               </div>
             </div>
@@ -124,7 +121,7 @@
               </el-row>
               <el-row class="item_count">
                 <div class="title_data">
-                  <div style="width: 25%">{{ item.onlineCar || "--" }}</div>
+                  <div style="width: 25%">{{ item.onlineNum || "--" }}</div>
                   <div style="width: 50%">
                     {{ item.todayArea ? item.todayArea.toFixed(2) : "--" }}
                   </div>
@@ -136,15 +133,15 @@
               <div class="bottom_data">
                 <div>
                   <div class="l">{{ t("statisticsReport.Cumulativevehicles") }}</div>
-                  <div class="r">{{ item.totalCar }}</div>
+                  <div class="r">{{ item.totalNum|| "/" }}</div>
                 </div>
                 <div>
                   <div class="l">{{ t("statisticsReport.jobthousand") }}</div>
-                  <div class="r">{{ item.beforeAreaSum || "/" }}</div>
+                  <div class="r">{{ item.beforeArea || "/" }}</div>
                 </div>
                 <div>
                   <div class="l2">{{ t("statisticsReport.CumulativeDuration") }}(h)</div>
-                  <div class="r2">{{ item.beforeDurationSum || "/" }}</div>
+                  <div class="r2">{{ item.beforeDuration || "/" }}</div>
                 </div>
               </div>
             </div>
@@ -167,7 +164,7 @@
             {{ chartValue.onlineNum }}
           </div>
           <div class="title">{{ t("statisticsReport.totalNumber") }}：</div>
-          <div class="value2">
+          <div class="value">
             {{ chartValue.totalNum }}
           </div>
           <div class="title">{{ t("statisticsReport.jobthousand") }}:</div>
@@ -184,10 +181,10 @@
             <!-- <p :class="isActive == 1 ? 'active' : ''" @click="onDayClick">
               {{ $t("work.today") }}
             </p> -->
-            <p :class="isActive == 2 ? 'active' : ''" @click="onMonthClick">
+            <p :class="isActive == 2 ? 'active' : ''" @click="onMonthClick2">
               {{ $t("work.thisMonth") }}
             </p>
-            <p :class="isActive == 3 ? 'active' : ''" @click="onYearClick">
+            <p :class="isActive == 3 ? 'active' : ''" @click="onYearClick2">
               {{ $t("work.thisYear") }}
             </p>
             <div class="demo-date-picker">
@@ -269,7 +266,7 @@ const changteTime = () => {
   getProvinceDataNewList();
   getCityDataNewList(addrcode.value);
   provinceChart.clear();
-  getChartData(addrcode.value);
+  // getChartData(addrcode.value);
 };
 //今天
 // const onDayClick = () => {
@@ -290,10 +287,13 @@ const onMonthClick = () => {
     new Date(new Date().setHours(0, 0, 0)).getTime() - 3600 * 1000 * 24 * 30,
     new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
   ];
-  getProvinceDataNewList();
-  getCityDataNewList(addrcode.value);
+  if(status.value.provinceShow ){
+    getProvinceDataNewList();
+  } else {
+    getCityDataNewList(addrcode.value);
+  }
   provinceChart.clear();
-  getChartData(addrcode.value);
+  // getChartData(addrcode.value);
 };
 // 这一年
 const onYearClick = () => {
@@ -302,10 +302,36 @@ const onYearClick = () => {
     new Date(new Date().setHours(0, 0, 0)).getTime() - 3600 * 1000 * 24 * 365,
     new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
   ];
-  getProvinceDataNewList();
-  getCityDataNewList(addrcode.value);
+  if(status.value.provinceShow ){
+    getProvinceDataNewList();
+  } else {
+    getCityDataNewList(addrcode.value);
+  }
+  provinceChart.clear();
+  // getChartData(addrcode.value);
+};
+const onMonthClick2 = () => {
+  isActive.value = 2;
+  timeRange.value = [
+    new Date(new Date().setHours(0, 0, 0)).getTime() - 3600 * 1000 * 24 * 30,
+    new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
+  ];
+  // getProvinceDataNewList();
+  // getCityDataNewList(addrcode.value);
   provinceChart.clear();
   getChartData(addrcode.value);
+};
+// 这一年
+const onYearClick2 = () => {
+  isActive.value = 3;
+  timeRange.value = [
+    new Date(new Date().setHours(0, 0, 0)).getTime() - 3600 * 1000 * 24 * 365,
+    new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
+  ];
+  // getProvinceDataNewList();
+  // getCityDataNewList(addrcode.value);
+  provinceChart.clear();
+   getChartData(addrcode.value);
 };
 const addrcode = ref<any>("");
 const provinceName = ref<any>("");
@@ -370,6 +396,12 @@ const goBack = () => {
   statusStark.value.pop();
   const iStatus = statusStark.value[statusStark.value.length - 1];
   status.value = iStatus;
+  console.log(iStatus)
+  if(iStatus.provinceShow ){
+    getProvinceDataNewList();
+  } else {
+    getCityDataNewList(addrcode.value);
+  }
 };
 const chartValue = ref<any>({});
 // 获取列表
@@ -529,7 +561,7 @@ function ChartCreate(date: any, x: any, y: any) {
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListx,
-
+        yAxisIndex: 0,
         lineStyle: {
           color: "#227AC1",
         },
@@ -559,6 +591,7 @@ function ChartCreate(date: any, x: any, y: any) {
         name: `${t("statisticsReport.workingHours")}`,
         showSymbol: true, //是否默认展示圆点
         type: "line",
+        yAxisIndex: 1,
         data: valueListy,
         lineStyle: {
           color: "#30A925",
@@ -650,23 +683,6 @@ onUnmounted(() => {
   .car_item_online {
     background-color: #e7ffe6 !important;
   }
-
-  .intro {
-    width: 310px;
-    height: 120px;
-    position: absolute;
-    top: 20px;
-    left: 20px;
-
-    .intro_item {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      width: 40px;
-      height: 25px;
-    }
-  }
-
   .province_card_item,
   .city_card_item {
     width: 300px;
@@ -686,6 +702,7 @@ onUnmounted(() => {
       .cityline {
         display: flex;
         align-items: center;
+
       }
       .item_title_province {
         align-items: center;

@@ -26,7 +26,7 @@
             disabled
           />
           <el-select-v2
-            style="width: 350px"
+            style="width: 210px"
             filterable
             v-model="pageInfo.id"
             :options="options"
@@ -61,11 +61,11 @@
       <div class="title_list">
         <div class="title">{{ t("statisticsReport.jobacres") }}</div>
         <div class="value">
-          {{ carChartValue.beforeAreaSum * 1000 }}
+          {{ carChartValue.beforeAreaSum  }}
         </div>
         <div class="title">{{ t("statisticsReport.CumulativeDuration") }}(h)</div>
         <div class="value">
-          {{ carChartValue.beforeDurationSum * 1000 }}
+          {{ carChartValue.beforeDurationSum  }}
         </div>
       </div>
       <div id="carChart"></div>
@@ -245,8 +245,18 @@ function ChartCreate(date: any, x: any, y: any) {
       },
       {
         name: ` ${t("statisticsReport.CumulativeDuration") + "(h)"}`,
-        alignTicks: true,
+
         type: "value",
+        splitNumber: 5,
+        axisLine: {
+          show: false,
+        },
+        axisTick: {
+          show: false, // 是否显示坐标轴刻度
+        },
+        splitLine: {
+          show: true,
+        },
       },
     ],
     series: [
@@ -255,7 +265,7 @@ function ChartCreate(date: any, x: any, y: any) {
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListx,
-
+        yAxisIndex: 0,
         lineStyle: {
           color: "#227AC1",
         },
@@ -285,6 +295,7 @@ function ChartCreate(date: any, x: any, y: any) {
         name: `${t('statisticsReport.workingHours')}`,
         showSymbol: true, //是否默认展示圆点
         type: "line",
+        yAxisIndex: 1,
         data: valueListy,
         lineStyle: {
           color: "#30A925",

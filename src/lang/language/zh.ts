@@ -1,3 +1,5 @@
+
+
 const zh = {
   messages: {
     total: '总数',
@@ -5,6 +7,8 @@ const zh = {
     onlineCount:'在线数',
     cumulativeOperation:'累计作业(万亩)',
     InOperation:'工作中',
+    todayTime:'今日作业时长',
+    culTime:'累计作业时长',
     Standby:'待机',
     StatusNotification:'状态通知',
     Offline:'离线',
@@ -26,7 +30,8 @@ const zh = {
     Pleasedistributor:'请选择经销商',
     systemName:'司南耕耘',
     backHome:'返回首页',
-    noRequest:'访问地址不存在！'
+    noRequest:'访问地址不存在！',
+    noPer:'您当前无权限访问,请联系管理员'
 
 
   },
@@ -56,8 +61,15 @@ const zh = {
     monitoring: '态势监控',
     machineryList: '农机管理',
     projectMgt:'作业管理',
+    jobList:'作业列表',
+    projectMan: '作业管理',
     aftersalesMgt:'售后服务',
+    qualityMgt:'质保管理',
     alarmView:'告警查看',
+    insights:'智数洞察',
+    alarmStatics:'告警统计',
+    jobStatics:'作业统计',
+    machineOverview:'农机概况',
     statisticalReports:'统计报表',
     assistanceHandling:'求助处理',
     perceptionPlatform: '感知平台',
@@ -289,6 +301,7 @@ const zh = {
     registrationCode: "注册码",
     nettingDuration: "罗网期限",
     warrantyPeriod: "质保期限",
+    solStat:'解状态',
     softwareDuration: "软件期限",
     satelliteBaseDuration: "星基期限",
     activationTime:'激活时间',
@@ -299,6 +312,13 @@ const zh = {
     ratedVoltage: "额定电压",
     executiveStandard: "执行标准",
     linearAccuracy: "直线精度（±cm)",
+    lat:'纬度',
+    lon:'经度',
+    terminalType:'终端类型',
+    baseDis:'基站距离',
+    CarStatus:'卡状态',
+    differentialChains:'差分链',
+    unknown:'未知解',
     productionNumber: "生产编号",
     productionDate: "生产日期",
     enterRatedPower: "请输入额定功率",
@@ -380,8 +400,20 @@ const zh = {
     actived:'已激活',
     activationStatus:'激活状态',
     totalNumber:'设备总数',
-    thousandArea:'面积(千亩)',
+    thousandArea:'面积(亩)',
     workingHours:'工作时长'
   },
+  job:{
+    fix:'固定',
+    others:'其他（单点，浮动等）',
+    SatelliteBase:'星基',
+    lines:'轨迹线',
+    point:'轨迹点',
+    acTime: "作业时长",
+    milerage:'作业里程',
+    mu:'亩',
+    meter:'米',
+    work:'作业'
+  }
 }
 export default zh

@@ -26,7 +26,7 @@
             disabled
           />
           <el-select-v2
-            style="width: 350px"
+            style="width: 210px"
             filterable
             v-model="pageInfo.id"
             :options="options"

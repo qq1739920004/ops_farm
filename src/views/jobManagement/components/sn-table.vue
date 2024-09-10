@@ -31,6 +31,9 @@
     <el-table-column :label="$t('work.acTime')" align="center">
       <template #="{ row }"> {{ row.paddyDuration }}</template>
     </el-table-column>
+    <el-table-column :label="$t('job.milerage')+'(km)'" align="center">
+      <template #="{ row }"> {{ (row.workMileage / 1000).toFixed(2) }}</template>
+    </el-table-column>
     <el-table-column :label="$t('work.location')" prop="position" align="center">
     </el-table-column>
 

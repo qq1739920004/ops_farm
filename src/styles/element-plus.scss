@@ -10,3 +10,7 @@
 .el-button.is-text.is-disabled:hover {
     color: var(--el-color-info-light-5) !important;
 }
+.el-breadcrumb__item:last-child .el-breadcrumb__inner{
+    color:var(--main-text-color)!important;
+  }
+  
