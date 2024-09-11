@@ -105,8 +105,8 @@ let CarDealerList = ref<any[]>([]);
 const carChartValue = ref<any>({});
 const changeBlur1 = () => {
   carChart.clear();
+  pageInfo.id = '';
   getDealerCarList();
-  pageInfo.id = "请选择";
 };
 const changeBlur2 = () => {
   getCarChart();
@@ -484,8 +484,8 @@ const getDealerCarList = async () => {
         };
       }
     });
-
-    pageInfo.id = res.data[0].id;
+    options.unshift({value:'',label:t('work.allcars')})
+    
     getCarChart();
   }
 };

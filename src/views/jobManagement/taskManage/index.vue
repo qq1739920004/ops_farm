@@ -446,6 +446,7 @@ const loadWorkData = (workId: any) => {
           // ElMessage.warning(`${item}暂无作业数据`);
           return;
         } else {
+          let nameTitle: any = item;
           emptyIds.value = false;
           let PointListTransed = res.data[item].map((item2: any) => {
             return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
@@ -454,7 +455,7 @@ const loadWorkData = (workId: any) => {
           let line = L.polyline(PointListTransed, { color: "#00ff00", weight: 8 })
             .bindPopup(
               `<div class="map_popup">
-              <div> <div>${t("job.work")}${index + 1}</div>
+              <div> <div class="name">${nameTitle}</div>
              <div class="value">${area}${t("job.mu")}</div>
              </div>
               <div> <div >${t("job.acTime")}</div>
@@ -498,6 +499,7 @@ const drawLine = (workId: any, ress: any) => {
         // ElMessage.warning(`${item}暂无作业数据`);
         return;
       } else {
+        let nameTitle: any = item;
         emptyIds.value = false;
         let PointListTransed = it.data[item].map((item2: any) => {
           return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
@@ -506,7 +508,7 @@ const drawLine = (workId: any, ress: any) => {
         let line = L.polyline(PointListTransed, { color: "#00ff00", weight: 8 })
           .bindPopup(
             `<div class="map_popup">
-              <div> <div  >${t("job.work")}${index + 1}</div>
+              <div> <div class="name" >${nameTitle}</div>
              <div class="value">${area}${t("job.mu")}</div>
              </div>
               <div> <div >${t("job.acTime")}</div>
@@ -548,6 +550,7 @@ const drawSolLine = (workId: any, ress: any) => {
         return;
       } else {
         const solSatList: any = [];
+        let nameTitle: any = item;
         emptyIds.value = false;
         let PointListTransed = it.data[item].map((item2: any) => {
           solSatList.push(item2.solStat);
@@ -557,7 +560,7 @@ const drawSolLine = (workId: any, ress: any) => {
         let line = L.polyline(PointListTransed, { color: "#5C5C5C", weight: 1 })
           .bindPopup(
             `<div class="map_popup">
-              <div> <div  >${t("job.work")}${index + 1}</div>
+              <div> <div class="name" >${nameTitle}</div>
              <div class="value">${area}${t("job.mu")}</div>
              </div>
               <div> <div >${t("job.acTime")}</div>
@@ -907,7 +910,7 @@ const getDealerCarList = async () => {
       label: `${item.nameNpn}`,
     }));
 
-    pageInfo.carId = route.query.carId? +route.query.carId:''  || res.data[0].id;
+    pageInfo.carId = route.query.carId ? +route.query.carId : "" || res.data[0].id;
     getPaddyWorkList(true);
   }
 };
@@ -1732,10 +1735,14 @@ watch(
   }
 }
 :deep(.map_popup) {
-  width: 180px;
+  width: 220px;
 
   color: #fff;
-
+  .name {
+    text-overflow: ellipsis;
+      overflow: hidden;
+      word-break: break-all;
+  }
   div {
     width: 100%;
     margin-top: 5px;
@@ -1743,14 +1750,14 @@ watch(
     display: flex;
     align-items: center;
     div {
-      width: 50%;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      width: 100px;
+     
+      margin-right: 20px;
     }
   }
 }
 :deep(.leaflet-popup) {
-  width: 200px;
+  width: 220px;
   color: white;
   .leaflet-popup-content-wrapper {
     background-color: rgba(0, 0, 0, 0.67);

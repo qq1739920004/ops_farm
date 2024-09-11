@@ -179,38 +179,38 @@ const getPaddyWorkList = async () => {
     total.value = res.data.total
     paddyWorkList.value = res.data.records
 
-    paddyWorkList.value.forEach((item: any) => {
-        if (item.lineptax && item.lineptay) {
-            // axios({
-            //     url: `${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`,
-            //     method: 'get',
-            //     params: {
-            //         'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
-            //         'output': 'json',
-            //         'coordtype': 'wgs84ll',
-            //         'location': item.lineptay + ',' + item.lineptax
-            //     }
-            // }).then((res: any) => {
-            //     item.position = res.data.result.formatted_address
-            // })
+    // paddyWorkList.value.forEach((item: any) => {
+    //     if (item.lineptax && item.lineptay) {
+    //         // axios({
+    //         //     url: `${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`,
+    //         //     method: 'get',
+    //         //     params: {
+    //         //         'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
+    //         //         'output': 'json',
+    //         //         'coordtype': 'wgs84ll',
+    //         //         'location': item.lineptay + ',' + item.lineptax
+    //         //     }
+    //         // }).then((res: any) => {
+    //         //     item.position = res.data.result.formatted_address
+    //         // })
 
-            // const res = getTrueLocation_API()
-            axios.get(`${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`, {
+    //         // const res = getTrueLocation_API()
+    //         axios.get(`${import.meta.env.VITE_APP_BASE_BAIDU}/reverse_geocoding/v3`, {
       
-                params: {
-                    'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
-                    'output': 'json',
-                    'coordtype': 'wgs84ll',
-                    'location': item.lineptay + ',' + item.lineptax
-                },
-                adapter: jsonp
-            }).then((res: any) => {
-                item.position = res.data.result.formatted_address
-            })
+    //             params: {
+    //                 'ak': 'G5zGmmVnuYiUCN087KWmpZM70sZPvnQe',
+    //                 'output': 'json',
+    //                 'coordtype': 'wgs84ll',
+    //                 'location': item.lineptay + ',' + item.lineptax
+    //             },
+    //             adapter: jsonp
+    //         }).then((res: any) => {
+    //             item.position = res.data.result.formatted_address
+    //         })
 
-        }
-    })
-    console.log(paddyWorkList.value)
+    //     }
+    // })
+    // console.log(paddyWorkList.value)
     // res.data.records.forEach((item: any, index: any) => {
     //     paddyWorkList.value.forEach((val: any) => {
     //         val.position1 = item.lineptax
