@@ -27,6 +27,7 @@ const en = {
     browse: 'browse',
     Pleasedistributor: 'Please select a distributor',
     systemName: 'Sino Farm',
+    systemName2: 'CHANGFA AGRICULTURAL EQUIPMENT',
     backHome: 'back to home',
     noRequest: 'The access address does not exist!',
     noPer: 'You do not currently have access, please contact administrators'
@@ -417,6 +418,20 @@ const en = {
     mu: 'mu',
     meter: 'meters',
     work: 'job'
+  },
+  content: {
+    LOSS_RTK_DATA: 'LOSS_RTK_DATA',
+    LOSS_LOCATION: 'LOSS_LOCATION',
+    LOSS_MOTOR_VALUE_MAX: 'LOSS_MOTOR_VALUE_MAX',
+    LOSS_MOTOR_VALUE: 'LOSS_MOTOR_VALUE',
+    LOSS_FRONT_GYRO: 'LOSS_FRONT_GYRO',
+    LOSS_BODY_GYRO: 'LOSS_BODY_GYRO',
+    LOSS_MOTOR: 'LOSS_MOTOR',
+    LOSS_SMART_WHEEL: 'LOSS_SMART_WHEEL',
+    LOSS_COURSE: 'LOSS_COURSE',
+    alarmtimes:'Alarm times',
+    LOSS_LOCATION_BUT_SIGNAL: 'LOSS_LOCATION_BUT_SIGNAL',
+    LOSS_BASE_LINE:'LOSS_BASE_LINE'
   }
 };
 export default en;

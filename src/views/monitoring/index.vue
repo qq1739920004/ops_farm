@@ -7,7 +7,6 @@
       :markerDataHidden="markerDataHidden"
       :mapCenter="mapCenter"
       mapRenderMode="canvas"
-
     />
     <div class="search_box">
       <el-autocomplete
@@ -329,6 +328,7 @@ onUnmounted(() => {
 });
 onMounted(() => {
   socketStore.connect();
+
 });
 
 getFaromDataStatistics();
@@ -725,7 +725,7 @@ function createMarkerPopup(item: any) {
 
   let openRemote: any = true; //是否远程管理
 
-  if (item.onlineTcp == 0 || item.driveState != 0) {
+  if (item.onlineTcp === 0 || item.driveState != 0) {
     openRemote = false; // 禁用
   } else {
     // if (
@@ -749,7 +749,7 @@ function createMarkerPopup(item: any) {
          <li>
             <div class="le">
               <span > <img class="sate" src=${satelite}></span>
-             <span class="value">${item.satNum}</span>
+             <span class="value">${item.satNum || "--"}</span>
             </div>
             <div class="re" >
               <div class="value" style="margin-left: auto;margin-right:20px">
@@ -761,23 +761,23 @@ function createMarkerPopup(item: any) {
           <li>
             <div class="l">
               <div class="label">${t("messages.carName")}</div>
-              <div class="value">${item.carName}</div>
+              <div class="value">${item.carName || "--"}</div>
             </div>
             <div class="r">
               <div class="label">SN</div>
               <div class="value"  style="cursor: pointer;text-decoration: underline;" onclick='goMachineryList_markerPopup(${JSON.stringify(
                 item
-              )})'>${item.sn}</div>
+              )})'>${item.sn || "--"}</div>
             </div>
           </li>
           <li>
             <div class="l">
            <div class="label">${t("work.companyName")}</div>
-              <div class="value">${item.companyName}</div>
+              <div class="value">${item.companyName || "--"}</div>
             </div>
             <div class="r">
               <div class="label">${t("messages.labelSN")}</div>
-              <div class="value">${item.npn || "/"}</div>
+              <div class="value">${item.npn || "--"}</div>
             </div>
           </li>
 
@@ -785,14 +785,14 @@ function createMarkerPopup(item: any) {
             <div class="l">
               <div class="label">${t("messages.workingcondition")}</div>
               <div class="value">
-                <span class='status ${workingStatus[item.judgeLevel]}'></span>
-                <span>${item.judgeLevel || "无"}</span>
+                <span class='${item.judgeLevel ? "status " + workingStatus[item.judgeLevel]:""} '></span>
+                <span>${item.judgeLevel || "--"}</span>
               </div>
             </div>
             <div class="r">
               <div class="label">${t("work.drivingStatus")}</div>
               <div class="value">
-                <span class='status ${onlineStatus[item.driveState] || "--"}'></span>
+                <span class='${driveState[item.driveState] ? "status "+ onlineStatus[item.driveState] :"" }'></span>
                 <span>${driveState[item.driveState] || "--"}</span>
               </div>
             </div>
@@ -801,38 +801,40 @@ function createMarkerPopup(item: any) {
             <div class="l">
               <div class="label">${t("work.solStat")}</div>
               <div class="value">
-                <span class='status ${
-                  item.solStat == 4 ? "status_3" : "status_0"
+                <span class='${snTypeReflect[item.solStat]?
+                  item.solStat == 4 ? "status status_3" : "status status_0" :''
                 }'></span>
-                <span>${snTypeReflect[item.solStat] || t("work.unknown")}</span>
+                <span>${snTypeReflect[item.solStat] || "--"}</span>
               </div>
             </div>
             <div class="r">
               <div class="label">${t("work.differentialChains")}</div>
-              <div class="value">${diffSource[item.diffSource] || "/"} (${
-    item.diffAge
-  }s)</div>
+              <div class="value">${diffSource[item.diffSource] || "--"} (${
+    item.diffAge ? item.diffAge + "s" : "--"
+  })</div>
             </div>
           </li>
           <li>
             <div class="l">
           <div class="label">${t("work.baseDis")}</div>
-              <div class="value">${(item.baseDist / 1000).toFixed(3)} Km</div>
+              <div class="value">${
+                item.baseDist ? (item.baseDist / 1000).toFixed(3) + "km" : "--"
+              }</div>
             </div>
             <div class="r">
                <div class="label">${t("work.terminalType")}</div>
-              <div class="value">${item.terminalType}</div>
+              <div class="value">${item.terminalType || "--"}</div>
             </div>
           </li>
 
           <li>
             <div class="l">
               <div class="label">${t("work.lon")}</div>
-              <div class="value">${dmsTrans(item.posY)}</div>
+              <div class="value">${dmsTrans(item.posY) || "--"}</div>
             </div>
             <div class="r">
               <div class="label">${t("work.lat")}</div>
-              <div class="value">${dmsTrans(item.posX)}</div>
+              <div class="value">${dmsTrans(item.posX) || "--"}</div>
 
             </div>
           </li>
@@ -860,7 +862,7 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="btn ${
-              item.driveState == 0 ? "disabled" : ""
+              item.driveState == 0 || item.onlineTcp == 0 ? "disabled" : ""
             }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(item)})'>${t(
     "messages.Realtimedrivingtrendchart"
   )}</div>
@@ -972,7 +974,7 @@ function gohistoryChart_markerPopup(arg: any) {
 }
 // marker-弹窗-实时趋势图
 function openRealTimeChart_markerPopup(arg: any) {
-  if (arg.driveState == 0) return;
+  if (arg.driveState == 0 || arg.onlineTcp == 0) return;
   sn.value = arg.sn;
   realTime.value.dialogVisible = true;
 }
@@ -1268,19 +1270,19 @@ function openRemote_markerPopup(arg: any) {
 }
 
 :deep(.map_popup) {
-  width: 360px;
+  width: 300px;
 
   .popup_container {
     font-size: 14px;
     .sate {
       width: 22px;
-      height: 22px;
+      height: 18px;
       margin-right: 2px;
     }
 
     li {
       display: flex;
-      line-height: 19px;
+      line-height: 20px;
 
       margin-bottom: 8px;
       .le {
@@ -1348,12 +1350,12 @@ function openRemote_markerPopup(arg: any) {
   }
 
   .btns_container {
-    padding-top: 6px;
+    padding-top: 2px;
 
     li {
       display: flex;
       justify-content: space-around;
-      line-height: 22px;
+      line-height: 20px;
 
       .btn {
         color: var(--el-color-primary);
