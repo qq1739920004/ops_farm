@@ -264,7 +264,7 @@
           :style="isLanguage == 'en' ? 'width: 75px' : 'width:55px'"
           type="primary"
           text
-          @click="gotoMap(row.sn, row.npn)"
+          @click="gotoMap(row.id)"
           >{{ $t("devicelist.historyTrack") }}</el-button
         >
         <el-button
@@ -494,9 +494,8 @@ const gotoRemote = (val: any, val2: any, val3: any, val4: any, val5: any, val6: 
   isChange.value = !isChange.value;
 };
 // 历史轨迹
-const gotoMap = (sn: string, npn: string) => {
-  console.log(sn, npn);
-  router.push({ path: "/machineryList/taskMachine", query: { sn, npn } });
+const gotoMap = (id:string) => {
+  router.push({ path: "/machineryList/taskMachine", query: { carId:id } });
 };
 
 const filterChange = (filterObj: any) => {

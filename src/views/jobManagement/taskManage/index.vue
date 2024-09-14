@@ -128,6 +128,7 @@ import {
   paddyWorkListResponsenumber,
 } from "@/api/jobManagement/type";
 import { carDealerResponseData, carDealerObj } from "@/api/machineryList/type";
+import { ElMessage } from "element-plus";
 import { getCarDealerList_API, paddyWorkList_API } from "@/api/jobManagement/index";
 import { carDealer_API } from "@/api/machineryList/index";
 import { historyList_path } from "@/api/jobManagement/taskManage/index";
@@ -236,14 +237,20 @@ const changeRadio = (item: any) => {
     });
     ids.value = paddyListIdList;
 
-    drawLine(paddyListIdList, loadValue.value);
+    
+    setTimeout(() => {
+      drawLine(paddyListIdList, loadValue.value);
+    }, 100);
   }
   if (item === 2) {
     let paddyListIdList = paddyWorkList.value.map((item) => {
       return item.id;
     });
     ids.value = paddyListIdList;
-    drawSolLine(paddyListIdList, loadValue.value);
+
+    setTimeout(() => {
+      drawSolLine(paddyListIdList, loadValue.value);
+    }, 100);
   }
 };
 function initMap() {
@@ -443,18 +450,24 @@ const loadWorkData = (workId: any) => {
           item === "paddyDuration"
         ) {
           emptyIds.value = true;
-          // ElMessage.warning(`${item}暂无作业数据`);
+
           return;
         } else {
           let nameTitle: any = item;
           emptyIds.value = false;
-          let PointListTransed = res.data[item].map((item2: any) => {
-            return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
-          });
+          if (res.data[item].length === 0) {
+            ElMessage.warning(`${item}暂无作业数据`);
+          } else {
+            let PointListTransed = res.data[item].map((item2: any) => {
+              return coorTransform(
+                [item2.posX as never, item2.posY as never],
+                mapId.value
+              ); // 转换坐标
+            });
 
-          let line = L.polyline(PointListTransed, { color: "#00ff00", weight: 8 })
-            .bindPopup(
-              `<div class="map_popup">
+            let line = L.polyline(PointListTransed, { color: "#00ff00", weight: 8 })
+              .bindPopup(
+                `<div class="map_popup">
               <div> <div class="name">${nameTitle}</div>
              <div class="value">${area}${t("job.mu")}</div>
              </div>
@@ -465,11 +478,12 @@ const loadWorkData = (workId: any) => {
              <div class="value">${mile}km</div>
              </div>
              </div>`
-            )
-            .addTo(map);
-          tranpatrnt.value.push(PointListTransed);
-          saveMarker(workId, [{ markerObj: line, name: "lines" }]);
-          map.fitBounds(line.getBounds(), { maxZoom: 16 });
+              )
+              .addTo(map);
+            tranpatrnt.value.push(PointListTransed);
+            saveMarker(workId, [{ markerObj: line, name: "lines" }]);
+            map.fitBounds(line.getBounds(), { maxZoom: 16 });
+          }
         }
       });
     })
@@ -529,6 +543,7 @@ const drawLine = (workId: any, ress: any) => {
 let eleDataObject = <any>[];
 const drawSolLine = (workId: any, ress: any) => {
   const res = ress;
+
   res.map((it: any, index: any) => {
     let key = Object.keys(it.data);
     const area: any = it.data["workedArea"];
@@ -549,6 +564,7 @@ const drawSolLine = (workId: any, ress: any) => {
         // ElMessage.warning(`${item}暂无作业数据`);
         return;
       } else {
+
         const solSatList: any = [];
         let nameTitle: any = item;
         emptyIds.value = false;
@@ -921,7 +937,10 @@ const getPaddyWorkList = async (flag: Boolean) => {
     et: timestampToTime(timeRange.value[1]),
   });
   paddyWorkList.value = res.data.records;
-
+  if (res.data.records.length === 0) {
+    ElMessage.warning(`暂无作业数据`);
+    loadValue.value = [];
+  }
   let tem = res.data.records;
   tem.forEach((element) => {
     markerCollect[element.id] = { marker: [] };
@@ -1740,8 +1759,8 @@ watch(
   color: #fff;
   .name {
     text-overflow: ellipsis;
-      overflow: hidden;
-      word-break: break-all;
+    overflow: hidden;
+    word-break: break-all;
   }
   div {
     width: 100%;
@@ -1751,7 +1770,7 @@ watch(
     align-items: center;
     div {
       width: 100px;
-     
+
       margin-right: 20px;
     }
   }

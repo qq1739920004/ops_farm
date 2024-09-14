@@ -65,7 +65,7 @@
           <div>{{ $t("messages.onlineCount") }}</div>
         </li>
         <li class="top_line">
-          <div>{{ dataStatistics.device?.offlineDevice }}</div>
+          <div>{{  dataStatistics.device?.totalDevice- dataStatistics.device?.onlineDevice }}</div>
           <div class="outside">
             {{ $t("messages.Offline") }}
             <div class="offline_area"></div>
@@ -232,11 +232,11 @@ import AG360_offline from "@/assets/icons/AG360_offline.svg";
 // import AGunknown from "@/assets/icons/AGunknown.svg";
 // import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
 import satelite from "@/assets/monitoring/satelite.png";
-import wifi_0 from "@/assets/monitoring/wifi_0.png";
-import wifi_1 from "@/assets/monitoring/wifi_1.png";
-import wifi_2 from "@/assets/monitoring/wifi_2.png";
-import wifi_3 from "@/assets/monitoring/wifi_3.png";
-import wifi_4 from "@/assets/monitoring/wifi_4.png";
+import wifi_0 from "@/assets/monitoring/Signal-1.png";
+import wifi_1 from "@/assets/monitoring/Signal-2.png";
+import wifi_2 from "@/assets/monitoring/Signal-3.png";
+import wifi_3 from "@/assets/monitoring/Signal-4.png";
+import wifi_4 from "@/assets/monitoring/Signal-5.png";
 import green from "@/assets/monitoring/green.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
 import SinoMap from "@/components/SinoMap/index.vue";

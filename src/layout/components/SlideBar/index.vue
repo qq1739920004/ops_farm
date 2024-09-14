@@ -16,9 +16,10 @@
 
       <span>{{ t("messages.systemName2") }}</span>
     </el-menu-item>
+    <!-- ucFrontEnd -->
     <el-menu-item
       v-else
-      onclick="location.href='/ucFrontEnd'"
+      onclick="location.href='/'"
       :class="{ logo_area: true, logo_active: collapse }"
     >
       <SvgIcon icon="logo" size="48" />

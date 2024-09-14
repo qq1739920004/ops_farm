@@ -271,8 +271,7 @@ onMounted(() => {
   handleMapCenter(props.mapCenter);
   createMarker(props.markerData);
   createLine(props.lineData);
-  map.zoomIn()
-
+  map.zoomIn();
 });
 
 // 创建地图marker点
@@ -305,8 +304,7 @@ function createMarker(list: any) {
     markerAddToMap(item.markerType, marker);
     // changeZoom()
   });
-  map.zoomIn()
-  
+  map.zoomIn();
 }
 // 删除地图marker点
 function removeMarker(list: any) {
@@ -434,32 +432,6 @@ function updateMarkerVisible(list: any) {
     includedMarkers.length ? markerCanvasGroup.addMarkers(includedMarkers) : "";
     map.setView(map.getCenter()); //缩放也会漂移
   }
-  // lineMarkers.forEach((makrer:any)=>{
-  //   markerGroup.addLayer(makrer);
-  // })
-  // markerArr.forEach((item: any) => {
-  //   if (mapRenderMode == "dom") {
-  //     if (list.includes(item.markerType)) {
-  //       markerGroup.removeLayer(item);
-  //     } else {
-  //       markerGroup.addLayer(item);
-  //     }
-  //   } else if (mapRenderMode == "polymer") {
-  //     if (list.includes(item.markerType)) {
-  //       markerClusterGroup.removeLayer(item);
-  //     } else {
-  //       markerClusterGroup.addLayer(item);
-  //     }
-  //   } else if (mapRenderMode == "canvas") {
-  //     initCanvasGroup();
-  //     if (list.includes(item.markerType)) {
-  //       markerCanvasGroup.removeLayer(item);
-  //     } else {
-  //       markerCanvasGroup.addLayer(item);
-  //     }
-  //     map.setView(map.getCenter());
-  //   }
-  // });
 }
 // 创建icon图标
 function createIcon(item: any) {
