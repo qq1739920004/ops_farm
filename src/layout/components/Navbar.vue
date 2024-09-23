@@ -171,16 +171,19 @@ function goUserCenter() {
     margin-right: 10px;
   }
   .avatar-dropdown {
+
     color: #fff;
     cursor: pointer;
     div {
       display: flex;
+      
       img {
         width: 25px;
       }
       span {
         display: flex;
-        align-items: flex-end;
+        align-items: center;
+   
         span {
           margin: 0 3px;
         }

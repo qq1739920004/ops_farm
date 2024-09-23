@@ -27,6 +27,7 @@ const en = {
     browse: 'browse',
     Pleasedistributor: 'Please select a distributor',
     systemName: 'Sino Farm',
+    systemName2: 'CHANGFA AGRICULTURAL EQUIPMENT',
     backHome: 'back to home',
     noRequest: 'The access address does not exist!',
     noPer: 'You do not currently have access, please contact administrators'
@@ -196,15 +197,15 @@ const en = {
     project: "Project",
     type: "Type",
     acreage: "Acreage",
-    acTime: "作业时长",
+    acTime: "acTime",
     projectTime: "Project time",
     location: "Location",
     labelSN: "Label SN",
     plzSN: 'Please enter SN number, nameplate SN,parts SN',
     vehicle: "Vehicle",
     today: "Today",
-    thisMonth: "This month",
-    thisYear: "This year",
+    thisMonth: "Almost a month",
+    thisYear: "Almost a year",
     startDate: "Start date",
     endDate: "End of date",
     status1: "Sow ",
@@ -261,6 +262,7 @@ const en = {
     todayTotalOperation: "Today Operation (Thousand Mu)",
     prefectureCityList: "Prefecture City List",
     currentVehicle: "Current Vehicle:",
+    allcars:'All cars',
     settings: "Settings",
     getSourceNode: "Get Source Node",
     serverIP: "Server IP",
@@ -416,6 +418,20 @@ const en = {
     mu: 'mu',
     meter: 'meters',
     work: 'job'
+  },
+  content: {
+    LOSS_RTK_DATA: 'LOSS_RTK_DATA',
+    LOSS_LOCATION: 'LOSS_LOCATION',
+    LOSS_MOTOR_VALUE_MAX: 'LOSS_MOTOR_VALUE_MAX',
+    LOSS_MOTOR_VALUE: 'LOSS_MOTOR_VALUE',
+    LOSS_FRONT_GYRO: 'LOSS_FRONT_GYRO',
+    LOSS_BODY_GYRO: 'LOSS_BODY_GYRO',
+    LOSS_MOTOR: 'LOSS_MOTOR',
+    LOSS_SMART_WHEEL: 'LOSS_SMART_WHEEL',
+    LOSS_COURSE: 'LOSS_COURSE',
+    alarmtimes:'Alarm times',
+    LOSS_LOCATION_BUT_SIGNAL: 'LOSS_LOCATION_BUT_SIGNAL',
+    LOSS_BASE_LINE:'LOSS_BASE_LINE'
   }
 };
 export default en;

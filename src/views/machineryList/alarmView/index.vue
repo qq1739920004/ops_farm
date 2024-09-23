@@ -34,7 +34,7 @@
       <div class="table_area">
         <el-table class="date-icon" style="max-width: 100%" :data="pageList" stripe>
           <el-table-column type="index" :label="$t('devicelist.item')"  width="120"/>
-          <el-table-column label="SN" prop="carId"> </el-table-column>
+          <el-table-column label="SN" > {{route.query.sn}}</el-table-column>
           <el-table-column :label="$t('devicelist.type')" prop="grade">
             <template #default="scope">
               <div v-if="scope.row.grade === 1" class="grade_area">
@@ -47,6 +47,7 @@
             prop="content"
             :filter-multiple="false"
           >
+          <template #default="scope"> {{  contentList[scope.row.content] || '--' }}</template>
           </el-table-column>
           <el-table-column :label="t('work.time')" prop="time" :filter-multiple="false">
             <template #default="scope"> {{ (scope.row.time) }}</template>
@@ -66,7 +67,7 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { ref, reactive, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, reactive} from "vue";
 import { statPage_API } from "@/api/inSight/index.ts";
 import { useRoute } from "vue-router";
 import Pagination from "@/components/Pagination/index.vue";
@@ -76,6 +77,19 @@ const timeRange = ref<any>([
   new Date(new Date().setHours(0, 0, 0)).getTime(),
   new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
 ]);
+const contentList:any = {
+  1001:t('content.LOSS_COURSE'),
+  1002:t('content.LOSS_LOCATION'),
+  1003:t('content.LOSS_MOTOR_VALUE_MAX'),
+  1005:t('content.LOSS_MOTOR_VALUE'),
+  1006:t('content.LOSS_FRONT_GYRO'),
+  1007:t('content.LOSS_BODY_GYRO'),
+  1008:t('content.LOSS_MOTOR'),
+  1009:t('content.LOSS_SMART_WHEEL'),
+  1010:t('content.LOSS_RTK_DATA'),
+  1011:t('content.LOSS_LOCATION_BUT_SIGNAL'),
+  1012:t('content.LOSS_BASE_LINE'),
+}
 const route = useRoute();
 const isActive = ref<number>(1);
 const total = ref<number>(0);

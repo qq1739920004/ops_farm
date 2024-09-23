@@ -85,7 +85,7 @@
 
 <script setup lang="ts">
 const L = window.L;
-import { PageInfoObj, singleCarTrackResponseData } from "@/api/machineryList/type";
+import { singleCarTrackResponseData } from "@/api/machineryList/type";
 import { getSingleCarTrick_API } from "@/api/machineryList/index";
 import { ref, reactive, watch, onMounted } from "vue";
 import router from "@/router";
@@ -99,21 +99,22 @@ const route = useRoute();
 // 按钮控制
 const loading = ref<boolean>(false);
 // 提交数据
-const pageInfoData = reactive<PageInfoObj>({
-  sn: "",
-  npn: "",
+const pageInfoData = reactive<any>({
+  carId: "",
   st: "",
   et: "",
+  currentPage: 1,
+  pageSize: 2000,
 });
 const value1 = ref<Date>();
 let eleDataObject = <any>[];
 const value2 = ref<Date>();
 const a = ref<Date>();
 onMounted(() => {
-  Object.assign(pageInfoData, route.query);
+  pageInfoData.carId = route.query.carId;
   value2.value = new Date();
   const start = new Date();
-  start.setTime(start.getTime() - 3600 * 1000 * 24 * 1);
+  start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
   value1.value = start;
   pageInfoData.st = formartDate(value1.value);
   pageInfoData.et = formartDate(value2.value);
@@ -194,6 +195,7 @@ function initMap() {
     attributionControl: false,
     closePopupOnClick: false,
     zoomControl: false,
+    zoomAnimation: false,
   }).setView(originPoint.value, originZoom.value);
   handleMapChange(mapId.value);
 }
@@ -232,33 +234,7 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
     L.tileLayer(mapUrl[key], options).addTo(map);
   }
 }
-// const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
-//     try {
-//         if (!map) {
-//             console.warn('未初始化底图实例')
-//             return
-//         }
-//         if (tileLayer.length) {
-//             tileLayer.forEach((layer: any) => layer.remove())
-//             Object.assign(tileLayer, [])
-//         }
-//         let mapUrl = tileUrl[mapName][mapType]
-//         let options = reactive<any>({})
-//         options.subdomains = tileUrl[mapName]['Subdomains']
-//         if ('tms' in tileUrl[mapName]) {
-//             options.tms = tileUrl[mapName]['tms']
-//         }
-//         if ('key' in tileUrl[mapName]) {
-//             options.key = tileUrl[mapName]['key']
-//         }
-//         for (let key in mapUrl) {
-//             let layer = L.tileLayer(mapUrl[key], options).addTo(map)
-//             tileLayer.push(layer as never)
-//         }
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
+
 // 更改底地图
 const hangleSelectChange = () => {
   handleMapChange(mapId.value);
@@ -277,55 +253,105 @@ const getSingleCarTrick = async () => {
   loading.value = true;
   removeMarker();
   const solSatList: any = [];
-
+  const turePoint: any = [];
+  let total: any;
+  let times: any;
   getSingleCarTrick_API(pageInfoData)
-    .then((res: singleCarTrackResponseData) => {
-      if (!res.data.length || res.data === null) {
+    .then(async (res: any) => {
+      if (!res.data.records.length || res.data.records === null) {
         loading.value = false;
-        ElMessage.warning(`${route.query.sn}暂无作业数据,请选择其他时间！`);
+        ElMessage.warning(`暂无作业数据,请选择其他时间！`);
         return;
       } else {
-        let PointListTransed = res.data.map((item2: any) => {
-          solSatList.push(item2.solStat);
-          return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
-        });
-
-        ElMessage.success(`${route.query.sn}轨迹获取成功！`);
-        let line = L.polyline(PointListTransed, { color: "#5C5C5C", weight: 1 }).addTo(
-          map
-        );
-        PointListTransed.map((item: any, index: any) => {
-          if (solSatList[index] === 4) {
-            let line2 = L.circle(item, {
-              radius: 1,
-              color: "#22B14C",
-              fillOpacity: 1,
-            }).addTo(map);
-            eleDataObject.push(line2);
-          } else if (solSatList[index] === 15) {
-            let line2 = L.circle(item, {
-              radius: 1,
-              color: "#3F48CC",
-              fillOpacity: 1,
-            }).addTo(map);
-            eleDataObject.push(line2);
-          } else {
-            let line2 = L.circle(item, {
-              radius: 1,
-              color: "#ED1C24",
-              fillOpacity: 1,
-            }).addTo(map);
-            eleDataObject.push(line2);
+        total = res.data.total;
+        times = Math.ceil(total / 2000);
+        if (times > 1) {
+          for (let i = 0; i < times; i++) {
+            const ress: any = await getSingleCarTrick_API(pageInfoData);
+            ress.data.records.map((item3: any) => {
+              solSatList.push(item3.solStat);
+              turePoint.push(
+                coorTransform([item3.posX as never, item3.posY as never], mapId.value)
+              );
+            });
+            pageInfoData.currentPage++;
           }
-        });
-        saveMarker([{ markerObj: line, name: "lines" }]);
+          ElMessage.success(`轨迹获取成功！`);
+          let line = L.polyline(turePoint, {
+            color: "#5C5C5C",
+            weight: 1,
+          }).addTo(map);
+          turePoint.map((item: any, index: any) => {
+            if (solSatList[index] === 4) {
+              let line2 = L.circle(item, {
+                radius: 1,
+                color: "#22B14C",
+                fillOpacity: 1,
+              }).addTo(map);
+              eleDataObject.push(line2);
+            } else if (solSatList[index] === 15) {
+              let line2 = L.circle(item, {
+                radius: 1,
+                color: "#3F48CC",
+                fillOpacity: 1,
+              }).addTo(map);
+              eleDataObject.push(line2);
+            } else {
+              let line2 = L.circle(item, {
+                radius: 1,
+                color: "#ED1C24",
+                fillOpacity: 1,
+              }).addTo(map);
+              eleDataObject.push(line2);
+            }
+          });
+          saveMarker([{ markerObj: line, name: "lines" }]);
 
-        map.fitBounds(PointListTransed);
-        loading.value = false;
+          map.fitBounds(turePoint);
+          loading.value = false;
+        } else {
+          let PointListTransed = res.data.records.map((item2: any) => {
+            solSatList.push(item2.solStat);
+            return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
+          });
+
+          ElMessage.success(`轨迹获取成功！`);
+          let line = L.polyline(PointListTransed, { color: "#5C5C5C", weight: 1 }).addTo(
+            map
+          );
+          PointListTransed.map((item: any, index: any) => {
+            if (solSatList[index] === 4) {
+              let line2 = L.circle(item, {
+                radius: 1,
+                color: "#22B14C",
+                fillOpacity: 1,
+              }).addTo(map);
+              eleDataObject.push(line2);
+            } else if (solSatList[index] === 15) {
+              let line2 = L.circle(item, {
+                radius: 1,
+                color: "#3F48CC",
+                fillOpacity: 1,
+              }).addTo(map);
+              eleDataObject.push(line2);
+            } else {
+              let line2 = L.circle(item, {
+                radius: 1,
+                color: "#ED1C24",
+                fillOpacity: 1,
+              }).addTo(map);
+              eleDataObject.push(line2);
+            }
+          });
+          saveMarker([{ markerObj: line, name: "lines" }]);
+
+          map.fitBounds(PointListTransed);
+          loading.value = false;
+        }
       }
     })
-    .catch(() => {
-      console.log("error");
+    .catch((e) => {
+      console.log(e);
       loading.value = false;
     });
 
@@ -370,6 +396,7 @@ const removeMarker = () => {
       eleDataObject.forEach((item: any) => {
         map.removeLayer(item);
       });
+      pageInfoData.currentPage = 1;
     } else {
     }
   } catch (err) {

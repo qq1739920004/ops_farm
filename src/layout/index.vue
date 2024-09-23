@@ -119,6 +119,7 @@ function changeCollapse() {
   height: 100%;
   .el-container {
     height: 100%;
+
     flex: 1;
     .el-header {
       display: flex;

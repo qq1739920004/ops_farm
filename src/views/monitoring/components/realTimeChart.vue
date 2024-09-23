@@ -16,7 +16,7 @@
         <div id="difference"></div>
         <div class="judgeLevel">
           <span :class="['level' + judgeLevel]">{{$t('work.level')}}:{{ judgeLevel }} </span>
-          <el-tooltip effect="dark" content="所有3min展示的点中，横向偏差在（-3，3）占总点比，<br />>=90%为优、>=70%为中、&lt;70%为差">
+          <el-tooltip effect="dark" content="所有3min展示的点中，横向偏差在（-3，3）占总点比，占比>=90%为优、占比>=70%并<90%为中、占比&lt;70%为差">
             <el-icon>
               <InfoFilled />
             </el-icon>

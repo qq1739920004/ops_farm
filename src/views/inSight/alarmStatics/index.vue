@@ -20,7 +20,7 @@
             ></el-option>
           </el-select>
           <el-input
-            style="width: 179px; margin-right: 20px"
+            style="width: 179px; margin-right: 20px; height: 32px"
             v-if="dealerList.length === 1"
             v-model="dealerList[0].name"
             disabled
@@ -59,7 +59,7 @@
         </div>
         <div class="number_area">
           <div class="l">
-            <SvgIcon icon="allNum" size="22" style="margin-right: 15px" /> 告警总数:
+            <SvgIcon icon="allNum" size="22" style="margin-right: 15px" /> {{t('content.alarmtimes')}}:
           </div>
           <div class="r">{{ carChartValue.allSum }}</div>
         </div>
@@ -94,6 +94,19 @@ const timeRange = ref<any>([
   new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
 ]);
 const isActive = ref<number>(2);
+const contentList: any = {
+  1001: t("content.LOSS_COURSE"),
+  1002: t("content.LOSS_LOCATION"),
+  1003: t("content.LOSS_MOTOR_VALUE_MAX"),
+  1005: t("content.LOSS_MOTOR_VALUE"),
+  1006: t("content.LOSS_FRONT_GYRO"),
+  1007: t("content.LOSS_BODY_GYRO"),
+  1008: t("content.LOSS_MOTOR"),
+  1009: t("content.LOSS_SMART_WHEEL"),
+  1010: t("content.LOSS_RTK_DATA"),
+  1011: t("content.LOSS_LOCATION_BUT_SIGNAL"),
+  1012: t("content.LOSS_BASE_LINE"),
+};
 const pageInfo = reactive<any>({
   id: "",
   companyId: "",
@@ -105,8 +118,8 @@ let CarDealerList = ref<any[]>([]);
 const carChartValue = ref<any>({});
 const changeBlur1 = () => {
   carChart.clear();
+  pageInfo.id = "";
   getDealerCarList();
-  pageInfo.id = "请选择";
 };
 const changeBlur2 = () => {
   getCarChart();
@@ -275,7 +288,7 @@ function ChartCreate(
     ],
     yAxis: [
       {
-        name: `告警次数`,
+        name: t('content.alarmtimes'),
         type: "value",
         splitNumber: 5,
         axisLine: {
@@ -291,7 +304,7 @@ function ChartCreate(
     ],
     series: [
       {
-        name: `航向丢失`,
+        name: contentList[1001],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueLista,
@@ -301,7 +314,7 @@ function ChartCreate(
         },
       },
       {
-        name: `定位丢失`,
+        name: contentList[1002],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListb,
@@ -310,7 +323,7 @@ function ChartCreate(
         },
       },
       {
-        name: `电压过低`,
+        name: contentList[1003],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListc,
@@ -320,7 +333,7 @@ function ChartCreate(
         },
       },
       {
-        name: `电压过高`,
+        name: contentList[1005],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListd,
@@ -329,7 +342,7 @@ function ChartCreate(
         },
       },
       {
-        name: `前轮速率脱落丢失`,
+        name: contentList[1006],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListe,
@@ -339,7 +352,7 @@ function ChartCreate(
         },
       },
       {
-        name: `车身速率脱落丢失`,
+        name: contentList[1007],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListf,
@@ -348,7 +361,7 @@ function ChartCreate(
         },
       },
       {
-        name: `电机丢失`,
+        name: contentList[1008],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListg,
@@ -358,7 +371,7 @@ function ChartCreate(
         },
       },
       {
-        name: `智能方向盘丢失`,
+        name: contentList[1009],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListh,
@@ -367,7 +380,7 @@ function ChartCreate(
         },
       },
       {
-        name: `RTK无数据`,
+        name:contentList[1010],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListi,
@@ -377,7 +390,7 @@ function ChartCreate(
         },
       },
       {
-        name: `无RTK,单点平滑工作中`,
+        name: contentList[1011],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListj,
@@ -386,7 +399,7 @@ function ChartCreate(
         },
       },
       {
-        name: `无线电源异常`,
+        name: contentList[1012],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListk,
@@ -414,21 +427,22 @@ function ChartCreate(
       "#CFFF00",
       "#CBD98F",
     ],
+
     legend: {
       icon: "rectangle",
       formatter: function (name: any) {
         let data = [
-          { name: "航向丢失", value: sumCount[0] },
-          { name: "定位丢失", value: sumCount[1] },
-          { name: "电压过低", value: sumCount[2] },
-          { name: "电压过高", value: sumCount[4] },
-          { name: "前轮速率脱落丢失", value: sumCount[5] },
-          { name: "车身速率脱落丢失", value: sumCount[6] },
-          { name: "电机丢失", value: sumCount[7] },
-          { name: "智能方向盘丢失", value: sumCount[8] },
-          { name: "RTK无数据", value: sumCount[9] },
-          { name: "无RTK,单点平滑工作中", value: sumCount[10] },
-          { name: "无线电源异常", value: sumCount[11] },
+          { name: contentList[1001], value: sumCount[0] },
+          { name: contentList[1002], value: sumCount[1] },
+          { name: contentList[1003], value: sumCount[2] },
+          { name: contentList[1005], value: sumCount[4] },
+          { name: contentList[1006], value: sumCount[5] },
+          { name: contentList[1007], value: sumCount[6] },
+          { name: contentList[1008], value: sumCount[7] },
+          { name: contentList[1009], value: sumCount[8] },
+          { name: contentList[1010], value: sumCount[9] },
+          { name: contentList[1011], value: sumCount[10] },
+          { name: contentList[1012], value: sumCount[11] },
         ];
         let tarValue = 0; // 目前的数值，由于data数据是string型，所以有这步
 
@@ -449,8 +463,8 @@ function ChartCreate(
         rich: {
           b: {
             width: 200,
-            height:20,
-            fontSize:14,
+            height: 20,
+            fontSize: 14,
             lineHeight: 12,
           },
         },
@@ -462,6 +476,7 @@ function ChartCreate(
     carChart.resize();
   });
 }
+
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
   const res: any = await getCarDealerList_API(pageInfo.companyId);
@@ -484,8 +499,8 @@ const getDealerCarList = async () => {
         };
       }
     });
+    options.unshift({ value: "", label: t("work.allcars") });
 
-    pageInfo.id = res.data[0].id;
     getCarChart();
   }
 };

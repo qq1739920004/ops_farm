@@ -9,9 +9,16 @@
     @select="elMenuSelect"
     :ellipsis="false"
     :unique-opened="true"
-    :class="locale == 'zh' ? 'menu-cn' : 'menu-en'"
+    :class="locale == 'zh' ? 'menu-cn' : isChangfa ? 'menu-en-cf' : 'menu-en'"
   >
+    <el-menu-item v-if="isChangfa" :class="{ logo_area: true }" style="cursor: auto">
+      <img src="@/assets/common/changfa_logo.png" alt="" />
+
+      <span>{{ t("messages.systemName2") }}</span>
+    </el-menu-item>
+    <!-- ucFrontEnd -->
     <el-menu-item
+      v-else
       onclick="location.href='/'"
       :class="{ logo_area: true, logo_active: collapse }"
     >
@@ -47,6 +54,7 @@ const router = useRouter();
 const emit = defineEmits(["handleChange"]);
 import { useI18n } from "vue-i18n";
 const { t, locale } = useI18n();
+const isChangfa = import.meta.env.MODE === "changFa";
 defineProps({
   collapse: {
     type: Boolean,
@@ -67,43 +75,58 @@ function elMenuSelect() {
 </script>
 
 <style lang="scss" scoped>
-.menu-en{
-  
+.menu-en {
+  width: 200px;
   .logo_area {
-    padding: 0!important;
-
+    padding: 0 !important;
   }
-  :deep(.el-menu-item:not(.logo_area)){
-         
-          font-size: var(--sino-el-menu-item-font-size-en)!important;
-    }
-    :deep(.el-sub-menu__title){
-      font-size: var(--sino-el-menu-item-font-size-en)!important;
-    }
+  :deep(.el-menu-item:not(.logo_area)) {
+    font-size: var(--sino-el-menu-item-font-size-en) !important;
+  }
+  :deep(.el-sub-menu__title) {
+    font-size: var(--sino-el-menu-item-font-size-en) !important;
+  }
 }
-.menu-cn{
-  :deep(.el-menu-item:not(.logo_area)){
-         
-         font-size: var(--sino-el-menu-item-font-size-cn)!important;
-   }
-   :deep(.el-sub-menu__title){
-      font-size: var(--sino-el-menu-item-font-size-cn)!important;
-    }
+.menu-en-cf {
+  width: 240px;
+  .logo_area {
+    padding: 0 !important;
+  }
+  :deep(.el-menu-item:not(.logo_area)) {
+    font-size: var(--sino-el-menu-item-font-size-en) !important;
+  }
+  :deep(.el-sub-menu__title) {
+    font-size: var(--sino-el-menu-item-font-size-en) !important;
+  }
+}
+.menu-cn {
+  width: var(--menu-width);
+  :deep(.el-menu-item:not(.logo_area)) {
+    font-size: var(--sino-el-menu-item-font-size-cn) !important;
+  }
+  :deep(.el-sub-menu__title) {
+    font-size: var(--sino-el-menu-item-font-size-cn) !important;
+  }
 }
 .logo_area {
   font-size: 24px;
   transition: all 1s;
-  margin-top:8px;
+  margin-top: 8px;
   margin-bottom: 22px;
   line-height: normal;
-  height:auto;
+  height: auto;
   img {
     width: 48px;
   }
-  span{
+  span {
     margin-left: var(--menu-gutter);
+    word-break: normal;
+    width: auto;
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: hidden;
   }
- 
 }
 .logo_active {
   transition: all 1s;
@@ -126,65 +149,53 @@ function elMenuSelect() {
   }
 }
 
-  
-
 .el-menu {
   border-right: none;
   height: 100%;
   overflow: scroll;
 
-  &.el-menu--vertical{
+  &.el-menu--vertical {
     height: 100%;
-   
-    &:not(.el-menu--collapse){
-      width: var(--menu-width);
+
+    &:not(.el-menu--collapse) {
       min-height: 400px;
       // :deep(svg){
       //   margin-right: var(--menu-gutter);
-      // } 
-      :deep(.el-menu-item:not(.logo_area)){
-          padding-left:var(--menu-padding-left);
-         
-        }
-      >:deep(li){
-      
-        &.el-sub-menu{
-         
-          >.el-sub-menu__title{
-            // margin:0 var(--menu-gutter);
-            padding-right:0;
-            
-          }
-          .el-menu-item{
-            padding-left:44px;
-          
-          }
-        }
-      
+      // }
+      :deep(.el-menu-item:not(.logo_area)) {
+        padding-left: var(--menu-padding-left);
       }
-
+      > :deep(li) {
+        &.el-sub-menu {
+          > .el-sub-menu__title {
+            // margin:0 var(--menu-gutter);
+            padding-right: 0;
+          }
+          .el-menu-item {
+            padding-left: 44px;
+          }
+        }
+      }
     }
-    &.el-menu--collapse{
-      :deep(svg){
+    &.el-menu--collapse {
+      :deep(svg) {
         margin-right: 0;
       }
-      :deep(.el-sub-menu__title){
-        padding-right:0;
+      :deep(.el-sub-menu__title) {
+        padding-right: 0;
       }
-     
-      .logo_active{
-        margin:0;
-        padding:0;
+
+      .logo_active {
+        margin: 0;
+        padding: 0;
       }
     }
   }
- 
- &.el-menu--horizontal {
+
+  &.el-menu--horizontal {
     height: 100%;
     border-bottom: none;
   }
-  
-
 }
 
 .el-menu--vertical {
@@ -194,7 +205,10 @@ function elMenuSelect() {
   background-size: cover;
 }
 :deep(.el-menu-item.is-active) {
-  background: linear-gradient(90deg, rgba(76, 176, 79, 0) 0%, var(--el-color-primary) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(76, 176, 79, 0) 0%,
+    var(--el-color-primary) 100%
+  );
 }
 </style>
-

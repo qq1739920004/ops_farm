@@ -79,7 +79,7 @@
               <div class="bottom_data">
                 <div>
                   <div class="l">{{ t("statisticsReport.Cumulativevehicles") }}</div>
-                  <div class="r">{{ item.totalNum||'/' }}</div>
+                  <div class="r">{{ item.totalNum || "/" }}</div>
                 </div>
                 <div>
                   <div class="l">{{ t("statisticsReport.jobthousand") }}</div>
@@ -133,7 +133,7 @@
               <div class="bottom_data">
                 <div>
                   <div class="l">{{ t("statisticsReport.Cumulativevehicles") }}</div>
-                  <div class="r">{{ item.totalNum|| "/" }}</div>
+                  <div class="r">{{ item.totalNum || "/" }}</div>
                 </div>
                 <div>
                   <div class="l">{{ t("statisticsReport.jobthousand") }}</div>
@@ -194,7 +194,7 @@
                   type="daterange"
                   start-placeholder="Start Date"
                   end-placeholder="End Date"
-                  @change="changteTime"
+                  @change="changteTime2"
                 />
               </div>
             </div>
@@ -263,10 +263,17 @@ const getCityDataNewList = async (val: string) => {
 };
 const changteTime = () => {
   isActive.value = 0;
-  getProvinceDataNewList();
-  getCityDataNewList(addrcode.value);
+  if (status.value.provinceShow) {
+    getProvinceDataNewList();
+  } else {
+    getCityDataNewList(addrcode.value);
+  }
   provinceChart.clear();
   // getChartData(addrcode.value);
+};
+const changteTime2 = () => {
+  provinceChart.clear();
+ getChartData(addrcode.value);
 };
 //今天
 // const onDayClick = () => {
@@ -287,7 +294,7 @@ const onMonthClick = () => {
     new Date(new Date().setHours(0, 0, 0)).getTime() - 3600 * 1000 * 24 * 30,
     new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
   ];
-  if(status.value.provinceShow ){
+  if (status.value.provinceShow) {
     getProvinceDataNewList();
   } else {
     getCityDataNewList(addrcode.value);
@@ -302,7 +309,7 @@ const onYearClick = () => {
     new Date(new Date().setHours(0, 0, 0)).getTime() - 3600 * 1000 * 24 * 365,
     new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
   ];
-  if(status.value.provinceShow ){
+  if (status.value.provinceShow) {
     getProvinceDataNewList();
   } else {
     getCityDataNewList(addrcode.value);
@@ -331,7 +338,7 @@ const onYearClick2 = () => {
   // getProvinceDataNewList();
   // getCityDataNewList(addrcode.value);
   provinceChart.clear();
-   getChartData(addrcode.value);
+  getChartData(addrcode.value);
 };
 const addrcode = ref<any>("");
 const provinceName = ref<any>("");
@@ -353,22 +360,22 @@ const handleProButClick = (item: any) => {
   statusStark.value.push(status.value);
 };
 // 点击城市
- const handleCityCardClick = (item: any) => {
+const handleCityCardClick = (item: any) => {
   addrcode.value = item.addrcode;
   provinceName.value = item.name;
   let iStatus = {
     provinceShow: false,
-    provinceName:  item.name,
+    provinceName: item.name,
     provinceCode: item.code,
     cityShow: false,
     cityName: "",
     cityCode: null,
     formShow: true,
   };
-   status.value = iStatus;
-   statusStark.value.push(status.value);
-   getChartData(item.addrcode);
- };
+  status.value = iStatus;
+  statusStark.value.push(status.value);
+  getChartData(item.addrcode);
+};
 // 点击省份
 const handleProCardClick = (item: any) => {
   addrcode.value = item.addrcode;
@@ -396,8 +403,7 @@ const goBack = () => {
   statusStark.value.pop();
   const iStatus = statusStark.value[statusStark.value.length - 1];
   status.value = iStatus;
-  console.log(iStatus)
-  if(iStatus.provinceShow ){
+  if (iStatus.provinceShow) {
     getProvinceDataNewList();
   } else {
     getCityDataNewList(addrcode.value);
@@ -702,7 +708,6 @@ onUnmounted(() => {
       .cityline {
         display: flex;
         align-items: center;
-
       }
       .item_title_province {
         align-items: center;
