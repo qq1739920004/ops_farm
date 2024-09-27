@@ -254,7 +254,7 @@ const zh = {
     logUploadNotAvailableAG302: "AG302以及AG302_Android的日志回传功能暂未开放",
     betaVersion: "测试版",
     forceUpgrade: "强制升级",
-    logUploadFeatureNotAvailable: "AG302以及A3502_Android的日志回传功能暂未开放",
+    logUploadFeatureNotAvailable: "除AG360/AG360pro外，其他设备暂未开放",
     noFirmwarePackageForDevice: "该设备没有固件包",
     noactive: "未激活",
     versionSelection: "版本选择",

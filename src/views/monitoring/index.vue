@@ -65,7 +65,9 @@
           <div>{{ $t("messages.onlineCount") }}</div>
         </li>
         <li class="top_line">
-          <div>{{  dataStatistics.device?.totalDevice- dataStatistics.device?.onlineDevice }}</div>
+          <div>
+            {{ dataStatistics.device?.totalDevice - dataStatistics.device?.onlineDevice }}
+          </div>
           <div class="outside">
             {{ $t("messages.Offline") }}
             <div class="offline_area"></div>
@@ -231,12 +233,13 @@ import AG360_offline from "@/assets/icons/AG360_offline.svg";
 // import MC100_warn from "@/assets/icons/MC100_warn.svg";
 // import AGunknown from "@/assets/icons/AGunknown.svg";
 // import AGunknown_warn from "@/assets/icons/AGunknown_warn.svg";
-import satelite from "@/assets/monitoring/satelite.png";
-import wifi_0 from "@/assets/monitoring/Signal-1.png";
-import wifi_1 from "@/assets/monitoring/Signal-2.png";
-import wifi_2 from "@/assets/monitoring/Signal-3.png";
-import wifi_3 from "@/assets/monitoring/Signal-4.png";
-import wifi_4 from "@/assets/monitoring/Signal-5.png";
+import satelite from "@/assets/monitoring/sa1.png";
+import satelite2 from "@/assets/monitoring/sa2.png";
+import wifi_0 from "@/assets/monitoring/s-1.png";
+import wifi_1 from "@/assets/monitoring/s-2.png";
+import wifi_2 from "@/assets/monitoring/s-3.png";
+import wifi_3 from "@/assets/monitoring/s-4.png";
+import wifi_4 from "@/assets/monitoring/s-5.png";
 import green from "@/assets/monitoring/green.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
 import SinoMap from "@/components/SinoMap/index.vue";
@@ -328,7 +331,6 @@ onUnmounted(() => {
 });
 onMounted(() => {
   socketStore.connect();
-
 });
 
 getFaromDataStatistics();
@@ -649,11 +651,14 @@ function createMarkerType(item: any) {
   } else if (
     item.terminalType &&
     item.terminalType.includes("AG501") &&
-    item.terminalType != "AG501Pro"
+    item.terminalType != "AG501Pro" &&
+    item.terminalType != "AG501_CF"
   ) {
     return "AG501";
   } else if (item.terminalType && item.terminalType == "AG501Pro") {
     return "AG501Pro";
+  } else if (item.terminalType && item.terminalType == "AG501_CF") {
+    return "AG501_CF";
   } else if (item.terminalType && item.terminalType.includes("AG502")) {
     return "AG502";
   } else if (
@@ -669,7 +674,7 @@ function createMarkerType(item: any) {
   } else if (item.terminalType && item.terminalType.includes("SA200")) {
     return "SA200";
   } else if (item.terminalType && item.terminalType.includes("MT801")) {
-    return "MT801";
+    return "MT801Pro";
   } else if (item.terminalType && item.terminalType.includes("MT802")) {
     return "MT802";
   } else {
@@ -748,7 +753,10 @@ function createMarkerPopup(item: any) {
         <ul class="popup_container">
          <li>
             <div class="le">
-              <span > <img class="sate" src=${satelite}></span>
+            
+              <span > <img class="sate" src= ${
+                item.onlineTcp == 0 ? satelite2 : satelite
+              }></span>
              <span class="value">${item.satNum || "--"}</span>
             </div>
             <div class="re" >
@@ -785,14 +793,20 @@ function createMarkerPopup(item: any) {
             <div class="l">
               <div class="label">${t("messages.workingcondition")}</div>
               <div class="value">
-                <span class='${item.judgeLevel ? "status " + workingStatus[item.judgeLevel]:""} '></span>
+                <span class='${
+                  item.judgeLevel ? "status " + workingStatus[item.judgeLevel] : ""
+                } '></span>
                 <span>${item.judgeLevel || "--"}</span>
               </div>
             </div>
             <div class="r">
               <div class="label">${t("work.drivingStatus")}</div>
               <div class="value">
-                <span class='${driveState[item.driveState] ? "status "+ onlineStatus[item.driveState] :"" }'></span>
+                <span class='${
+                  driveState[item.driveState]
+                    ? "status " + onlineStatus[item.driveState]
+                    : ""
+                }'></span>
                 <span>${driveState[item.driveState] || "--"}</span>
               </div>
             </div>
@@ -801,8 +815,12 @@ function createMarkerPopup(item: any) {
             <div class="l">
               <div class="label">${t("work.solStat")}</div>
               <div class="value">
-                <span class='${snTypeReflect[item.solStat]?
-                  item.solStat == 4 ? "status status_3" : "status status_0" :''
+                <span class='${
+                  snTypeReflect[item.solStat]
+                    ? item.solStat == 4
+                      ? "status status_3"
+                      : "status status_0"
+                    : ""
                 }'></span>
                 <span>${snTypeReflect[item.solStat] || "--"}</span>
               </div>
@@ -810,7 +828,7 @@ function createMarkerPopup(item: any) {
             <div class="r">
               <div class="label">${t("work.differentialChains")}</div>
               <div class="value">${diffSource[item.diffSource] || "--"} (${
-    item.diffAge ? item.diffAge + "s" : "--"
+    item.diffAge !== null ? item.diffAge + "s" : "--"
   })</div>
             </div>
           </li>
@@ -966,7 +984,10 @@ function goMachineryList_markerPopup(arg: any) {
 }
 // marker弹窗-前往历史轨迹
 function goTaskMachine_markerPopup(arg: any) {
-  router.push({ path: "/monitoring/taskMachine", query: { sn: arg.sn } });
+  router.push({
+    path: "/monitoring/taskMachine",
+    query: { sn: arg.sn, carId: arg.carId },
+  });
 }
 // marker-弹窗-前往历史趋势图
 function gohistoryChart_markerPopup(arg: any) {

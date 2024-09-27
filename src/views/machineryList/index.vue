@@ -47,7 +47,7 @@
             @click="gotoUpgrade"
             >{{ $t("devicelist.upgrade") }}</el-button
           >
-          <el-button style="margin-right: 20px" type="primary" @click="gotoInput">{{
+          <el-button style="margin-right: 20px" type="primary"  v-auth="568" @click="gotoInput">{{
             $t("devicelist.inputDealerDevice")
           }}</el-button>
 

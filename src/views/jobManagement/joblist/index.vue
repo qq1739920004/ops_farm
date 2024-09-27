@@ -26,13 +26,13 @@
                 <p :class="isActive == 3 ? 'active' : ''" @click="onYearClick">{{ $t('work.thisYear') }}</p>
                 <div class="demo-date-picker">
                     <div class="block">
-                        <el-date-picker style="width: 144px;" class=".date_picker1" v-model="value1" type="date"
+                        <el-date-picker style="width: 204px;" class=".date_picker1" v-model="value1" type="datetime"   :default-time='defaultTime1'
                             :placeholder="$t('work.startDate')" size="default" :disabled-date="disabledDate"
                             @change="changeA()" />
                     </div>
                     <div class="gang">--</div>
                     <div class="block">
-                        <el-date-picker style="width: 144px;" class=".date_picker2" v-model="value2" type="date"
+                        <el-date-picker style="width: 204px;" class=".date_picker2" v-model="value2" type="datetime"  :default-time='defaultTime2'
                             :placeholder="$t('work.endDate')" :disabled-date="disabledDate" size="default"
                             @change="changeA()" />
                     </div>
@@ -69,11 +69,12 @@ import { carDealer_API } from '@/api/machineryList/index'
 import { PageObj, paddyWorkListResponsenumber, paddyWorkObj, dealerCarObj, dealerCarResponseData } from '@/api/jobManagement/type'
 import { carDealerResponseData, carDealerObj } from '@/api/machineryList/type'
 import router from '@/router'
-import axios from 'axios';
-import jsonp from 'axios-jsonp'
+// import axios from 'axios';
+// import jsonp from 'axios-jsonp'
 
 
-
+const defaultTime1 = new Date(2000, 1, 1, 0, 0, 0)
+const defaultTime2 = new Date(2000, 1, 1, 23, 59, 59)
 // 控制table显示与否
 // 时间格式转换
 function add0(m: any) {
@@ -152,17 +153,10 @@ const getDealerCarList = async () => {
     else {
         CarDealerList.value = res.data
         options = CarDealerList.value.map((item: any, _idx) => {
-            if (item.nameNpn.includes('()')) {
-                return {
-                    value: item.id,
-                    label: item.nameNpn.split('(')[0],
-                }
-            } else {
-                return {
-                    value: item.id,
-                    label: `${item.nameNpn}`,
-                }
-            }
+            return {
+          value: item.id,
+          label: item.sn + "(" + item.npn + ")",
+        };
 
         })
         // dataItems.value = CarDealerList.value.filter((_item, index) => {
