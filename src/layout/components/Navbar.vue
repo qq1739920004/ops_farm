@@ -12,15 +12,10 @@
       <SvgIcon icon="language" size="18" />
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item
-            :disabled="locale == 'zh'"
-            @click="changeLang('zh')"
+          <el-dropdown-item :disabled="locale == 'zh'" @click="changeLang('zh')"
             >中文</el-dropdown-item
           >
-          <el-dropdown-item
-            divided
-            :disabled="locale == 'en'"
-            @click="changeLang('en')"
+          <el-dropdown-item divided :disabled="locale == 'en'" @click="changeLang('en')"
             >English</el-dropdown-item
           >
         </el-dropdown-menu>
@@ -37,6 +32,12 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item @click="goUserCenter">用户中心</el-dropdown-item>
+          <el-dropdown-item @click="gotoList" v-if="isChangfa"
+            >订单管理</el-dropdown-item
+          >
+          <el-dropdown-item @click="gotoPm" v-if="isChangfa"
+            >发布管理</el-dropdown-item
+          >
           <el-dropdown-item @click="logOut" divided>退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -60,8 +61,11 @@
     </div>
     <div class="item themeColor_item">
       <el-divider>自定义颜色</el-divider>
-      <div style="display:flex;justify-content: center;">
-        <el-color-picker @change="changeThemeColor(appStore.themeColor)" v-model="appStore.themeColor" />
+      <div style="display: flex; justify-content: center">
+        <el-color-picker
+          @change="changeThemeColor(appStore.themeColor)"
+          v-model="appStore.themeColor"
+        />
       </div>
     </div>
     <div class="item themeColor_item">
@@ -79,19 +83,13 @@
       <el-divider>导航设置</el-divider>
       <ul class="layout">
         <el-tooltip content="左侧模式" placement="bottom">
-          <li
-            @click="changeNavgation('vertical')"
-            :class="'layout-item layout-left '"
-          >
+          <li @click="changeNavgation('vertical')" :class="'layout-item layout-left '">
             <div />
             <div />
           </li>
         </el-tooltip>
         <el-tooltip content="顶部模式" placement="bottom">
-          <li
-            @click="changeNavgation('horizontal')"
-            :class="'layout-item layout-top '"
-          >
+          <li @click="changeNavgation('horizontal')" :class="'layout-item layout-top '">
             <div />
             <div />
           </li>
@@ -109,6 +107,7 @@ import useUserStore from "@/store/user";
 import { useFullscreen } from "@vueuse/core";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 const { locale } = useI18n();
+const isChangfa = import.meta.env.MODE === "changFa";
 const appStore = useAppStore();
 const userStore = useUserStore();
 const { isFullscreen, toggle } = useFullscreen();
@@ -148,7 +147,13 @@ function logOut() {
 }
 // 前往用户中心
 function goUserCenter() {
-  window.open('/ucFrontEnd')
+  window.open("/ucFrontEnd");
+}
+function gotoList() {
+  window.open("/simanFrontEnd");
+}
+function gotoPm() {
+  window.open("/pm");
 }
 </script>
 
@@ -171,19 +176,18 @@ function goUserCenter() {
     margin-right: 10px;
   }
   .avatar-dropdown {
-
     color: #fff;
     cursor: pointer;
     div {
       display: flex;
-      
+
       img {
         width: 25px;
       }
       span {
         display: flex;
         align-items: center;
-   
+
         span {
           margin: 0 3px;
         }

@@ -71,7 +71,7 @@
             >{{ $t("messages.Downloadtemplate") }}</el-button
           >
           <el-button
-            v-auth="568"
+           
             type="primary"
             style="
               background-color: var(--el-color-primary);
