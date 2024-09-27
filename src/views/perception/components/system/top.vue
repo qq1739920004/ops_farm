@@ -2,7 +2,13 @@
   <div class="top">
     <div class="top_left">
       <!-- <img src="~@/assets/systemPerceptionImage/top_title_logo.png" class="top-img"  key=""  alt="" /> -->
-      <div class="top_tittle">
+      <div class="top_tittle" v-if="isChangfa">
+        <router-link to='/monitoring'>
+          <img src="~@/assets/perceptionImage/logochangfa-usercenter.png" key=""  alt="" />
+          <h1>常发耕耘感知平台</h1>
+        </router-link>
+      </div>
+      <div class="top_tittle" v-else>
         <router-link to='/monitoring'>
           <img src="~@/assets/perceptionImage/top_title_logo.png" key=""  alt="" />
           <h1>司南耕耘感知平台</h1>
@@ -62,6 +68,8 @@
 </template>
 <script setup lang='ts'>
 import districtInfo from './districtInfo.vue';
+const isChangfa = import.meta.env.MODE === "changFa";
+
 defineProps({
   monitorData: {
     type: Object,

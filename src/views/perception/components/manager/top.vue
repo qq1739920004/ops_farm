@@ -1,7 +1,13 @@
 <template>
   <div class="top">
     <div class="top_left">
-      <div class="top_tittle">
+      <div class="top_tittle" v-if="isChangfa">
+        <router-link to="/monitoring">
+          <img src="~@/assets/perceptionImage/logochangfa-usercenter.png" key="" alt="" />
+          <h1>常发导航北斗农机智能监管平台</h1>
+        </router-link>
+      </div>
+      <div class="top_tittle" v-else>
         <router-link to="/monitoring">
           <img src="~@/assets/perceptionImage/top_title_logo.png" key="" alt="" />
           <h1>司南导航北斗农机智能监管平台</h1>
@@ -87,6 +93,7 @@ const props = defineProps({
 });
 // 定义初始值
 const initialValue = 0;
+const isChangfa = import.meta.env.MODE === "changFa";
 
 // 创建一个ref来保存动画值
 let totalDeviceValue = ref(initialValue);
