@@ -365,13 +365,11 @@ function updateMarker(item: any) {
 
     if (mapRenderMode == "canvas") {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
-      const newMarker =  L.marker([markerLat, markerLng], {
+      const newMarker = L.marker([markerLat, markerLng], {
         icon,
         zIndexOffset: item.onlineTcp ? 1000 : 500,
         riseOnHover: true,
-      }).bindPopup(
-        item.markerPopup
-      ) as any;
+      }).bindPopup(item.markerPopup) as any;
       newMarker.markerId = currentMarker.markerId;
       newMarker.markerType = item.markerType;
       newMarker.onlineTcp = item.onlineTcp;
@@ -398,13 +396,11 @@ function updateMarker(item: any) {
 
     if (mapRenderMode == "canvas") {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
-      const newMarker =  L.marker([markerLat, markerLng], {
+      const newMarker = L.marker([markerLat, markerLng], {
         icon,
         zIndexOffset: item.onlineTcp ? 1000 : 500,
         riseOnHover: true,
-      }).bindPopup(
-        item.markerPopup
-      ) as any;
+      }).bindPopup(item.markerPopup) as any;
       newMarker.markerId = currentMarker.markerId;
       newMarker.markerType = item.markerType;
       newMarker.onlineTcp = item.onlineTcp;
@@ -429,9 +425,56 @@ function changeZoom() {
 }
 // 修改地图marker显隐藏
 function updateMarkerVisible(list: any) {
-  console.log(list)
-  let includedMarkers = markerArr.filter((j: any) => !list.includes(j.markerType));
-  console.log(includedMarkers)
+  console.log(list);
+  let fitlerArr: any;
+  if (
+    list.includes("online1") &&
+    !list.includes("online2") &&
+    !list.includes("offline")
+  ) {
+    fitlerArr = markerArr.filter((j: any) => j.driveState === 0 || j.onlineTcp === 0);
+  } else if (
+    list.includes("online2") &&
+    !list.includes("online1") &&
+    !list.includes("offline")
+  ) {
+    fitlerArr = markerArr.filter((j: any) => j.driveState !== 0 || j.onlineTcp === 0);
+  } else if (
+    list.includes("offline") &&
+    !list.includes("online1") &&
+    !list.includes("online2")
+  ) {
+
+    fitlerArr = markerArr.filter((j: any) => j.onlineTcp !== 0);
+  } else if (
+    list.includes("online1") &&
+    list.includes("online2") &&
+    !list.includes("offline")
+  ) {
+    fitlerArr = markerArr.filter((j: any) => j.onlineTcp === 0);
+  } else if (
+    list.includes("online1") &&
+    list.includes("offline") &&
+    !list.includes("online2")
+  ) {
+    fitlerArr = markerArr.filter((j: any) => j.driveState === 0);
+  } else if (
+    list.includes("online2") &&
+    list.includes("offline") &&
+    !list.includes("online1")
+  ) {
+    fitlerArr = markerArr.filter((j: any) => j.driveState !== 0 && j.onlineTcp !== 0);
+  } else if (
+    list.includes("online2") &&
+    list.includes("offline") &&
+    list.includes("online1")
+  ) {
+    fitlerArr = [];
+  } else {
+    fitlerArr = markerArr;
+  }
+  let includedMarkers = fitlerArr.filter((j: any) => !list.includes(j.markerType));
+  console.log(includedMarkers);
   markerGroup.clearLayers();
   if (mapRenderMode == "dom") {
     includedMarkers.forEach((marker: any) => {
@@ -775,9 +818,11 @@ function changeMarkerIcon() {
       markerArr.forEach((marker: any, index: number) => {
         // if(!markerTypeIcon[marker.markerType]){return}
         const normalIcon = getRelativeIcon(createMarkerIcon(marker));
-        const newMarker = L.marker(marker.getLatLng(), { icon: normalIcon, zIndexOffset: marker.onlineTcp ? 1000 : 500,riseOnHover: true, }).bindPopup(
-          marker.getPopup()
-        ) as any;
+        const newMarker = L.marker(marker.getLatLng(), {
+          icon: normalIcon,
+          zIndexOffset: marker.onlineTcp ? 1000 : 500,
+          riseOnHover: true,
+        }).bindPopup(marker.getPopup()) as any;
         newMarker.markerId = marker.markerId;
         newMarker.markerType = marker.markerType;
         newMarker.driveState = marker.driveState;
@@ -790,9 +835,11 @@ function changeMarkerIcon() {
       markerArr.forEach((marker: any, index: number) => {
         // if(!markerTypeIconSmall[marker.markerType]){return}
         const smallIcon = getRelativeIcon(createMarkerIconSmall(marker));
-        const newMarker = L.marker(marker.getLatLng(), { icon: smallIcon , zIndexOffset: marker.onlineTcp ? 1000 : 500,riseOnHover: true,}).bindPopup(
-          marker.getPopup()
-        ) as any;
+        const newMarker = L.marker(marker.getLatLng(), {
+          icon: smallIcon,
+          zIndexOffset: marker.onlineTcp ? 1000 : 500,
+          riseOnHover: true,
+        }).bindPopup(marker.getPopup()) as any;
         newMarker.markerId = marker.markerId;
         newMarker.markerType = marker.markerType;
         newMarker.driveState = marker.driveState;
@@ -805,9 +852,11 @@ function changeMarkerIcon() {
     markerArr.forEach((marker: any, index: number) => {
       // if(!markerTypeIcon[marker.markerType]){return}
       const normalIcon = getRelativeIcon(createMarkerIcon(marker));
-      const newMarker = L.marker(marker.getLatLng(), { icon: normalIcon , zIndexOffset: marker.onlineTcp ? 1000 : 500,riseOnHover: true,}).bindPopup(
-        marker.getPopup()
-      ) as any;
+      const newMarker = L.marker(marker.getLatLng(), {
+        icon: normalIcon,
+        zIndexOffset: marker.onlineTcp ? 1000 : 500,
+        riseOnHover: true,
+      }).bindPopup(marker.getPopup()) as any;
       newMarker.markerId = marker.markerId;
       newMarker.markerType = marker.markerType;
       newMarker.driveState = marker.driveState;

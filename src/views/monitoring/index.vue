@@ -64,15 +64,7 @@
           <div>{{ dataStatistics.device?.onlineDevice }}</div>
           <div>{{ $t("messages.onlineCount") }}</div>
         </li>
-        <li class="top_line">
-          <div>
-            {{ dataStatistics.device?.totalDevice - dataStatistics.device?.onlineDevice }}
-          </div>
-          <div class="outside">
-            {{ $t("messages.Offline") }}
-            <div class="offline_area"></div>
-          </div>
-        </li>
+
         <li>
           <div>{{ dataStatistics.workArea?.todayArea.toFixed(2) }}</div>
           <div>{{ $t("messages.todaysOperation") }}</div>
@@ -121,24 +113,49 @@
           "
         ></div>
         <li class="bottom_li">
-          <span>{{ dataStatistics.drive?.driving }}</span>
+          <span class="num_test">{{ dataStatistics.drive?.driving }}</span>
           <div>
+            <el-checkbox
+              size="large"
+              v-model="onlineList[0].checked"
+              @change="markerTypeChange()"
+            />
             <span>{{ $t("messages.InOperation") }}</span>
             <div></div>
           </div>
         </li>
-        <li class="bottom_li">
-          <span>{{ dataStatistics.drive?.standbyDevice }}</span>
+        <li class="bottom_li bottom_li2">
+          <span class="num_test">{{ dataStatistics.drive?.standbyDevice }}</span>
           <div>
+            <el-checkbox
+              size="large"
+              v-model="onlineList[1].checked"
+              @change="markerTypeChange()"
+            />
             <span>{{ $t("messages.Standby") }}</span>
             <div></div>
+          </div>
+        </li>
+        <li class="bottom_li">
+          <span class="num_test">
+            {{ dataStatistics.device?.totalDevice - dataStatistics.device?.onlineDevice }}
+          </span>
+          <div class="outside">
+            <el-checkbox
+              size="large"
+              v-model="onlineList[2].checked"
+              @change="markerTypeChange()"
+            />
+            <span> {{ $t("messages.Offline") }}</span>
+
+            <div class="offline_area"></div>
           </div>
         </li>
       </ul>
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
-            <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange" />
+            <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange()" />
             <!-- <SvgIcon :icon="item.typeName" size="22" /> -->
             <span class="label">{{ item.typeName }}</span>
           </label>
@@ -268,6 +285,11 @@ const refName = ref<any>(null);
 let mapRenderModeLengthMax = 500;
 const router = useRouter();
 const route = useRoute();
+const onlineList = ref<any>([
+  { checked: true, typeName: "online1" },
+  { checked: true, typeName: "online2" },
+  { checked: true, typeName: "offline" },
+]);
 const socketStore = useSocketStore();
 let markerData = ref<any>([]);
 let markerDataHidden = ref<any>([]);
@@ -640,9 +662,17 @@ async function getOnlineFarmPosition() {
 
 //
 function markerTypeChange() {
-  let types = dataStatistics.value.type.filter((item: any) => !item.checked);
-  types = types.map((item: any) => item.typeName);
-  markerDataHidden.value = types;
+  let types = [];
+
+    let typ1 = onlineList.value.filter((item: any) => !item.checked);
+    typ1 = typ1.map((item: any) => item.typeName);
+    let typ2 = dataStatistics.value.type.filter((item: any) => !item.checked);
+    typ2 = typ2.map((item: any) => item.typeName);
+    types.push(...typ1,...typ2);
+console.log(types)
+   markerDataHidden.value = types;
+ 
+
 }
 
 function createMarkerType(item: any) {
@@ -753,7 +783,7 @@ function createMarkerPopup(item: any) {
         <ul class="popup_container">
          <li>
             <div class="le">
-            
+
               <span > <img class="sate" src= ${
                 item.onlineTcp == 0 ? satelite2 : satelite
               }></span>
@@ -1091,7 +1121,7 @@ function openRemote_markerPopup(arg: any) {
       flex-wrap: wrap;
       padding-left: 10px;
       .top_line {
-        width: 33%;
+        width: 50%;
         .outside {
           display: flex;
           align-items: center;
@@ -1122,6 +1152,15 @@ function openRemote_markerPopup(arg: any) {
       }
 
       .bottom_li {
+        width: 33%;
+        margin-bottom: -5px;
+        .offline_area {
+          margin-left: 5px;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background-color: #d6d6d6;
+        }
         span {
           font-family: D-DIN-DIN, D-DIN-DIN;
           font-weight: bold;
@@ -1148,7 +1187,7 @@ function openRemote_markerPopup(arg: any) {
         }
       }
 
-      .bottom_li:last-child {
+      .bottom_li2 {
         div {
           div {
             background-color: #f7c23c;
@@ -1168,15 +1207,6 @@ function openRemote_markerPopup(arg: any) {
         display: flex;
         align-items: center;
         height: 35px;
-
-        :deep(.el-checkbox) {
-          margin-right: 8px;
-
-          .el-checkbox__inner {
-            background-color: transparent;
-            border: 1px solid #00fff7;
-          }
-        }
 
         label {
           cursor: pointer;
@@ -1402,5 +1432,20 @@ function openRemote_markerPopup(arg: any) {
 
 :deep(.el-select .el-input.is-focus .el-input__wrapper) {
   box-shadow: none !important;
+}
+:deep(.el-checkbox) {
+  margin-right: 8px;
+
+  .el-checkbox__inner {
+    background-color: transparent;
+    border: 1px solid #00fff7;
+  }
+}
+.num_test {
+  width: 100%;
+  margin-bottom: -6px;
+  display: flex;
+  justify-content: center;
+  padding-right: 18px;
 }
 </style>
