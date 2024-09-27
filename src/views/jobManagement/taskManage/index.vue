@@ -923,7 +923,7 @@ const getDealerCarList = async () => {
     CarDealerList.value = res.data;
     optionsList = CarDealerList.value.map((item: any, _idx) => ({
       value: item.id,
-      label: `${item.nameNpn}`,
+      label: item.sn + "(" + item.npn + ")",
     }));
 
     pageInfo.carId = route.query.carId ? +route.query.carId : "" || res.data[0].id;
@@ -1811,5 +1811,8 @@ watch(
       margin-left: 5px;
     }
   }
+}
+:deep(.el-select) {
+  --el-select-input-focus-border-color: transparent;
 }
 </style>

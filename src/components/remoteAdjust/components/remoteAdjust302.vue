@@ -416,7 +416,7 @@
             <el-form-item class="item" :label="$t('work.logUpload')">
               <el-row>
                 <el-col align="center">
-                  AG302以及A3502_Android的日志回传功能暂未开放
+                  除AG360/AG360pro外，其他设备暂未开放
                 </el-col>
               </el-row>
             </el-form-item>

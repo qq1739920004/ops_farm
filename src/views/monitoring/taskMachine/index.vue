@@ -2,20 +2,46 @@
 <template>
   <div class="page7_child6_container">
     <div id="child6_map" class=""></div>
-    <div class="map_selector">
-      <el-select
-        style="width: 99px; height: 32px; opacity: 1; border-radius: 4px"
-        v-model="mapId"
-        placeholder=""
-        @change="hangleSelectChange"
-      >
-        <el-option
-          v-for="(item, index) in mapOptions"
-          :key="index"
-          :label="item.mapName"
-          :value="item.mapId"
-        />
-      </el-select>
+    <div class="map_utils">
+      <div class="map_utils_item flex-align-center">
+        <el-select
+          style="width: 111px"
+          v-model="mapId"
+          placeholder=""
+          @change="hangleSelectChange"
+        >
+          <el-option
+            v-for="(item, index) in mapOptions"
+            :key="index"
+            :label="item.mapName"
+            :value="item.mapId"
+          />
+        </el-select>
+      </div>
+      <div class="map_utils_item">
+        <el-tooltip
+          effect="light"
+          :content="t('sinoMap.Clickmetoreturntotheoverallsituation')"
+        >
+          <el-button @click="handleMapCenter()">
+            <el-icon size="16"><RefreshRight /></el-icon>
+          </el-button>
+        </el-tooltip>
+      </div>
+      <div class="map_utils_item">
+        <el-tooltip effect="light" :content="t('sinoMap.ranging')">
+          <el-button @click="calculateDistance">
+            <SvgIcon icon="ranging" size="16" />
+          </el-button>
+        </el-tooltip>
+      </div>
+      <div class="map_utils_item" v-if="calculationObj.length > 0">
+        <el-tooltip effect="light" :content="t('work.clear')">
+          <el-button style="color: rgba(76, 176, 79, 1)" @click="clearDistance">
+            <el-icon> <Delete /> </el-icon
+          ></el-button>
+        </el-tooltip>
+      </div>
     </div>
     <div class="color_list">
       <div class="out_area">
@@ -89,27 +115,44 @@ import { singleCarTrackResponseData } from "@/api/machineryList/type";
 import { getSingleCarTrick_API } from "@/api/machineryList/index";
 import { ref, reactive, watch, onMounted } from "vue";
 import router from "@/router";
+import SvgIcon from "@/components/SvgIcon/index.vue";
 import { ElMessage } from "element-plus";
 import gcoord from "gcoord";
 import { useRoute } from "vue-router";
 import { mapTitleLayers } from "./mapTitleLayers";
+import { useI18n } from "vue-i18n";
+import c from "@/assets/jobManage/c.png";
+const { t } = useI18n();
 const route = useRoute();
-
+const pickedPoints = ref<any[]>([]);
 // 提交的车辆数组
 // 按钮控制
+let calculationObj = <any[]>reactive([]);
 const loading = ref<boolean>(false);
+const pickupMode = ref<boolean>(false);
 // 提交数据
 const pageInfoData = reactive<any>({
   carId: "",
   st: "",
   et: "",
   currentPage: 1,
-  pageSize: 2000,
+  pageSize: 20000,
 });
+const calculateDistance = () => {
+  const mapId = document.getElementById("child6_map");
+  if (mapId) {
+    mapId.style.cursor = "crosshair";
+  }
+  pickupMode.value = true; //开启拾取模式
+};
 const value1 = ref<Date>();
 let eleDataObject = <any>[];
 const value2 = ref<Date>();
 const a = ref<Date>();
+function handleMapCenter() {
+  map.setView(originPoint.value, originZoom.value);
+}
+
 onMounted(() => {
   pageInfoData.carId = route.query.carId;
   value2.value = new Date();
@@ -198,7 +241,52 @@ function initMap() {
     zoomAnimation: false,
   }).setView(originPoint.value, originZoom.value);
   handleMapChange(mapId.value);
+  map.on("click", function (event: any) {
+    if (pickupMode.value) {
+      let point = event.latlng;
+      pickedPoints.value.push(point);
+      let icon = L.icon({
+        iconUrl: c,
+        iconAnchor: [23, 46],
+      });
+
+      let marker = L.marker(point, { icon: icon }).addTo(map);
+      calculationObj.push(marker);
+      if (pickedPoints.value.length === 2) {
+        let distance = pickedPoints.value[0].distanceTo(pickedPoints.value[1]); //算距离
+        let polyline = L.polyline(pickedPoints.value, { color: "red" })
+          .addTo(map)
+          .bindPopup(`相距:${distance.toFixed(3)}米`)
+          .openPopup(); //划线
+        calculationObj.push(polyline);
+        map.fitBounds(pickedPoints.value); //适应视野
+        //恢复状态
+        pickupMode.value = false;
+        pickedPoints.value = [];
+        const mapId = document.getElementById("child6_map");
+        if (mapId) {
+          mapId.style.cursor = "grab";
+        }
+        return;
+      }
+    }
+  });
 }
+// 清除测距
+const clearDistance = () => {
+  if (calculationObj.length) {
+    calculationObj.forEach((item) => {
+      map.removeLayer(item);
+    });
+    calculationObj = [];
+  }
+  pickupMode.value = false;
+  pickedPoints.value = [];
+  const mapId = document.getElementById("child6_map");
+  if (mapId) {
+    mapId.style.cursor = "grab";
+  }
+};
 const handleMapChange = (mapId: any) => {
   switch (mapId) {
     case 0:
@@ -258,13 +346,13 @@ const getSingleCarTrick = async () => {
   let times: any;
   getSingleCarTrick_API(pageInfoData)
     .then(async (res: any) => {
-      if (!res.data.records.length || res.data.records === null) {
+      if (!res.data || res.data.records.length === 0 || res.data.records === null) {
         loading.value = false;
-        ElMessage.warning(`暂无作业数据,请选择其他时间！`);
+        ElMessage.warning(`暂无轨迹数据,请选择其他时间！`);
         return;
       } else {
         total = res.data.total;
-        times = Math.ceil(total / 2000);
+        times = Math.ceil(total / 20000);
         if (times > 1) {
           for (let i = 0; i < times; i++) {
             const ress: any = await getSingleCarTrick_API(pageInfoData);
@@ -525,5 +613,101 @@ const removeMarker = () => {
       top: 10px;
     }
   }
+}
+:deep(.el-select .el-input.is-focus .el-input__wrapper) {
+  box-shadow: none !important;
+}
+.map_utils {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 999;
+  display: flex;
+  .map_utils_item {
+    margin-right: 6px;
+  }
+}
+.map_utils {
+  background: url("@/assets/monitoring/inputBack.png") no-repeat center center;
+  background-size: 105% 105%;
+
+  border: 1px solid #fff;
+  border-radius: 5px;
+  padding: 6px 10px;
+  color: #fff;
+
+  .map_utils_item {
+    height: 15px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    .el-checkbox__label {
+      color: #fff;
+    }
+    .item {
+      padding: 0 6px;
+      display: flex;
+      align-items: center;
+
+      p {
+        text-decoration: underline;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+        margin: 0;
+      }
+      .el-dropdown-link {
+        color: #fff;
+        display: flex;
+        align-items: center;
+      }
+    }
+    &:first-child {
+      padding-left: 0;
+    }
+    &:last-child {
+      padding-right: 0;
+    }
+    .el-button {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+    }
+    :deep(.el-input__wrapper) {
+      background: transparent !important;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      .el-input__inner {
+        color: white;
+      }
+    }
+
+    .el-icon {
+      color: #fff;
+    }
+    .el-scrollbar {
+      padding: 0 10px !important;
+    }
+
+    svg {
+      cursor: pointer;
+      use {
+        fill: #fff;
+      }
+    }
+    .el-dropdown-link {
+      color: #fff;
+      display: flex;
+      align-items: center;
+    }
+
+    &:not(:last-child) {
+      border-right: 1px solid #fff;
+    }
+  }
+}
+:deep(.el-select) {
+  --el-select-input-focus-border-color: transparent;
 }
 </style>

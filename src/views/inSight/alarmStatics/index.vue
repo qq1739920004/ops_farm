@@ -59,7 +59,8 @@
         </div>
         <div class="number_area">
           <div class="l">
-            <SvgIcon icon="allNum" size="22" style="margin-right: 15px" /> {{t('content.alarmtimes')}}:
+            <SvgIcon icon="allNum" size="22" style="margin-right: 15px" />
+            {{ t("content.alarmtimes") }}:
           </div>
           <div class="r">{{ carChartValue.allSum }}</div>
         </div>
@@ -288,7 +289,7 @@ function ChartCreate(
     ],
     yAxis: [
       {
-        name: t('content.alarmtimes'),
+        name: t("content.alarmtimes"),
         type: "value",
         splitNumber: 5,
         axisLine: {
@@ -380,7 +381,7 @@ function ChartCreate(
         },
       },
       {
-        name:contentList[1010],
+        name: contentList[1010],
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListi,
@@ -487,17 +488,11 @@ const getDealerCarList = async () => {
   } else {
     CarDealerList.value = res.data;
     options = CarDealerList.value.map((item: any, _idx) => {
-      if (item.nameNpn.includes("()")) {
         return {
           value: item.id,
-          label: item.nameNpn.split("(")[0],
+          label: item.sn + "(" + item.npn + ")",
         };
-      } else {
-        return {
-          value: item.id,
-          label: `${item.nameNpn}`,
-        };
-      }
+      
     });
     options.unshift({ value: "", label: t("work.allcars") });
 

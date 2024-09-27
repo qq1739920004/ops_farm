@@ -282,7 +282,11 @@ function createMarker(list: any) {
     const [markerLng, markerLat] = gcoordLngLat(item.markerLng, item.markerLat);
     const icon = createIcon(item);
     if (icon) {
-      marker = L.marker([markerLat, markerLng], { icon });
+      marker = L.marker([markerLat, markerLng], {
+        icon,
+        zIndexOffset: item.onlineTcp ? 1000 : 500,
+        riseOnHover: true,
+      });
     } else {
       marker = L.marker([markerLat, markerLng]);
     }
@@ -361,7 +365,11 @@ function updateMarker(item: any) {
 
     if (mapRenderMode == "canvas") {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
-      const newMarker = L.marker([markerLat, markerLng], { icon: icon }).bindPopup(
+      const newMarker =  L.marker([markerLat, markerLng], {
+        icon,
+        zIndexOffset: item.onlineTcp ? 1000 : 500,
+        riseOnHover: true,
+      }).bindPopup(
         item.markerPopup
       ) as any;
       newMarker.markerId = currentMarker.markerId;
@@ -390,7 +398,11 @@ function updateMarker(item: any) {
 
     if (mapRenderMode == "canvas") {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
-      const newMarker = L.marker([markerLat, markerLng], { icon: icon }).bindPopup(
+      const newMarker =  L.marker([markerLat, markerLng], {
+        icon,
+        zIndexOffset: item.onlineTcp ? 1000 : 500,
+        riseOnHover: true,
+      }).bindPopup(
         item.markerPopup
       ) as any;
       newMarker.markerId = currentMarker.markerId;
@@ -417,7 +429,9 @@ function changeZoom() {
 }
 // 修改地图marker显隐藏
 function updateMarkerVisible(list: any) {
+  console.log(list)
   let includedMarkers = markerArr.filter((j: any) => !list.includes(j.markerType));
+  console.log(includedMarkers)
   markerGroup.clearLayers();
   if (mapRenderMode == "dom") {
     includedMarkers.forEach((marker: any) => {
@@ -761,7 +775,7 @@ function changeMarkerIcon() {
       markerArr.forEach((marker: any, index: number) => {
         // if(!markerTypeIcon[marker.markerType]){return}
         const normalIcon = getRelativeIcon(createMarkerIcon(marker));
-        const newMarker = L.marker(marker.getLatLng(), { icon: normalIcon }).bindPopup(
+        const newMarker = L.marker(marker.getLatLng(), { icon: normalIcon, zIndexOffset: marker.onlineTcp ? 1000 : 500,riseOnHover: true, }).bindPopup(
           marker.getPopup()
         ) as any;
         newMarker.markerId = marker.markerId;
@@ -776,7 +790,7 @@ function changeMarkerIcon() {
       markerArr.forEach((marker: any, index: number) => {
         // if(!markerTypeIconSmall[marker.markerType]){return}
         const smallIcon = getRelativeIcon(createMarkerIconSmall(marker));
-        const newMarker = L.marker(marker.getLatLng(), { icon: smallIcon }).bindPopup(
+        const newMarker = L.marker(marker.getLatLng(), { icon: smallIcon , zIndexOffset: marker.onlineTcp ? 1000 : 500,riseOnHover: true,}).bindPopup(
           marker.getPopup()
         ) as any;
         newMarker.markerId = marker.markerId;
@@ -791,7 +805,7 @@ function changeMarkerIcon() {
     markerArr.forEach((marker: any, index: number) => {
       // if(!markerTypeIcon[marker.markerType]){return}
       const normalIcon = getRelativeIcon(createMarkerIcon(marker));
-      const newMarker = L.marker(marker.getLatLng(), { icon: normalIcon }).bindPopup(
+      const newMarker = L.marker(marker.getLatLng(), { icon: normalIcon , zIndexOffset: marker.onlineTcp ? 1000 : 500,riseOnHover: true,}).bindPopup(
         marker.getPopup()
       ) as any;
       newMarker.markerId = marker.markerId;
@@ -1063,8 +1077,7 @@ defineExpose({
   font-size: 8px;
 }
 
-//  :deep(.el-select) {
-
-//  --el-select-input-focus-border-color: transparent;
-// }
+:deep(.el-select) {
+  --el-select-input-focus-border-color: transparent;
+}
 </style>

@@ -42,12 +42,15 @@ function formatRoute(menuPermissions) {
     if (flag) {
       let path = item.path;
       item.path = "";
+      console.log(item.isAlwaysvisible)
         return {
           path,
           component: Layout,
           children: [item],
           isHavePermission: item.isHavePermission,
+          isAlwaysVisible: item.isAlwaysvisible,
         };
+    
       // if (item.crumb) {
       //   return {
       //     path,
@@ -138,6 +141,7 @@ function formatRoute(menuPermissions) {
         hideTitle: !item.crumb
       };
       item.visible ? (item.meta.hidden = true) : "";
+      item.visible || (!item.visible && !item.isHavePermission && !item.isAlwaysVisible) ? (item.meta.hidden = true) : "",
       !item.children ? delete item.children : "";
       if (item.file_path) {
         // 设置路由对象name属性

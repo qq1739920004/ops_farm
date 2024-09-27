@@ -134,7 +134,7 @@ const en = {
     loadInformation: "Load Information",
     logUploadNotAvailableAG302: "The log upload feature for AG302 and AG302_Android is not yet available",
     noFirmwarePackageForDevice: "No firmware package available for the device",
-    logUploadFeatureNotAvailable: "The log upload feature for AG302 and A3502_Android is not yet available",
+    logUploadFeatureNotAvailable: "The log upload feature is not yet available except AG360/AG360pro",
     builtInRadio: "Built-in Radio",
     overwriteConfirmation: "This operation will overwrite all parameters of the current vehicle. Do you want to continue?",
     modificationSuccess: "Modification Successful",

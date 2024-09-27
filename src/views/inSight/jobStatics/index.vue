@@ -351,17 +351,10 @@ const getDealerCarList = async () => {
   } else {
     CarDealerList.value = res.data;
     options = CarDealerList.value.map((item: any, _idx) => {
-      if (item.nameNpn.includes("()")) {
-        return {
+      return {
           value: item.id,
-          label: item.nameNpn.split("(")[0],
+          label: item.sn + "(" + item.npn + ")",
         };
-      } else {
-        return {
-          value: item.id,
-          label: `${item.nameNpn}`,
-        };
-      }
     });
     options.unshift({value:'',label:t('work.allcars')})
    
