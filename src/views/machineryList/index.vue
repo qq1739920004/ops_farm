@@ -3,8 +3,8 @@
     <div class="table_container app_card" v-show="tableShow">
       <div class="search_container">
         <div class="input_area">
+          <!--    :placeholder="$t('devicelist.pleaseInput')" -->
           <el-input
-            :placeholder="$t('devicelist.pleaseInput')"
             v-model="pageInfo.key"
             class="input-with-select"
             @keyup.enter.native="search"
@@ -47,9 +47,13 @@
             @click="gotoUpgrade"
             >{{ $t("devicelist.upgrade") }}</el-button
           >
-          <el-button style="margin-right: 20px" type="primary"  v-auth="568" @click="gotoInput">{{
-            $t("devicelist.inputDealerDevice")
-          }}</el-button>
+          <el-button
+            style="margin-right: 20px"
+            type="primary"
+            v-auth="568"
+            @click="gotoInput"
+            >{{ $t("devicelist.inputDealerDevice") }}</el-button
+          >
 
           <!-- <el-button-group class="button_group2">
           <el-button
@@ -113,6 +117,7 @@ import { getProvinceDataNewList_API } from "@/api/machineryList/sn-card/index";
 let $route = useRoute();
 // 控制table显示与否
 const tableShow = ref<boolean>(true);
+
 const total = ref<number>(10);
 // 经销商列表
 const dealerList = ref<carDealerObj[]>([]);
@@ -125,7 +130,7 @@ const pageInfo = reactive<pageInfo>({
   provinceCode: "",
   cityCode: "",
   activationStatus: "",
-  terminalType:''
+  terminalType: "",
 });
 const upgradeD = ref();
 const inputD = ref();

@@ -147,13 +147,13 @@ function logOut() {
 }
 // 前往用户中心
 function goUserCenter() {
-  window.open("/ucFrontEnd");
+  window.open("/ucFrontEnd/");
 }
 function gotoList() {
-  window.open("/simanFrontEnd");
+  window.open("/simanFrontEnd/");
 }
 function gotoPm() {
-  window.open("/pm");
+  window.open("/pm/");
 }
 </script>
 

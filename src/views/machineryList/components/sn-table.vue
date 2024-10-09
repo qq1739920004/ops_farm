@@ -14,12 +14,34 @@
       width="60"
       align="center"
     />
-    <el-table-column :label="$t('devicelist.name')" prop="userName" align="center">
+    <el-table-column
+      v-if="!isChangfa"
+      :label="$t('devicelist.name')"
+      prop="userName"
+      align="center"
+    >
     </el-table-column>
-    <el-table-column :label="$t('devicelist.tel')" prop="tel" width="110" align="center">
+    <el-table-column
+      v-if="!isChangfa"
+      :label="$t('devicelist.tel')"
+      prop="tel"
+      width="110"
+      align="center"
+    >
     </el-table-column>
-    <el-table-column :label="$t('devicelist.labelSN')" width="180" align="center">
+    <el-table-column
+      v-if="!isChangfa"
+      prop="npn"
+      :label="$t('devicelist.labelSN')"
+      width="180"
+      align="center"
+    >
       <template #default="scope">
+        {{ scope.row.npn }}
+      </template>
+    </el-table-column>
+    <el-table-column label="SN" prop="sn" align="center" width="180"
+      ><template #default="scope">
         <div
           :class="scope.row.onlineTcp === 1 ? 'sn_area1' : 'sn_area2'"
           @click="gotoMonitor(scope.row.sn, scope.row.onlineTcp)"
@@ -33,13 +55,12 @@
               "
             />
           </el-icon>
-          <span style="margin-left: 10px">{{ scope.row.npn }}</span>
+          <span style="margin-left: 10px">{{ scope.row.sn }}</span>
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="SN" prop="sn" align="center"> </el-table-column>
 
-    <el-table-column :label="$t('devicelist.location')" align="center">
+    <el-table-column  :label="$t('devicelist.location')" align="center">
       <template #="{ row }">
         <div style="color: rgba(130, 130, 130, 1)">
           {{
@@ -51,6 +72,14 @@
       </template>
     </el-table-column>
     <el-table-column
+       v-if="isChangfa"
+      :label="$t('devicelist.type')"
+      prop="terminalType"
+      align="center"
+    >
+    </el-table-column>
+    <el-table-column
+       v-if="!isChangfa"
       :filters="handleTerminalTypeList()"
       column-key="filterTerminalType"
       :filter-multiple="false"
@@ -60,6 +89,7 @@
     >
     </el-table-column>
     <el-table-column
+      v-if="!isChangfa"
       :label="t('statisticsReport.activationStatus')"
       align="center"
       :filters="handleFunctionList()"
@@ -124,6 +154,7 @@
         </div>
       </template>
     </el-table-column>
+    
     <!-- <el-table-column label="过期时间" >
             <template #="{ row }">
                 <el-popover placement="right" :width="200" trigger="hover" style="">
@@ -343,7 +374,7 @@ const { t } = useI18n();
 const router = useRouter();
 const props = defineProps(["carNewList"]);
 
-const emits = defineEmits(["changeSort", "datachange","typechange"]);
+const emits = defineEmits(["changeSort", "datachange", "typechange"]);
 // const switchStatus = ref<boolean>(false)
 const sn = ref();
 const MachineD = ref();
@@ -368,12 +399,12 @@ const handleFunctionList = () => {
 };
 const handleTerminalTypeList = () => {
   let apiArr = [
-    { text: "AG360", value: 'AG360' },
+    { text: "AG360", value: "AG360" },
     { text: "AG502", value: "AG502" },
-    { text: "AG501", value: 'AG501' },
-    { text: "AG302Android", value: 'AG302Android' },
-    { text: "AG302", value: 'AG302' },
-    { text: "AG501Pro", value: 'AG501Pro' },
+    { text: "AG501", value: "AG501" },
+    { text: "AG302Android", value: "AG302Android" },
+    { text: "AG302", value: "AG302" },
+    { text: "AG501Pro", value: "AG501Pro" },
   ];
   return apiArr;
 };
@@ -390,6 +421,7 @@ const terminalType2 = ref<string>("");
 const pageInfo = reactive<any>({
   order: "1",
 });
+const isChangfa = import.meta.env.MODE === "changFa";
 const gotoalarm = (id: any, sn: any) => {
   router.push({ path: "/machineryList/alarmView", query: { id: id, sn: sn } });
 };
@@ -494,13 +526,13 @@ const gotoRemote = (val: any, val2: any, val3: any, val4: any, val5: any, val6: 
   isChange.value = !isChange.value;
 };
 // 历史轨迹
-const gotoMap = (id:string) => {
-  router.push({ path: "/machineryList/taskMachine", query: { carId:id } });
+const gotoMap = (id: string) => {
+  router.push({ path: "/machineryList/taskMachine", query: { carId: id } });
 };
 
 const filterChange = (filterObj: any) => {
   let activeValue;
-  let terValue
+  let terValue;
   if (filterObj.filterfunction) {
     filterObj.filterfunction[0] === undefined
       ? (activeValue = "")
@@ -508,8 +540,9 @@ const filterChange = (filterObj: any) => {
     emits("datachange", {
       activationStatus: activeValue,
     });
-  } if(filterObj.filterTerminalType){
- (terValue = filterObj.filterTerminalType[0]);
+  }
+  if (filterObj.filterTerminalType) {
+    terValue = filterObj.filterTerminalType[0];
     emits("typechange", {
       terminalType: terValue,
     });

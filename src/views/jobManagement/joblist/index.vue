@@ -155,7 +155,7 @@ const getDealerCarList = async () => {
         options = CarDealerList.value.map((item: any, _idx) => {
             return {
           value: item.id,
-          label: item.sn + "(" + item.npn + ")",
+          label: item.npn ? item.sn + "(" + item.npn + ")" : item.sn,
         };
 
         })
@@ -220,10 +220,10 @@ watch(() => [value1.value, value2.value], () => {
         value2.value = a.value
     }
 })
-
+console.log(Date.now())
 // 禁止选择今日以后的日期
 const disabledDate = (time: Date) => {
-    return time.getTime() > Date.now()
+    return time.getTime() > Date.now()+ 8.64e7
 }
 const changeBlur1 = () => {
     getDealerCarList()

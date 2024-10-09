@@ -21,10 +21,11 @@
         <el-tab-pane :label="$t('work.vehicleParameters')" name="1"></el-tab-pane>
         <el-tab-pane :label="$t('work.calibrationParameters')" name="2"></el-tab-pane>
         <el-tab-pane :label="$t('work.pidParameters')" name="3"></el-tab-pane>
-        <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane>
+        <el-tab-pane :label="$t('work.onlineUpgrade')" name="6" ></el-tab-pane>
         <el-tab-pane
           :label="$t('work.remoteSetting')"
           name="5"
+          v-if="!isChangfa"
           @click="gotoChafen"
         ></el-tab-pane>
         <!-- <el-tab-pane label="日志回传" name="7"></el-tab-pane> -->
@@ -450,6 +451,7 @@ import axios from "axios";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const router = useRouter();
+const isChangfa = import.meta.env.MODE === "changFa";
 const activeName = ref("1");
 const handleClick = (tab: TabsPaneContext) => {
   activeIndex.value = tab.props.name as never;

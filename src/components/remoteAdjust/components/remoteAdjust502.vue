@@ -22,11 +22,12 @@
         <el-tab-pane :label="$t('work.calibrationParameters')" name="2"></el-tab-pane>
         <el-tab-pane label="基本参数" name="3"></el-tab-pane>
         <el-tab-pane label="高级参数1" name="4"></el-tab-pane>
-        <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane>
+        <!-- <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane> -->
         <el-tab-pane
           :label="$t('work.remoteSetting')"
           name="5"
           @click="gotoChafen"
+          v-if="!isChangfa"
         ></el-tab-pane>
         <!-- <el-tab-pane label="日志回传" name="7"></el-tab-pane> -->
       </el-tabs>
@@ -291,15 +292,15 @@
             <el-form-item class="item" :label="$t('work.logUpload')">
               <el-row>
                 <el-col align="center">
-                <!--  AG502以及AG502_Android的 -->
-                 日志回传功能暂未开放
+                  <!--  AG502以及AG502_Android的 -->
+                  日志回传功能暂未开放
                 </el-col>
               </el-row>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 10px">
-          <el-col :span="12" :offset="6">
+          <!-- <el-col :span="12" :offset="6">
             <el-form-item class="item" :label="$t('work.dataStorage')">
               <el-switch
                 v-auth="474"
@@ -312,7 +313,7 @@
                 inactive-text="关"
               />
             </el-form-item>
-          </el-col>
+          </el-col> -->
         </el-row>
       </el-form>
       <!-- <el-form ref="formLabelAlignRef" :validate-on-rule-change="false" v-show="activeName == '6'" :rules="rules"
@@ -419,7 +420,7 @@ import {
 } from "@/api/machineryList/remoteAdjust/index";
 import { carNewDetail_API, logOpen_API } from "@/api/machineryList/index";
 import type { TabsPaneContext } from "element-plus";
-
+const isChangfa = import.meta.env.MODE === "changFa";
 const activeName = ref("1");
 
 const handleClick = (tab: TabsPaneContext) => {
@@ -680,7 +681,7 @@ const openRemoteAdjust = () => {
       getAdvanced1();
     }
   } else {
-    ElMessage.warning(t('work.lackVersion'))
+    ElMessage.warning(t("work.lackVersion"));
   }
 
   getChafenList();

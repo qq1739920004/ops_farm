@@ -433,17 +433,17 @@ function ChartCreate(
       icon: "rectangle",
       formatter: function (name: any) {
         let data = [
-          { name: contentList[1001], value: sumCount[0] },
-          { name: contentList[1002], value: sumCount[1] },
-          { name: contentList[1003], value: sumCount[2] },
-          { name: contentList[1005], value: sumCount[4] },
-          { name: contentList[1006], value: sumCount[5] },
-          { name: contentList[1007], value: sumCount[6] },
-          { name: contentList[1008], value: sumCount[7] },
-          { name: contentList[1009], value: sumCount[8] },
-          { name: contentList[1010], value: sumCount[9] },
-          { name: contentList[1011], value: sumCount[10] },
-          { name: contentList[1012], value: sumCount[11] },
+          { name: contentList[1001], value: sumCount[0] || 0 },
+          { name: contentList[1002], value: sumCount[1] || 0 },
+          { name: contentList[1003], value: sumCount[2] || 0 },
+          { name: contentList[1005], value: sumCount[4] || 0 },
+          { name: contentList[1006], value: sumCount[5] || 0 },
+          { name: contentList[1007], value: sumCount[6] || 0 },
+          { name: contentList[1008], value: sumCount[7] || 0 },
+          { name: contentList[1009], value: sumCount[8] || 0 },
+          { name: contentList[1010], value: sumCount[9] || 0 },
+          { name: contentList[1011], value: sumCount[10] || 0 },
+          { name: contentList[1012], value: sumCount[11] || 0 },
         ];
         let tarValue = 0; // 目前的数值，由于data数据是string型，所以有这步
 
@@ -488,11 +488,10 @@ const getDealerCarList = async () => {
   } else {
     CarDealerList.value = res.data;
     options = CarDealerList.value.map((item: any, _idx) => {
-        return {
-          value: item.id,
-          label: item.sn + "(" + item.npn + ")",
-        };
-      
+      return {
+        value: item.id,
+        label: item.npn ? item.sn + "(" + item.npn + ")" : item.sn,
+      };
     });
     options.unshift({ value: "", label: t("work.allcars") });
 

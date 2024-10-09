@@ -69,6 +69,7 @@ const props = defineProps([
   "name",
   "isChange",
 ]);
+
 const terminalType = ref<string>("");
 const paramVersionnum = ref<string>("");
 const paramType = ref<string>("");
@@ -81,6 +82,7 @@ const RemoteD502 = ref();
 const RemoteD501 = ref();
 const RemoteD360 = ref();
 const gotoRemote = () => {
+  console.log(terminalType.value)
   if (terminalType.value.includes("AG360") && Number(paramVersionnum.value) < 100) {
     RemoteD.value.dialogVisible = true;
   } else if (
@@ -93,6 +95,8 @@ const gotoRemote = () => {
   } else if (terminalType.value == "AG501Pro") {
     RemoteD501.value.dialogVisible = true;
   } else if (terminalType.value.includes("MT")) {
+    RemoteD501.value.dialogVisible = true;
+  } else if (terminalType.value =="AG501_CF") {
     RemoteD501.value.dialogVisible = true;
   } else {
     RemoteD502.value.dialogVisible = true;

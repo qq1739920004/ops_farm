@@ -10,7 +10,7 @@ import { nextTick } from "vue";
 import useAppStore from "@/store/app";
 const isChangfa = import.meta.env.MODE === "changFa";
 nextTick(() => {
-  document.title = isChangfa ? "常发耕耘" : "司南耕耘";
+  document.title = isChangfa ? "常发农装" : "司南耕耘";
 });
 const appStore = useAppStore();
 const changeFavicon = (link:any) => {

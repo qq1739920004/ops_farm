@@ -22,10 +22,11 @@
         <el-tab-pane :label="$t('work.calibrationParameters')" name="2"></el-tab-pane>
         <el-tab-pane label="基本参数" name="3"></el-tab-pane>
         <el-tab-pane label="高级参数1" name="4"></el-tab-pane>
-        <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane>
+        <el-tab-pane :label="$t('work.onlineUpgrade')" name="6" ></el-tab-pane>
         <el-tab-pane
           :label="$t('work.remoteSetting')"
           name="5"
+          v-if="!isChangfa"
           @click="gotoChafen"
         ></el-tab-pane>
         <!-- <el-tab-pane label="日志回传" name="7"></el-tab-pane> -->
@@ -496,6 +497,8 @@ import axios from "axios";
 const router = useRouter();
 const basicTitleData = ref<any | null>([]);
 const activeName = ref("1");
+const isChangfa = import.meta.env.MODE === "changFa";
+console.log('111111',isChangfa)
 const handleClick = (tab: TabsPaneContext) => {
   activeIndex.value = tab.props.name as never;
 };

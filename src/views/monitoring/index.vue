@@ -9,11 +9,12 @@
       mapRenderMode="canvas"
     />
     <div class="search_box">
+    <!--    :placeholder="$t('messages.SNLabelSNcarName')" -->
       <el-autocomplete
         :style="{ width: labelWidth }"
         v-model="searchSn"
         :fetch-suggestions="querySearch"
-        :placeholder="$t('messages.SNLabelSNcarName')"
+     
         @select="handleSelect"
         clearable
       >
@@ -737,6 +738,7 @@ function createMarkerPopup(item: any) {
     2: "差分解",
     3: "浮动解",
     4: "固定解",
+    15:'星基解'
   };
   const diffSource: any = {
     0: "电台",

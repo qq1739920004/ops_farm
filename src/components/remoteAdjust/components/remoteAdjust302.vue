@@ -26,10 +26,11 @@
           :label="$t('work.pidUltraLowSpeedParameters')"
           name="10"
         ></el-tab-pane>
-        <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane>
+        <el-tab-pane :label="$t('work.onlineUpgrade')" name="6" ></el-tab-pane>
         <el-tab-pane
           :label="$t('work.remoteSetting')"
           name="5"
+          v-if="!isChangfa"
           @click="gotoChafen"
         ></el-tab-pane>
         <!-- <el-tab-pane label="日志回传" name="7"></el-tab-pane> -->
@@ -422,7 +423,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row style="margin-bottom: 10px">
+        <!-- <el-row style="margin-bottom: 10px">
           <el-col :span="12" :offset="6">
             <el-form-item class="item" :label="$t('work.dataStorage')">
               <el-switch
@@ -437,7 +438,7 @@
               />
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
       </el-form>
 
       <el-form
@@ -573,7 +574,7 @@ import type { TabsPaneContext } from "element-plus";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const activeName = ref("1");
-
+const isChangfa = import.meta.env.MODE === "changFa";
 const handleClick = (tab: TabsPaneContext) => {
   activeIndex.value = tab.props.name as never;
 };

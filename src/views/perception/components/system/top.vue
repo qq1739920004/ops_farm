@@ -5,7 +5,7 @@
       <div class="top_tittle" v-if="isChangfa">
         <router-link to='/monitoring'>
           <img src="~@/assets/perceptionImage/logochangfa-usercenter.png" key=""  alt="" />
-          <h1>常发耕耘感知平台</h1>
+          <h1>常发农装感知平台</h1>
         </router-link>
       </div>
       <div class="top_tittle" v-else>

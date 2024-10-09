@@ -22,11 +22,12 @@
         <!-- <el-tab-pane :label="$t('work.calibrationParameters')" name="2"></el-tab-pane> -->
         <el-tab-pane label="基本参数" name="3"></el-tab-pane>
         <el-tab-pane label="高级参数1" name="4"></el-tab-pane>
-        <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane>
+        <!-- <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane> -->
         <el-tab-pane
           :label="$t('work.remoteSetting')"
           name="5"
           @click="gotoChafen"
+           v-if="!isChangfa"
         ></el-tab-pane>
         <!-- <el-tab-pane label="日志回传" name="7"></el-tab-pane> -->
       </el-tabs>
@@ -445,6 +446,7 @@ const carParamsData = ref<any | null>([]);
 const CalibTitleData = ref<any | null>([]);
 const basicTitleData = ref<any | null>([]);
 const advance1TitleData = ref<any | null>([]);
+  const isChangfa = import.meta.env.MODE === "changFa";
 const basicParamsData = reactive<any>({});
 const advanced1ParamsData = reactive<any>({});
 const productList = ref<GetcarProductpackageObj[]>([]);

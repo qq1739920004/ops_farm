@@ -923,7 +923,7 @@ const getDealerCarList = async () => {
     CarDealerList.value = res.data;
     optionsList = CarDealerList.value.map((item: any, _idx) => ({
       value: item.id,
-      label: item.sn + "(" + item.npn + ")",
+      label: item.npn ? item.sn + "(" + item.npn + ")" : item.sn,
     }));
 
     pageInfo.carId = route.query.carId ? +route.query.carId : "" || res.data[0].id;
