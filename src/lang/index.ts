@@ -1,24 +1,11 @@
-import { createI18n } from 'vue-i18n';
 import zh from './language/zh'
 import en from './language/en'
-
-import useAppStore from '@/store/app'
-const appStore = useAppStore()
-
+import i18n from 'sino-i18n-v3';
 const messages = {
-    'zh': zh,
-    'en': en
+    zh,
+    en
 };
-
-const i18n = createI18n({
-    legacy: false,
-    locale: appStore.language,
-    messages: messages,
-    globalInjection: true,
-    silentTranslationWarn:true,
-    missingWarn:false,
-    silentFallbackWarn:true,
-    fallbackWarn:false
-});
-
+for(const [key,value] of Object.entries(messages)){
+    i18n.global.mergeLocaleMessage(key,value)
+}
 export default i18n;

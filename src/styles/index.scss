@@ -1,7 +1,8 @@
-@import "./reset";
-@import './dark';
-@import './variables';
-@import './element-plus.scss';
+@use './variables';
+@use "./reset";
+@use './dark';
+
+@use './element-plus.scss';
 
 .app_container {
     padding: 12px;

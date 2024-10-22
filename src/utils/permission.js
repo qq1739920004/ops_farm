@@ -42,13 +42,13 @@ function formatRoute(menuPermissions) {
     if (flag) {
       let path = item.path;
       item.path = "";
-      console.log(item.isAlwaysvisible)
+      
         return {
           path,
           component: Layout,
           children: [item],
           isHavePermission: item.isHavePermission,
-          isAlwaysVisible: item.isAlwaysvisible,
+          isAlwaysVisible: item.isAlwaysVisible,
         };
     
       // if (item.crumb) {
@@ -87,7 +87,7 @@ function formatRoute(menuPermissions) {
     router.addRoute(item);
     
   });
-
+  console.log(addRouteList)
   router.options.routes.push(...addRouteList);
   // appStore.updateRoutes(router.options.routes);
 

@@ -55,3 +55,42 @@ export function getStatisticsReportnetworkAPI() {
     })
   }
 
+  //统计报表总数据头
+export function statistiHead(){
+  return request({
+    url:`/farm/report/title`,
+    method:'get',
+  })
+}
+//统计报表列表
+export function statisticalList(data:any){
+  return request({
+    url:`/farm/report/list`,
+    method:'get',
+    params:data
+  })
+}
+//统计报表列表导出
+export function statisticalExport(data:any){
+  return request({
+    url:`/farm/report/export`,
+    method:'get',
+    responseType: 'blob',
+    params:data
+  })
+}
+//出库总量折线图
+export function statisticalLineData(){
+  return request({
+    url:`/farm/report/foldLine`,
+    method:'get',
+  })
+}
+//获取经销商列表
+export function getCompany(){
+  return request({
+    url:`/farm/salesman/in/list`,
+    method:'get',
+  })
+}
+
