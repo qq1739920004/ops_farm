@@ -9,12 +9,11 @@
       mapRenderMode="canvas"
     />
     <div class="search_box">
-    <!--    :placeholder="$t('messages.SNLabelSNcarName')" -->
+      <!--    :placeholder="$t('messages.SNLabelSNcarName')" -->
       <el-autocomplete
         :style="{ width: labelWidth }"
         v-model="searchSn"
         :fetch-suggestions="querySearch"
-     
         @select="handleSelect"
         clearable
       >
@@ -156,7 +155,11 @@
       <ul class="center">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
-            <el-checkbox size="large" v-model="item.checked" @change="markerTypeChange()" />
+            <el-checkbox
+              size="large"
+              v-model="item.checked"
+              @change="markerTypeChange()"
+            />
             <!-- <SvgIcon :icon="item.typeName" size="22" /> -->
             <span class="label">{{ item.typeName }}</span>
           </label>
@@ -665,15 +668,12 @@ async function getOnlineFarmPosition() {
 function markerTypeChange() {
   let types = [];
 
-    let typ1 = onlineList.value.filter((item: any) => !item.checked);
-    typ1 = typ1.map((item: any) => item.typeName);
-    let typ2 = dataStatistics.value.type.filter((item: any) => !item.checked);
-    typ2 = typ2.map((item: any) => item.typeName);
-    types.push(...typ1,...typ2);
-console.log(types)
-   markerDataHidden.value = types;
- 
-
+  let typ1 = onlineList.value.filter((item: any) => !item.checked);
+  typ1 = typ1.map((item: any) => item.typeName);
+  let typ2 = dataStatistics.value.type.filter((item: any) => !item.checked);
+  typ2 = typ2.map((item: any) => item.typeName);
+  types.push(...typ1, ...typ2);
+  markerDataHidden.value = types;
 }
 
 function createMarkerType(item: any) {
@@ -738,7 +738,7 @@ function createMarkerPopup(item: any) {
     2: "差分解",
     3: "浮动解",
     4: "固定解",
-    15:'星基解'
+    15: "星基解",
   };
   const diffSource: any = {
     0: "电台",

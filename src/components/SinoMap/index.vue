@@ -161,9 +161,11 @@ watch(
     createMarker(markerData);
   }
 );
+const markerDataHiddenNow = ref<any>([])
 watch(
   () => props.markerDataHidden,
   (markerDataHidden) => {
+    markerDataHiddenNow.value = markerDataHidden
     updateMarkerVisible(markerDataHidden);
   },
   { deep: true }
@@ -474,7 +476,7 @@ function updateMarkerVisible(list: any) {
     fitlerArr = markerArr;
   }
   let includedMarkers = fitlerArr.filter((j: any) => !list.includes(j.markerType));
-  console.log(includedMarkers);
+  TMarkers.value = includedMarkers
   markerGroup.clearLayers();
   if (mapRenderMode == "dom") {
     includedMarkers.forEach((marker: any) => {
@@ -490,6 +492,7 @@ function updateMarkerVisible(list: any) {
     map.setView(map.getCenter()); //缩放也会漂移
   }
 }
+const TMarkers = ref<any>([])
 // 创建icon图标
 function createIcon(item: any) {
   if (item.markerIcon) {
@@ -870,7 +873,7 @@ function changeMarkerIcon() {
       markerAddToMap(v.markerType, v);
     });
   }
-
+  updateMarkerVisible(markerDataHiddenNow.value)
   map.setView(map.getCenter());
 }
 // 地图缩放处理事件

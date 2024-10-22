@@ -46,21 +46,21 @@
     <div class="color_list">
       <div class="out_area">
         <div class="cycle1"></div>
-        <div>固定</div>
+        <div>{{ $t('job.fix') }}</div>
       </div>
       <div class="out_area">
         <div class="cycle2"></div>
-        <div>其他（单点，浮动等）</div>
+        <div>{{ $t('job.others') }}</div>
       </div>
       <div class="out_area">
         <div class="cycle3"></div>
-        <div>星基</div>
+        <div>{{ $t('job.SatelliteBase') }}</div>
       </div>
     </div>
     <div class="demo-date-picker">
-      <div class="top_sn">历史轨迹-{{ pageInfoData.sn }}</div>
+      <div class="top_sn">{{ $t("work.historicalTrack") }}-{{ pageInfoData.sn }}</div>
       <div class="block">
-        <span>开始日期：</span>
+        <span>{{ $t("work.startDate") }}</span>
         <el-date-picker
           class="date_picker"
           v-model="value1"
@@ -73,7 +73,7 @@
         />
       </div>
       <div class="block">
-        <span>结束日期：</span>
+        <span>{{ $t("work.endDate") }}:</span>
         <el-date-picker
           class="date_picker"
           v-model="value2"
@@ -95,7 +95,7 @@
           :loading="loading"
           :disabled="loading"
         >
-          查询
+          {{$t('work.search')}}
         </el-button>
       </div>
     </div>
@@ -348,7 +348,7 @@ const getSingleCarTrick = async () => {
     .then(async (res: any) => {
       if (!res.data || res.data.records.length === 0 || res.data.records === null) {
         loading.value = false;
-        ElMessage.warning(`暂无轨迹数据,请选择其他时间！`);
+        ElMessage.warning(t('work.noTrace'));
         return;
       } else {
         total = res.data.total;
@@ -364,7 +364,7 @@ const getSingleCarTrick = async () => {
             });
             pageInfoData.currentPage++;
           }
-          ElMessage.success(`轨迹获取成功！`);
+          ElMessage.success(t('work.taceSuccess'));
           let line = L.polyline(turePoint, {
             color: "#5C5C5C",
             weight: 1,
@@ -403,7 +403,7 @@ const getSingleCarTrick = async () => {
             return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
           });
 
-          ElMessage.success(`轨迹获取成功！`);
+          ElMessage.success(t('work.taceSuccess'));
           let line = L.polyline(PointListTransed, { color: "#5C5C5C", weight: 1 }).addTo(
             map
           );

@@ -2,12 +2,12 @@
     <div class="app_container">
         <div class="historyDriveContainer app_card">
             <div class="dateContainer ">
-                <el-date-picker style="height: 34px; width: 200px;" v-model="filterDate" type="date" placeholder="选择日期"
+                <el-date-picker style="height: 34px; width: 200px;" v-model="filterDate" type="date" :placeholder="t('chart.chooseDate')"
                     :disabled-date="disabledDate" :clearable="false" @change="filterDateChange" />
                 <el-time-picker style="height: 34px; width: 240px;margin-left: 10px;margin-right: 10px;" v-model="timeRange"
-                    is-range :clearable="false" range-separator="-" start-placeholder="开始时间" end-placeholder="结束时间"
-                    placeholder="选择时间范围" format="HH:mm" @change="refreshData" />
-                <el-tooltip class="item" effect="dark" content="刷新数据" placement="top">
+                    is-range :clearable="false" range-separator="-" 
+                    :placeholder="t('chart.chooseTime')" format="HH:mm" @change="refreshData" />
+                <el-tooltip class="item" effect="dark" :content="t('chart.refreshData')" placement="top">
                     <el-icon>
                         <Refresh @click="refreshData" />
                     </el-icon>
@@ -15,15 +15,15 @@
             </div>
             <div class="chartContainer">
                 <div class="hDiffContainer">
-                    <p class="title">横向偏差</p>
+                    <p class="title">{{ t('chart.lateralDeviation') }}</p>
                     <div id="history_hDiffChart"></div>
                 </div>
                 <div class="speedContainer">
-                    <p class="title">车速</p>
+                    <p class="title">{{ t('chart.speed') }}</p>
                     <div id="history_speedChart"></div>
                 </div>
                 <div class="azimuthContainer">
-                    <p class="title">车航向</p>
+                    <p class="title">{{ t('chart.CarHeading') }}</p>
                     <div id="history_azimuthChart"></div>
                 </div>
             </div>
@@ -37,9 +37,11 @@ import { useRoute } from "vue-router";
 import { driveTendency_API } from '@/api/monitoring/index'
 import { ElMessage } from 'element-plus'
 import * as echarts from 'echarts'
+import { useI18n } from "vue-i18n";
 const filterDate = ref(new Date())
 const timeRange = ref<Date[]>([])
 let hDiffData = <any>[]
+    const { t } = useI18n();
 let hDiffXLabel = <any>[]
 let speedData = <any>[]
 let azimuthData = <any>[]
@@ -134,7 +136,7 @@ const initHDiffChart = () => {
                 onZero: false
             },
             data: hDiffXLabel,
-            name: '时间s',
+            name: `${t('work.time')}s`,
             nameLocation: 'center',
             nameGap: 30,
             axisLabel: {
@@ -155,7 +157,7 @@ const initHDiffChart = () => {
             axisLine: {
                 show: true,
             },
-            name: '偏差(cm)',
+            name: `${t('chart.deviation')}(cm)`,
             position: 'left',
             splitNumber: 4
         },
@@ -168,7 +170,7 @@ const initHDiffChart = () => {
         },
         series: [
             {
-                name: '横向偏差',
+                name: t('chart.lateralDeviation'),
                 type: 'line',
                 showSymbol: false,
                 emphasis: {
@@ -278,7 +280,7 @@ const initSpeedChart = () => {
                 onZero: false
             },
             data: hDiffXLabel,
-            name: '时间s',
+            name:`${t('work.time')}s`,
             nameLocation: 'center',
             nameGap: 30,
             axisLabel: {
@@ -298,14 +300,14 @@ const initSpeedChart = () => {
             axisLine: {
                 show: true,
             },
-            name: '速度(km/h)',
+            name: `${t('chart.speed')}(km/h)`,
             position: 'left',
             splitNumber: 3,
             minInterval: 1
         },
         series: [
             {
-                name: '速度',
+                name: `${t('chart.speed')}`,
                 type: 'line',
                 showSymbol: false,
                 emphasis: {
@@ -387,7 +389,7 @@ const initAzimuthChart = () => {
                 onZero: false
             },
             data: hDiffXLabel,
-            name: '时间s',
+            name: `${t('work.time')}s`,
             nameLocation: 'center',
             nameGap: 30,
             axisLabel: {
@@ -409,14 +411,14 @@ const initAzimuthChart = () => {
                 show: true,
             },
 
-            name: '航向角(°)',
+            name: `${t('chart.headingAngle')}(°)`,
             position: 'left',
             splitNumber: 4
 
         },
         series: [
             {
-                name: '航向角',
+                name: `${t('chart.headingAngle')}`,
                 type: 'line',
                 showSymbol: false,
                 emphasis: {
@@ -460,7 +462,7 @@ const initAzimuthChart = () => {
 const refreshData = async () => {
     const res = await driveTendency_API({ sn: route.query.sn as string, st: formartDate(startTime.value), et: formartDate(endTime.value) })
     if (res.data.length == 0) {
-        ElMessage({ type: 'warning', message: '无历史驾驶数据' })
+        ElMessage({ type: 'warning', message: t('chart.noHis') })
     }
     let allData = res.data
     hDiffXLabel = []

@@ -142,6 +142,7 @@ const en = {
     basicInformation: "Basic Information",
     softwareVersion: "Software Version",
     selectAll: 'Select All',
+    historicalTrack:'Historical Track',
     cancelSelectAll: 'Unselect all',
     updateTime: "Update Time",
     vehicleManufacturer: "Vehicle Manufacturer",
@@ -215,9 +216,12 @@ const en = {
     status3: "Qi Long",
     status4: "Harvest",
     status5: "Spray",
+    noTrace:'No trace data available, please choose another time!',
+    taceSuccess:'Trace data acquisition successful!',
     status6: "Other",
     submit: "Submit",
     export: "Export",
+    search:'Search',
     PlateSN: "Plate SN",
     MotorSN: "Motor SN",
     BodySN: "Body SN",
@@ -432,6 +436,20 @@ const en = {
     alarmtimes:'Alarm times',
     LOSS_LOCATION_BUT_SIGNAL: 'LOSS_LOCATION_BUT_SIGNAL',
     LOSS_BASE_LINE:'LOSS_BASE_LINE'
+  },
+  chart:{
+    lateralDeviation:'Lateral Deviation',
+    lan1:'Among all the points displayed in 3min, the lateral deviation is (-3,3) to the total point ratio, accounting for >=90% is excellent, accounting for >=70%, and < 90% is medium and accounting for <70% is poor',
+    last3:'Only the last three minutes of data are displayed',
+    speed:'speed',
+    headingAngle:'Heading Angle',
+    DifferentialAge:'Differential Age',
+    CarHeading:'Car Heading',
+    refreshData:'Refresh Data',
+    chooseTime:'Choose Time',
+    chooseDate:'Choose Date',
+    deviation:'Deviation',
+    noHis:'No historical driving data'
   }
 };
 export default en;

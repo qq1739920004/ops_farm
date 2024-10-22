@@ -60,7 +60,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column  :label="$t('devicelist.location')" align="center">
+    <el-table-column :label="$t('devicelist.location')" align="center">
       <template #="{ row }">
         <div style="color: rgba(130, 130, 130, 1)">
           {{
@@ -72,14 +72,14 @@
       </template>
     </el-table-column>
     <el-table-column
-       v-if="isChangfa"
+      v-if="isChangfa"
       :label="$t('devicelist.type')"
       prop="terminalType"
       align="center"
     >
     </el-table-column>
     <el-table-column
-       v-if="!isChangfa"
+      v-if="!isChangfa"
       :filters="handleTerminalTypeList()"
       column-key="filterTerminalType"
       :filter-multiple="false"
@@ -135,26 +135,35 @@
             >已过期</el-tag
           >
         </div> -->
-        <div style="display: flex; justify-content: center">
-          <el-tag
-            v-if="row.activationStatus == 1"
-            style="
-              color: rgba(42, 130, 228, 1);
-              width: 80px;
-              height: 26px;
-              opacity: 1;
-              border-radius: 4px;
-              background: rgba(171, 210, 255, 1);
-              border: 1px solid rgba(171, 210, 255, 1);
-            "
-          >
-            {{ t("statisticsReport.actived") }}</el-tag
-          >
-          <div v-else>{{ t("statisticsReport.notActived") }}</div>
+        <div
+          v-if="
+            row.terminalType === 'AG502' ||
+            row.terminalType === 'AG501Pro' ||
+            row.terminalType === 'AG501'
+          "
+        >
+          <div style="display: flex; justify-content: center">
+            <el-tag
+              v-if="row.activationStatus == 1"
+              style="
+                color: rgba(42, 130, 228, 1);
+                width: 80px;
+                height: 26px;
+                opacity: 1;
+                border-radius: 4px;
+                background: rgba(171, 210, 255, 1);
+                border: 1px solid rgba(171, 210, 255, 1);
+              "
+            >
+              {{ t("statisticsReport.actived") }}</el-tag
+            >
+            <div v-else>{{ t("statisticsReport.notActived") }}</div>
+          </div>
         </div>
+        <div v-else>--</div>
       </template>
     </el-table-column>
-    
+
     <!-- <el-table-column label="过期时间" >
             <template #="{ row }">
                 <el-popover placement="right" :width="200" trigger="hover" style="">
@@ -255,7 +264,7 @@
         <el-button
           :disabled="row.onlineTcp === 1 ? false : true"
           v-auth="476"
-          :style="isLanguage == 'en' ? 'width: 85px' : 'width:65px'"
+          :style="locale == 'en' ? 'width: 85px' : 'width:65px'"
           type="primary"
           text
           @click="gotoRegister(row.id, row.sn, row.deviceId)"
@@ -270,7 +279,7 @@
           placement="top-start"
         >
           <el-button
-            :style="isLanguage == 'en' ? 'width: 85px' : 'width:65px'"
+            :style="locale === 'en' ? 'width: 85px' : 'width:65px'"
             :disabled="!row.openRemote"
             type="primary"
             text
@@ -292,7 +301,7 @@
 
         <el-button
           v-auth="503"
-          :style="isLanguage == 'en' ? 'width: 75px' : 'width:55px'"
+          :style="locale === 'en' ? 'width: 75px' : 'width:55px'"
           type="primary"
           text
           @click="gotoMap(row.id)"
@@ -300,7 +309,7 @@
         >
         <el-button
           v-auth="458"
-          :style="isLanguage == 'en' ? 'width: 40px' : 'width:40px'"
+          :style="locale === 'en' ? 'width: 40px' : 'width:40px'"
           type="primary"
           text
           @click="
@@ -316,7 +325,7 @@
           >{{ $t("devicelist.details") }}</el-button
         >
         <el-button
-          :style="isLanguage == 'en' ? 'width: 75px' : 'width:55px'"
+          :style="locale === 'en' ? 'width: 75px' : 'width:55px'"
           text
           type="primary"
           @click="gotoalarm(row.id, row.sn)"
@@ -365,11 +374,13 @@ import { reactive, ref } from "vue";
 import { pageInfo } from "@/api/machineryList/type";
 import MachineDetailDia from "./machineDetailDia.vue";
 import MachineDetail501Dia from "./machineDetail501Dia.vue";
+import { terminalTypeList_API } from "@/api/machineryList/index";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
 import RegisterDia from "./registerDia.vue";
 import { useRouter } from "vue-router";
 import { cityCodeList } from "./citycode2";
 import { useI18n } from "vue-i18n";
+const { locale } = useI18n();
 const { t } = useI18n();
 const router = useRouter();
 const props = defineProps(["carNewList"]);
@@ -390,6 +401,8 @@ const name = ref<string>("");
 const deviceId = ref<string>("");
 const isChange = ref(false);
 const isLanguage = ref<any>(localStorage.language);
+
+
 const handleFunctionList = () => {
   let apiArr = [
     { text: t("statisticsReport.notActived"), value: 0 },
@@ -397,15 +410,19 @@ const handleFunctionList = () => {
   ];
   return apiArr;
 };
+const terminalList = ref([]);
+const getTerminalType = async () => {
+  const res = await terminalTypeList_API();
+  terminalList.value = res.data.map((item: any) => {
+    return {
+      text: item,
+      value: item,
+    };
+  });
+};
+getTerminalType();
 const handleTerminalTypeList = () => {
-  let apiArr = [
-    { text: "AG360", value: "AG360" },
-    { text: "AG502", value: "AG502" },
-    { text: "AG501", value: "AG501" },
-    { text: "AG302Android", value: "AG302Android" },
-    { text: "AG302", value: "AG302" },
-    { text: "AG501Pro", value: "AG501Pro" },
-  ];
+  let apiArr = terminalList.value;
   return apiArr;
 };
 // 车辆ID

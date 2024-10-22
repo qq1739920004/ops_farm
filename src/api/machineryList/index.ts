@@ -113,4 +113,9 @@ export function upgradeList_API(data:any) {
     })
 }
 
-
+export function terminalTypeList_API(){
+    return request<any,any>({
+        url:'/farm/car/terminalType',
+        method:'get'
+    })
+} 

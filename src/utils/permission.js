@@ -140,8 +140,13 @@ function formatRoute(menuPermissions) {
         breadcrumb: item.breadcrumb ? [{ title: item.breadcrumb,titleEn:item.breadcrumbEn }] : "",
         hideTitle: !item.crumb
       };
-      item.visible ? (item.meta.hidden = true) : "";
-      item.visible || (!item.visible && !item.isHavePermission && !item.isAlwaysVisible) ? (item.meta.hidden = true) : "",
+      if(!import.meta.env.VITE_ENV.includes("prod")) {
+        item.visible||(!item.visible&&!item.isHavePermission&&!item.isAlwaysVisible)?(item.meta.hidden = true):''
+      } else {
+        item.visible? (item.meta.hidden = true) : ""
+      }
+      // item.visible ? (item.meta.hidden = true) : "";
+      //  item.visible || (!item.visible && !item.isHavePermission && !item.isAlwaysVisible) ? (item.meta.hidden = true) : "",
       !item.children ? delete item.children : "";
       if (item.file_path) {
         // 设置路由对象name属性

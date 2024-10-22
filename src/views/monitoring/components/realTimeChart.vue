@@ -1,9 +1,9 @@
 <template>
   <div class="realTimeChart_component">
-    <el-dialog @open="beforeOpen" v-model="dialogVisible" :title="props.sn + '实时驾驶趋势图'" width="40%" center>
+    <el-dialog @open="beforeOpen" v-model="dialogVisible" :title="props.sn + t('messages.Realtimedrivingtrendchart')" width="40%" center>
       <p>
         <el-icon class="el-icon-warning-outline" />
-        <span>仅显示最新3分钟数据</span>
+        <span>{{ t('chart.last3') }}</span>
       </p>
       <div class="charts_container">
       
@@ -16,7 +16,7 @@
         <div id="difference"></div>
         <div class="judgeLevel">
           <span :class="['level' + judgeLevel]">{{$t('work.level')}}:{{ judgeLevel }} </span>
-          <el-tooltip effect="dark" content="所有3min展示的点中，横向偏差在（-3，3）占总点比，占比>=90%为优、占比>=70%并<90%为中、占比&lt;70%为差">
+          <el-tooltip effect="dark" :content="t('chart.lan1')">
             <el-icon>
               <InfoFilled />
             </el-icon>
@@ -31,6 +31,7 @@
 import { ref, watch } from "vue";
 import { driveStatusPath_API } from '@/api/monitoring/index'
 import { driveStatusPathResponseData } from '@/api/monitoring/type'
+import { useI18n } from "vue-i18n";
 import * as echarts from 'echarts'
 const props = defineProps({
   sn: {
@@ -42,6 +43,7 @@ const props = defineProps({
     default: {}
   }
 });
+const { t } = useI18n();
 const dialogVisible = ref<boolean>(false)
 const judgeLevel = ref<string>()
 let chartOffset = <any>null
@@ -76,7 +78,7 @@ const optionOffset = {
       onZero: true
     },
     data: [],
-    name: '时间s',
+    name: t('work.time'),
     nameLocation: 'center',
     nameGap: 30
   },
@@ -94,7 +96,7 @@ const optionOffset = {
       show: true,
     },
 
-    name: '横向偏差(cm)',
+    name: `${t('chart.lateralDeviation')}(cm)`,
     position: 'left',
     nameTextStyle: {
       align: 'center'
@@ -109,7 +111,7 @@ const optionOffset = {
   },
   series: [
     {
-      name: '横向偏差',
+      name: t('chart.lateralDeviation'),
       type: 'line',
       showSymbol: false,
       data: [],
@@ -177,7 +179,7 @@ const optionSpeed = {
       onZero: false
     },
     data: [],
-    name: '时间s',
+    name: t('work.time'),
     nameLocation: 'center',
     nameGap: 30
   },
@@ -194,7 +196,7 @@ const optionSpeed = {
     axisLine: {
       show: true,
     },
-    name: '速度(km/h)',
+    name: `${t('chart.speed')}(km/h)`,
     position: 'left',
     nameTextStyle: {
       align: 'center'
@@ -202,7 +204,7 @@ const optionSpeed = {
   },
   series: [
     {
-      name: '速度',
+      name: `${t('chart.speed')}`,
       type: 'line',
       showSymbol: false,
       data: [],
@@ -241,7 +243,7 @@ const optionDirection = {
       onZero: false
     },
     data: [],
-    name: '时间s',
+    name: `${t('work.time')}s`,
     nameLocation: 'center',
     nameGap: 30
   },
@@ -258,7 +260,7 @@ const optionDirection = {
     axisLine: {
       show: true,
     },
-    name: '航向角(°)',
+    name: `${t('chart.headingAngle')}(°)`,
     position: 'left',
     nameTextStyle: {
       align: 'center'
@@ -266,7 +268,7 @@ const optionDirection = {
   },
   series: [
     {
-      name: '航向角',
+      name: t('chart.headingAngle'),
       type: 'line',
       showSymbol: false,
       data: [],
@@ -305,7 +307,7 @@ const optionDifference = {
       onZero: false
     },
     data: [],
-    name: '时间s',
+    name: `${t('work.time')}s`,
     nameLocation: 'center',
     nameGap: 30
   },
@@ -322,7 +324,7 @@ const optionDifference = {
     axisLine: {
       show: true,
     },
-    name: '差分龄期(s)',
+    name: `${t('chart.DifferentialAge')}(s)`,
     position: 'left',
     nameTextStyle: {
       align: 'center'
@@ -330,7 +332,7 @@ const optionDifference = {
   },
   series: [
     {
-      name: '差分龄期',
+      name: t('chart.DifferentialAge'),
       type: 'line',
       showSymbol: false,
       data: [],
