@@ -5,7 +5,7 @@ import path from "path";
 import AutoImport from 'unplugin-auto-import/vite'
 // import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
-// import Components from 'unplugin-vue-components/vite'
+import Components from 'unplugin-vue-components/vite'
 import topLevelAwait from 'vite-plugin-top-level-await'
 
 const baiduUrl = `https://api.map.baidu.com`;
@@ -27,9 +27,9 @@ export default defineConfig({
   // ],
 
   // }),
-  // Components({
-  //   dirs: ['src/components'], // 按需加载的文件夹
-  // }),
+  Components({
+    dirs: ['src/components'], // 按需加载的文件夹
+  }),
   createSvgIconsPlugin({
     // 指定需要缓存的图标文件夹
     iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],

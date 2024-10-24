@@ -1,5 +1,5 @@
 <template>
-  <div class="statistical app_container">
+  <div class="statistical ">
     <div class="head" v-if="headData">
       <head-dom
         :config="{ img: 'dealer', name: '经销商总数', number: headData.companyTotal }"
@@ -8,39 +8,36 @@
         :config="{ img: 'device', name: '设备总数', number: headData.deviceTotal }"
       ></head-dom>
       <head-dom
-        :config="{ img: 'export', name: '出库总数', number: headData.outTotal }"
+        :config="{ img: 'export', name: '激活总数', number: headData.outTotal }"
       ></head-dom>
       <head-dom
-        :config="{ img: 'noExport', name: '未出库总数', number: headData.inToal }"
+        :config="{ img: 'noExport', name: '未激活总数', number: headData.inTotal }"
       ></head-dom>
       <head-dom
         :config="{
           img: 'month',
-          name: '本月出库总数',
+          name: '本月激活总数',
           number: headData.thisMonthOutTotal,
         }"
       ></head-dom>
       <head-dom
-        :config="{ img: 'overdue', name: '超期库存', number: headData.overDueTotal }"
+        :config="{ img: 'overdue', name: '超期库存', number: headData.overDueNum }"
       ></head-dom>
     </div>
-    <div class="content">
+    <div class="content app_card">
       <div class="tb-select">
         <com-select
           :config="{
             width: '348px',
           }"
-          v-model:companyId="companyId"
+          v-model:companyId="tbParams.companyId"
           :agencyList="agencyList"
-          @selectChange="selectChange"
+          @selectChange="loadTable"
         ></com-select>
-        <div class="but-box">
-          <el-button type="primary" class="but" @click="goLine" v-auth="1626"
-            ><img src="./img/line_chart2.svg" alt="icon" />折线图</el-button
-          >
-          <el-button type="primary" class="but" @click="exportInventory" v-auth="1613"
-            >导出数据</el-button
-          >
+        <div class="but-box">        
+          <el-button type="primary" class="but" @click="goLine" v-auth="1970">
+            <SvgIcon icon="line_chart2" style="margin-right: 8px;"></SvgIcon>折线图</el-button>
+          <el-button type="primary" class="but" @click="exportInventory" v-auth="2010">导出数据</el-button>
         </div>
       </div>
       <statistical-tb
@@ -60,13 +57,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, reactive,onMounted } from "vue";
 import {
   statistiHead,
   statisticalList,
   statisticalExport,
-  getCompany,
 } from "@/api/statisticsReport";
+import { carDealer_API } from "@/api/machineryList/index";
 import headDom from "./components/headDom.vue";
 import statisticalTb from "./components/statisticalTb.vue";
 import comSelect from "./components/comSelect.vue";
@@ -75,65 +72,62 @@ import { downloadFile } from "sino-tool-v3";
 const router = useRouter();
 const headData = ref<any>(null);
 const statisticalListData = ref<any[]>([]);
-const companyId = ref<number|undefined>();
 const total = ref<number>(0);
 const agencyList = ref<any[]>([]);
-const tbParams = ref<any>({
+const tbParams = reactive<any>({
   currentPage: 1,
   pageSize: 10,
-  companyId: undefined,
-  sorted: null, //不排序不传, 1 设备总数 2 出库数量 3 未出库数量 4 超期库存
+  companyId: -1,
+  sorted: null, //不排序不传, 1 设备总数 2 激活数量 3 未激活数量 4 超期库存
   order: null, //不排序不传, true 升序 false 降序
 });
 onMounted(async () => {
-  const { data } = await statistiHead();
-  headData.value = data.title;
-
+  headData.value = (await statistiHead()).data;
+  
   loadAgencyList();
 });
 const loadAgencyList = async () => {
-  const { data } = await getCompany();
-  agencyList.value = data.companyList;
-  if (agencyList.value.length == 1) {
-    companyId.value = agencyList.value[0].id;
-  } else {
-    agencyList.value = [
-      { id: "", name: "全部经销商", managerTel: "" },
-      ...agencyList.value,
-    ];
-    companyId.value = undefined;
+  agencyList.value  = (await carDealer_API()).data||[];
+  if(agencyList.value.length>1){   
+    agencyList.value.unshift( { id: -1, name: "全部经销商", managerTel: "" })
   }
-  loadTable(tbParams.value);
+  // if (agencyList.value.length == 1) {
+  //   companyId.value = agencyList.value[0].id;
+  // } else {
+  //   agencyList.value = [
+  //     { id: undefined, name: "全部经销商", managerTel: "" },
+  //     ...agencyList.value,
+  //   ];
+  //   companyId.value = undefined;
+  // }
+  tbParams.companyId=agencyList.value[0].id;
+  loadTable();
 };
-const loadTable = async (params: any) => {
-  const { list, total } = (await statisticalList(params)).data;
-  statisticalListData.value = list;
-  total.value = total;
+const loadTable = async () => {
+  const { data } = await statisticalList(tbParams);
+  statisticalListData.value = data.records;
+  total.value = data.total;
 };
 const tbSortChange = (data: any[]) => {
-  tbParams.value.sorted = data[0].column;
-  tbParams.value.order = data[0].asc;
-  if (tbParams.value.order == undefined) tbParams.value.sorted = null;
-  loadTable(tbParams.value);
+  tbParams.sorted = data[0].column;
+  tbParams.order = data[0].asc;
+  if (tbParams.order == undefined) tbParams.sorted = null;
+  loadTable();
 };
-const selectChange = (val?: number) => {
-  tbParams.value.companyId = val;
-  loadTable(tbParams.value);
-};
+
 const goLine = () => {
   router.push("/statisticsReport/line");
 };
 const exportInventory = async () => {
-  // const companyId = this.companyId || null;
-  const companyId = null;
-
-  let res = await statisticalExport({ companyId });
-  downloadFile(res, "库存分析.xlsx");
+ 
+  let res:any = await statisticalExport({ companyId:tbParams.companyId });
+  downloadFile(res, "激活分析.xlsx");
+ 
 };
 const currentChange = (val: any) => {
-  tbParams.value.currentPage = val.currentPage;
-  tbParams.value.pageSize = val.pageSize;
-  loadTable(tbParams.value);
+  tbParams.currentPage = val.currentPage;
+  tbParams.pageSize = val.pageSize;
+  loadTable();
 };
 </script>
 <style lang="scss" scoped>

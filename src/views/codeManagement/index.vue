@@ -448,7 +448,7 @@ const exportData = () => {
   }).then((res: any) => {
     let name = "二维码管理.xls";
     const type = "application/vnd.ms-excel;charset=utf-8"; //excel文件
-    let u = window.URL.createObjectURL(new Blob([res], { type: type }));
+    let u = window.URL.createObjectURL(new Blob([res.data], { type: type }));
     let a = document.createElement("a");
     a.download = name;
     a.href = u;

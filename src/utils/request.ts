@@ -44,7 +44,8 @@ service.interceptors.response.use(
 
     // 响应数据为二进制流处理(Excel导出)
     if (response.data instanceof ArrayBuffer || response.data instanceof Blob) {
-      return response.data;
+      // return response.data;
+      return response;//有时需使用response.headers，返回response
     } else {
       if (code === 0 || code === 200 || code === 'ok') {
         return response.data;

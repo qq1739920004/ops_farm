@@ -4,10 +4,9 @@
     <el-table
       ref="registerTb"
       :data="tbData"
-      style="overflow: auto;"
-      @selection-change="handleSelectionChange"
+   
       @sort-change="tbDataSort"
-      @select="singleSelect"
+     
       class="all_select_tb"
       row-key="sn"
     >
@@ -15,7 +14,7 @@
         fixed
         type="index"
         :label="$t('message.serialNumber')"
-        width="50"
+        width="60"
       >
       </el-table-column>
       <el-table-column
@@ -29,7 +28,7 @@
         fixed
         prop="deviceNum"
         label="设备总数"
-        :min-width="100"
+        :min-width="110"
         sortable="column"
 
       >
@@ -37,17 +36,17 @@
       <el-table-column
         fixed
         prop="outNum"
-        label="出库数量"
-        :min-width="100"
+        label="激活数量"
+        :min-width="110"
         sortable="column"
 
       >
       </el-table-column>
       <el-table-column
         fixed
-        prop="inToal"
-        label="未出库数量"
-      :min-width="115"
+        prop="inNum"
+        label="未激活数量"
+      :min-width="125"
         sortable="column"
       >
       </el-table-column>
@@ -55,93 +54,81 @@
         fixed
         prop="overDueNum"
         label="超期库存"
-        :min-width="100"
+        :min-width="110"
         sortable="column"
 
       >
       </el-table-column>
-      <el-table-column
-        fixed
+      <el-table-column       
         prop="januaryNum"
-        label="1月出库"
+        label="1月激活"
         :min-width="78"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="februaryNum"
-        label="2月出库"
+        label="2月激活"
         :min-width="78"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="marchNum"
-        label="3月出库"
+        label="3月激活"
         :min-width="78"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="aprilNum"
-        label="4月出库"
+        label="4月激活"
         :min-width="78"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="mayNum"
-        label="5月出库"
+        label="5月激活"
         :min-width="78"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="juneNum"
-        label="6月出库"
+        label="6月激活"
         :min-width="78"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="julyNum"
-        label="7月出库"
+        label="7月激活"
         :min-width="78"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="augustNum"
-        label="8月出库"
+        label="8月激活"
         :min-width="78"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="septemberNum"
-        label="9月出库"
+        label="9月激活"
         :min-width="78"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="octoberNum"
-        label="10月出库"
-        :min-width="78"
+        label="10月激活"
+        :min-width="88"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="novemberNum"
-        label="11月出库"
-        :min-width="78"
+        label="11月激活"
+        :min-width="88"
       >
       </el-table-column>
       <el-table-column
-        fixed
         prop="decemberNum"
-        label="12月出库"
-        :min-width="78"
+        label="12月激活"
+        :min-width="88"
       >
       </el-table-column>
     </el-table>

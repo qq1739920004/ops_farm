@@ -38,8 +38,6 @@ export function getStatisticsReportnetworkAPI() {
   }
 // 远程校准次数、设置数据链次数、注册次数，小程序合并接口
   export function getStatisticsRemoteAPI(params: timeParams) {
-    console.log(111);
-    console.log(params)
     return request<timeParams, getStatisticsRemoteAPIResponse>({
         url: "/farm/stat/remote",
       method: 'get',
@@ -79,18 +77,12 @@ export function statisticalExport(data:any){
     params:data
   })
 }
-//出库总量折线图
+//激活总量折线图
 export function statisticalLineData(){
   return request({
     url:`/farm/report/foldLine`,
     method:'get',
   })
 }
-//获取经销商列表
-export function getCompany(){
-  return request({
-    url:`/farm/salesman/in/list`,
-    method:'get',
-  })
-}
+
 

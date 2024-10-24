@@ -1,7 +1,7 @@
 <template>
   <div class="headDom">
     <div class="left">
-      <div class="name-box">
+      <div class="name-box flex-align-center ">
         <img v-if="config.img=='dealer'" class="name-img" src="../img/name_dealer_number.png" alt="">
         <img v-else-if="config.img=='device'" class="name-img" src="../img/name_device_number.png" alt="">
         <img v-else-if="config.img=='noExport'" class="name-img" src="../img/name_no_export_number.png" alt="">

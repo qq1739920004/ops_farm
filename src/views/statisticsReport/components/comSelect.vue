@@ -1,7 +1,7 @@
 <template>
   <el-select
     v-model="companyIdTemp"
-    :placeholder="$t('terminal.numbertem')"
+    :placeholder="$t('statisticsReport.numbertem')"
     filterable
     remote
     reserve-keyword
@@ -71,7 +71,7 @@ const cacheList=(key:string)=>{
     agencyLoading.value=false;
 }
 const selectChange=()=>{
-     emit('selectChange', companyIdTemp.value);
+     emit('selectChange');
 }
 </script>
 <style lang="scss" scoped></style>

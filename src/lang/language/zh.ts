@@ -80,9 +80,10 @@ const zh = {
     fileStorage: '文件存储',
     retrievingFiles: '回传文件',
     aftersalesprocessing: '售后处理',
-    processingDetails: '处理详情'
-
-
+    processingDetails: '处理详情',
+    projectManagement: '项目管理',
+    deviceManage: '设备管理',
+    landManage: '地块管理',
 
   },
   devicelist: {
@@ -126,7 +127,7 @@ const zh = {
     notAutonomousDriving: "未自动驾驶",
     goOnline: "上线",
     vehicleModel: "车辆型号",
-    historicalTrack:'历史轨迹',
+    historicalTrack: '历史轨迹',
     companyName: "公司名称",
     sunflowerSN: "向日葵SN",
     boardFirmwareNumber: "板卡固件号",
@@ -210,7 +211,7 @@ const zh = {
     status6: "其他",
     endDate: "结束日期",
     export: "导出",
-    search:'查询',
+    search: '查询',
     overwriteConfirmation: "此操作将覆盖当前车辆所有参数，是否继续？",
     modificationSuccess: "修改成功",
     getSourceNodeDataSuccess: "获取源节点数据成功",
@@ -223,8 +224,8 @@ const zh = {
     deviceType: "设备类型",
     remoteManagement: "远程管理",
     vehicleName: "车辆名称",
-    noTrace:'暂无轨迹数据,请选择其他时间!',
-    taceSuccess:'轨迹获取成功！',
+    noTrace: '暂无轨迹数据,请选择其他时间!',
+    taceSuccess: '轨迹获取成功！',
     vehicleType: "车辆类型",
     pidParameters: "PID参数",
     pidUltraLowSpeedParameters: "PID超低速参数",
@@ -407,7 +408,8 @@ const zh = {
     activationStatus: '激活状态',
     totalNumber: '设备总数',
     thousandArea: '面积(亩)',
-    workingHours: '工作时长'
+    workingHours: '工作时长',
+    numbertem: '可搜索名称或手机号',
   },
   job: {
     fix: '固定',
@@ -432,23 +434,43 @@ const zh = {
     LOSS_MOTOR: '电机丢失',
     LOSS_SMART_WHEEL: '智能方向盘丢失',
     LOSS_COURSE: 'RTK无数据',
-    alarmtimes:'告警次数',
+    alarmtimes: '告警次数',
     LOSS_LOCATION_BUT_SIGNAL: '无RTK,单点平滑工作中',
-    LOSS_BASE_LINE:'天线电源异常'
+    LOSS_BASE_LINE: '天线电源异常'
   },
-  chart:{
-    lateralDeviation:'横向偏差',
-    lan1:'所有3min展示的点中，横向偏差在（-3，3）占总点比，占比>=90%为优、占比>=70%并<90%为中、占比<70%为差',
-    last3:'仅展示最近三分钟的数据',
-    speed:'速度',
-    headingAngle:'航向角',
-    DifferentialAge:'差分龄期',
-    CarHeading:'车航向',
-    refreshData:'刷新数据',
-    chooseTime:'选择时间范围',
-    chooseDate:'选择日期',
-    deviation:'偏差',
-    noHis:'无历史轨迹数据'
+  chart: {
+    lateralDeviation: '横向偏差',
+    lan1: '所有3min展示的点中，横向偏差在（-3，3）占总点比，占比>=90%为优、占比>=70%并<90%为中、占比<70%为差',
+    last3: '仅展示最近三分钟的数据',
+    speed: '速度',
+    headingAngle: '航向角',
+    DifferentialAge: '差分龄期',
+    CarHeading: '车航向',
+    refreshData: '刷新数据',
+    chooseTime: '选择时间范围',
+    chooseDate: '选择日期',
+    deviation: '偏差',
+    noHis: '无历史轨迹数据'
+  },
+  project: {
+
+    projectName: '项目名称',
+    newProject: '添加项目',
+    editProject: '编辑项目',
+    newDevice: '添加设备',
+    sendTask: '任务下发',
+    pauseTask: '暂停已下发任务',
+    time:'每日整点',
+    landName:'地块名称'
+  },
+  tip:{
+    projectName:'请输入项目名称',
+    sn:'请输入SN',
+    int:'请输入整数(1-23)',
+    time:'请输入每日整点',
+    sendTask:'下发后会覆盖终端已有任务',
+    deleteLand:'确认删除该地块吗？',
+    deleteProject:'确认删除该项目吗？',
   }
 }
 export default zh

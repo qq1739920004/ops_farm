@@ -31,6 +31,7 @@
     "sass": "^1.63.6",
     "sino-i18n-v3": "^1.0.0",
     "sino-tool-v3": "^1.0.3",
+    "unplugin-vue-components": "^0.27.4",
     "url": "^0.11.1",
     "vue": "^3.3.4",
     "vue-i18n": "^9.3.0-beta.24",

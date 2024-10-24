@@ -13,4 +13,16 @@
 .el-breadcrumb__item:last-child .el-breadcrumb__inner{
     color:var(--main-text-color)!important;
   }
+  .input-number{
+    margin-right: 12px;
+    .el-input-number__decrease,.el-input-number__increase{
+        display: none;
+    }
+    .el-input__inner{    
+        text-align: left!important;
+    }
+    .el-input__wrapper{
+      padding:1px 11px!important;
+    }
+  }
   
