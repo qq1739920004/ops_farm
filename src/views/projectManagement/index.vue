@@ -27,7 +27,6 @@
         </el-table-column>
 
         <el-table-column
-          sortable
           :label="t('message.remark')"
           prop="remark"
           align="center"

@@ -90,7 +90,6 @@ function formatRoute(menuPermissions) {
 
   router.options.routes.push(...addRouteList);
   // appStore.updateRoutes(router.options.routes);
-  console.log(router.options.routes)
   function setFirstRouter(list) {
     list.forEach((item) => {
       if (item.children) {
