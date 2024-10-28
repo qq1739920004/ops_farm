@@ -474,6 +474,7 @@ const en = {
     sendTask:'After issuance, it will overwrite the existing tasks on the terminal',
     deleteLand:'Confirm to delete this plot of land?',
     deleteProject:'Confirm to delete this project?',
+    deleteDevice:'Confirm to delete this device?',
   }
 };
 export default en;

@@ -471,6 +471,7 @@ const zh = {
     sendTask:'下发后会覆盖终端已有任务',
     deleteLand:'确认删除该地块吗？',
     deleteProject:'确认删除该项目吗？',
+    deleteDevice:'确认删除该设备吗？',
   }
 }
 export default zh
