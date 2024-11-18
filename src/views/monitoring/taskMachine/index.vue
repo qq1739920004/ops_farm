@@ -213,13 +213,13 @@ const originZoom = ref<any>(5);
 const mapId = ref(0);
 const mapOptions = reactive([
   {
-    mapName: "卫星地图",
+    mapName: t('sinoMap.SatellitesMap'),
     mapId: 0,
   },
   {
-    mapName: "高德地图",
+    mapName: t('sinoMap.AMAP'),
     mapId: 1,
-  },
+  }, 
   // {
   //     mapName: '谷歌地图',
   //     mapId: 2
@@ -710,4 +710,16 @@ const removeMarker = () => {
 :deep(.el-select) {
   --el-select-input-focus-border-color: transparent;
 }
+  :deep(.el-select__wrapper) {
+    background: transparent;
+
+    box-shadow: none !important;
+    color: #fff;
+  }
+  :deep(.el-select__wrapper .el-tooltip__trigger .el-tooltip__trigger) {
+    box-shadow: none !important;
+  }
+  :deep(.el-select__placeholder) {
+    color: #fff;
+  }
 </style>

@@ -52,7 +52,7 @@
                   placement="top"
                 >
                   <div class="cityline">
-                    市 <el-icon><ArrowRight /></el-icon>
+                    {{t('work.city') }}<el-icon><ArrowRight /></el-icon>
                   </div>
                 </el-tooltip>
               </div>
@@ -104,7 +104,7 @@
           <div v-for="(item, index) in cityCountData" :key="index" class="city_card_item">
             <el-row class="item_title">
               <div class="item_title_province">
-                <SvgIcon @click="goBack" icon="goBack" /><span @click="goBack">省</span>
+                <SvgIcon @click="goBack" icon="goBack" /><span @click="goBack">{{ t('work.province') }}</span>
                 <div style="margin-left: 20px">
                   {{ item.name || "/" }}
                 </div>

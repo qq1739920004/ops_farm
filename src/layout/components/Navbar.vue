@@ -31,14 +31,14 @@
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="goUserCenter">用户中心</el-dropdown-item>
+          <el-dropdown-item @click="goUserCenter">{{t('menus.userCenter')}}</el-dropdown-item>
           <el-dropdown-item @click="gotoList" v-if="isChangfa"
             >订单管理</el-dropdown-item
           >
           <el-dropdown-item @click="gotoPm" v-if="isChangfa"
             >发布管理</el-dropdown-item
           >
-          <el-dropdown-item @click="logOut" divided>退出登录</el-dropdown-item>
+          <el-dropdown-item @click="logOut" divided>{{t('menus.logOut')}}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -106,7 +106,9 @@ import useAppStore from "@/store/app";
 import useUserStore from "@/store/user";
 import { useFullscreen } from "@vueuse/core";
 import SvgIcon from "@/components/SvgIcon/index.vue";
-const { locale } = useI18n();
+
+
+const { locale,t } = useI18n();
 const isChangfa = import.meta.env.MODE === "changFa";
 const appStore = useAppStore();
 const userStore = useUserStore();

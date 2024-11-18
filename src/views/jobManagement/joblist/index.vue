@@ -237,7 +237,7 @@ const openExportDia = () => {
     getPaddyWorkExport_API(pageInfo).then((res) => {
         let name = '作业.xlsx';
         const type = 'application/vnd.ms-excel;charset=utf-8'; //excel文件
-        let u = window.URL.createObjectURL(new Blob([res], { type: type }));
+        let u = window.URL.createObjectURL(new Blob([res.data], { type: type }));
         let a = document.createElement('a');
         a.download = name;
         a.href = u;

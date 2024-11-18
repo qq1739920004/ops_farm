@@ -16,7 +16,7 @@
     />
     <el-table-column
       v-if="!isChangfa"
-      :label="$t('devicelist.name')"
+      :label="$t('devicelist.owner')"
       prop="userName"
       align="center"
     >

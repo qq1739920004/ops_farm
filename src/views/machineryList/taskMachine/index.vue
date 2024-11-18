@@ -213,13 +213,13 @@ const originZoom = ref<any>(5);
 const mapId = ref(0);
 const mapOptions = reactive([
   {
-    mapName: "卫星地图",
+    mapName: t('sinoMap.SatellitesMap'),
     mapId: 0,
   },
   {
-    mapName: "高德地图",
+    mapName: t('sinoMap.AMAP'),
     mapId: 1,
-  },
+  }, 
   // {
   //     mapName: '谷歌地图',
   //     mapId: 2

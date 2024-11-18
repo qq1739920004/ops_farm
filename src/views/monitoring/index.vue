@@ -1450,4 +1450,17 @@ function openRemote_markerPopup(arg: any) {
   justify-content: center;
   padding-right: 18px;
 }
+  :deep(.el-select__wrapper) {
+    background: transparent;
+
+    box-shadow: none !important;
+    color: #fff;
+  }
+  :deep(.el-select__wrapper .el-tooltip__trigger .el-tooltip__trigger) {
+    box-shadow: none !important;
+  }
+  :deep(.el-select__placeholder) {
+    color: #fff;
+  }
+
 </style>

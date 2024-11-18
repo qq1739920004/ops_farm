@@ -4,46 +4,55 @@
       <img src="./images/noPermission.png" alt="" />
       <div class="words">
         <p class="tip" v-if="!isShowAuthBtn">
-          暂无权限！请联系管理员获取~<span> {{ companyManagerTel }}</span>
+          {{ $t("tip.noPermission") }}<span>
+            {{ companyManagerTel }}</span
+          >
         </p>
-        <p class="tip" v-if="isShowAuthBtn">暂无权限！请立即申请权限～</p>
-        <el-button type="primary" v-if="isShowAuthBtn" @click="dialogFormVisible = true"
-          >申请权限</el-button
+        <p class="tip" v-if="isShowAuthBtn">{{ $t("tip.noPermission") }}</p>
+        <span v-if="isShowAuthBtn" style="color: #409eff;"  @click="dialogFormVisible = true"
+          >{{ $t("permission.apply") }}</span
         >
       </div>
     </div>
 
     <!-- 申请权限dialog -->
-    <el-dialog width="30%" title="申请权限" v-model="dialogFormVisible">
+    <el-dialog
+    center
+      width="30%"
+      :title="$t('permission.apply')"
+      v-model="dialogFormVisible"
+      @open="applyFormOpen"
+    >
       <el-form
         :model="applyForm"
         ref="applyForm"
         :rules="rules"
         :label-width="formLabelWidth"
       >
-        <el-form-item label="行业" prop="industry">
+        <el-form-item :label="$t('permission.industry')" prop="industry">
           <el-input
             v-model="applyForm.industry"
             autocomplete="off"
-            placeholder="请输入您的行业"
+            :placeholder="$t('permission.industryTip')"
           ></el-input>
         </el-form-item>
-        <el-form-item label="描述" prop="description">
+        <el-form-item :label="$t('permission.description')" prop="description">
           <el-input
             type="textarea"
             :rows="2"
-            placeholder="请简单描述下您想申请的权限"
+            :placeholder="$t('permission.descriptionTip')"
             v-model="applyForm.description"
           >
           </el-input>
         </el-form-item>
+       
+        <div style="width:100%;display:flex;justify-content:center">
+          <el-button type="primary" @click="sureApply('applyForm')">{{
+            $t("message.submit")
+          }}</el-button>
+        </div>
+   
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="sureApply('applyForm')"
-          >提 交</el-button
-        >
-      </div>
     </el-dialog>
   </div>
 </template>
@@ -64,10 +73,10 @@ export default {
       isShowAuthBtn: false,
       rules: {
         industry: [
-          { required: true, message: "行业不能为空", trigger: "change" },
+          { required: true, message:  this.$t("tip.industry"), trigger: "change" },
         ],
         description: [
-          { required: true, message: "描述不能为空", trigger: "change" },
+          { required: true, message: this.$t("tip.description"), trigger: "change" },
         ],
       },
     };
@@ -124,6 +133,7 @@ export default {
     text-align: center;
     .words {
       margin-top: -60px;
+      font-size: 24px;
       p {
         margin-top: 0px;
         color: rgba(0, 0, 0, 1);

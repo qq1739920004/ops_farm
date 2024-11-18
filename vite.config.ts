@@ -1,18 +1,18 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from "path";
 
 import AutoImport from 'unplugin-auto-import/vite'
 // import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
-// import Components from 'unplugin-vue-components/vite'
+import Components from 'unplugin-vue-components/vite'
 import topLevelAwait from 'vite-plugin-top-level-await'
 
 const baiduUrl = `https://api.map.baidu.com`;
 const nogateway = `https://cloud.sinognss.com/gateway`;
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default ({ mode }) => defineConfig({
   base: "./",
   plugins: [vue(),
   // AutoImport({
@@ -27,9 +27,9 @@ export default defineConfig({
   // ],
 
   // }),
-  // Components({
-  //   dirs: ['src/components'], // 按需加载的文件夹
-  // }),
+  Components({
+    dirs: ['src/components'], // 按需加载的文件夹
+  }),
   createSvgIconsPlugin({
     // 指定需要缓存的图标文件夹
     iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],
@@ -54,12 +54,17 @@ export default defineConfig({
     // css预处理器
     preprocessorOptions: {
       scss: {
+        api: "modern-compiler",
         additionalData: `
-          @import "@/styles/variables.scss";
-          @import "@/styles/mixin.scss";
+          @use "@/styles/variables.scss" as *;
+          @use "@/styles/mixin.scss" as *;
         `
       }
     }
+  },
+  build: {
+    outDir:  `dist-${loadEnv(mode, process.cwd()).VITE_ENV}`, //指定打包输出路径
+   
   },
   server: {
     host: "0.0.0.0",
@@ -83,7 +88,7 @@ export default defineConfig({
         // target: 'http://140.207.166.210:9030',
          target: 'http://140.207.166.210:9030/gateway',
         //  target: 'http://192.168.2.136/gateway',常发
-       // target: 'https://cloud.sinognss.com/gateway',
+         //target: 'https://cloud.sinognss.com/gateway',
         // target: 'https://ads.changfanz.net/gateway',
         //target: 'http://140.207.166.210:9030/gateway/farm',
         changeOrigin: true,

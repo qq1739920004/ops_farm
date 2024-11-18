@@ -42,13 +42,13 @@ function formatRoute(menuPermissions) {
     if (flag) {
       let path = item.path;
       item.path = "";
-      console.log(item.isAlwaysvisible)
+      
         return {
           path,
           component: Layout,
           children: [item],
           isHavePermission: item.isHavePermission,
-          isAlwaysVisible: item.isAlwaysvisible,
+          isAlwaysVisible: item.isAlwaysVisible,
         };
     
       // if (item.crumb) {
@@ -90,7 +90,6 @@ function formatRoute(menuPermissions) {
 
   router.options.routes.push(...addRouteList);
   // appStore.updateRoutes(router.options.routes);
-
   function setFirstRouter(list) {
     list.forEach((item) => {
       if (item.children) {
@@ -159,6 +158,10 @@ function formatRoute(menuPermissions) {
         }
         item.name = name;
         nameArr.push(item.name);
+
+        item.component = item.isHavePermission?
+        loadView[`/src/views${nonParamPath}.vue`]||loadView[`/src/views${nonParamPath}/index.vue`] 
+        :loadComponents[`/src/components/noPermission/index.vue`]
       }
 
       if (item.path.includes("*")) {
@@ -168,20 +171,17 @@ function formatRoute(menuPermissions) {
         } else {
           item.path = location.origin + item.path.split("*")[1];
         }
-      }
-
-      if (item.isHavePermission) {
-        item.file_path
-        ? item.component = loadView[`/src/views${item.file_path}.vue`]||loadView[`/src/views${item.file_path}/index.vue`]
-           
-        : "";
-       
-       } 
-      else {
-        item.file_path
-          ? (item.component = loadComponents[`/src/components/noPermission/index.vue`])
-          : "";
-      }
+      }    
+      // if (item.isHavePermission) {
+      //   item.file_path
+      //   ? item.component = loadView[`/src/views${item.file_path}.vue`]||loadView[`/src/views${item.file_path}/index.vue`]          
+      //   : "";             
+      //  } 
+      // else {
+      //   item.file_path
+      //     ? (item.component = loadComponents[`/src/components/noPermission/index.vue`])
+      //     : "";
+      // }
 
       if (item.children) {
         item.children.forEach((item2) => {
