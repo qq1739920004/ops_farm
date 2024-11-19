@@ -470,7 +470,7 @@ const zh = {
   },
   tip:{
     projectName:'请输入项目名称',
-    noPermission:'您当前无权限访问，请联系管理员申请权限~',
+    noPermission:'请联系管理员申请权限~',
     sn:'请输入SN',
     int:'请输入整数(1-23)',
     time:'请输入每日整点',

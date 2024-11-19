@@ -473,7 +473,7 @@ const en = {
   },
   tip:{
     projectName:'Pls input project name',
-    noPermission:'You currently do not have permission to access, please contact the administrator to apply for permission immediately~',
+    noPermission:'Please contact the administrator to apply for permission immediately~',
     sn:'Pls input SN',
     apply:'Go to apply for permission',
     int:'Please input an integer (1-23)',

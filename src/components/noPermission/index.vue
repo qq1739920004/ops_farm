@@ -115,6 +115,7 @@ export default {
           if (res.code == 200) {
             this.dialogFormVisible = false;
             this.$message({ type: "success", message: "请等待系统管理员分配权限" });
+            dialogFormVisible.value = false
           }
         });
       });
