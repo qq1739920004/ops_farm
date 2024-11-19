@@ -262,6 +262,7 @@ import wifi_2 from "@/assets/monitoring/s-3.png";
 import wifi_3 from "@/assets/monitoring/s-4.png";
 import wifi_4 from "@/assets/monitoring/s-5.png";
 import green from "@/assets/monitoring/green.svg";
+import gray from "@/assets/monitoring/gray.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
 import SinoMap from "@/components/SinoMap/index.vue";
 // import SvgIcon from "@/components/SvgIcon/index.vue";
@@ -968,26 +969,14 @@ function createMarkerIcon(item: any) {
   return icon;
 }
 function createMarkerIconSmall(item: any) {
-  const { terminalType, driveState } = item;
+    const { terminalType, driveState, onlineTcp } = item;
   let icon: string = "";
-  icon = driveState == 0 ? yellow : green;
-  // if (terminalType.includes("AG360")) {
-  //   icon = driveState == 0 ? yellow : green;
-  // } else if (terminalType.includes("AG501") && terminalType != "AG501Pro") {
-  //   icon = driveState == 0 ? yellow : green;
-  // } else if (terminalType == "AG501Pro") {
-  //   icon = driveState == 0 ? yellow : green;
-  // } else if (terminalType.includes("AG502")) {
-  //   icon = driveState == 0 ? yellow : green;
-  // } else if (terminalType.includes("AG302") && terminalType != "AG302Android") {
-  //   icon = driveState == 0 ? yellow : green;
-  // } else if (terminalType == "AG302Android") {
-  //   icon = driveState == 0 ? yellow : green;
-  // } else if (item.terminalType.includes("MC100")) {
-  //   icon = driveState == 0 ? yellow : green;
-  // } else {
-  //   icon = driveState == 0 ? yellow : green;
-  // }
+  console.log(onlineTcp)
+  if (onlineTcp === 0) {
+    icon = gray;
+  } else {
+    icon = driveState == 0 ? yellow : green;
+  }
 
   return icon;
 }
