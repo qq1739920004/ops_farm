@@ -8,9 +8,12 @@
 import { ElConfigProvider } from "element-plus";
 import { nextTick } from "vue";
 import useAppStore from "@/store/app";
+import { useI18n } from "vue-i18n";
+
+const { t} = useI18n();
 const isChangfa = import.meta.env.MODE === "changFa";
 nextTick(() => {
-  document.title = isChangfa ? "常发农装" : "司南耕耘";
+  document.title = isChangfa ? "常发农装" : t('messages.systemName');
 });
 const appStore = useAppStore();
 const changeFavicon = (link:any) => {

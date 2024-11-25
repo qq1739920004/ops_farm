@@ -717,9 +717,9 @@ function createMarkerType(item: any) {
 // marker弹窗
 function createMarkerPopup(item: any) {
   const driveState: any = {
-    0: "非自动驾驶",
-    1: "自动驾驶",
-    2: "自动驾驶", //自动驾驶
+    0: t("messages.auto1"),
+    1: t("messages.auto2"),
+    2: t("messages.auto2"), //自动驾驶
   };
   const onlineStatus: any = {
     0: "status_1",
@@ -733,18 +733,24 @@ function createMarkerPopup(item: any) {
     差: "status_0",
     null: "status_1",
   };
+  const workingStatus2: any = {
+    优: t("messages.excellent"),
+    中: t("messages.medium"),
+    差: t("messages.bad"),
+    null: null,
+  };
   const snTypeReflect: any = {
-    0: "无效解",
-    1: "单点解",
-    2: "差分解",
-    3: "浮动解",
-    4: "固定解",
-    15: "星基解",
+    0: t('messages.invalidSolution'),
+    1: t('messages.singleSolution'),
+    2: t('messages.differenceSolution'),
+    3: t('messages.floatingSolution'),
+    4: t('messages.fixedSolution'),
+    15:t('messages.SatelliteBaseSolution'),
   };
   const diffSource: any = {
-    0: "电台",
-    1: "网络",
-    3: "罗网",
+    0: t("messages.radioStation"),
+    1: t("messages.internet"),
+    3: t("messages.net"),
   };
   const netSignalImg: any = {
     0: wifi_0,
@@ -780,7 +786,7 @@ function createMarkerPopup(item: any) {
     openRemote = true;
   }
 
-  const cardUsage = item.cardUsage == 1 ? "卡1" : item.cardUsage == 2 ? "卡2" : "双卡";
+  const cardUsage = item.cardUsage == 1 ? t('messages.card1') : item.cardUsage == 2 ? t('messages.card2') : t('messages.doubleCard');
   const popup = `<div class="map_popup">
 
         <ul class="popup_container">
@@ -829,7 +835,7 @@ function createMarkerPopup(item: any) {
                 <span class='${
                   item.judgeLevel ? "status " + workingStatus[item.judgeLevel] : ""
                 } '></span>
-                <span>${item.judgeLevel || "--"}</span>
+                <span>${workingStatus2[item.judgeLevel] || "--"}</span>
               </div>
             </div>
             <div class="r">
@@ -1089,7 +1095,7 @@ function openRemote_markerPopup(arg: any) {
     top: 10px;
     position: absolute;
     z-index: 999;
-    width: 320px;
+    width: 360px;
     background: url("@/assets/monitoring/bg_1.png") no-repeat center center;
     background-size: cover;
 

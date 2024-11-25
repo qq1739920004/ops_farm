@@ -19,7 +19,7 @@
             filterable
             v-if="dealerList.length > 1"
             class="m_2"
-            placeholder="公司/经销商"
+            :placeholder="t('messages.companyD')"
             v-model="pageInfo.companyId"
             @change="changeBlur"
           >
