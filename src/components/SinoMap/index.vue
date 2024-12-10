@@ -68,6 +68,7 @@ import AG360_offline from "@/assets/icons/AG360_offline.svg";
 import green from "@/assets/monitoring/green.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
 import gray from "@/assets/monitoring/gray.svg";
+import {gcoordLngLat } from "sino-tool-v3";
 // import AG302 from "@/assets/icons/AG302.svg";
 // import AG302_warn from "@/assets/icons/AG302_warn.svg";
 // import AG501 from "@/assets/icons/AG501.svg";
@@ -270,7 +271,6 @@ watch(
 
 onMounted(() => {
   initMap();
-  handleMapCenter(props.mapCenter);
   createMarker(props.markerData);
   createLine(props.lineData);
   map.zoomIn();
@@ -281,16 +281,16 @@ function createMarker(list: any) {
   mapRenderModeLength.value += list.length;
   list.forEach((item: any) => {
     let marker: any;
-    const [markerLng, markerLat] = gcoordLngLat(item.markerLng, item.markerLat);
+    const position:any = gcoordLngLat(item.markerLng, item.markerLat);
     const icon = createIcon(item);
     if (icon) {
-      marker = L.marker([markerLat, markerLng], {
+      marker = L.marker(position, {
         icon,
         zIndexOffset: item.onlineTcp ? 1000 : 500,
         riseOnHover: true,
       });
     } else {
-      marker = L.marker([markerLat, markerLng]);
+      marker = L.marker(position);
     }
     marker.bindPopup(item.markerPopup);
     if (item.markerName) {
@@ -311,6 +311,10 @@ function createMarker(list: any) {
     // changeZoom()
   });
   map.zoomIn();
+
+setTimeout(() => {
+  handleMapCenter('')
+},100)
 }
 // 删除地图marker点
 function removeMarker(list: any) {
@@ -354,8 +358,8 @@ function updateMarker(item: any) {
   if (!currentMarker || !item.markerLng || !item.markerLat) {
     return;
   }
-  const [markerLng, markerLat] = gcoordLngLat(item.markerLng, item.markerLat);
-  currentMarker.setLatLng([markerLat, markerLng]);
+  const position = gcoordLngLat(item.markerLng, item.markerLat);
+  currentMarker.setLatLng(position);
   currentMarker.getPopup().setContent(item.markerPopup);
 
   if (
@@ -427,7 +431,6 @@ function changeZoom() {
 }
 // 修改地图marker显隐藏
 function updateMarkerVisible(list: any) {
-  console.log(list);
   let fitlerArr: any;
   if (
     list.includes("online1") &&
@@ -565,8 +568,8 @@ function createPolygon(list: any) {
 
   list.forEach((item: any) => {
     item.forEach((v: any) => {
-      const [markerLng, markerLat] = gcoordLngLat(v[0], v[1]);
-      var circle = L.circle([markerLat, markerLng], {
+      const position = gcoordLngLat(v[0], v[1]);
+      var circle = L.circle(position, {
         radius, // 半径（单位：米）
         color: "none",
         fillColor: "#5AF269",
@@ -587,7 +590,7 @@ function createLine(list: any) {
   list.forEach((item: any) => {
     let arr: any = [];
     item.forEach((v: any) => {
-      arr.push(gcoordLngLat(v[0], v[1]).reverse());
+      arr.push(gcoordLngLat(v[0], v[1]));
     });
     latLng.push(arr);
   });
@@ -626,7 +629,7 @@ function handleMapCenter(data: any) {
     findMarker.openPopup();
     map.fitBounds([findMarker._latlng]);
     map.setZoom(map.getZoom() - 2);
-  } else if (data.center && data.center.length > 0) {
+  } else if (data.center && data.center.length > 0) {   
     let latLng: any = [];
     latLng = data.center.map((item: any) => {
       return gcoordLngLat(item[1], item[0]);
@@ -659,10 +662,10 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
   }
 }
 // 处理经纬度偏差
-function gcoordLngLat(markerLng: number, markerLat: number) {
-  const [lat, lng] = gcoord.transform([markerLat, markerLng], gcoord.WGS84, gcoord.GCJ02);
-  return [lng, lat];
-}
+// function gcoordLngLat(markerLng: number, markerLat: number) {
+//   const [lat, lng] = gcoord.transform([markerLat, markerLng], gcoord.WGS84, gcoord.GCJ02);
+//   return [lng, lat];
+// }
 let canvasLayerElement: any = [];
 const setRangeStyle = (style: any) => {
   const mapEelement = document.getElementById("map");

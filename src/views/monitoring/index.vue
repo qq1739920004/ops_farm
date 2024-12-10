@@ -766,7 +766,7 @@ function createMarkerPopup(item: any) {
   };
   const diffSource: any = {
     0: t("messages.radioStation"),
-    1: t("messages.internet"),
+    1: t("messages.network"),
     3: t("messages.net"),
   };
   const netSignalImg: any = {
@@ -995,7 +995,6 @@ function createMarkerIcon(item: any) {
 function createMarkerIconSmall(item: any) {
     const { terminalType, driveState, onlineTcp } = item;
   let icon: string = "";
-  console.log(onlineTcp)
   if (onlineTcp === 0) {
     icon = gray;
   } else {
