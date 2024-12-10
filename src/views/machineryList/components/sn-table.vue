@@ -224,7 +224,7 @@
       :label="$t('devicelist.lastOnlineTime')"
       prop="createtime"
       align="center"
-      width="160"
+      width="180"
     >
       <template #="{ row }">
         <!-- <el-tooltip
@@ -259,7 +259,7 @@
             </template>
         </el-table-column> -->
     <!-- 说明  离线和自动驾驶状态不可编辑 -->
-    <el-table-column :label="$t('devicelist.operation')" width="475" align="center">
+    <el-table-column :label="$t('devicelist.operation')" width="475" >
       <template #="{ row }">
         <el-button
           :disabled="row.onlineTcp === 1 ? false : true"

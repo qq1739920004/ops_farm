@@ -10,7 +10,7 @@
                 </div>
                 <div class="search_area">
                     {{ $t('work.softwareVersion') }}：
-                    <el-select filterable  v-model="softVersion" class="m-2" placeholder="Select" @change="getSnList">
+                    <el-select filterable  v-model="softVersion" style="width:200px" placeholder="Select" @change="getSnList">
                         <el-option v-for="(item, index) in softList" :key="index" :label="item" :value="item"
                             size="small" />
                     </el-select>
@@ -27,7 +27,7 @@
             </div>
             <el-table id="t1" ref="multipleTableRef" :data="tableData" style="width: 100%" @select="handleSelect">
                 <el-table-column type="selection" width="60" />
-                <el-table-column label="序号" type="index" width="220" />
+                <el-table-column :label="t('work.item')" type="index" width="220" />
                 <el-table-column label="SN">
                     <template #default="scope">{{ scope.row }}</template>
                 </el-table-column>
@@ -105,6 +105,8 @@ import { GetcarProductpackageResponseData } from '@/api/machineryList/remoteAdju
 import { GetcarProductpackage_API } from '@/api/machineryList/remoteAdjust/index'
 import { getsoftList_API, getTypeSnList_API, upgradeList_API } from '@/api/machineryList/index'
 import { ElMessage } from 'element-plus'
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const multipleTableRef = ref()
 const tableData = ref([])
 const dialogVisible = ref<boolean>(false)
@@ -218,7 +220,7 @@ const upgradeByList = async () => {
         "updateModel": "9",
         "upgradeWay": 1
     })
-    ElMessage({ type: 'success', message: '修改成功' })
+    ElMessage({ type: 'success', message: t('work.modificationSuccess') })
 }
 defineExpose({
     dialogVisible
@@ -275,8 +277,11 @@ defineExpose({
     font-weight: 400;
 
     .search_area {
-        margin-left: 20px;
+        margin: 0 40px;
+        display: flex;
+        align-items: center;
     }
+
 
 }
 

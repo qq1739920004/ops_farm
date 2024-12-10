@@ -161,11 +161,11 @@ watch(
     createMarker(markerData);
   }
 );
-const markerDataHiddenNow = ref<any>([])
+const markerDataHiddenNow = ref<any>([]);
 watch(
   () => props.markerDataHidden,
   (markerDataHidden) => {
-    markerDataHiddenNow.value = markerDataHidden
+    markerDataHiddenNow.value = markerDataHidden;
     updateMarkerVisible(markerDataHidden);
   },
   { deep: true }
@@ -446,7 +446,6 @@ function updateMarkerVisible(list: any) {
     !list.includes("online1") &&
     !list.includes("online2")
   ) {
-
     fitlerArr = markerArr.filter((j: any) => j.onlineTcp !== 0);
   } else if (
     list.includes("online1") &&
@@ -476,7 +475,7 @@ function updateMarkerVisible(list: any) {
     fitlerArr = markerArr;
   }
   let includedMarkers = fitlerArr.filter((j: any) => !list.includes(j.markerType));
-  TMarkers.value = includedMarkers
+  TMarkers.value = includedMarkers;
   markerGroup.clearLayers();
   if (mapRenderMode == "dom") {
     includedMarkers.forEach((marker: any) => {
@@ -492,7 +491,7 @@ function updateMarkerVisible(list: any) {
     map.setView(map.getCenter()); //缩放也会漂移
   }
 }
-const TMarkers = ref<any>([])
+const TMarkers = ref<any>([]);
 // 创建icon图标
 function createIcon(item: any) {
   if (item.markerIcon) {
@@ -873,7 +872,7 @@ function changeMarkerIcon() {
       markerAddToMap(v.markerType, v);
     });
   }
-  updateMarkerVisible(markerDataHiddenNow.value)
+  updateMarkerVisible(markerDataHiddenNow.value);
   map.setView(map.getCenter());
 }
 // 地图缩放处理事件
@@ -1132,5 +1131,4 @@ defineExpose({
 :deep(.el-select) {
   --el-select-input-focus-border-color: transparent;
 }
-
 </style>

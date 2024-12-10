@@ -113,7 +113,7 @@ const getCarChart = async () => {
   carChartValue.value = res.data;
   const data = res.data;
   if (data.length == 0) {
-    ElMessage.warning("暂无数据");
+    ElMessage.warning(t('work.noData'));
   }
   const dateData = data.timeList;
   const farmData = data.carStatPaddyOneVOS;

@@ -8,6 +8,18 @@ export function getMonitorAPI() {
         method: 'get',
     })
 }
+export function getGeo_API(val:any) {
+  return request<any,any>({
+    url:`/farm/monitor/country/geo?num=${val}`,
+    method:'get'
+  })
+}
+export function getMonitorSea_API() {
+  return request<any, any>({
+    url: "/farm/monitor/sea/get",
+    method: 'get',
+})
+}
 export function getGeojson(keyWord:string) {
   return request<any, geojsonObj>({
     url: "/farm/monitor/geo",
@@ -82,6 +94,8 @@ export function getActiveData(params:timeParams) {
     params
   })
 }
+
+
 export function getStateWs(resList: any) {
   //获取cookie
   let cookie =document.cookie.split('loginSysCookie=')[1].split('#').join('_')
@@ -122,3 +136,4 @@ ws.addEventListener('error', (error) => {
   console.error('WebSocket 连接发生错误:', error);
 });
 }
+

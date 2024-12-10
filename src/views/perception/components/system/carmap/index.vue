@@ -112,6 +112,7 @@ async function drawingCity(AMap: any, data: any) {
   for (let i = 0; i < data.length; i += 1) {//构造MultiPolygon的path
     data[i] = [data[i]]
   }
+
   mask = data;
   startDraw(AMap);
 }

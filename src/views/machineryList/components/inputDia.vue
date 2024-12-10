@@ -97,6 +97,8 @@ import { carDealerResponseData, carDealerObj } from "@/api/machineryList/type";
 import type { UploadInstance } from "element-plus";
 import { ElMessage } from "element-plus";
 import useUserStore from "@/store/user";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const userStore = useUserStore();
 const formRef = ref();
 const dialogVisible = ref<boolean>(false);
@@ -112,7 +114,7 @@ defineExpose({
   dialogVisible,
 });
 const rules = {
-  id: [{ required: true, message: "经销商不能为空", trigger: "change" }],
+  id: [{ required: true, message: t('messages.dealerCantBeEmpty'), trigger: "change" }],
 };
 const getInputList = async () => {
   const res: carDealerResponseData = await carDealer_API();

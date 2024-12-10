@@ -7,7 +7,7 @@
     v-model="dialogVisible"
     :title="$t('work.remoteManagement')"
     width="1012px"
-    height="596px"
+    height="696px"
     center
   >
     <div class="top">
@@ -148,7 +148,7 @@
       >
         <el-row style="margin-bottom: 10px">
           <el-col :span="18" :offset="6">
-            <el-form-item class="item" label="差分设置：">
+            <el-form-item class="item" :label="t('work.differentialSetting')">
               <el-select v-model="workPattern.type" style="width: 225px; height: 32px">
                 <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
                 <el-option :label="$t('work.netting')" :value="'3'" disabled />
@@ -265,7 +265,7 @@
                 v-auth="532"
                 style="margin-left: 20px"
                 @click="uploadBack(props.sn)"
-                >回传</el-button
+                >{{ t('work.return') }}</el-button
               >
               <el-button
                 type="primary"
@@ -274,7 +274,7 @@
                 class="btn3"
                 style=""
                 @click="toFileList"
-                >文件查看</el-button
+                >{{t('work.fileView')}}</el-button
               >
             </el-form-item>
           </el-col>
@@ -289,8 +289,8 @@
                 v-model="chaFenlist.isTransfer"
                 class="ml-2"
                 inline-prompt
-                active-text="开"
-                inactive-text="关"
+                :active-text="t('work.on')"
+                :inactive-text="t('work.off')"
               />
             </el-form-item>
           </el-col>
@@ -313,7 +313,7 @@
         </div>
         <el-row style="margin-top: 40px">
           <el-col :span="14" :offset="6">
-            <el-form-item class="item" label="模块选择：" prop="radio1">
+            <el-form-item class="item" :label="t('work.moduleSelection')" prop="radio1">
               <el-radio-group
                 @change="changeRadio1"
                 text-color="var(--el-color-primary)"
@@ -548,7 +548,7 @@ const updateModelItem = reactive([
   },
   {
     label: "11002",
-    name: "板卡",
+    name: t('work.board'),
   },
 ]);
 const formLabelAlign = reactive({
@@ -583,7 +583,7 @@ const uploadBack = (val: any) => {
       { headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" } }
     )
     .then(() => {
-      ElMessage({ type: "success", message: "回传成功", duration: 1000 });
+      // ElMessage({ type: "success", message: "回传成功", duration: 1000 });
     });
 };
 const switchStatus = ref<boolean>(false);
@@ -601,7 +601,6 @@ const changeLogStatus = async (val: string, val2: any) => {
   if (switchStatus) {
     try {
       await logOpen_API({ sn: val, flag: val2 });
-      ElMessage({ type: "success", message: "修改成功", duration: 1000 });
     } catch {
       // ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
     }
@@ -733,9 +732,9 @@ const openRemoteAdjust = () => {
 // 更新车辆参数
 const updateCarParams = async () => {
   await carFormRef.value.validate();
-  ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
+    confirmButtonText: t('work.submit'),
+    cancelButtonText: t('work.cancel'),
     type: "warning",
   })
     .then(() => {
@@ -743,7 +742,7 @@ const updateCarParams = async () => {
       updateInfo.value.paramJson = JSON.stringify(paramParamsData);
       paramCarParamUpdate_API(updateInfo.value).then(() => {
         try {
-          ElMessage({ type: "success", message: "修改成功" });
+          // ElMessage({ type: "success", message: t('work.modificationSuccess') });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -754,9 +753,9 @@ const updateCarParams = async () => {
 // 更新PID参数
 const updatePidParams = async () => {
   await pidFormRef.value.validate();
-  ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
+    confirmButtonText: t('work.submit'),
+    cancelButtonText: t('work.cancel'),
     type: "warning",
   })
     .then(() => {
@@ -764,7 +763,7 @@ const updatePidParams = async () => {
       updateInfo.value.paramJson = JSON.stringify(PidParamsData);
       updatePidParm_API(updateInfo.value).then(() => {
         try {
-          ElMessage({ type: "success", message: "修改成功" });
+          // ElMessage({ type: "success", message: t('work.modificationSuccess') });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -775,9 +774,9 @@ const updatePidParams = async () => {
 // 更新校准参数更新校准数据
 const updateCalibParams = async () => {
   await calibFormRef.value.validate();
-  ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
+    confirmButtonText: t('work.submit'),
+    cancelButtonText: t('work.cancel'),
     type: "warning",
   })
     .then(() => {
@@ -785,7 +784,7 @@ const updateCalibParams = async () => {
       updateInfo.value.paramJson = JSON.stringify(CalibParamsData);
       updateCalibParam_API(updateInfo.value).then(() => {
         try {
-          ElMessage({ type: "success", message: "修改成功" });
+          // ElMessage({ type: "success", message: t('work.modificationSuccess') });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -826,9 +825,9 @@ const getExtendSourceNode = () => {
     try {
       if (res.data.length >= 1) {
         sourceNode.value = res.data;
-        ElMessage({ type: "success", message: "获取源节点数据成功" });
+        // ElMessage({ type: "success", message: "获取源节点数据成功" });
       } else {
-        ElMessage({ type: "error", message: "获取源节点数据失败" });
+        // ElMessage({ type: "error", message: "获取源节点数据失败" });
       }
     } catch (err) {
       // ElMessage({ type: 'error', message: '获取源节点数据失败' })
@@ -838,9 +837,9 @@ const getExtendSourceNode = () => {
 // 更新差分数据moudleRef
 const updateChafenData = async () => {
   await moudleRef.value.validate();
-  ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
+    confirmButtonText: t('work.submit'),
+    cancelButtonText: t('work.cancel'),
     type: "warning",
   })
     .then(() => {
@@ -854,7 +853,7 @@ const updateChafenData = async () => {
         insidePassword: chaFenlist.value.insidePassword,
       }).then(() => {
         try {
-          ElMessage({ type: "success", message: "修改成功" });
+          // ElMessage({ type: "success", message: t('work.modificationSuccess') });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -890,7 +889,7 @@ const updateProductList = async () => {
       updateModel: formLabelAlign.radio1 === "11001" ? "11" : "12",
       upgradeWay: 1,
     });
-    ElMessage({ type: "success", message: "修改成功" });
+    // ElMessage({ type: "success", message: t('work.modificationSuccess') });
   } catch {
     // ElMessage({ type: 'error', message: '修改失败' })
   }
@@ -908,7 +907,7 @@ const parseVerification = (objItem: { type: string; name: string; range: string 
     let rule1 = {
       min: 1,
       max: 20,
-      message: "长度在 1 到 20 个字符",
+      message: t('work.lengthBetween1And20'),
       trigger: "blur",
     };
     temRule.push(rule1);
@@ -926,13 +925,13 @@ const parseVerification = (objItem: { type: string; name: string; range: string 
           return testRe.test(input);
         };
         if (!value && value !== 0) {
-          return callback(new Error("请输入参数"));
+          return callback(new Error(t('work.enterValue')));
         }
         if (!checkNumber(value)) {
-          return callback(new Error("值必须为整型"));
+          return callback(new Error(t('work.paramShould')));
         }
         if (value < min || value > max) {
-          return callback(new Error(`范围 ${min} 到 ${max} `));
+          return callback(new Error(`${t('work.range')} ${min} - ${max} `));
         }
         callback();
       };
@@ -954,10 +953,10 @@ const parseVerification = (objItem: { type: string; name: string; range: string 
           return testRe.test(input);
         };
         if (!value && value !== 0) {
-          return callback(new Error("请输入参数"));
+          return callback(new Error(t('work.enterValue')));
         }
         if (!checkNumber(value)) {
-          return callback(new Error("参数必须为数字"));
+          return callback(new Error(t('work.paramShould')));
         }
         callback();
       };
@@ -975,13 +974,13 @@ const parseVerification = (objItem: { type: string; name: string; range: string 
           return Number(element);
         });
         if (!value && value !== 0) {
-          return callback(new Error("请输入参数"));
+          return callback(new Error(t('work.enterValue')));
         }
         if (!checkNumber(value)) {
-          return callback(new Error("参数必须为数字"));
+          return callback(new Error(t('work.paramShould')));
         }
         if (value < min || value > max) {
-          return callback(new Error(`范围 ${min}到${max}`));
+          return callback(new Error(`${t('work.range')} ${min}-${max}`));
         }
         callback();
       };
@@ -995,7 +994,7 @@ const carParamRules = computed(() => {
   let rules = {} as any;
   for (let key in carParamsData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+    let rule1 = { required: true, message: t('work.enterValue'), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(carParamsData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -1007,7 +1006,7 @@ const CalibParamRules = computed(() => {
   let rules = {} as any;
   for (let key in CalibTitleData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+    let rule1 = { required: true, message: t('work.enterValue'), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(CalibTitleData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -1019,7 +1018,7 @@ const pibParamRules = computed(() => {
   let rules = {} as any;
   for (let key in PidTitleData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+    let rule1 = { required: true, message: t('work.enterValue'), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(PidTitleData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -1029,15 +1028,15 @@ const pibParamRules = computed(() => {
 });
 
 const rules = {
-  type: [{ required: true, message: "请输入值", trigger: "blur" }],
-  insideHost: [{ required: true, message: "请输入值", trigger: "blur" }],
-  insidePort: [{ required: true, message: "请输入值", trigger: "blur" }],
-  insideSourceNode: [{ required: true, message: "请输入值", trigger: "blur" }],
-  insideUsername: [{ required: true, message: "请输入值", trigger: "blur" }],
-  insidePassword: [{ required: true, message: "请输入值", trigger: "blur" }],
-  radio1: [{ required: true, message: "请输入值", trigger: "blur" }],
-  radio2: [{ required: true, message: "请输入值", trigger: "blur" }],
-  filename: [{ required: true, message: "请输入值", trigger: "blur" }],
+  type: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  insideHost: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  insidePort: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  insideSourceNode: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  insideUsername: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  insidePassword: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  radio1: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  radio2: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  filename: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
 };
 
 // 时间格式转换
@@ -1065,7 +1064,7 @@ const formartDate = (val: Date) => {
 
 .top {
   position: absolute;
-  top: 61px;
+    top: 81px;
   left: 20px;
 
   span {

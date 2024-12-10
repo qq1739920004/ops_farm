@@ -28,8 +28,11 @@
     <el-table-column :label="$t('work.acreage')" align="center">
       <template #="{ row }"> {{ row.workedArea }}{{ $t("work.are") }}</template>
     </el-table-column>
-    <el-table-column :label="$t('work.acTime')" align="center">
-      <template #="{ row }"> {{ row.paddyDuration }}</template>
+    <el-table-column :label="$t('work.acTime')" align="center" width="180">
+      <template #="{ row }"
+        ><span v-if="locale === ' zh'"> {{ row.paddyDuration }}</span>
+        <span v-else> {{ row.paddyDuration.replace('天','days').replace('时','hours').replace('分','mins') }}</span>
+      </template>
     </el-table-column>
     <el-table-column :label="$t('job.milerage') + '(km)'" align="center">
       <template #="{ row }"> {{ (row.workMileage / 1000).toFixed(2) }}</template>
@@ -74,7 +77,7 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const props = defineProps(["paddyWorkList"]);
 const workTypeReflect = reactive<any>({

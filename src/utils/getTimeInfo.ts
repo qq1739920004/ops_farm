@@ -1,3 +1,4 @@
+import i18n from 'sino-i18n-v3';
 export function getCurrentDateTime() {
   // 获取当前时间
   const now = new Date();
@@ -5,8 +6,8 @@ export function getCurrentDateTime() {
   // 格式化日期部分为 'YYYY.MM.DD' 格式
   const date = `${now.getFullYear()}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getDate().toString().padStart(2, '0')}`;
 
-  // 获取当前星期
-  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  // 获取当前星期i18n.global.t(errorCode[code])
+  const weekDays = [i18n.global.t('perception.Sunday'), i18n.global.t('perception.Monday'), i18n.global.t('perception.Tuesday'), i18n.global.t('perception.Wednesday'), i18n.global.t('perception.Thursday'),i18n.global.t('perception.Friday'), i18n.global.t('perception.Saturday')];
   const week = weekDays[now.getDay()];
 
   // 格式化时间部分为 'HH:mm:ss' 格式

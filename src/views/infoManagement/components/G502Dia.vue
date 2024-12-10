@@ -1,9 +1,9 @@
 <!--  -->
 <template>
     <div>
-        <el-dialog v-model="dialogVisible" :title="newRecords.id ? '编辑' : '新建'" width="544px" height="580px">
+        <el-dialog v-model="dialogVisible" :title="newRecords.id ?  $t('work.edit') :  $t('work.new')" width="544px" height="580px">
             <el-form label-width="140px" style="width: 90%" ref="formRef" :model="newRecords" :rules="rules">
-                <el-form-item label="设备类型" prop="terminalType">
+                <el-form-item :label="$t('work.deviceType')" prop="terminalType">
                     <el-select v-model="newRecords.terminalType" class="m-2" :placeholder="$t('work.pleaseSelect')" width="120px"
                         style="width:100%" prop="terminalType">
                         <el-option value="AG360" label="AG360" />
@@ -11,19 +11,19 @@
                         <el-option value="AG501" label="AG501" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="铭牌SN" prop="npn">
+                <el-form-item :label="$t('work.labelSN')" prop="npn">
                     <el-input v-model="newRecords.npn"></el-input>
                 </el-form-item>
-                <el-form-item label="平板SN" prop="sn">
+                <el-form-item :label="$t('work.PlateSN')" prop="sn">
                     <el-input v-model="newRecords.sn"></el-input>
                 </el-form-item>
-                <el-form-item label="电机SN" prop="motorSn">
+                <el-form-item :label="$t('work.motorSN')" prop="motorSn">
                     <el-input v-model="newRecords.motorSn"></el-input>
                 </el-form-item>
-                <el-form-item label="天线1_SN" prop="antennaOne">
+                <el-form-item  :label="$t('work.Antenna1_SN')" prop="antennaOne">
                     <el-input v-model="newRecords.antennaOne"></el-input>
                 </el-form-item>
-                <el-form-item label="天线2_SN" prop="antennaTwo">
+                <el-form-item :label="$t('work.Antenna2_SN')" prop="antennaTwo">
                     <el-input v-model="newRecords.antennaTwo"></el-input>
                 </el-form-item>
             </el-form>
@@ -31,10 +31,10 @@
             <template #footer>
                 <span class="dialog-footer">
                     <el-button type="primary" v-if="!newRecords.id" @click="submit">
-                        确定
+                        {{ $t('work.submit') }}
                     </el-button>
                     <el-button type="primary" v-else @click="editSubmit">
-                        确定
+                        {{ $t('work.submit') }}
                     </el-button>
                 </span>
             </template>
@@ -46,6 +46,8 @@
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { carModuleInfoSave_API, carModuleInfoUpdate_API } from '@/api/infoManagement/index'
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const formRef = ref()
 const props = defineProps({
     newRecords: {
@@ -78,7 +80,7 @@ const editSubmit = async () => {
 const editInfo = async () => {
     try {
         await carModuleInfoUpdate_API(ApiData)
-        ElMessage({ type: 'success', message: '编辑成功' })
+        ElMessage({ type: 'success', message: t('work.editSuccess') })
         emits('push', '')
     }
     catch {
@@ -88,7 +90,7 @@ const editInfo = async () => {
 const addInfo = async () => {
     try {
         await carModuleInfoSave_API(ApiData)
-        ElMessage({ type: 'success', message: '添加成功' })
+        ElMessage({ type: 'success', message: t('messages.addSuccess') })
         emits('push', '')
     }
     catch {
@@ -102,12 +104,12 @@ const submit = async () => {
     addInfo()
 }
 const rules = {
-    terminalType: [{ required: true, message: '请选择种类', trigger: 'blur' }],
-    npn: [{ required: true, message: '请输入铭牌名称', trigger: 'blur' }],
-    sn: [{ required: true, message: '请输入平板SN', trigger: 'blur' }],
-    motorSn: [{ required: true, message: '请输入电机SN', trigger: 'blur' }],
-    antennaOne: [{ required: true, message: '请输入天线1_SN名称', trigger: 'blur' }],
-    antennaTwo: [{ required: true, message: '请输入天线2_SN名称', trigger: 'blur' }],
+    terminalType: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    npn: [{ required: true, message:t('messages.plzenter'), trigger: 'blur' }],
+    sn: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    motorSn: [{ required: true, message:t('messages.plzenter'), trigger: 'blur' }],
+    antennaOne: [{ required: true, message:t('messages.plzenter'), trigger: 'blur' }],
+    antennaTwo: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
 }
 </script>
 

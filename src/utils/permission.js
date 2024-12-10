@@ -42,15 +42,15 @@ function formatRoute(menuPermissions) {
     if (flag) {
       let path = item.path;
       item.path = "";
-      
-        return {
-          path,
-          component: Layout,
-          children: [item],
-          isHavePermission: item.isHavePermission,
-          isAlwaysVisible: item.isAlwaysVisible,
-        };
-    
+
+      return {
+        path,
+        component: Layout,
+        children: [item],
+        isHavePermission: item.isHavePermission,
+        isAlwaysVisible: item.isAlwaysVisible,
+      };
+
       // if (item.crumb) {
       //   return {
       //     path,
@@ -85,7 +85,7 @@ function formatRoute(menuPermissions) {
 
   addRouteList.forEach((item) => {
     router.addRoute(item);
-    
+
   });
 
   router.options.routes.push(...addRouteList);
@@ -100,8 +100,8 @@ function formatRoute(menuPermissions) {
               item2.path.slice(0, 1) == "/"
                 ? item2.path
                 : item2.path
-                ? `/${item2.path}`
-                : "";
+                  ? `/${item2.path}`
+                  : "";
             item2.file_path = upperPath + nextPath;
           } else {
             item2.activeMenu = item.file_path;
@@ -136,14 +136,10 @@ function formatRoute(menuPermissions) {
         icon: item.icon,
         keepAlive: item.keepAlive,
         activeMenu: item.activeMenu ? item.activeMenu : "",
-        breadcrumb: item.breadcrumb ? [{ title: item.breadcrumb,titleEn:item.breadcrumbEn }] : "",
+        breadcrumb: item.breadcrumb ? [{ title: item.breadcrumb, titleEn: item.breadcrumbEn }] : "",
         hideTitle: !item.crumb
       };
-      if(!import.meta.env.VITE_ENV.includes("prod")) {
-        item.visible||(!item.visible&&!item.isHavePermission&&!item.isAlwaysVisible)?(item.meta.hidden = true):''
-      } else {
-        item.visible? (item.meta.hidden = true) : ""
-      }
+      item.visible || (!item.visible && !item.isHavePermission && !item.isAlwaysVisible) ? (item.meta.hidden = true) : ''
       // item.visible ? (item.meta.hidden = true) : "";
       //  item.visible || (!item.visible && !item.isHavePermission && !item.isAlwaysVisible) ? (item.meta.hidden = true) : "",
       !item.children ? delete item.children : "";
@@ -159,9 +155,9 @@ function formatRoute(menuPermissions) {
         item.name = name;
         nameArr.push(item.name);
 
-        item.component = item.isHavePermission?
-        loadView[`/src/views${nonParamPath}.vue`]||loadView[`/src/views${nonParamPath}/index.vue`] 
-        :loadComponents[`/src/components/noPermission/index.vue`]
+        item.component = item.isHavePermission ?
+          loadView[`/src/views${nonParamPath}.vue`] || loadView[`/src/views${nonParamPath}/index.vue`]
+          : loadComponents[`/src/components/noPermission/index.vue`]
       }
 
       if (item.path.includes("*")) {
@@ -171,7 +167,7 @@ function formatRoute(menuPermissions) {
         } else {
           item.path = location.origin + item.path.split("*")[1];
         }
-      }    
+      }
       // if (item.isHavePermission) {
       //   item.file_path
       //   ? item.component = loadView[`/src/views${item.file_path}.vue`]||loadView[`/src/views${item.file_path}/index.vue`]          
@@ -191,8 +187,8 @@ function formatRoute(menuPermissions) {
               item2.path.slice(0, 1) == "/"
                 ? item2.path
                 : item2.path
-                ? `/${item2.path}`
-                : "";
+                  ? `/${item2.path}`
+                  : "";
             item2.file_path = upperPath + nextPath;
           }
         });
@@ -205,29 +201,22 @@ function formatRoute(menuPermissions) {
   // 设置默认菜单数据
   function setDefaultRoute() {
     if (serializeRoutes.length > 0) {
-      let character = (serializeRoutes[1]||serializeRoutes[0])?.children[0].path ? "/" : "";
+      // const firstRoute=serializeRoutes[0];
+      const firstRoute = serializeRoutes.find(i => !i.hidden);
+      if (!firstRoute) { return }
+      // const firstChildren=firstRoute.children[0];
+      const firstChildren = firstRoute.children.find(i => !i.hidden);
+      if (!firstChildren) { return }
+      let character = firstChildren.path ? "/" : "";
       asyncRoutes.unshift({
         path: "/",
+        component: Layout,
         redirect:
-          (serializeRoutes[1]||serializeRoutes[0]).path +
+          firstRoute.path +
           character +
-          (serializeRoutes[1]||serializeRoutes[0]).children[0].path,
-      });
-    } else {
-      // 没有权限数据
-      asyncRoutes.unshift({
-        path: "/",
-        component:  loadComponents[`/src/components/noPermission/index.vue`],
+          firstChildren.path,
       });
     }
-    serializeRoutes.push(
-      {
-        path: "/404",
-        component: loadComponents[`/src/components/404/index.vue`],
-        meta: { hidden: true },
-      },
-      { path: "/:catchAll(.*)", redirect: "/404", meta: { hidden: true } }
-    );
   }
 }
 

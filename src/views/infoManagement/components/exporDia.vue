@@ -12,9 +12,9 @@
                 </el-col>
                 <el-col :span="11">
                     <el-radio-group class="mainArea" v-model="radio">
-                        <el-radio :label="3" class="mainArea">立即过期</el-radio>
-                        <el-radio :label="6" class="mainArea">一年</el-radio>
-                        <el-radio :label="9" class="mainArea">永久</el-radio>
+                        <el-radio :label="3" class="mainArea">{{ $t('devicelist.expiredNow') }}</el-radio>
+                        <el-radio :label="6" class="mainArea">{{ $t('devicelist.oneYear') }}</el-radio>
+                        <el-radio :label="9" class="mainArea">{{ $t('devicelist.permanent') }}</el-radio>
                     </el-radio-group>
                 </el-col>
             </el-row>
@@ -26,7 +26,7 @@
             <template #footer>
                 <span class="dialog-footer">
                     <el-button type="primary">
-                        确定
+                        {{ $t('work.submit') }}
                     </el-button>
                 </span>
             </template>

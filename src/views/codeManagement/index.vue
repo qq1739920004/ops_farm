@@ -374,7 +374,7 @@ const handleAddDialogClose = () => {
 const addData = async () => {
   await formRef.value.validate();
   ElMessageBox.confirm("确定新增？", "Warning", {
-    confirmButtonText: "确定",
+    confirmButtonText: t('work.submit') ,
     cancelButtonText: "取消",
     type: "warning",
   }).then(() => {
@@ -407,7 +407,7 @@ const editData = async () => {
     try {
       sacredCowQrUpdate_path(formData.value).then((res) => {
         if (res.code === 0) {
-          ElMessage({ type: "success", message: "修改成功" });
+          ElMessage({ type: "success", message: t('work.modificationSuccess') });
           dialogVisible.value = false;
         }
       });
@@ -446,7 +446,7 @@ const exportData = () => {
   sacredCowQrExport_path({
     ids: pathValue,
   }).then((res: any) => {
-    let name = "二维码管理.xls";
+    let name = "file.xls";
     const type = "application/vnd.ms-excel;charset=utf-8"; //excel文件
     let u = window.URL.createObjectURL(new Blob([res.data], { type: type }));
     let a = document.createElement("a");

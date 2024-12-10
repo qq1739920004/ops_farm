@@ -710,4 +710,92 @@ const removeMarker = () => {
 :deep(.el-select) {
   --el-select-input-focus-border-color: transparent;
 }
+:deep(.map_popup) {
+  width: 220px;
+
+  color: #fff;
+  .name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+  }
+  div {
+    width: 100%;
+    margin-top: 5px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    div {
+      width: 100px;
+
+      margin-right: 20px;
+    }
+  }
+}
+:deep(.leaflet-popup) {
+  width: 220px;
+  color: white;
+  .leaflet-popup-content-wrapper {
+    background-color: rgba(0, 0, 0, 0.67);
+    color: var(--color-scheme);
+  }
+
+  .leaflet-popup-content {
+    width: auto !important;
+  }
+
+  .leaflet-popup-tip {
+    background-color: rgba(0, 0, 0, 0.67);
+  }
+}
+.time {
+  margin-left: 10px;
+  height: 32px;
+  background: url("@/assets/monitoring/inputBack.png");
+  background-size: 100% 100%;
+  :deep(.el-input__wrapper) {
+    background: transparent !important;
+    box-shadow: none;
+    padding: 0;
+    color: white;
+
+    .el-range-separator,
+    .el-range-input {
+      color: #fff;
+    }
+    .el-icon {
+      color: #4cb04f;
+      margin-left: 5px;
+    }
+  }
+}
+:deep(.el-select) {
+  --el-select-input-focus-border-color: transparent;
+}
+:deep(.el-select__wrapper) {
+  background: url("@/assets/monitoring/inputBack.png");
+  background-size: 100% 100%;
+  box-shadow: none !important;
+  color: #fff;
+}
+:deep(.el-select__wrapper .el-tooltip__trigger .el-tooltip__trigger) {
+  box-shadow: none !important;
+}
+:deep(.el-select__placeholder) {
+  color: #fff;
+}
+.map_utils_item {
+  :deep(.el-select__wrapper) {
+    background: transparent;
+
+    box-shadow: none !important;
+    color: #fff;
+  }
+  :deep(.el-select__wrapper .el-tooltip__trigger .el-tooltip__trigger) {
+    box-shadow: none !important;
+  }
+  :deep(.el-select__placeholder) {
+    color: #fff;
+  }
+}
 </style>

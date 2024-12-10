@@ -7,7 +7,7 @@
     v-model="dialogVisible"
     :title="$t('work.remoteManagement')"
     width="1012px"
-    height="516px"
+    height="616px"
     center
   >
     <div class="top">
@@ -20,8 +20,8 @@
       <el-tabs stretch v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane :label="$t('work.vehicleParameters')" name="1"></el-tab-pane>
         <!-- <el-tab-pane :label="$t('work.calibrationParameters')" name="2"></el-tab-pane> -->
-        <el-tab-pane label="基本参数" name="3"></el-tab-pane>
-        <el-tab-pane label="高级参数1" name="4"></el-tab-pane>
+        <el-tab-pane :label="$t('work.basicP')" name="3"></el-tab-pane>
+        <el-tab-pane :label="$t('work.advanceP')" name="4"></el-tab-pane>
         <!-- <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane> -->
         <el-tab-pane
           :label="$t('work.remoteSetting')"
@@ -189,7 +189,7 @@
       >
         <el-row style="margin-bottom: 10px">
           <el-col :span="18" :offset="6">
-            <el-form-item class="item" label="差分设置：">
+            <el-form-item class="item" :label="t('work.differentialSetting')">
               <el-select v-model="workPattern.type" style="width: 187px; height: 32px">
                 <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
                 <el-option :label="$t('work.netting')" :value="'3'" disabled />
@@ -293,7 +293,7 @@
               <el-row>
                 <el-col align="center">
                 <!--  AG502以及AG502_Android的 -->
-                 日志回传功能暂未开放
+                 {{ t('work.unploadUnv') }}
                 </el-col>
               </el-row>
             </el-form-item>
@@ -309,8 +309,8 @@
                 v-model="chaFenlist.isTransfer"
                 class="ml-2"
                 inline-prompt
-                active-text="开"
-                inactive-text="关"
+                :active-text="t('work.on')"
+                :inactive-text="t('work.off')"
               />
             </el-form-item>
           </el-col>
@@ -367,7 +367,7 @@
       >
         <el-row>
           <el-col align="center">
-            MT801，MT802，AG502以及AG502_Android的升级功能暂未开放
+          {{ t('work.mTcant') }}
           </el-col>
         </el-row>
       </el-form>
@@ -651,7 +651,6 @@ const changeLogStatus = async (val: string, val2: any) => {
     console.log(val, val2);
     try {
       await logOpen_API({ sn: val, flag: val2 });
-      ElMessage({ type: "success", message: "修改成功", duration: 1000 });
     } catch {
       // ElMessage({ type: 'error', message: '修改失败', duration: 1000 })
     }
@@ -691,9 +690,9 @@ const openRemoteAdjust = () => {
 // 更新车辆参数
 const updateCarParams = async () => {
   await carFormRef.value.validate();
-  ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
+    confirmButtonText: t('work.submit'),
+    cancelButtonText: t('work.cancel'),
     type: "warning",
   })
     .then(() => {
@@ -701,7 +700,7 @@ const updateCarParams = async () => {
       updateInfo.value.paramJson = JSON.stringify(paramParamsData);
       paramCarParamUpdate_API(updateInfo.value).then(() => {
         try {
-          ElMessage({ type: "success", message: "修改成功" });
+          ElMessage({ type: "success", message: t('work.modificationSuccess') });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -712,9 +711,9 @@ const updateCarParams = async () => {
 // 更新基本参数
 const updatebasicParams = async () => {
   await pidFormRef.value.validate();
-  ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
+    confirmButtonText: t('work.submit'),
+    cancelButtonText: t('work.cancel'),
     type: "warning",
   })
     .then(() => {
@@ -723,7 +722,7 @@ const updatebasicParams = async () => {
 
       updateBasicParm_API(updateInfo.value).then(() => {
         try {
-          ElMessage({ type: "success", message: "修改成功" });
+          ElMessage({ type: "success", message: t('work.modificationSuccess') });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -734,9 +733,9 @@ const updatebasicParams = async () => {
 // 更新校准参数更新校准数据
 // const updateCalibParams = async () => {
 //   await calibFormRef.value.validate();
-//   ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
-//     confirmButtonText: "确定",
-//     cancelButtonText: "取消",
+//   ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
+//     confirmButtonText: t('work.submit'),
+//     cancelButtonText: t('work.cancel'),
 //     type: "warning",
 //   })
 //     .then(() => {
@@ -744,7 +743,7 @@ const updatebasicParams = async () => {
 //       updateInfo.value.paramJson = JSON.stringify(CalibParamsData);
 //       updateCalibParam_API(updateInfo.value).then(() => {
 //         try {
-//           ElMessage({ type: "success", message: "修改成功" });
+//           ElMessage({ type: "success", message: t('work.modificationSuccess') });
 //         } catch {
 //           // ElMessage({ type: 'error', message: '修改失败' })
 //         }
@@ -778,9 +777,9 @@ const getAdvanced1 = async () => {
 
 const updateAdvanced1Params = async () => {
   await advanceFormRef.value.validate();
-  ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
+    confirmButtonText: t('work.submit'),
+    cancelButtonText: t('work.cancel'),
     type: "warning",
   })
     .then(() => {
@@ -788,7 +787,7 @@ const updateAdvanced1Params = async () => {
       updateInfo.value.paramJson = JSON.stringify(advanced1ParamsData);
       advanced1ParamUpdate_API(updateInfo.value).then(() => {
         try {
-          ElMessage({ type: "success", message: "修改成功" });
+          ElMessage({ type: "success", message: t('work.modificationSuccess') });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -824,9 +823,9 @@ const getExtendSourceNode = () => {
 // 更新差分数据
 const updateChafenData = async () => {
   await moudleRef.value.validate();
-  ElMessageBox.confirm("此操作将覆盖当前车辆所有参数，是否继续？", "Warning", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
+    confirmButtonText: t('work.submit'),
+    cancelButtonText: t('work.cancel'),
     type: "warning",
   })
     .then(() => {
@@ -840,7 +839,7 @@ const updateChafenData = async () => {
         insidePassword: chaFenlist.value.insidePassword,
       }).then(() => {
         try {
-          ElMessage({ type: "success", message: "修改成功" });
+          ElMessage({ type: "success", message: t('work.modificationSuccess') });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -876,15 +875,15 @@ const getProductList = async () => {
     });
 };
 const rules = {
-  type: [{ required: true, message: "请输入值", trigger: "blur" }],
-  insideHost: [{ required: true, message: "请输入值", trigger: "blur" }],
-  insidePort: [{ required: true, message: "请输入值", trigger: "blur" }],
-  insideSourceNode: [{ required: true, message: "请输入值", trigger: "blur" }],
-  insideUsername: [{ required: true, message: "请输入值", trigger: "blur" }],
-  insidePassword: [{ required: true, message: "请输入值", trigger: "blur" }],
-  radio1: [{ required: true, message: "请输入值", trigger: "blur" }],
-  radio2: [{ required: true, message: "请输入值", trigger: "blur" }],
-  filename: [{ required: true, message: "请输入值", trigger: "blur" }],
+  type: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  insideHost: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  insidePort: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  insideSourceNode: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  insideUsername: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  insidePassword: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  radio1: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  radio2: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
+  filename: [{ required: true, message: t('work.enterValue'), trigger: "blur" }],
 };
 const parseVerification = (objItem: { type: any; name: any; range: any }) => {
   let temRule = [];
@@ -892,7 +891,7 @@ const parseVerification = (objItem: { type: any; name: any; range: any }) => {
     let rule1 = {
       min: 1,
       max: 20,
-      message: "长度在 1 到 20 个字符",
+      message:t('work.lengthBetween1And20'),
       trigger: "blur",
     };
     temRule.push(rule1);
@@ -910,13 +909,13 @@ const parseVerification = (objItem: { type: any; name: any; range: any }) => {
           return testRe.test(input);
         };
         if (!value && value !== 0) {
-          return callback(new Error("请输入参数"));
+          return callback(new Error( t('work.enterValue')));
         }
         if (!checkNumber(value)) {
-          return callback(new Error("值必须为整型"));
+          return callback(new Error(t('work.paramShould')));
         }
         if (value < min || value > max) {
-          return callback(new Error(`范围 ${min} 到 ${max} `));
+          return callback(new Error(`${t('work.range')} ${min} - ${max} `));
         }
         callback();
       };
@@ -938,10 +937,10 @@ const parseVerification = (objItem: { type: any; name: any; range: any }) => {
           return testRe.test(input);
         };
         if (!value && value !== 0) {
-          return callback(new Error("请输入参数"));
+          return callback(new Error( t('work.enterValue')));
         }
         if (!checkNumber(value)) {
-          return callback(new Error("参数必须为数字"));
+          return callback(new Error(t('work.paramShould')));
         }
         callback();
       };
@@ -959,13 +958,13 @@ const parseVerification = (objItem: { type: any; name: any; range: any }) => {
           return Number(element);
         });
         if (!value && value !== 0) {
-          return callback(new Error("请输入参数"));
+          return callback(new Error( t('work.enterValue')));
         }
         if (!checkNumber(value)) {
-          return callback(new Error("参数必须为数字"));
+          return callback(new Error(t('work.paramShould')));
         }
         if (value < min || value > max) {
-          return callback(new Error(`范围 ${min}到${max}`));
+          return callback(new Error(`${t('work.range')} ${min}-${max}`));
         }
         callback();
       };
@@ -979,7 +978,7 @@ const carParamRules = computed(() => {
   let rules = {} as any;
   for (let key in carParamsData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+    let rule1 = { required: true, message:  t('work.enterValue'), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(carParamsData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -991,7 +990,7 @@ const CalibParamRules = computed(() => {
   let rules = {} as any;
   for (let key in CalibTitleData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+    let rule1 = { required: true, message:  t('work.enterValue'), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(CalibTitleData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -1003,7 +1002,7 @@ const pibParamRules = computed(() => {
   let rules = {} as any;
   for (let key in basicTitleData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+    let rule1 = { required: true, message:  t('work.enterValue'), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(basicTitleData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -1015,7 +1014,7 @@ const advance1ParamRules = computed(() => {
   let rules = {} as any;
   for (let key in advance1TitleData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message: "请输入参数", trigger: "blur" };
+    let rule1 = { required: true, message:  t('work.enterValue'), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(advance1TitleData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -1063,7 +1062,7 @@ const advance1ParamRules = computed(() => {
 <style lang="scss" scoped>
 .top {
   position: absolute;
-  top: 61px;
+  top: 81px;
   left: 20px;
 
   span {

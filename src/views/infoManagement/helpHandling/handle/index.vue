@@ -79,7 +79,7 @@
               <span class="time">{{ baseInfo.creatorName }}</span>
             </li>
             <li>
-              <span>{{ $t("work.creator") }}电话：</span>
+              <span>{{ $t("work.creatorTel") }}</span>
               <span class="time">{{ baseInfo.creatorTel }}</span>
             </li>
             <li>
@@ -271,18 +271,20 @@ import type {
   RecordsObj,
 } from "@/api/helpHanding/type";
 import type { carNewDetailResponseData, carNewDetailObj } from "@/api/machineryList/type";
+import { useI18n } from "vue-i18n";
 
+const { t} = useI18n();
 const dialogFormVisible = ref(false);
 const $router = useRouter();
 let $route = useRoute();
 
 let isShow = ref<Boolean>(false);
-let openContent = ref<string>("展开");
+let openContent = ref<string>( t('work.unfold'));
 let formRef = ref();
 
 const rules = {
-  info: [{ required: true, message: "请输入备注", trigger: "blur" }],
-  handlerName: [{ required: true, message: "请选择", trigger: "blur" }],
+  info: [{ required: true, message: t('work.enterRemark'), trigger: "blur" }],
+  handlerName: [{ required: true, message: t('work.pleaseSelect'), trigger: "blur" }],
 };
 const helpList = ref<RecordsObj>({
   id: 0,
@@ -522,7 +524,7 @@ const remoteManage = () => {
 
 const clickOpen = () => {
   isShow.value = !isShow.value;
-  isShow.value ? (openContent.value = "收起") : (openContent.value = "展开");
+  isShow.value ? (openContent.value = t('work.fold')) : (openContent.value = t('work.unfold'));
 };
 
 // 处理指派-选择按钮

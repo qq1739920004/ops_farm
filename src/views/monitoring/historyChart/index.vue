@@ -46,7 +46,7 @@ let hDiffXLabel = <any>[]
 let speedData = <any>[]
 let azimuthData = <any>[]
 let history_hDiffChart = <any>null
-let history_speedChart = <any>null
+let history_speedChart = ref<any>(null)
 let history_azimuthChart = <any>null
 const route = useRoute()
 const disabledDate = (time: Date) => {
@@ -194,7 +194,7 @@ const initHDiffChart = () => {
     }
     history_hDiffChart.setOption(option)
     history_hDiffChart.on('dataZoom', (res: any) => {
-        history_speedChart.setOption({
+        history_speedChart.value.setOption({
             dataZoom: [
                 {
                     start: res.batch[0].start,
@@ -221,10 +221,10 @@ const initHDiffChart = () => {
     })
 }
 const initSpeedChart = () => {
-    if (history_speedChart != null) {
-        history_speedChart.dispose()
+    if (history_speedChart.value != null) {
+        history_speedChart.value.dispose()
     }
-    history_speedChart = echarts.init(
+    history_speedChart.value = echarts.init(
         document.getElementById('history_speedChart')
     )
     let option = {
@@ -317,8 +317,8 @@ const initSpeedChart = () => {
             }
         ]
     }
-    history_speedChart.setOption(option)
-    history_speedChart.on('dataZoom', (res: any) => {
+    history_speedChart.value.setOption(option)
+    history_speedChart.value.on('dataZoom', (res: any) => {
         history_hDiffChart.setOption({
             dataZoom: [
                 {
@@ -445,7 +445,7 @@ const initAzimuthChart = () => {
                 }
             ]
         })
-        history_speedChart.setOption({
+        history_speedChart.value.setOption({
             dataZoom: [
                 {
                     start: res.batch[0].start,
@@ -554,8 +554,8 @@ onBeforeUnmount(() => {
     if (history_hDiffChart) {
         history_hDiffChart.dispose()
     }
-    if (history_speedChart) {
-        history_speedChart.dispose()
+    if (history_speedChart.value) {
+        history_speedChart.value.dispose()
     }
     if (history_azimuthChart) {
         history_azimuthChart.dispose()
@@ -565,6 +565,7 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .historyDriveContainer {
+    height: 100%;
     padding: 10px;
 
     overflow: hidden;
@@ -579,9 +580,8 @@ onBeforeUnmount(() => {
     }
 
     .chartContainer {
-        height: calc(100% - 100px);
-        height: -webkit-calc(100% - 100px);
-        height: -moz-calc(100% - 100px);
+        height: 700px;
+
 
         @media (max-width: 1919px) {
             padding: 10px 5%;

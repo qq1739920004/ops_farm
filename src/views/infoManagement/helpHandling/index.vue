@@ -20,6 +20,7 @@
       <div class="state">
         <span>{{$t('devicelist.state')}}：</span>
         <el-select
+        style="width: 180px;"
           v-model="helpHandling.status"
           :placeholder="$t('work.pleaseSelect')"
           @change="chooseStatus"
@@ -238,6 +239,8 @@ const chooseStatus = () => {
 
   .state {
     margin-left: 20px;
+    display: flex;
+    align-items: center;
 
     span {
       font-size: 14px;

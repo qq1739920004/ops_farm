@@ -7,10 +7,23 @@ export function catStartList_API(data: any) {
     data
   })
 }
-
+export function catStartSeaList_API(data: any) {
+  return request<any, any>({
+    url: "/farm/carStat/sea/list",
+    method: 'post',
+    data
+  })
+}
 export function provinceChart_API(data: any) {
   return request<any, any>({
     url: "/farm/carStat/list/province",
+    method: 'post',
+    data
+  })
+}
+export function provinceChartSea_API(data: any) {
+  return request<any, any>({
+    url: "/farm/carStat/sea/list/country",
     method: 'post',
     data
   })

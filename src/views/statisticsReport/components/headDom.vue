@@ -48,7 +48,7 @@ defineProps({
     margin-right: 4px;
   }
   .left {
-    width: 66%;
+    width: 85%;
     height: 100%;
     box-sizing: border-box;
     padding: 10px 16px;
@@ -75,7 +75,7 @@ defineProps({
     }
   }
   .rigth {
-    width: 34%;
+    width: 25%;
     height: 100%;
     padding-top: 5px;
   }

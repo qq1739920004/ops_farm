@@ -138,6 +138,7 @@ function initMap(cityArr: string[]) {
 async function drawingCity(AMap: any, cityArr: string[]) {
   const paramsArr=new Set(cityArr);
   const response = await getGeojson(Array.from(paramsArr).join(','));
+
   let length = response.data.length;
   for (let i = 0; i < length; i++) {
     const data = JSON.parse(response.data[i])
@@ -145,6 +146,7 @@ async function drawingCity(AMap: any, cityArr: string[]) {
       //数据处理
       let [maskTemp, maskPolyTemp] = purifyBaiduData(AMap, data, cityArr[i])
       mask = maskTemp;
+      
       maskPoly = maskPolyTemp;
     }
     if (i === length - 1) {

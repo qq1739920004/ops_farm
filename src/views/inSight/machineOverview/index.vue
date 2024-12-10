@@ -44,7 +44,11 @@
                   {{ item.name || "/" }}
                 </div>
               </div>
-              <div class="item_title_city" @click.native="handleProButClick(item)">
+              <div
+                v-if="item.addrcode !== '-1'"
+                class="item_title_city"
+                @click.native="handleProButClick(item)"
+              >
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -52,7 +56,8 @@
                   placement="top"
                 >
                   <div class="cityline">
-                    {{t('work.city') }}<el-icon><ArrowRight /></el-icon>
+                    <span v-if="locale === 'zh'"> 省 </span>
+                    <span v-else> Country/Region </span><el-icon><ArrowRight /></el-icon>
                   </div>
                 </el-tooltip>
               </div>
@@ -83,7 +88,9 @@
                 </div>
                 <div>
                   <div class="l">{{ t("statisticsReport.jobthousand") }}</div>
-                  <div class="r">{{ item.beforeArea || "/" }}</div>
+                  <div class="r">
+                    {{ Math.floor(item.beforeArea * 100) / 100 || "/" }}
+                  </div>
                 </div>
                 <div>
                   <div class="l2">{{ t("statisticsReport.CumulativeDuration") }}(h)</div>
@@ -104,7 +111,10 @@
           <div v-for="(item, index) in cityCountData" :key="index" class="city_card_item">
             <el-row class="item_title">
               <div class="item_title_province">
-                <SvgIcon @click="goBack" icon="goBack" /><span @click="goBack">{{ t('work.province') }}</span>
+                <SvgIcon @click="goBack" icon="goBack" /><span @click="goBack">
+                  <span v-if="locale === 'zh'"> 省 </span>
+                  <span v-else> Continent </span>
+                </span>
                 <div style="margin-left: 20px">
                   {{ item.name || "/" }}
                 </div>
@@ -137,7 +147,9 @@
                 </div>
                 <div>
                   <div class="l">{{ t("statisticsReport.jobthousand") }}</div>
-                  <div class="r">{{ item.beforeArea || "/" }}</div>
+                  <div class="r">
+                    {{ Math.floor(item.beforeArea * 100) / 100 || "/" }}
+                  </div>
                 </div>
                 <div>
                   <div class="l2">{{ t("statisticsReport.CumulativeDuration") }}(h)</div>
@@ -214,11 +226,16 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick } from "vue";
-import { catStartList_API, provinceChart_API } from "@/api/inSight/index";
+import {
+  catStartList_API,
+  provinceChart_API,
+  provinceChartSea_API,
+  catStartSeaList_API,
+} from "@/api/inSight/index";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import { ElMessage } from "element-plus";
 import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+const { t, locale } = useI18n();
 import * as echarts from "echarts";
 const isActive = ref(2);
 
@@ -254,12 +271,21 @@ const status = ref({
 });
 const currentPage = ref<number>(1);
 const getCityDataNewList = async (val: string) => {
-  const res: any = await catStartList_API({
-    stTime: timestampToTime(timeRange.value[0]),
-    etTime: timestampToTime(timeRange.value[1]),
-    addrcode: val,
-  });
-  cityCountData.value = res.data;
+  if (locale.value === "zh") {
+    const res: any = await catStartList_API({
+      stTime: timestampToTime(timeRange.value[0]),
+      etTime: timestampToTime(timeRange.value[1]),
+      addrcode: val,
+    });
+    cityCountData.value = res.data;
+  } else {
+    const res: any = await catStartSeaList_API({
+      stTime: timestampToTime(timeRange.value[0]),
+      etTime: timestampToTime(timeRange.value[1]),
+      continentId: val,
+    });
+    cityCountData.value = res.data;
+  }
 };
 const changteTime = () => {
   isActive.value = 0;
@@ -273,7 +299,7 @@ const changteTime = () => {
 };
 const changteTime2 = () => {
   provinceChart.clear();
- getChartData(addrcode.value);
+  getChartData(chartId.value,chartIndex.value);
 };
 //今天
 // const onDayClick = () => {
@@ -326,7 +352,7 @@ const onMonthClick2 = () => {
   // getProvinceDataNewList();
   // getCityDataNewList(addrcode.value);
   provinceChart.clear();
-  getChartData(addrcode.value);
+  getChartData(chartId.value,chartIndex.value);
 };
 // 这一年
 const onYearClick2 = () => {
@@ -338,14 +364,15 @@ const onYearClick2 = () => {
   // getProvinceDataNewList();
   // getCityDataNewList(addrcode.value);
   provinceChart.clear();
-  getChartData(addrcode.value);
+  getChartData(chartId.value,chartIndex.value);
 };
 const addrcode = ref<any>("");
 const provinceName = ref<any>("");
 // 点击...
 const handleProButClick = (item: any) => {
   if (item.code === "-1") return;
-  addrcode.value = item.addrcode;
+  if (item.addrcode === "-1") return;
+  // addrcode.value = item.addrcode;
   getCityDataNewList(item.addrcode);
   let iStatus = {
     provinceShow: false,
@@ -361,7 +388,8 @@ const handleProButClick = (item: any) => {
 };
 // 点击城市
 const handleCityCardClick = (item: any) => {
-  addrcode.value = item.addrcode;
+  // console.log(item)
+  // addrcode.value = item.addrcode;
   provinceName.value = item.name;
   let iStatus = {
     provinceShow: false,
@@ -374,7 +402,7 @@ const handleCityCardClick = (item: any) => {
   };
   status.value = iStatus;
   statusStark.value.push(status.value);
-  getChartData(item.addrcode);
+  getChartData(item.addrcode, 2);
 };
 // 点击省份
 const handleProCardClick = (item: any) => {
@@ -391,7 +419,8 @@ const handleProCardClick = (item: any) => {
   };
   status.value = iStatus;
   statusStark.value.push(status.value);
-  getChartData(item.addrcode);
+
+  getChartData(item.addrcode, 1);
 };
 // 计算
 // const pageTitle = computed(() => {
@@ -403,6 +432,7 @@ const goBack = () => {
   statusStark.value.pop();
   const iStatus = statusStark.value[statusStark.value.length - 1];
   status.value = iStatus;
+
   if (iStatus.provinceShow) {
     getProvinceDataNewList();
   } else {
@@ -410,23 +440,44 @@ const goBack = () => {
   }
 };
 const chartValue = ref<any>({});
+const chartId = ref('')
+const chartIndex = ref('')
 // 获取列表
-const getChartData = async (addrcode: any) => {
+const getChartData = async (addrcode: any, index: any) => {
   let code = {
     provinceCode: "",
     cityCode: "",
   };
+  chartId.value = addrcode
+  chartIndex.value = index
   status.value.provinceCode ? (code.provinceCode = status.value.provinceCode) : "";
   status.value.cityCode ? (code.cityCode = status.value.cityCode) : "";
-  const res = await provinceChart_API({
-    stTime: timestampToTime(timeRange.value[0]),
-    etTime: timestampToTime(timeRange.value[1]),
-    addrcode: addrcode,
-  });
+  let res: any;
+  if (locale.value === "zh") {
+    res = await provinceChart_API({
+      stTime: timestampToTime(timeRange.value[0]),
+      etTime: timestampToTime(timeRange.value[1]),
+      addrcode: addrcode,
+    });
+  } else {
+    if (index === 1) {
+      res = await provinceChartSea_API({
+        stTime: timestampToTime(timeRange.value[0]),
+        etTime: timestampToTime(timeRange.value[1]),
+        continentId: addrcode,
+      });
+    } else {
+      res = await provinceChartSea_API({
+        stTime: timestampToTime(timeRange.value[0]),
+        etTime: timestampToTime(timeRange.value[1]),
+        countryCode: addrcode,
+      });
+    }
+  }
   const data = res.data;
   chartValue.value = res.data;
   if (data.length == 0) {
-    ElMessage.warning("暂无数据");
+    ElMessage.warning(t("work.noData"));
   }
   const dateData = data.timeList;
   const farmData = data.carStatPaddyOneVOS;
@@ -655,11 +706,20 @@ function timestampToTime(timestamp: any) {
   return Y + M + D + h + m + s;
 }
 const getProvinceDataNewList = async () => {
-  const res: any = await catStartList_API({
-    stTime: timestampToTime(timeRange.value[0]),
-    etTime: timestampToTime(timeRange.value[1]),
-  });
-  provinceCountData.value = res.data;
+  if (locale.value === "zh") {
+    const res: any = await catStartList_API({
+      stTime: timestampToTime(timeRange.value[0]),
+      etTime: timestampToTime(timeRange.value[1]),
+    });
+    provinceCountData.value = res.data;
+  } else {
+    const res: any = await catStartSeaList_API({
+      stTime: timestampToTime(timeRange.value[0]),
+      etTime: timestampToTime(timeRange.value[1]),
+      continentId: -1,
+    });
+    provinceCountData.value = res.data;
+  }
 };
 
 onMounted(() => {

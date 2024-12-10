@@ -177,6 +177,8 @@ import { carModuleInfoOperationLogResponseData, LogObj, carMoudleInfoGetLeftResp
 import { reactive, ref } from 'vue';
 import { carModuleInfoGet_API, carModuleInfoOperationLog_API, carModuleInfoUpdate_API } from '@/api/infoManagement/index'
 import { ElMessage } from 'element-plus'
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const scence = ref<string>('')
 let $route = useRoute()
 const formRef = ref()
@@ -208,22 +210,21 @@ const topvalue = reactive<MoudleInfoGetLeftObj>({
     activationTime:''
 })
 const rules = {
-    sn: [{ required: true, message: '请输入平板SN', trigger: 'blur' }],
-    motorSn: [{ required: true, message: '请输入电机SN', trigger: 'blur' }],
-    carImuSn: [{ required: true, message: '请输入车身SN', trigger: 'blur' }],
-    wheelImuSn: [{ required: true, message: '请输入前轮SN', trigger: 'blur' }],
-    antennaOne: [{ required: true, message: '请输入天线_1SN', trigger: 'blur' }],
-    antennaTwo: [{ required: true, message: '请输入天线_2SN', trigger: 'blur' }],
-    hubSn: [{ required: true, message: '请输入HUB_SN', trigger: 'blur' }],
+    sn: [{ required: true, message:t('messages.plzenter'), trigger: 'blur' }],
+    motorSn: [{ required: true, message:t('messages.plzenter'), trigger: 'blur' }],
+    carImuSn: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    wheelImuSn: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    antennaOne: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    antennaTwo: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    hubSn: [{ required: true, message:t('messages.plzenter'), trigger: 'blur' }],
 }
 const tableData = reactive<LogObj[]>([])
 const getInfo = async () => {
     const res: carModuleInfoOperationLogResponseData = await carModuleInfoOperationLog_API($route.query.id as never)
     if (res.data.length > 0) {
         Object.assign(tableData, res.data)
-        ElMessage({ type: 'success', message: '获取成功' })
     } else {
-        ElMessage({ message: '暂无变更记录' })
+        ElMessage({ message: t('messages.noRecord') })
     }
 
 }
@@ -251,7 +252,7 @@ const changeSnBtn = async (val: string) => {
     await formRef.value.validateField('sn')
     try {
         await carModuleInfoUpdate_API({ 'sn': val, 'type': '', 'id': topvalue.id })
-        ElMessage({ type: 'success', message: '编辑成功' })
+        ElMessage({ type: 'success', message: t('work.editSuccess') })
         getTopInfo()
     }
     catch {
@@ -262,7 +263,7 @@ const changeMotorSnBtn = async (val: string) => {
     await formRef.value.validateField('motorSn')
     try {
         await carModuleInfoUpdate_API({ 'motorSn': val, 'type': '', 'id': topvalue.id })
-        ElMessage({ type: 'success', message: '编辑成功' })
+        ElMessage({ type: 'success', message: t('work.editSuccess') })
         getTopInfo()
     }
     catch {
@@ -274,7 +275,7 @@ const changeCarImuSnBtn = async (val: string) => {
     await formRef.value.validateField('carImuSn')
     try {
         await carModuleInfoUpdate_API({ 'carImuSn': val, 'type': '', 'id': topvalue.id })
-        ElMessage({ type: 'success', message: '编辑成功' })
+        ElMessage({ type: 'success', message: t('work.editSuccess') })
         getTopInfo()
     }
     catch {
@@ -285,7 +286,7 @@ const changeWheelImuSnBtn = async (val: string) => {
     await formRef.value.validateField('wheelImuSn')
     try {
         await carModuleInfoUpdate_API({ 'wheelImuSn': val, 'type': '', 'id': topvalue.id })
-        ElMessage({ type: 'success', message: '编辑成功' })
+        ElMessage({ type: 'success', message: t('work.editSuccess') })
         getTopInfo()
     }
     catch {
@@ -297,7 +298,7 @@ const changeAntennaOneBtn = async (val: string) => {
     await formRef.value.validateField('antennaOne')
     try {
         await carModuleInfoUpdate_API({ 'antennaOne': val, 'type': '', 'id': topvalue.id })
-        ElMessage({ type: 'success', message: '编辑成功' })
+        ElMessage({ type: 'success', message: t('work.editSuccess') })
         getTopInfo()
     }
     catch {
@@ -308,7 +309,7 @@ const changeAntennaTwoBtn = async (val: string) => {
     await formRef.value.validateField('antennaTwo')
     try {
         await carModuleInfoUpdate_API({ 'antennaTwo': val, 'type': '', 'id': topvalue.id })
-        ElMessage({ type: 'success', message: '编辑成功' })
+        ElMessage({ type: 'success', message: t('work.editSuccess') })
         getTopInfo()
     }
     catch {
@@ -319,7 +320,7 @@ const changeHubSnBtn = async (val: string) => {
     await formRef.value.validateField('hubSn')
     try {
         await carModuleInfoUpdate_API({ 'hubSn': val, 'type': '', 'id': topvalue.id })
-        ElMessage({ type: 'success', message: '编辑成功' })
+        ElMessage({ type: 'success', message: t('work.editSuccess') })
         getTopInfo 
     }
     catch {

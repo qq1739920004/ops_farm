@@ -78,6 +78,20 @@
             placement="top"
           >
             <div style="text-overflow: ellipsis; overflow: hidden">
+              <!-- <span ref="refName" @mouseover="onMouseOver" v-if="locale =='en'">
+                {{
+                  dataStatistics.workArea
+                    ? (dataStatistics.workArea?.totalArea / 10000/15).toFixed(3)
+                    : ""
+                }}
+              </span>
+              <span ref="refName" @mouseover="onMouseOver" v-else>
+                {{
+                  dataStatistics.workArea
+                    ? (dataStatistics.workArea?.totalArea / 10000).toFixed(2)
+                    : ""
+                }}
+              </span> -->
               <span ref="refName" @mouseover="onMouseOver">
                 {{
                   dataStatistics.workArea
@@ -88,7 +102,10 @@
             </div>
           </el-tooltip>
 
-          <div>{{ $t("messages.cumulativeOperation") }}</div>
+          <!-- <div v-if="locale =='zh'">{{ $t("messages.cumulativeOperation") }}</div>
+          <div v-if="locale =='en'">km²</div> -->
+          
+         <div >{{ $t("messages.cumulativeOperation") }}</div>
         </li>
         <li>
           <div>{{ dataStatistics.workDuration?.todayDuration }}</div>
@@ -908,6 +925,7 @@ function createMarkerPopup(item: any) {
         </ul>
         <ul class="btns_container">
           <li>
+          
             <div class="btn ${
               !openRemote ? "disabled" : ""
             }" onclick='openRemote_markerPopup(${JSON.stringify(item)})'>${t(
@@ -1403,13 +1421,16 @@ function openRemote_markerPopup(arg: any) {
     li {
       display: flex;
       justify-content: space-around;
-      line-height: 20px;
+
 
       .btn {
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
         color: var(--el-color-primary);
         font-size: 14px;
         cursor: pointer;
-
+        width: 120px;
         &:hover {
           opacity: 0.8;
         }

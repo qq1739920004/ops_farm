@@ -2,26 +2,26 @@
   <div class="statistical ">
     <div class="head" v-if="headData">
       <head-dom
-        :config="{ img: 'dealer', name: '经销商总数', number: headData.companyTotal }"
+        :config="{ img: 'dealer', name: t('tip.delaerNum'), number: headData.companyTotal }"
       ></head-dom>
       <head-dom
-        :config="{ img: 'device', name: '设备总数', number: headData.deviceTotal }"
+        :config="{ img: 'device', name: t('tip.deviceNum'), number: headData.deviceTotal }"
       ></head-dom>
       <head-dom
-        :config="{ img: 'export', name: '激活总数', number: headData.outTotal }"
+        :config="{ img: 'export', name: t('tip.ActivatedDevice'), number: headData.outTotal }"
       ></head-dom>
       <head-dom
-        :config="{ img: 'noExport', name: '未激活总数', number: headData.inTotal }"
+        :config="{ img: 'noExport', name: t('tip.NonActivatedDevice'), number: headData.inTotal }"
       ></head-dom>
       <head-dom
         :config="{
           img: 'month',
-          name: '本月激活总数',
+          name:t('tip.MonthActivatedDevice') ,
           number: headData.thisMonthOutTotal,
         }"
       ></head-dom>
       <head-dom
-        :config="{ img: 'overdue', name: '超期库存', number: headData.overDueNum }"
+        :config="{ img: 'overdue', name: t('tip.Overstock'), number: headData.overDueNum }"
       ></head-dom>
     </div>
     <div class="content app_card">
@@ -36,8 +36,8 @@
         ></com-select>
         <div class="but-box">        
           <el-button type="primary" class="but" @click="goLine" v-auth="1970">
-            <SvgIcon icon="line_chart2" style="margin-right: 8px;"></SvgIcon>折线图</el-button>
-          <el-button type="primary" class="but" @click="exportInventory" v-auth="2010">导出数据</el-button>
+            <SvgIcon icon="line_chart2" style="margin-right: 8px;"></SvgIcon>{{ t('tip.lineData') }}</el-button>
+          <el-button type="primary" class="but" @click="exportInventory" v-auth="2010">{{ t('tip.Export') }}</el-button>
         </div>
       </div>
       <statistical-tb
@@ -58,6 +58,9 @@
 </template>
 <script setup lang="ts">
 import { ref, reactive,onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t} = useI18n();
 import {
   statistiHead,
   statisticalList,
