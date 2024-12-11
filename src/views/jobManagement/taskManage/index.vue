@@ -136,9 +136,9 @@ import gcoord from "gcoord";
 import { mapTitleLayers } from "./mapTitleLayers";
 import c from "@/assets/jobManage/c.png";
 import SvgIcon from "@/components/SvgIcon/index.vue";
-import { useI18n } from "vue-i18n";
+import { useI18n, } from "vue-i18n";
 import { useRoute } from "vue-router";
-const { t } = useI18n();
+const { t,locale } = useI18n();
 const radio2 = ref(1);
 const route = useRoute();
 // 提交的车辆数组
@@ -434,8 +434,14 @@ const loadWorkData = (workId: any) => {
       loadValue.value.push(res);
       let key = Object.keys(res.data);
       getMachineInfo();
+      let time:any
       const area: any = res.data["workedArea"];
-      const time: any = res.data["paddyDuration"];
+      if (locale.value ==='zh') {
+          time = res.data["paddyDuration"];
+      } else {
+        time = res.data["paddyDuration"].replace('天','days').replace('时','hours').replace('分','mins');
+      }
+    
 
       const mil: any = res.data["workMileage"];
       const mile: any = Math.floor(mil * 100) / 100000;
