@@ -1,0 +1,1 @@
+.legend_container{min-width:190px;position:absolute;top:50px;z-index:999;left:180px;display:flex;justify-content:space-between;font-size:14px;cursor:pointer}.legend_container .active,.legend_container .legend_item:hover{color:#0080ff}

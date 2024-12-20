@@ -35,8 +35,10 @@ defineProps({
 
 <style lang="scss" scoped>
 .headDom {
+  width: 20%;
   background-color:#ffffff;
   margin:0 3px;
+  position: relative;
   min-width: 245px;
   box-shadow: 0px 2px 12px -4px rgba(0,0,0,0.2);
   border-radius: 4px 4px 4px 4px;
@@ -48,7 +50,7 @@ defineProps({
     margin-right: 4px;
   }
   .left {
-    width: 85%;
+    width: 100%;
     height: 100%;
     box-sizing: border-box;
     padding: 10px 16px;
@@ -75,9 +77,10 @@ defineProps({
     }
   }
   .rigth {
-    width: 25%;
-    height: 100%;
-    padding-top: 5px;
+    position: absolute;
+    width: 86px;
+    right: 0;
+    padding-top: 3px;
   }
 }
 </style>

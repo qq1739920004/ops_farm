@@ -12,5 +12,17 @@ export const errorCode: any = {
     1017: 'code.noPackage',
     1018: 'code.upGradeMis',
     1019: 'code.updateMis',
-    1030: 'code.StarMis'
+    1030: 'code.StarMis',
+    1031: 'code.code1031',
+    1032: 'code.code1032',
+    1038: 'code.code1038',
+    1056: 'code.code1056',
+    1057: 'code.code1057',
+    1060: 'code.code1060',
+    1061: 'code.code1061',
+    1100: 'code.code1100',
+    1101: 'code.code1101',
+    1102: 'code.code1102',
+    1103: 'code.code1103',
+    1104: 'code.code1104'
 }

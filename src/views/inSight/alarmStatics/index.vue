@@ -232,7 +232,7 @@ function ChartCreate(
       left: "3%",
       right: "4%",
       bottom: "3%",
-      top: "30%",
+      top: "35%",
       containLabel: true,
     },
     // toolbox: {

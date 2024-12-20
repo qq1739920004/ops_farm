@@ -12,7 +12,8 @@
 <script setup lang="ts">
 import * as echarts from "echarts";
 import { ref, watch, onMounted, onUnmounted } from "vue";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 let bar = ref();
 let mycharts: any;
 const props = defineProps({
@@ -158,7 +159,7 @@ const option = {
       symbol: "path://M1 1,L140 1,L140 15,L1 15,Z",
       symbolKeepAspect: false,
       stack: "triangle",
-      name:'在线数',
+      name:t('messages.onlineCount'),
       barWidth: 5,
       itemStyle: {
         borderWidth: 0,

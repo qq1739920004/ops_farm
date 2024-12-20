@@ -3,13 +3,13 @@
     <div class="top_left">
       <div class="top_tittle" v-if="isChangfa">
         <router-link to="/monitoring">
-          <img src="~@/assets/perceptionImage/logochangfa-usercenter.png" key="" alt="" />
+          <img src="~@/assets/perceptionImage/logochangfa-usercenter.png" style="width:60px" key="" alt="" />
           <h1>常发导航北斗农机智能监管平台</h1>
         </router-link>
       </div>
       <div class="top_tittle" v-else>
         <router-link to="/monitoring">
-          <img src="~@/assets/perceptionImage/top_title_logo.png" key="" alt="" />
+          <img src="~@/assets/common/perceoArrow.png" key="" alt="" />
           <h1>CTFarm Perception Platform</h1>
         </router-link>
       </div>
@@ -149,7 +149,7 @@ watch(() => props.monitorData.addNowYearDevice, (newValue) => {
       align-items: center;
 
       img {
-        width: 60px; // 图标大小保持不变
+        width: 1rem;; // 图标大小保持不变
         margin: 0 calc(20 / 1920 * 100vw) 0 calc(15 / 1920 * 100vw);
       }
 

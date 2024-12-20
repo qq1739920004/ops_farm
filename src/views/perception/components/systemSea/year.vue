@@ -16,7 +16,7 @@
         <span>{{$t('perception.workingArea')}}</span>
         <div class="value-box">
           <span class="circle"></span><span  class="area">{{ numPurify(Math.trunc(totalArea)/15) }}</span
-          ><span class="unit">/km²</span>
+          ><span class="unit">/ha</span>
         </div>
       </div>
     </div>

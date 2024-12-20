@@ -1,50 +1,44 @@
 <template>
   <div class="app_container">
     <!-- 搜索 -->
-   
 
     <!-- 表格 -->
     <div class="table_container app_card">
-      <div class="search_container ">
-      <div>
-        <el-input
-          :placeholder="$t('work.enterSNOrPhone')"
-          v-model="helpHandling.key"
-          @keyup.enter.native="search()"
-        >
-          <template #append>
-            <el-button icon="Search" @click="search()" />
-          </template>
-        </el-input>
+      <div class="search_container">
+        <div>
+          <el-input
+            :placeholder="$t('work.enterSNOrPhone')"
+            v-model="helpHandling.key"
+            @keyup.enter.native="search()"
+          >
+            <template #append>
+              <el-button icon="Search" @click="search()" />
+            </template>
+          </el-input>
+        </div>
+        <div class="state">
+          <span>{{ $t("devicelist.state") }}：</span>
+          <el-select
+            style="width: 180px"
+            v-model="helpHandling.status"
+            :placeholder="$t('work.pleaseSelect')"
+            @change="chooseStatus"
+          >
+            <el-option value="0" :label="$t('work.pending')" />
+            <el-option value="1" :label="$t('work.assigned')" />
+            <el-option value="2" :label="$t('work.processed')" />
+          </el-select>
+        </div>
+        <div class="tag">
+          <el-tag type="danger" class="el_tag_uncount">
+            <el-icon :size="20">
+              <Edit />
+            </el-icon>
+            {{ $t("work.pending") }} {{ helpHandlingUncount }}
+          </el-tag>
+        </div>
       </div>
-      <div class="state">
-        <span>{{$t('devicelist.state')}}：</span>
-        <el-select
-        style="width: 180px;"
-          v-model="helpHandling.status"
-          :placeholder="$t('work.pleaseSelect')"
-          @change="chooseStatus"
-        >
-          <el-option value="0" :label="$t('work.pending')" />
-          <el-option value="1" :label="$t('work.assigned')" />
-          <el-option value="2" :label="$t('work.processed')" />
-        </el-select>
-      </div>
-      <div class="tag">
-        <el-tag type="danger" class="el_tag_uncount">
-          <el-icon :size="20">
-            <Edit />
-          </el-icon>
-          {{$t('work.pending')}} {{ helpHandlingUncount }}
-        </el-tag>
-      </div>
-    </div>
-      <el-table
-        type="index"
-        @sort-change="changeTableSort"
-        :data="helpList"
-        stripe
-      >
+      <el-table type="index" @sort-change="changeTableSort" :data="helpList" stripe>
         <el-table-column
           :label="$t('devicelist.item')"
           type="index"
@@ -61,14 +55,14 @@
                   background: rgba(255, 212, 212, 1);
                   border: 1px solid rgba(255, 212, 212, 1);
                 "
-                >{{$t('work.pending')}}</el-tag
+                >{{ $t("work.pending") }}</el-tag
               >
             </div>
             <div v-if="row.status == 1">
-              <el-tag>{{$t('work.assigned')}}</el-tag>
+              <el-tag>{{ $t("work.assigned") }}</el-tag>
             </div>
             <div v-if="row.status == 2">
-              <el-tag>{{$t('work.processed')}}</el-tag>
+              <el-tag>{{ $t("work.processed") }}</el-tag>
             </div>
           </template>
         </el-table-column>
@@ -90,7 +84,11 @@
         <el-table-column :label="$t('work.period')" prop="consumeTime" align="center" />
         <el-table-column :label="$t('work.handler')" prop="handlerName" align="center" />
         <el-table-column :label="$t('work.admin')" prop="managerName" align="center" />
-        <el-table-column :label="$t('work.assignTime')" prop="assignTime" align="center" />
+        <el-table-column
+          :label="$t('work.assignTime')"
+          prop="assignTime"
+          align="center"
+        />
         <el-table-column :label="$t('work.remark')" prop="info" />
         <el-table-column :label="$t('work.operation')" prop="status" align="center">
           <template #="{ row }">
@@ -101,7 +99,7 @@
               type="success"
               @click="handleEdit(row)"
               :disabled="row.status == 2"
-              >{{$t('work.processed2')}}</el-button
+              >{{ $t("work.processed2") }}</el-button
             >
           </template>
         </el-table-column>
@@ -120,10 +118,7 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted } from "vue";
 import Pagination from "@/components/Pagination/index.vue";
-import {
-  getHelpHandlingAPI,
-  getHelpHandlingUncountAPI,
-} from "@/api/helpHanding/index";
+import { getHelpHandlingAPI, getHelpHandlingUncountAPI } from "@/api/helpHanding/index";
 import type {
   RecordsObj,
   HelpHandlingObj,
@@ -131,7 +126,8 @@ import type {
   HelpHandlingUncountData,
 } from "@/api/helpHanding/type";
 import { useRouter } from "vue-router";
-
+import { useI18n } from "vue-i18n";
+const { locale } = useI18n();
 const helpList = ref<RecordsObj[]>([]);
 const total = ref<number>(10);
 const helpHandlingUncount = ref<HelpHandlingUncountData>();
@@ -195,12 +191,17 @@ const tsToStr = (nowtime: any) => {
   // let Moth = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
   let Day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
   let Hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-  let Minute =
-    date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-  let Sechond =
-    date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-  let GMT = Day + "天" + Hour + "小时" + Minute + "分钟" + Sechond + "秒";
-  return GMT;
+  let Minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+  let Sechond = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+  if(locale.value.includes('zh')) {
+    let GMT = Day + "天" + Hour + "小时" + Minute + "分钟" + Sechond + "秒";
+      return GMT;
+  } else {
+    let GMT = Day + "d " + Hour + "h " + Minute + "m " + Sechond + "s";
+      return GMT;
+  }
+
+
 };
 
 getHelpHandling();

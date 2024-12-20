@@ -66,15 +66,18 @@
               <el-row class="item_text">
                 <div class="title_data">
                   <div style="width: 25%">{{ $t("work.onlineTotalVehicles") }}</div>
-                  <div style="width: 50%">{{ $t("work.todayTotalOperation") }}</div>
+                  <div style="width: 40%">{{ $t("work.todayTotalOperation") }}</div>
                   <div style="width: 35%">{{ $t("work.todayTime") }}</div>
                 </div>
               </el-row>
               <el-row class="item_count">
                 <div class="title_data">
                   <div style="width: 25%">{{ item.onlineNum || "--" }}</div>
-                  <div style="width: 50%">
+                  <div style="width: 40%" v-if="locale.includes('zh')">
                     {{ item.todayArea ? item.todayArea.toFixed(2) : "--" }}
+                  </div>
+                  <div style="width: 40%" v-if="locale.includes('en')">
+                    {{ item.todayArea ? (item.todayArea/15).toFixed(2) : "--" }}
                   </div>
                   <div style="width: 35%">
                     {{ item.todayDuration ? item.todayDuration.toFixed(2) : "--" }}
@@ -88,8 +91,11 @@
                 </div>
                 <div>
                   <div class="l">{{ t("statisticsReport.jobthousand") }}</div>
-                  <div class="r">
+                  <div class="r" v-if="locale.includes('zh')">
                     {{ Math.floor(item.beforeArea * 100) / 100 || "/" }}
+                  </div>
+                  <div class="r" v-if="locale.includes('en')">
+                    {{ Math.floor(item.beforeArea * 100/15) / 100 || "/" }}
                   </div>
                 </div>
                 <div>
@@ -132,8 +138,11 @@
               <el-row class="item_count">
                 <div class="title_data">
                   <div style="width: 25%">{{ item.onlineNum || "--" }}</div>
-                  <div style="width: 50%">
+                  <div style="width: 50%" v-if="locale.includes('zh')">
                     {{ item.todayArea ? item.todayArea.toFixed(2) : "--" }}
+                  </div>
+                  <div style="width: 50%" v-if="locale.includes('en')">
+                    {{ item.todayArea ? (item.todayArea/15).toFixed(2) : "--" }}
                   </div>
                   <div style="width: 35%">
                     {{ item.todayDuration ? item.todayDuration.toFixed(2) : "--" }}
@@ -147,8 +156,11 @@
                 </div>
                 <div>
                   <div class="l">{{ t("statisticsReport.jobthousand") }}</div>
-                  <div class="r">
+                  <div class="r" v-if="locale.includes('zh')">
                     {{ Math.floor(item.beforeArea * 100) / 100 || "/" }}
+                  </div>
+                  <div class="r" v-if="locale.includes('en')">
+                    {{ Math.floor(item.beforeArea * 100/15) / 100 || "/" }}
                   </div>
                 </div>
                 <div>
@@ -180,8 +192,11 @@
             {{ chartValue.totalNum }}
           </div>
           <div class="title">{{ t("statisticsReport.jobthousand") }}:</div>
-          <div class="value">
+          <div class="value" v-if="locale.includes('zh')">
             {{ chartValue.beforeAreaSum }}
+          </div>
+          <div class="value" v-if="locale.includes('en')">
+            {{( chartValue.beforeAreaSum/15 ).toFixed(2)}}
           </div>
           <div class="title">{{ t("statisticsReport.CumulativeDuration") }}(h):</div>
           <div class="value">
@@ -481,13 +496,24 @@ const getChartData = async (addrcode: any, index: any) => {
   }
   const dateData = data.timeList;
   const farmData = data.carStatPaddyOneVOS;
-  const beforeArea = farmData.map((item: any) => {
+  if(locale.value.includes('zh')) {
+    const beforeArea = farmData.map((item: any) => {
     return item.beforeArea;
   });
   const beforeDuration = farmData.map((item: any) => {
     return item.beforeDuration;
   });
   ChartCreate(dateData, beforeArea, beforeDuration);
+  } else {
+    const beforeArea = farmData.map((item: any) => {
+    return (item.beforeArea/15).toFixed(2);
+  });
+  const beforeDuration = farmData.map((item: any) => {
+    return (item.beforeDuration/15).toFixed(2);
+  });
+  ChartCreate(dateData, beforeArea, beforeDuration);
+  }
+
 };
 let provinceChart: any;
 function initChart() {

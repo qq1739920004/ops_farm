@@ -136,9 +136,9 @@ import gcoord from "gcoord";
 import { mapTitleLayers } from "./mapTitleLayers";
 import c from "@/assets/jobManage/c.png";
 import SvgIcon from "@/components/SvgIcon/index.vue";
-import { useI18n, } from "vue-i18n";
+import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-const { t,locale } = useI18n();
+const { t, locale } = useI18n();
 const radio2 = ref(1);
 const route = useRoute();
 // 提交的车辆数组
@@ -183,13 +183,13 @@ let calculationObj = <any[]>reactive([]);
 const mapId = ref(0);
 const mapOptions = reactive([
   {
-    mapName: t('sinoMap.SatellitesMap'),
+    mapName: t("sinoMap.SatellitesMap"),
     mapId: 0,
   },
   {
-    mapName: t('sinoMap.AMAP'),
+    mapName: t("sinoMap.AMAP"),
     mapId: 1,
-  }, 
+  },
   // {
   //     mapName: '谷歌地图',
   //     mapId: 2
@@ -434,14 +434,16 @@ const loadWorkData = (workId: any) => {
       loadValue.value.push(res);
       let key = Object.keys(res.data);
       getMachineInfo();
-      let time:any
+      let time: any;
       const area: any = res.data["workedArea"];
-      if (locale.value ==='zh') {
-          time = res.data["paddyDuration"];
+      if (locale.value.includes("zh")) {
+        time = res.data["paddyDuration"];
       } else {
-        time = res.data["paddyDuration"].replace('天','days').replace('时','hours').replace('分','mins');
+        time = res.data["paddyDuration"]
+          .replace("天", "d ")
+          .replace("时", "h ")
+          .replace("分", "m");
       }
-    
 
       const mil: any = res.data["workMileage"];
       const mile: any = Math.floor(mil * 100) / 100000;
@@ -461,7 +463,7 @@ const loadWorkData = (workId: any) => {
           let nameTitle: any = item;
           emptyIds.value = false;
           if (res.data[item].length === 0) {
-            ElMessage.warning(`${item}暂无作业数据`);
+            ElMessage.warning(`${item}${t('messages.noTaskData')}`);
           } else {
             let PointListTransed = res.data[item].map((item2: any) => {
               return coorTransform(
@@ -498,9 +500,15 @@ const loadWorkData = (workId: any) => {
 };
 const drawLine = (workId: any, ress: any) => {
   const res = ress;
+  let area: any;
   res.map((it: any, index: any) => {
     let key = Object.keys(it.data);
-    const area: any = it.data["workedArea"];
+    if (locale.value.includes("zh")) {
+      area = it.data["workedArea"];
+    } else {
+      area = (it.data["workedArea"] / 15).toFixed(2);
+    }
+
     const time: any = it.data["paddyDuration"];
     const mil: any = it.data["workMileage"];
     const mile: any = Math.floor(mil * 100) / 100000;
@@ -551,7 +559,12 @@ const drawSolLine = (workId: any, ress: any) => {
 
   res.map((it: any, index: any) => {
     let key = Object.keys(it.data);
-    const area: any = it.data["workedArea"];
+    let area: any;
+    if (locale.value.includes("zh")) {
+      area = it.data["workedArea"];
+    } else {
+      area = (it.data["workedArea"] / 15).toFixed(2);
+    }
     const time: any = it.data["paddyDuration"];
     const mil: any = it.data["workMileage"];
     const mile: any = Math.floor(mil * 100) / 100000;
@@ -942,7 +955,7 @@ const getPaddyWorkList = async (flag: Boolean) => {
   });
   paddyWorkList.value = res.data.records;
   if (res.data.records.length === 0) {
-    ElMessage.warning(`暂无作业数据`);
+    ElMessage.warning(t('messages.noTaskData'));
     loadValue.value = [];
   }
   let tem = res.data.records;

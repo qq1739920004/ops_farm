@@ -26,12 +26,13 @@
       </template>
     </el-table-column>
     <el-table-column :label="$t('work.acreage')" align="center">
-      <template #="{ row }"> {{ row.workedArea }}{{ $t("work.are") }}</template>
+      <template #="{ row }" v-if="locale.includes('zh')"> {{ row.workedArea }}{{ $t("work.are") }}</template>
+      <template #="{ row }" v-if="locale.includes('en')"> {{ (row.workedArea/15).toFixed(2) }}{{ $t("work.are") }}</template>
     </el-table-column>
     <el-table-column :label="$t('work.acTime')" align="center" width="180">
       <template #="{ row }"
-        ><span v-if="locale === ' zh'"> {{ row.paddyDuration }}</span>
-        <span v-else> {{ row.paddyDuration.replace('天','days').replace('时','hours').replace('分','mins') }}</span>
+        ><span v-if="locale.includes('zh') "> {{ row.paddyDuration }}</span>
+        <span v-else> {{ row.paddyDuration.replace('天','d ').replace('时','h ').replace('分','m') }}</span>
       </template>
     </el-table-column>
     <el-table-column :label="$t('job.milerage') + '(km)'" align="center">

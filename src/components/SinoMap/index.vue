@@ -243,12 +243,12 @@ let mapTileOptions = reactive({
       mapName: "GaoDe",
       mapType: "Normal",
     },
-    // {
-    //   id: 2,
-    //   lable: "sinoMap.googleMap",
-    //   mapName: "Google",
-    //   mapType: "Normal",
-    // },
+    {
+      id: 2,
+      lable: "sinoMap.googleMap",
+      mapName: "Google",
+      mapType: "Normal",
+    },
     // { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
   ],
 });
@@ -314,7 +314,7 @@ function createMarker(list: any) {
 
 setTimeout(() => {
   handleMapCenter('')
-},100)
+},10)
 }
 // 删除地图marker点
 function removeMarker(list: any) {
@@ -371,7 +371,7 @@ function updateMarker(item: any) {
 
     if (mapRenderMode == "canvas") {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
-      const newMarker = L.marker([markerLat, markerLng], {
+      const newMarker = L.marker(position, {
         icon,
         zIndexOffset: item.onlineTcp ? 1000 : 500,
         riseOnHover: true,
@@ -402,7 +402,7 @@ function updateMarker(item: any) {
 
     if (mapRenderMode == "canvas") {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
-      const newMarker = L.marker([markerLat, markerLng], {
+      const newMarker = L.marker(position, {
         icon,
         zIndexOffset: item.onlineTcp ? 1000 : 500,
         riseOnHover: true,
@@ -528,7 +528,7 @@ function createIcon(item: any) {
 // 初始化加载地图
 function initMap() {
   map = L.map("map", {
-    minZoom: 1, //最小缩放值
+    minZoom: 3, //最小缩放值
     maxZoom: 18, //最大缩放值
     // center: props.mapCenter.center, //注意和其他地图经纬度格式区别
     // zoom: props.mapCenter.zoom, //初始缩放值
@@ -614,7 +614,7 @@ function handleMapCenter(data: any) {
     let latLng: any = [];
     if (props.mapCenter.center) {
       latLng = props.mapCenter.center.map((item: any) => {
-        return gcoordLngLat(item[1], item[0]);
+        return gcoordLngLat(item[0], item[1]);
       });
       var bounds = L.latLngBounds(latLng);
       map.fitBounds(bounds);
@@ -632,7 +632,7 @@ function handleMapCenter(data: any) {
   } else if (data.center && data.center.length > 0) {   
     let latLng: any = [];
     latLng = data.center.map((item: any) => {
-      return gcoordLngLat(item[1], item[0]);
+      return gcoordLngLat(item[0], item[1]);
     });
     var bounds = L.latLngBounds(latLng);
     map.fitBounds(bounds);
@@ -641,12 +641,16 @@ function handleMapCenter(data: any) {
     map.setView(defaultMapCenter, defaultMapZoom);
   }
 }
-
+let currentLayers: any = [];
 // 设置图商
 function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
   if (!map) {
     console.warn("未初始化底图实例");
     return;
+  }
+  if (currentLayers.length) {
+    currentLayers.forEach((layer: any) => layer.remove());
+    currentLayers = [];
   }
   let mapUrl = mapTileLayers[mapName][mapType];
   let options: any = {};
@@ -658,7 +662,8 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
     options.key = mapTileLayers[mapName]["key"];
   }
   for (let key in mapUrl) {
-    L.tileLayer(mapUrl[key], options).addTo(map);
+    let layer = L.tileLayer(mapUrl[key], options).addTo(map);
+    currentLayers.push(layer);
   }
 }
 // 处理经纬度偏差

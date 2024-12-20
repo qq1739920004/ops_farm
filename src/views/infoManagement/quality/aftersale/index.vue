@@ -132,7 +132,7 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence == '1'" label="HUB_SN:" label-width="125px" prop="hubSn">
+                            <el-form-item v-if="scence == '1'" label="HUB SN:" label-width="125px" prop="hubSn">
                                 <el-input v-model="topvalue.hubSn">
                                     <template #append>
                                         <el-button @click="changeHubSnBtn(topvalue.hubSn)" class="change_btn">{{$t('work.replace')}}</el-button>

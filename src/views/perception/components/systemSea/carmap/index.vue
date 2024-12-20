@@ -59,6 +59,15 @@ const initMapChart = () => {
       borderColor: "#fff",
       backgroundColor: "rgba(20,120,186,0.5)",
       borderWidth: 1,
+      formatter: function (params: any) {
+        return (
+          "<div>" +
+          params.value[0].toFixed(2) +
+          "," +
+          params.value[1].toFixed(2) +
+          "</div>"
+        );
+      },
     },
     grid: {
       left: "center",

@@ -92,7 +92,7 @@ onMounted(async () => {
 const loadAgencyList = async () => {
   agencyList.value  = (await carDealer_API()).data||[];
   if(agencyList.value.length>1){   
-    agencyList.value.unshift( { id: -1, name: "全部经销商", managerTel: "" })
+    agencyList.value.unshift( { id: -1, name: t('devicelist.totalDealer'), managerTel: "" })
   }
   // if (agencyList.value.length == 1) {
   //   companyId.value = agencyList.value[0].id;

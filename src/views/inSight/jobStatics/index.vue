@@ -60,12 +60,15 @@
       </div>
       <div class="title_list">
         <div class="title">{{ t("statisticsReport.jobacres") }}</div>
-        <div class="value">
-          {{ carChartValue.beforeAreaSum  }}
+        <div class="value" v-if="locale.includes('zh')">
+          {{ carChartValue.beforeAreaSum }}
+        </div>
+        <div class="value" v-if="locale.includes('en')">
+          {{ (carChartValue.beforeAreaSum / 15).toFixed(2) }}
         </div>
         <div class="title">{{ t("statisticsReport.CumulativeDuration") }}(h)</div>
         <div class="value">
-          {{ carChartValue.beforeDurationSum  }}
+          {{ carChartValue.beforeDurationSum }}
         </div>
       </div>
       <div id="carChart"></div>
@@ -82,6 +85,7 @@ import { getCarDealerList_API } from "@/api/jobManagement/index";
 import { ElMessage } from "element-plus";
 import * as echarts from "echarts";
 const { t } = useI18n();
+const { locale } = useI18n();
 const timeRange = ref<any>([
   new Date(new Date().setHours(23, 59, 59, 999)).getTime() - 3600 * 1000 * 24 * 30,
   new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
@@ -97,7 +101,7 @@ let options = <any>[];
 let CarDealerList = ref<any[]>([]);
 const carChartValue = ref<any>({});
 const changeBlur1 = () => {
-  pageInfo.id = ''
+  pageInfo.id = "";
   carChart.clear();
   getDealerCarList();
 };
@@ -113,7 +117,7 @@ const getCarChart = async () => {
   carChartValue.value = res.data;
   const data = res.data;
   if (data.length == 0) {
-    ElMessage.warning(t('work.noData'));
+    ElMessage.warning(t("work.noData"));
   }
   const dateData = data.timeList;
   const farmData = data.carStatPaddyOneVOS;
@@ -153,6 +157,7 @@ function ChartCreate(date: any, x: any, y: any) {
       left: "3%",
       right: "4%",
       bottom: "3%",
+      top: "28%",
       containLabel: true,
     },
     toolbox: {
@@ -261,7 +266,7 @@ function ChartCreate(date: any, x: any, y: any) {
     ],
     series: [
       {
-        name: `${t('work.acreage')}`,
+        name: `${t("work.acreage")}`,
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListx,
@@ -292,7 +297,7 @@ function ChartCreate(date: any, x: any, y: any) {
         },
       },
       {
-        name: `${t('statisticsReport.workingHours')}`,
+        name: `${t("statisticsReport.workingHours")}`,
         showSymbol: true, //是否默认展示圆点
         type: "line",
         yAxisIndex: 1,
@@ -352,12 +357,12 @@ const getDealerCarList = async () => {
     CarDealerList.value = res.data;
     options = CarDealerList.value.map((item: any, _idx) => {
       return {
-          value: item.id,
-          label: item.npn ? item.sn + "(" + item.npn + ")" : item.sn,
-        };
+        value: item.id,
+        label: item.npn ? item.sn + "(" + item.npn + ")" : item.sn,
+      };
     });
-    options.unshift({value:'',label:t('work.allcars')})
-   
+    options.unshift({ value: "", label: t("work.allcars") });
+
     getCarChart();
   }
 };

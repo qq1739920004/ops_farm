@@ -23,13 +23,11 @@ import { onMounted, ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const emit = defineEmits(["mapFinish"]);
-const jsonFiles = import.meta.glob("@/utils/worldCountry/*.json");
-const jsonData = ref<any>(null);
 const loadAll = async () => {
   const res = await getUserAuth();
   getGeoData(res.data.countryCode);
 };
-const getGeoData = async (code:any) => {
+const getGeoData = async (code: any) => {
   const { data } = await getGeo_API(code);
   if (data) {
     initMapChart(JSON.parse(data));
@@ -96,6 +94,15 @@ const initMapChart = (val: any) => {
       borderColor: "#fff",
       backgroundColor: "rgba(20,120,186,0.5)",
       borderWidth: 1,
+      formatter: function (params: any) {
+        return (
+          "<div>" +
+          params.value[0].toFixed(2) +
+          "," +
+          params.value[1].toFixed(2) +
+          "</div>"
+        );
+      },
     },
     grid: {
       left: "center",

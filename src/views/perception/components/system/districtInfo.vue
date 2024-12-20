@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { getCurrentDateTime } from "@/utils/getTimeInfo";
-import { getWeather } from "@/api/perception/index.ts";
+import { getWeatherData } from "@/api/perception/index.ts";
 import {fullScreen} from '@/utils/fullScreen.ts';
 
 // import {getWeatherAPI} from '@/api/perception/index.ts';
@@ -42,8 +42,25 @@ setInterval(() => {
 //   console.log(res)
 // })
 async function weatherService() {
-  let res: any = await getWeather();
-  weather = JSON.parse(res.data);
+  if ("geolocation" in navigator) {  // 检查浏览器是否支持Geolocation API
+  navigator.geolocation.getCurrentPosition(async function(position) {
+    // 获取成功时执行的函数
+    var latitude = position.coords.latitude;   // 获取纬度
+    var longitude = position.coords.longitude; // 获取经度
+    let res= await getWeatherData(longitude+','+latitude)
+    weather = JSON.parse(res.data);
+  }, function(error) {
+    // 获取失败时执行的函数
+    let err="获取位置信息失败: " + error.message
+    console.error(err);
+  });
+} else {
+  let err="浏览器不支持Geolocation API"
+  console.error(err);
+
+}
+
+ 
 }
 weatherService();
 </script>

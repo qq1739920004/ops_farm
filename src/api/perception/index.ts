@@ -70,7 +70,7 @@ if ("geolocation" in navigator) {  // 检查浏览器是否支持Geolocation API
 }
 })
 }
-function getWeatherData(location: string) {
+export function getWeatherData(location: string) {
   return request<any, any>({
     url:"/farm/monitor/weather",
     method:'get',

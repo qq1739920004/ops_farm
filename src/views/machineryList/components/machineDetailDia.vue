@@ -159,7 +159,7 @@
             <div class="line line3">
                 <div class="tit">{{ $t('work.hubFirmwareNumber') }}:</div>
                 <div class="data">{{ NewDetail.hub }}</div>
-                <div class="tit">Hub_SN:</div>
+                <div class="tit">Hub SN:</div>
                 <div class="data">{{ NewDetail.hubSn }}</div>
                 <div class="tit">{{ $t('work.softwareVersion') }}:</div>
                 <div class="data">{{ NewDetail.softwareVersion }}</div>

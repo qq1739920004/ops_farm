@@ -119,3 +119,5 @@ export function terminalTypeList_API(){
         method:'get'
     })
 } 
+
+

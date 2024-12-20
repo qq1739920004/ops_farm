@@ -81,6 +81,7 @@ const getMonitor = async () => {
   const res = await getMonitorSea_API();
   monitorData.value = res.data;
   carAreas.value = res.data.carAreas;
+  console.log(carAreas.value)
   todayArea.value = res.data.todayArea;
   totalArea.value = res.data.totalArea;
   typeCounts.value = res.data.typeCounts;

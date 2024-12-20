@@ -58,7 +58,7 @@
                         {{ row.sn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column label="HUB_SN" align="center">
+                <el-table-column label="HUB SN" align="center">
                     <template #="{ row }">
                         {{ row.hubSn || '/' }}
                     </template>
@@ -196,20 +196,20 @@
                 </el-table-column>
                 <el-table-column :label="$t('work.MotorSN')" align="center">
                     <template #="{ row }">
-                        {{ row.motorSn || '/' }}
+                        {{  row.motorSn }}
                     </template>
                 </el-table-column>
-                <el-table-column :label="$t('work.BodySN')" align="center">
+                <!-- <el-table-column :label="$t('work.BodySN')" align="center">
                     <template #="{ row }">
                         {{ row.carImuSn || '/' }}
                     </template>
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column :label="$t('work.frontSN')" align="center">
                     <template #="{ row }">
                         {{ row.wheelImuSn || '/' }}
                     </template>
                 </el-table-column>
-                <el-table-column :label="$t('work.Antenna1_SN')" align="center">
+                <el-table-column :label="$t('work.Antenna3_SN')" align="center">
                     <template #="{ row }">
                         {{ row.antennaOne || '/' }}
                     </template>
@@ -249,7 +249,7 @@
                     <el-form-item :label="$t('work.gnssPoleSN')" prop="sn">
                         <el-input v-model="newRecords.sn"></el-input>
                     </el-form-item>
-                    <el-form-item label="HUB_SN" prop="hubSn">
+                    <el-form-item label="HUB SN" prop="hubSn">
                         <el-input v-model="newRecords.hubSn"></el-input>
                     </el-form-item>
                     <el-form-item :label="$t('work.MotorSN')" prop="motorSn">
@@ -301,8 +301,11 @@ const pageInfo = reactive<PageObj>({
     currentPage: 1,
     pageSize: 10
 })
+import { useI18n } from "vue-i18n";
+
+const { t} = useI18n();
 const $router = useRouter()
-const scence = ref<string>('1')
+const scence = ref<string>('2')
 const total = ref<number>(10)
 const records = ref<RecordsObj[]>([])
 const dialogVisible = ref<boolean>(false)
@@ -348,16 +351,16 @@ const handleSelectionChange = (val: any) => {
 //     }
 // };
 const rules = {
-    terminalType: [{ required: true, message: '请选择种类', trigger: 'blur' }],
-    npn: [{ required: true, message: '请输入铭牌名称', trigger: 'blur' }],
-    name: [{ required: true, message: '请输入车辆名称', trigger: 'blur' }],
+    terminalType: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    npn: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    name: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
     // warrantyDate: [{ required: true, validator: validatorwarrantyDate }],
-    sn: [{ required: true, message: '请输入一体机SN', trigger: 'blur' }],
-    hubSn: [{ required: true, message: '请输入HUB_SN', trigger: 'blur' }],
-    motorSn: [{ required: true, message: '请输入电机SN', trigger: 'blur' }],
-    steeringWheelSn: [{ required: true, message: '请输入多功能方向盘SN', trigger: 'blur' }],
-    carImuSn: [{ required: true, message: '请输入车身IMU_SN', trigger: 'blur' }],
-    wheelImuSn: [{ required: true, message: '请输入前轮IMU_SN', trigger: 'blur' }],
+    sn: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    hubSn: [{ required: true, message:t('messages.plzenter'), trigger: 'blur' }],
+    motorSn: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    steeringWheelSn: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    carImuSn: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
+    wheelImuSn: [{ required: true, message: t('messages.plzenter'), trigger: 'blur' }],
 }
 
 

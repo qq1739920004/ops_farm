@@ -77,9 +77,7 @@ function elMenuSelect() {
 <style lang="scss" scoped>
 .menu-en {
   width: 200px;
-  .logo_area {
-    padding: 0 !important;
-  }
+x
   :deep(.el-menu-item:not(.logo_area)) {
     font-size: var(--sino-el-menu-item-font-size-en) !important;
   }

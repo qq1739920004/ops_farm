@@ -201,24 +201,22 @@ function formatRoute(menuPermissions) {
   // 设置默认菜单数据
   function setDefaultRoute() {
     if (serializeRoutes.length > 0) {
-      // const firstRoute=serializeRoutes[0];
-      const firstRoute = serializeRoutes.find(i => !i.hidden);
-      if (!firstRoute) { return }
-      // const firstChildren=firstRoute.children[0];
-      const firstChildren = firstRoute.children.find(i => !i.hidden);
-      if (!firstChildren) { return }
-      let character = firstChildren.path ? "/" : "";
+      const firstRoute=serializeRoutes.find(i=>!i.hidden);
+      let redirect='/noPermission';//所有菜单都无权限默认跳转到无权限页面
       asyncRoutes.unshift({
         path: "/",
         component: Layout,
-        redirect:
-          firstRoute.path +
-          character +
-          firstChildren.path,
+        redirect:redirect
       });
-    }
+      if(!firstRoute){return}
+      const firstChildren=firstRoute.children.find(i=>!i.hidden);
+      if(!firstChildren){return}
+      let character = firstChildren.path ? "/" : "";
+      redirect= firstRoute.path +character +firstChildren.path;
+      asyncRoutes[0].redirect=redirect;
+    } 
+   }
   }
-}
 
 
 // 初始化按钮权限

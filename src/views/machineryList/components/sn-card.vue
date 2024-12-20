@@ -37,13 +37,22 @@
                             <span style="padding: 0 5px">/</span>
                             <span>{{ item.totalCar || "--" }}</span>
                         </el-col>
-                        <el-col :span="14">
+                        <el-col :span="14" v-if="locale.includes('zh')">
                             <span class="bold">{{
                                 item.todayArea ? (item.todayArea).toFixed(2) : "--"
                             }}</span>
                             <span style="padding: 0 5px">/</span>
                             <span>{{
                                 item.totalArea ? (item.totalArea).toFixed(2) : "--"
+                            }}</span>
+                        </el-col>
+                        <el-col :span="14" v-if="locale.includes('en')">
+                            <span class="bold">{{
+                                item.todayArea ? (item.todayArea/15).toFixed(2) : "--"
+                            }}</span>
+                            <span style="padding: 0 5px">/</span>
+                            <span>{{
+                                item.totalArea ? (item.totalArea/15).toFixed(2) : "--"
                             }}</span>
                         </el-col>
                     </el-row>
@@ -76,13 +85,22 @@
                             <span style="padding: 0 5px">/</span>
                             <span>{{ item.totalCar || "--" }}</span>
                         </el-col>
-                        <el-col :span="14">
+                        <el-col :span="14" v-if="locale.includes('zh')">
                             <span class="bold">{{
                                 item.todayArea ? (item.todayArea).toFixed(2) : "--"
                             }}</span>
                             <span style="padding: 0 5px">/</span>
                             <span>{{
                                 item.totalArea ? (item.totalArea).toFixed(2) : "--"
+                            }}</span>
+                        </el-col>
+                        <el-col :span="14" v-if="locale.includes('en')">
+                            <span class="bold">{{
+                                item.todayArea ? (item.todayArea/15).toFixed(2) : "--"
+                            }}</span>
+                            <span style="padding: 0 5px">/</span>
+                            <span>{{
+                                item.totalArea ? (item.totalArea/15).toFixed(2) : "--"
                             }}</span>
                         </el-col>
                     </el-row>
@@ -107,6 +125,8 @@ import { carNewList_API } from '@/api/machineryList/index'
 import { newListObj, carNewListResponseData } from '@/api/machineryList/type'
 import snTable from './sn-table.vue'
 import Pagination from '@/components/Pagination/index.vue'
+import { useI18n } from "vue-i18n";
+const {  locale } = useI18n();
 // 省份数据列表
 const provinceCountData = ref<any>([])
 // 地级市数据列表

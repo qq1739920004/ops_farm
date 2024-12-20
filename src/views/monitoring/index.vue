@@ -66,7 +66,8 @@
         </li>
 
         <li>
-          <div>{{ dataStatistics.workArea?.todayArea.toFixed(2) }}</div>
+          <div v-if="locale.includes('zh')">{{ dataStatistics.workArea?.todayArea.toFixed(2) }}</div>
+          <div v-else>{{ (dataStatistics.workArea?.todayArea/15).toFixed(2) }}</div>
           <div>{{ $t("messages.todaysOperation") }}</div>
         </li>
         <li>
@@ -92,10 +93,17 @@
                     : ""
                 }}
               </span> -->
-              <span ref="refName" @mouseover="onMouseOver">
+              <span ref="refName" @mouseover="onMouseOver" v-if="locale.includes('zh')">
                 {{
                   dataStatistics.workArea
                     ? (dataStatistics.workArea?.totalArea / 10000).toFixed(2)
+                    : ""
+                }}
+              </span>
+              <span ref="refName" @mouseover="onMouseOver" v-else>
+                {{
+                  dataStatistics.workArea
+                    ? (dataStatistics.workArea?.totalArea / 15*10000).toFixed(2)
                     : ""
                 }}
               </span>
@@ -169,7 +177,7 @@
           </div>
         </li>
       </ul>
-      <ul class="center">
+      <ul class="center" style="margin-left:10px"> 
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
             <el-checkbox
@@ -1013,8 +1021,15 @@ function dmsTrans(decimal: any) {
     let float = decimal - int;
     let decimal2: any = float * 60;
     let int2 = parseInt(decimal2);
+    if(int2 <0) {
+      int2 = -int2
+    }
+   
     let float2 = decimal2 - int2;
     let decimal3 = float2 * 60;
+    if(decimal3<0) {
+      decimal3 = -decimal3
+    }
     return `${int}°${int2}'${decimal3.toFixed(3)}''`;
   } catch (err) {
     console.log(err);
