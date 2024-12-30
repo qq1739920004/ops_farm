@@ -99,6 +99,13 @@ const props = defineProps({
     type: Array,
     default: [0, 1, 2],
   },
+  handleOb:{
+    type:Object,
+    default: () => ({
+      markerId: null,
+     
+    }),
+  },
   mapCenter: {
     type: Object,
     default: () => ({
@@ -201,7 +208,7 @@ watch(
   { deep: true }
 );
 watch(
-  () => props.mapCenter,
+  () => props.handleOb,
   (mapCenter) => {
     handleMapCenter(mapCenter);
   },
@@ -313,7 +320,7 @@ function createMarker(list: any) {
   map.zoomIn();
 
 setTimeout(() => {
-  handleMapCenter('')
+  handleMapCenter(props.mapCenter || '')
 },10)
 }
 // 删除地图marker点

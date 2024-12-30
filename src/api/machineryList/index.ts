@@ -89,10 +89,11 @@ export function getDownTemplate_API() {
     })
 }
 // 软件版本
-export function getsoftList_API() {
+export function getsoftList_API(params:any) {
     return request<any, any>({
         url: `/farm/car/softList`,
         method: 'get',
+        params
     })
 }
 // 软件sn列表

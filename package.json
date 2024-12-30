@@ -6,6 +6,7 @@
   "scripts": {
     "serve": "vite",
     "build:prod": "vite build --mode production",
+    "build:prodSea": "vite build --mode productionSea",
     "build:test": "vite build --mode test",
     "build:changFa": "vite build --mode changFa",
     "preview": "vite preview"

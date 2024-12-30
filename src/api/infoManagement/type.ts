@@ -28,6 +28,8 @@ export interface newRecordsObj {
     type: string,
     terminalType?: string,
     motorSn?: string,
+    userName?:string,
+    tel?:string
 }
 
 export interface carModuleInfoResponseData extends ResponseData {

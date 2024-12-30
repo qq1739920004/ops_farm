@@ -6,6 +6,7 @@
       :markerDataHandle="markerDataHandle"
       :markerDataHidden="markerDataHidden"
       :mapCenter="mapCenter"
+      :handleOb="handleOb"
       mapRenderMode="canvas"
     />
     <div class="search_box">
@@ -427,11 +428,13 @@ function querySearch(queryString: string, cb: any) {
   cb(filterData);
   return;
 }
+const handleOb = reactive<any>({
+  markerId:''
+})
 // 搜索框确认选择
 function handleSelect(item: any) {
   if (!item.markerId) return;
-  mapCenter.markerId = "";
-  mapCenter.markerId = item.markerId;
+ handleOb.markerId = item.markerId
 }
 
 // 处理socketData数据

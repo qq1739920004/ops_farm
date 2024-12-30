@@ -9,6 +9,7 @@
                         <el-option value="AG360" label="AG360" />
                         <el-option value="AG502" label="AG502" />
                         <el-option value="AG501" label="AG501" />
+                        <el-option value="AG502_JP" label="AG502JP" />
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('work.labelSN')" prop="npn">
