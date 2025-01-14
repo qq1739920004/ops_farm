@@ -22,16 +22,18 @@
             :placeholder="$t('work.deviceType')"
             @change="changeBlur"
           >
-            <el-option value="AG360" label="AG360" />
+            <!-- <el-option value="AG360" label="AG360" /> -->
             <el-option value="AG502" label="AG502" />
             <el-option value="AG501" label="AG501" />
             <el-option value="AG502_JP" label="AG502JP" />
+            <el-option value="AG501PRO_JP" label="AG501PROJP" />
+            <el-option value="MT802" label="MT802" />
+            <el-option value="MT901" label="MT901" />
           </el-select>
         </div>
         <div>
           <el-button type="primary" @click="openExportDia">
-            <el-icon class="el-icon--left">
-              <SvgIcon icon="export" size="16" /> </el-icon
+            <el-icon class="el-icon--left"> <SvgIcon icon="export" size="16" /> </el-icon
             >{{ $t("work.export") }}</el-button
           >
           <el-button v-auth="448" type="primary" icon="Plus" @click="openDialog">{{
@@ -42,7 +44,7 @@
       <el-table
         @selection-change="handleSelectionChange"
         :data="records"
-        v-show="scence == '1' || scence == '4'"
+        v-show="scence == '1' || scence == '4' || scence == '7'"
         stripe
       >
         <el-table-column type="selection" width="55" />
@@ -166,7 +168,7 @@
       <el-table
         @selection-change="handleSelectionChange"
         :data="records"
-        v-show="scence == '2'"
+        v-show="scence == '2' || scence == '5' || scence == '6'"
         stripe
       >
         <el-table-column type="selection" width="55" />
@@ -248,7 +250,7 @@
             {{ row.carImuSn || "/" }}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('work.Antenna1_SN')" align="center">
+        <el-table-column :label="$t('work.Antenna3_SN')" align="center">
           <template #="{ row }">
             {{ row.antennaOne || "/" }}
           </template>
@@ -433,10 +435,13 @@
               style="width: 100%"
               prop="terminalType"
             >
-              <el-option value="AG360" label="AG360" />
+              <!-- <el-option value="AG360" label="AG360" /> -->
               <el-option value="AG502" label="AG502" />
               <el-option value="AG501" label="AG501" />
               <el-option value="AG502_JP" label="AG502JP" />
+              <el-option value="AG501PRO_JP" label="AG501PROJP" />
+              <el-option value="MT802" label="MT802" />
+              <el-option value="MT901" label="MT901" />
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('work.labelSN')" prop="npn">
@@ -477,6 +482,9 @@
     <G502Dia @push="pushValue" ref="G502D" :newRecords="newRecords"></G502Dia>
     <G501Dia @push="pushValue" ref="G501D" :newRecords="newRecords"></G501Dia>
     <G502DiaJp @push="pushValue" ref="G502DJP" :newRecords="newRecords"></G502DiaJp>
+    <G502Dia @push="pushValue" ref="GMT802" :newRecords="newRecords"></G502Dia>
+    <G502Dia @push="pushValue" ref="GMT901" :newRecords="newRecords"></G502Dia>
+    <G502DiaJp @push="pushValue" ref="AG501PRO_JP" :newRecords="newRecords"></G502DiaJp>
   </div>
 </template>
 
@@ -517,6 +525,9 @@ const records = ref<RecordsObj[]>([]);
 const dialogVisible = ref<boolean>(false);
 const G502D = ref();
 const G502DJP = ref();
+const AG501PRO_JP = ref()
+const GMT802 = ref();
+const GMT901 = ref();
 const G501D = ref();
 const multipleSelection = ref<RecordsObj[]>([]);
 const newRecords = reactive<newRecordsObj>({
@@ -580,9 +591,9 @@ const search = () => {
   getInfoMangementInfo();
 };
 const changeBlur = () => {
-  if (pageInfo.terminalType == "AG360") {
-    scence.value = "1";
-  }
+  // if (pageInfo.terminalType == "AG360") {
+  //   scence.value = "1";
+  // }
   if (pageInfo.terminalType == "AG502") {
     scence.value = "2";
   }
@@ -591,6 +602,15 @@ const changeBlur = () => {
   }
   if (pageInfo.terminalType == "AG502_JP") {
     scence.value = "4";
+  }
+  if (pageInfo.terminalType == "MT802") {
+    scence.value = "5";
+  }
+  if (pageInfo.terminalType == "MT901") {
+    scence.value = "6";
+  }
+  if (pageInfo.terminalType == "AG501PRO_JP") {
+    scence.value = "7";
   }
   getInfoMangementInfo();
 };
@@ -617,6 +637,15 @@ const edit = (row: any) => {
   if (scence.value == "4") {
     G502DJP.value.dialogVisible = true;
   }
+  if (scence.value == "5") {
+    GMT802.value.dialogVisible = true;
+  }
+  if (scence.value == "6") {
+    GMT901.value.dialogVisible = true;
+  }
+  if (scence.value == "7") {
+    AG501PRO_JP.value.dialogVisible = true;
+  }
   newRecords.carImuSn = row.carImuSn;
   newRecords.hubSn = row.hubSn;
   newRecords.antennaTwo = row.antennaTwo;
@@ -636,6 +665,9 @@ const edit = (row: any) => {
     G501D.value.formRef?.clearValidate();
     G502D.value.formRef?.clearValidate();
     G502DJP.value.formRef?.clearValidate();
+    AG501PRO_JP.value.formRef?.clearValidate()
+    GMT802.value.formRef?.clearValidate();
+    GMT901.value.formRef?.clearValidate();
   });
 };
 watch(
@@ -646,24 +678,62 @@ watch(
       G502D.value.dialogVisible = true;
       G501D.value.dialogVisible = false;
       G502DJP.value.dialogVisible = false;
+      AG501PRO_JP.value.dialogVisible = false;
+      GMT802.value.dialogVisible = false;
+      GMT901.value.dialogVisible = false;
     }
-    if (newRecords.terminalType == "AG360") {
-      dialogVisible.value = true;
-      G502D.value.dialogVisible = false;
-      G501D.value.dialogVisible = false;
-      G502DJP.value.dialogVisible = false;
-    }
+    // if (newRecords.terminalType == "AG360") {
+    //   dialogVisible.value = true;
+    //   G502D.value.dialogVisible = false;
+    //   G501D.value.dialogVisible = false;
+    //   G502DJP.value.dialogVisible = false;
+    //   GMT802.value.dialogVisible = false;
+    //   GMT901.value.dialogVisible = false;
+    // }
     if (newRecords.terminalType == "AG501") {
       dialogVisible.value = false;
       G501D.value.dialogVisible = true;
       G502D.value.dialogVisible = false;
       G502DJP.value.dialogVisible = false;
+      AG501PRO_JP.value.dialogVisible = false;
+      GMT802.value.dialogVisible = false;
+      GMT901.value.dialogVisible = false;
     }
     if (newRecords.terminalType == "AG502_JP") {
       dialogVisible.value = false;
       G502DJP.value.dialogVisible = true;
+      AG501PRO_JP.value.dialogVisible = false;
       G502D.value.dialogVisible = false;
       G501D.value.dialogVisible = false;
+      GMT802.value.dialogVisible = false;
+      GMT901.value.dialogVisible = false;
+    }
+    if (newRecords.terminalType == "MT802") {
+      dialogVisible.value = false;
+      G501D.value.dialogVisible = false;
+      G502D.value.dialogVisible = false;
+      G502DJP.value.dialogVisible = false;
+      AG501PRO_JP.value.dialogVisible = false;
+      GMT802.value.dialogVisible = true;
+      GMT901.value.dialogVisible = false;
+    }
+    if (newRecords.terminalType == "MT901") {
+      dialogVisible.value = false;
+      G502DJP.value.dialogVisible = false;
+      AG501PRO_JP.value.dialogVisible = false;
+      G502D.value.dialogVisible = false;
+      G501D.value.dialogVisible = false;
+      GMT802.value.dialogVisible = false;
+      GMT901.value.dialogVisible = true;
+    }
+    if (newRecords.terminalType == "AG501PRO_JP") {
+      dialogVisible.value = false;
+      G502DJP.value.dialogVisible = false;
+      G502D.value.dialogVisible = false;
+      G501D.value.dialogVisible = false;
+      GMT802.value.dialogVisible = false;
+      GMT901.value.dialogVisible = false;
+      AG501PRO_JP.value.dialogVisible = true;
     }
   }
 );
@@ -674,12 +744,16 @@ const editSubmit = async () => {
   dialogVisible.value = false;
 };
 const openDialog = () => {
-  dialogVisible.value = true;
+  // dialogVisible.value = true;
+  G502D.value.dialogVisible = true
   nextTick(() => {
     G501D.value.formRef?.clearValidate();
     formRef.value.clearValidate();
     G502D.value.formRef?.clearValidate();
     G502DJP.value.formRef?.clearValidate();
+    GMT802.value.formRef?.clearValidate();
+    GMT901.value.formRef?.clearValidate();
+    AG501PRO_JP.value.formRef?.clearValidate()
     newRecords.carImuSn = "";
     newRecords.hubSn = "";
     newRecords.antennaTwo = "";

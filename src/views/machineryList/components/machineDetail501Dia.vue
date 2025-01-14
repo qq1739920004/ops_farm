@@ -116,8 +116,8 @@
             <div class="line line3">
                 <div class="tit">{{ $t('work.creationTime') }}:</div>
                 <div class="data">{{ NewDetail.createTime }}</div>
-                <div class="tit">{{ $t('work.updateTime') }}:</div>
-                <div class="data">{{ NewDetail.updateTime }}</div>
+                <div class="tit">{{ $t('work.activationTime') }}:</div>
+                <div class="data">{{ NewDetail.activationTime }}</div>
                 <div class="tit">{{ $t('work.lastOnlineTime') }}:</div>
                 <div class="data">{{ NewDetail.lastOnlineTime }}</div>
             </div>

@@ -78,6 +78,7 @@ export interface carNewListResponseData extends ResponseData {
 export interface carNewDetailObj {
     id: number,
     onlineTcp: number,
+    activationTime?:any,
     driveState: number,
     factory: string,
     age: number,

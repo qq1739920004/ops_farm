@@ -23,10 +23,13 @@
             style="width: 100%"
             prop="terminalType"
           >
-            <el-option value="AG360" label="AG360" />
+            <!-- <el-option value="AG360" label="AG360" /> -->
             <el-option value="AG502" label="AG502" />
             <el-option value="AG501" label="AG501" />
             <el-option value="AG502_JP" label="AG502JP" />
+            <el-option value="AG501PRO_JP" label="AG501PROJP" />
+            <el-option value="MT802" label="MT802" />
+            <el-option value="MT901" label="MT901" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('work.labelSN')" prop="npn">
@@ -51,7 +54,20 @@
           <el-button type="primary" v-else @click="editSubmit">
             {{ $t("work.submit") }}
           </el-button>
-          <el-button type="primary" v-if="!newRecords.id"   @click="active">
+
+          <el-button type="primary" v-if="!newRecords.id" @click="active">
+            {{ $t("work.activeNow") }}
+          </el-button>
+          <el-button
+            type="primary"
+            v-if="
+              newRecords.id &&
+              (!newRecords.warrantyDate ||
+                Date.parse(newRecords.warrantyDate.toString()) <=
+                  Date.parse(new Date().toString()))
+            "
+            @click="active2"
+          >
             {{ $t("work.activeNow") }}
           </el-button>
         </span>
@@ -82,7 +98,7 @@ const props = defineProps({
 
       terminalType: "AG502_JP",
       type: "all",
-      num:1
+      num: 1,
     },
   },
 });
@@ -95,6 +111,7 @@ defineExpose({
 });
 const emits = defineEmits(["push"]);
 const editSubmit = async () => {
+  props.newRecords.num = 1;
   Object.assign(ApiData, props.newRecords);
   await formRef.value.validate();
   editInfo();
@@ -127,15 +144,23 @@ const activeInfo = async () => {
     //ElMessage({ type: 'error', message: '添加失败' })
   }
 };
-const active = async() => {
-  props.newRecords.num = 2
+const active2 = async () => {
+  props.newRecords.num = 2;
+  Object.assign(ApiData, props.newRecords);
+  await formRef.value.validate();
+  editInfo();
+  dialogVisible.value = false;
+};
+
+const active = async () => {
+  props.newRecords.num = 2;
   Object.assign(ApiData, props.newRecords);
   await formRef.value.validate();
   dialogVisible.value = false;
-  activeInfo()
-}
+  activeInfo();
+};
 const submit = async () => {
-  props.newRecords.num = 1
+  props.newRecords.num = 1;
   Object.assign(ApiData, props.newRecords);
   await formRef.value.validate();
   dialogVisible.value = false;

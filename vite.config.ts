@@ -88,7 +88,7 @@ export default ({ mode }) => defineConfig({
         // target: 'http://140.207.166.210:9030',
         target: 'http://140.207.166.210:9030/gateway',
         // target: 'http://192.168.2.136/gateway',常发
-        //target: 'https://cloud.sinognss.com/gateway',
+        // target: 'https://cloud.sinognss.com/gateway',
         // target: 'https://ads.changfanz.net/gateway',
         //target: 'http://140.207.166.210:9030/gateway/farm',
         changeOrigin: true,

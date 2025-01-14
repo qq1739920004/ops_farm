@@ -46,15 +46,15 @@
     <div class="color_list">
       <div class="out_area">
         <div class="cycle1"></div>
-        <div>{{ $t('job.fix') }}</div>
+        <div>{{ $t("job.fix") }}</div>
       </div>
       <div class="out_area">
         <div class="cycle2"></div>
-        <div>{{ $t('job.others') }}</div>
+        <div>{{ $t("job.others") }}</div>
       </div>
       <div class="out_area">
         <div class="cycle3"></div>
-        <div>{{ $t('job.SatelliteBase') }}</div>
+        <div>{{ $t("job.SatelliteBase") }}</div>
       </div>
     </div>
     <div class="demo-date-picker">
@@ -95,7 +95,7 @@
           :loading="loading"
           :disabled="loading"
         >
-          {{$t('work.search')}}
+          {{ $t("work.search") }}
         </el-button>
       </div>
     </div>
@@ -122,7 +122,7 @@ import { useRoute } from "vue-router";
 import { mapTitleLayers } from "./mapTitleLayers";
 import { useI18n } from "vue-i18n";
 import c from "@/assets/jobManage/c.png";
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const route = useRoute();
 const pickedPoints = ref<any[]>([]);
 // 提交的车辆数组
@@ -211,19 +211,26 @@ const originZoom = ref<any>(5);
 // const tileUrl = reactive<any>({})
 // Object.assign(tileUrl, mapTitleLayers)
 const mapId = ref(0);
+
+if (locale.value.includes("zh")) {
+  mapId.value = 0;
+} else {
+  mapId.value = 2;
+}
 const mapOptions = reactive([
   {
-    mapName: t('sinoMap.SatellitesMap'),
+    mapName: t("sinoMap.SatellitesMap"),
     mapId: 0,
   },
   {
-    mapName: t('sinoMap.AMAP'),
+    mapName: t("sinoMap.AMAP"),
     mapId: 1,
-  }, 
-  // {
-  //     mapName: '谷歌地图',
-  //     mapId: 2
-  // },
+  },
+  {
+    mapId: 2,
+
+    mapName: t("sinoMap.googleMap"),
+  },
   // {
   //   mapName: "天地图",
   //   mapId: 3,
@@ -348,7 +355,7 @@ const getSingleCarTrick = async () => {
     .then(async (res: any) => {
       if (!res.data || res.data.records.length === 0 || res.data.records === null) {
         loading.value = false;
-        ElMessage.warning(t('work.noTrace'));
+        ElMessage.warning(t("work.noTrace"));
         return;
       } else {
         total = res.data.total;
@@ -364,7 +371,7 @@ const getSingleCarTrick = async () => {
             });
             pageInfoData.currentPage++;
           }
-          ElMessage.success(t('work.taceSuccess'));
+          ElMessage.success(t("work.taceSuccess"));
           let line = L.polyline(turePoint, {
             color: "#5C5C5C",
             weight: 1,
@@ -403,7 +410,7 @@ const getSingleCarTrick = async () => {
             return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
           });
 
-          ElMessage.success(t('work.taceSuccess'));
+          ElMessage.success(t("work.taceSuccess"));
           let line = L.polyline(PointListTransed, { color: "#5C5C5C", weight: 1 }).addTo(
             map
           );

@@ -122,7 +122,7 @@ import { useRoute } from "vue-router";
 import { mapTitleLayers } from "./mapTitleLayers";
 import { useI18n } from "vue-i18n";
 import c from "@/assets/jobManage/c.png";
-const { t } = useI18n();
+
 const route = useRoute();
 const pickedPoints = ref<any[]>([]);
 // 提交的车辆数组
@@ -202,7 +202,7 @@ const changeA = () => {
     pageInfoData.et = formartDate(value2.value);
   }
 };
-
+const { t, locale } = useI18n();
 // 地图相关
 let map = <any>null;
 const originPoint = ref<any>([31.172800343248, 121.406021546488]);
@@ -210,20 +210,25 @@ const originZoom = ref<any>(5);
 // const tileLayer = reactive<any>([])
 // const tileUrl = reactive<any>({})
 // Object.assign(tileUrl, mapTitleLayers)
-const mapId = ref(0);
+if (locale.value.includes("zh")) {
+  mapId.value = 0;
+} else {
+  mapId.value = 2;
+}
 const mapOptions = reactive([
   {
-    mapName: t('sinoMap.SatellitesMap'),
+    mapName: t("sinoMap.SatellitesMap"),
     mapId: 0,
   },
   {
-    mapName: t('sinoMap.AMAP'),
+    mapName: t("sinoMap.AMAP"),
     mapId: 1,
-  }, 
-  // {
-  //     mapName: '谷歌地图',
-  //     mapId: 2
-  // },
+  },
+  {
+    mapId: 2,
+
+    mapName: t("sinoMap.googleMap"),
+  },
   // {
   //   mapName: "天地图",
   //   mapId: 3,

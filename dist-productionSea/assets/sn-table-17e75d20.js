@@ -1,0 +1,1 @@
+import{_ as t,__tla as a}from"./sn-table.vue_vue_type_script_setup_true_lang-029b4564.js";import{__tla as _}from"./index-2a814056.js";let r=Promise.all([(()=>{try{return a}catch{}})(),(()=>{try{return _}catch{}})()]).then(async()=>{});export{r as __tla,t as default};

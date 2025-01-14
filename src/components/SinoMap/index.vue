@@ -68,7 +68,7 @@ import AG360_offline from "@/assets/icons/AG360_offline.svg";
 import green from "@/assets/monitoring/green.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
 import gray from "@/assets/monitoring/gray.svg";
-import {gcoordLngLat } from "sino-tool-v3";
+import { gcoordLngLat } from "sino-tool-v3";
 // import AG302 from "@/assets/icons/AG302.svg";
 // import AG302_warn from "@/assets/icons/AG302_warn.svg";
 // import AG501 from "@/assets/icons/AG501.svg";
@@ -91,19 +91,18 @@ import {gcoordLngLat } from "sino-tool-v3";
 // import SA200_warn from "@/assets/icons/SA200_warn.svg";
 // import {markerTypeIcon,markerTypeIconSmall} from '@/utils/enumerate'
 const L = window.L;
-
-const { t } = useI18n();
-
+import { useRouter, useRoute } from "vue-router";
+const route = useRoute();
+const { t, locale } = useI18n();
 const props = defineProps({
   mapTile: {
     type: Array,
     default: [0, 1, 2],
   },
-  handleOb:{
-    type:Object,
+  handleOb: {
+    type: Object,
     default: () => ({
       markerId: null,
-     
     }),
   },
   mapCenter: {
@@ -259,6 +258,11 @@ let mapTileOptions = reactive({
     // { id: 3, lable: "天地图", mapName: "TianDiTu", mapType: "Normal" },
   ],
 });
+if (locale.value.includes("zh")) {
+  mapTileOptions.id = 0;
+} else {
+  mapTileOptions.id = 2;
+}
 
 mapTileOptions.list = mapTileOptions.list.filter((item: any) =>
   props.mapTile.includes(item.id)
@@ -280,7 +284,6 @@ onMounted(() => {
   initMap();
   createMarker(props.markerData);
   createLine(props.lineData);
-  map.zoomIn();
 });
 
 // 创建地图marker点
@@ -288,7 +291,7 @@ function createMarker(list: any) {
   mapRenderModeLength.value += list.length;
   list.forEach((item: any) => {
     let marker: any;
-    const position:any = gcoordLngLat(item.markerLng, item.markerLat);
+    const position: any = gcoordLngLat(item.markerLng, item.markerLat);
     const icon = createIcon(item);
     if (icon) {
       marker = L.marker(position, {
@@ -315,13 +318,13 @@ function createMarker(list: any) {
     marker.onlineTcp = item.onlineTcp;
     markerArr.push(marker);
     markerAddToMap(item.markerType, marker);
+
     // changeZoom()
   });
   map.zoomIn();
-
-setTimeout(() => {
-  handleMapCenter(props.mapCenter || '')
-},10)
+  setTimeout(() => {
+    handleMapCenter(props.mapCenter || "");
+  }, 50);
 }
 // 删除地图marker点
 function removeMarker(list: any) {
@@ -636,7 +639,7 @@ function handleMapCenter(data: any) {
     findMarker.openPopup();
     map.fitBounds([findMarker._latlng]);
     map.setZoom(map.getZoom() - 2);
-  } else if (data.center && data.center.length > 0) {   
+  } else if (data.center && data.center.length > 0) {
     let latLng: any = [];
     latLng = data.center.map((item: any) => {
       return gcoordLngLat(item[0], item[1]);

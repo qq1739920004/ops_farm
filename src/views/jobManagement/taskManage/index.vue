@@ -181,6 +181,11 @@ const pickedPoints = ref<any[]>([]);
 // let ViewGroup = <any>null;
 let calculationObj = <any[]>reactive([]);
 const mapId = ref(0);
+if (locale.value.includes("zh")) {
+  mapId.value = 0;
+} else {
+  mapId.value = 2;
+}
 const mapOptions = reactive([
   {
     mapName: t("sinoMap.SatellitesMap"),
@@ -190,10 +195,10 @@ const mapOptions = reactive([
     mapName: t("sinoMap.AMAP"),
     mapId: 1,
   },
-  // {
-  //     mapName: '谷歌地图',
-  //     mapId: 2
-  // },
+  {
+    mapId: 2,
+    mapName: t("sinoMap.googleMap"),
+  },
   // {
   //   mapName: "天地图",
   //   mapId: 3,
