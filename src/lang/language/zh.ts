@@ -58,7 +58,8 @@ const zh = {
     bad: "差",
     auto1: '非自动驾驶',
     auto2: '自动驾驶',
-    companyD: '公司/经销商'
+    companyD: '公司/经销商',
+    plzup:'请上传文件'
 
 
   },
@@ -402,7 +403,8 @@ const zh = {
     deleteSuccess: "删除成功",
     deleteFailed: "删除失败",
     ratedPower: "额定功率",
-    p3000: 'P300操作系统版本号'
+    p3000: 'P300操作系统版本号',
+    onlyExcel:'只能上传excel的文件'
   },
   perception: {
     activeToday: "今日活跃数",

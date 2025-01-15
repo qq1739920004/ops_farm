@@ -10,7 +10,7 @@ const en = {
     differenceSolution: 'Diff',
     singleSolution: 'Single',
     SatelliteBaseSolution: 'PPP',
-    noTaskData:'No task data',
+    noTaskData: 'No task data',
     card1: 'Card 1',
     card2: "Card 2",
     doubleCard: 'Double Card',
@@ -41,7 +41,7 @@ const en = {
     dealerCantBeEmpty: 'Dealer cannot be empty',
     plzenter: 'Please enter',
     addSuccess: 'Add Success',
-    activeSuccess:'Active Success',
+    activeSuccess: 'Active Success',
     noRecord: 'There is no record of any changes',
     browse: 'browse',
     Pleasedistributor: 'Please Select Dealer',
@@ -52,15 +52,16 @@ const en = {
     noPer: 'You do not currently have access, please contact administrators',
 
 
-    good:'good',
-    average:'average',
+    good: 'good',
+    average: 'average',
 
     excellent: 'excellent',
     medium: 'medium',
     bad: "bad",
     auto1: 'Manual',
     auto2: 'Autosteer',
-    companyD: 'Company/Delaer'
+    companyD: 'Company/Delaer',
+    plzup:'Please upload the file first'
   },
   code: {
     notCar: 'Parameter incorrect,the SN does not have a corresponding car',
@@ -224,7 +225,7 @@ const en = {
     parameterInformation: "Parameter Information",
     differentialInformation: "Differential Information",
     workingMode: "Working Mode",
-    activeNow:'Activate now',
+    activeNow: 'Activate now',
     netting: "Netting",
     vehicleParameters: "Vehicle Parameters",
     calibrationParameters: "Calibration Parameters",
@@ -290,7 +291,7 @@ const en = {
     lackVersion: 'This car lacks version parameters',
     Antenna1_SN: "A100 Pro SN",
     Antenna2_SN: "Antenna2 SN",
-    Antenna3_SN:'Antenna1 SN',
+    Antenna3_SN: 'Antenna1 SN',
     delete: "delete",
     // remoteManagement: "Remote Management",
     remoteManagement: "Remote Manage...",
@@ -407,6 +408,7 @@ const en = {
     processed: "Processed",
     p3000: 'P300 operating system version number',
     snPlaceholder: "Please enter SN",
+    onlyExcel: 'Only excel files can be uploaded'
   },
   perception: {
     activeToday: "Activated Device(Today)",

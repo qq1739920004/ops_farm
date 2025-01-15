@@ -90,9 +90,11 @@ import { gcoordLngLat } from "sino-tool-v3";
 // import SA200 from "@/assets/icons/SA200.svg";
 // import SA200_warn from "@/assets/icons/SA200_warn.svg";
 // import {markerTypeIcon,markerTypeIconSmall} from '@/utils/enumerate'
+import useAppStore from "@/store/app";
+const appStore = useAppStore();
+console.log(appStore)
 const L = window.L;
-import { useRouter, useRoute } from "vue-router";
-const route = useRoute();
+
 const { t, locale } = useI18n();
 const props = defineProps({
   mapTile: {
@@ -263,7 +265,21 @@ if (locale.value.includes("zh")) {
 } else {
   mapTileOptions.id = 2;
 }
-
+watch(
+  () => locale.value,
+  (value) => {
+    if(value ==='zh') {
+      
+      mapTileOptions.id = 0;
+      mapTileChange()
+    } else {
+      
+      mapTileOptions.id = 2;
+      mapTileChange()
+    }
+  },
+  { deep: true }
+);
 mapTileOptions.list = mapTileOptions.list.filter((item: any) =>
   props.mapTile.includes(item.id)
 );

@@ -191,10 +191,10 @@
             </div>
 
 
-            <div class="line line3">
+            <!-- <div class="line line3">
                 <div class="tit">{{ $t('work.satelliteBaseExpiration') }}:</div>
                 <div class="data">{{ NewDetail.satelliteDate }}</div>
-            </div>
+            </div> -->
         </div>
     </el-dialog>
 </template>

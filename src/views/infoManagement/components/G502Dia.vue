@@ -10,7 +10,7 @@
                         <el-option value="AG502" label="AG502" />
                         <el-option value="AG501" label="AG501" />
                         <el-option value="AG502_JP" label="AG502JP" />
-                        <el-option value="AG501PRO_JP" label="AG501PROJP" />
+                        <el-option value="AG501Pro_JP" label="AG501PROJP" />
                         <el-option value="MT802" label="MT802" />
                         <el-option value="MT901" label="MT901" />
                     </el-select>

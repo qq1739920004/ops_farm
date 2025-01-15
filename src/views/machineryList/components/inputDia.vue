@@ -71,7 +71,6 @@
             >{{ $t("messages.Downloadtemplate") }}</el-button
           >
           <el-button
-           
             type="primary"
             style="
               background-color: var(--el-color-primary);
@@ -98,23 +97,24 @@ import type { UploadInstance } from "element-plus";
 import { ElMessage } from "element-plus";
 import useUserStore from "@/store/user";
 import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const userStore = useUserStore();
 const formRef = ref();
 const dialogVisible = ref<boolean>(false);
 const carDealerList = ref<carDealerObj[]>([]);
 const fileName = ref();
 const uploadRef = ref<UploadInstance>();
-let uploadData = reactive({
+let uploadData = reactive<any>({
   id: "",
   companyName: "",
+  type: "",
 });
 const actionUrl = import.meta.env.VITE_APP_BASE_API + `/farm/car/batchImport`;
 defineExpose({
   dialogVisible,
 });
 const rules = {
-  id: [{ required: true, message: t('messages.dealerCantBeEmpty'), trigger: "change" }],
+  id: [{ required: true, message: t("messages.dealerCantBeEmpty"), trigger: "change" }],
 };
 const getInputList = async () => {
   const res: carDealerResponseData = await carDealer_API();
@@ -137,7 +137,7 @@ const handleChange = (e: any) => {
 const beforeUploadFile = (file: any) => {
   const extension = file.name.substring(file.name.lastIndexOf(".") + 1);
   if (extension !== "xls" && extension !== "xlsx") {
-    ElMessage({ type: "warning", message: "只能上传excel的文件", duration: 1000 });
+    ElMessage({ type: "warning", message: t("work.onlyExcel"), duration: 1000 });
     return false;
   }
 };
@@ -148,19 +148,34 @@ const beforeRemove = () => {
 const submitBtn = async () => {
   await formRef.value.validate();
   if (!uploadData.companyName) {
-    ElMessage({ type: "warning", message: "请先选择经销商", duration: 1000 });
+    ElMessage({
+      type: "warning",
+      message: t("messages.Pleasedistributor"),
+      duration: 1000,
+    });
     return;
   }
   if (!fileName.value) {
-    ElMessage({ type: "warning", message: "请先上传文件", duration: 1000 });
+    ElMessage({ type: "warning", message: t("messages.plzup"), duration: 1000 });
     return;
+  }
+  if (locale.value.includes("zh")) {
+    uploadData.type = "";
+  } else {
+    uploadData.type = 1;
   }
   uploadRef.value!.submit();
 };
 
 const getTemplate = async () => {
-  getDownTemplate_API().then((res) => {
-    let name = "模板.xlsx";
+  let params: any;
+  if (locale.value.includes("zh")) {
+    params = {};
+  } else {
+    params = { type: 1 };
+  }
+  getDownTemplate_API(params).then((res) => {
+    let name = "template.xlsx";
     const type = "application/vnd.ms-excel;charset=utf-8"; //excel文件
     let u = window.URL.createObjectURL(new Blob([res.data], { type: type }));
     let a = document.createElement("a");
@@ -170,7 +185,6 @@ const getTemplate = async () => {
     document.body.appendChild(a);
     a.click();
     a.remove();
-    ElMessage({ type: "success", message: "获取成功", duration: 1000 });
   });
 };
 const successResult = (data: any) => {
@@ -196,7 +210,7 @@ const successResult = (data: any) => {
         dialogVisible.value = false;
       }
     } else {
-      ElMessage({ type: "success", message: "上传成功!", duration: 1000 });
+      
       dialogVisible.value = false;
     }
   }

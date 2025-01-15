@@ -26,7 +26,7 @@
             <el-option value="AG502" label="AG502" />
             <el-option value="AG501" label="AG501" />
             <el-option value="AG502_JP" label="AG502JP" />
-            <el-option value="AG501PRO_JP" label="AG501PROJP" />
+            <el-option value="AG501Pro_JP" label="AG501PROJP" />
             <el-option value="MT802" label="MT802" />
             <el-option value="MT901" label="MT901" />
           </el-select>
@@ -439,7 +439,7 @@
               <el-option value="AG502" label="AG502" />
               <el-option value="AG501" label="AG501" />
               <el-option value="AG502_JP" label="AG502JP" />
-              <el-option value="AG501PRO_JP" label="AG501PROJP" />
+              <el-option value="AG501Pro_JP" label="AG501PROJP" />
               <el-option value="MT802" label="MT802" />
               <el-option value="MT901" label="MT901" />
             </el-select>
@@ -609,7 +609,7 @@ const changeBlur = () => {
   if (pageInfo.terminalType == "MT901") {
     scence.value = "6";
   }
-  if (pageInfo.terminalType == "AG501PRO_JP") {
+  if (pageInfo.terminalType == "AG501Pro_JP") {
     scence.value = "7";
   }
   getInfoMangementInfo();
@@ -726,7 +726,7 @@ watch(
       GMT802.value.dialogVisible = false;
       GMT901.value.dialogVisible = true;
     }
-    if (newRecords.terminalType == "AG501PRO_JP") {
+    if (newRecords.terminalType == "AG501Pro_JP") {
       dialogVisible.value = false;
       G502DJP.value.dialogVisible = false;
       G502D.value.dialogVisible = false;

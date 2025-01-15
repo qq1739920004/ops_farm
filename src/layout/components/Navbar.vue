@@ -18,6 +18,9 @@
           <el-dropdown-item divided :disabled="locale == 'en'" @click="changeLang('en')"
             >English</el-dropdown-item
           >
+          <el-dropdown-item divided :disabled="locale == 'jp'" @click="changeLang('jp')"
+            >日本語</el-dropdown-item
+          >
         </el-dropdown-menu>
       </template>
     </el-dropdown>

@@ -81,11 +81,12 @@ export function getBackFileSnList(params: any) {
 }
 
 // 下载模板
-export function getDownTemplate_API() {
+export function getDownTemplate_API(params:any) {
     return request<any, any>({
         url: '/farm/car/downTemplate',
         method: 'get',
         responseType: 'blob',
+        params
     })
 }
 // 软件版本

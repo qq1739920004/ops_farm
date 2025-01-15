@@ -2,7 +2,7 @@
 // 导入 Element Plus 中英文语言包
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import en from "element-plus/es/locale/lang/en";
-
+import ja from "element-plus/es/locale/lang/ja";
 import { defineStore } from 'pinia'
 import { useStorage, useDark, useToggle } from "@vueuse/core";
 import { getLightColor, getDarkColor } from "@/utils/color";
@@ -11,7 +11,12 @@ import { ref, computed } from 'vue'
 let navigatorLanguage = navigator.language;
 if (navigatorLanguage == 'zh' || navigatorLanguage == 'zh-CN') {
     navigatorLanguage = 'zh'
-} else {
+}
+else if (navigatorLanguage.includes('ja')) {
+    navigatorLanguage = 'jp'
+}
+
+else {
     navigatorLanguage = 'en'
 }
 
@@ -27,6 +32,9 @@ const useAppStore = defineStore("app", () => {
         }
         if (language.value == 'en') {
             return en
+        }
+        if (language.value == 'jp') {
+            return ja
         }
     });
     setPrimaryColor()
