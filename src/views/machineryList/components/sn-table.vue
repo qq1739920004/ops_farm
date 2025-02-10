@@ -30,7 +30,7 @@
     >
     </el-table-column>
     <el-table-column
-      v-if="!isChangfa"
+      v-if="!isChangfa && locale == 'zh'"
       prop="npn"
       :label="$t('devicelist.labelSN')"
       width="180"
@@ -80,7 +80,7 @@
     >
     </el-table-column>
     <el-table-column
-    width="120"
+      width="120"
       v-if="!isChangfa"
       :filters="handleTerminalTypeList()"
       column-key="filterTerminalType"
@@ -91,7 +91,7 @@
     >
     </el-table-column>
     <el-table-column
-    width="120"
+      width="120"
       v-if="!isChangfa"
       :label="t('statisticsReport.activationStatus')"
       align="center"
@@ -142,7 +142,9 @@
           v-if="
             row.terminalType === 'AG502' ||
             row.terminalType === 'AG501Pro' ||
-            row.terminalType === 'AG501'
+            row.terminalType === 'AG501' ||
+            row.terminalType === 'AG502_JP' ||
+            row.terminalType === 'AG501Pro_JP'
           "
         >
           <div style="display: flex; justify-content: center">
@@ -224,6 +226,26 @@
         </el-table-column> -->
     <el-table-column
       sortable
+      :label="$t('work.activationTime')"
+      prop="activationTime"
+      align="center"
+      width="180"
+    >
+      <template #="{ row }">
+        <!-- <el-tooltip
+          style="margin-right: 6px"
+          :disabled="false"
+          class="box-item"
+          effect="dark"
+          :content="row.lastOnlineTime"
+          placement="top-start"
+        > -->
+        {{ row.activationTime || "--" }}
+        <!-- </el-tooltip> -->
+      </template>
+    </el-table-column>
+    <el-table-column
+      sortable
       :label="$t('devicelist.lastOnlineTime')"
       prop="createtime"
       align="center"
@@ -262,12 +284,17 @@
             </template>
         </el-table-column> -->
     <!-- 说明  离线和自动驾驶状态不可编辑 -->
-    <el-table-column :label="$t('devicelist.operation')" width="475">
+    <el-table-column
+      :label="$t('devicelist.operation')"
+      :width="locale == 'jp' ? 650 : 475"
+    >
       <template #="{ row }">
         <el-button
           :disabled="row.onlineTcp === 1 ? false : true"
           v-auth="476"
-          :style="locale == 'en' ? 'width: 85px' : 'width:65px'"
+          :style="
+            locale == 'en' ? 'width: 85px' : locale == 'jp' ? 'width:95px' : 'width:65px'
+          "
           type="primary"
           text
           @click="gotoRegister(row.id, row.sn, row.deviceId)"
@@ -282,7 +309,13 @@
           placement="top-start"
         >
           <el-button
-            :style="locale === 'en' ? 'width: 85px' : 'width:65px'"
+            :style="
+              locale == 'en'
+                ? 'width: 85px'
+                : locale == 'jp'
+                ? 'width:95px'
+                : 'width:65px'
+            "
             :disabled="!row.openRemote"
             type="primary"
             text
@@ -304,7 +337,9 @@
 
         <el-button
           v-auth="503"
-          :style="locale === 'en' ? 'width: 75px' : 'width:55px'"
+          :style="
+            locale == 'en' ? 'width: 75px' : locale == 'jp' ? 'width:75px' : 'width:55px'
+          "
           type="primary"
           text
           @click="gotoMap(row.id)"
@@ -312,7 +347,9 @@
         >
         <el-button
           v-auth="458"
-          :style="locale === 'en' ? 'width: 40px' : 'width:40px'"
+          :style="
+            locale == 'en' ? 'width: 40px' : locale == 'jp' ? 'width:85px' : 'width:40px'
+          "
           type="primary"
           text
           @click="
@@ -328,7 +365,9 @@
           >{{ $t("devicelist.details") }}</el-button
         >
         <el-button
-          :style="locale === 'en' ? 'width: 75px' : 'width:55px'"
+          :style="
+            locale == 'en' ? 'width: 75px' : locale == 'jp' ? 'width:75px' : 'width:55px'
+          "
           text
           type="primary"
           @click="gotoalarm(row.id, row.sn)"

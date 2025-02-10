@@ -63,7 +63,7 @@
         <div class="value" v-if="locale.includes('zh')">
           {{ carChartValue.beforeAreaSum }}
         </div>
-        <div class="value" v-if="locale.includes('en')">
+        <div class="value" v-if="locale.includes('en') || locale.includes('jp')">
           {{ (carChartValue.beforeAreaSum / 15).toFixed(2) }}
         </div>
         <div class="title">{{ t("statisticsReport.CumulativeDuration") }}(h)</div>

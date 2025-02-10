@@ -1,0 +1,1 @@
+import{_ as t,__tla as a}from"./timeBox.vue_vue_type_style_index_0_scope_true_lang-fd618e63.js";import{__tla as _}from"./index-e1c7a251.js";let r=Promise.all([(()=>{try{return a}catch{}})(),(()=>{try{return _}catch{}})()]).then(async()=>{});export{r as __tla,t as default};

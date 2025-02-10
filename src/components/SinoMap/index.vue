@@ -68,7 +68,7 @@ import AG360_offline from "@/assets/icons/AG360_offline.svg";
 import green from "@/assets/monitoring/green.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
 import gray from "@/assets/monitoring/gray.svg";
-import { gcoordLngLat } from "sino-tool-v3";
+import { gcoordLngLat,getMapView } from "sino-tool-v3";
 // import AG302 from "@/assets/icons/AG302.svg";
 // import AG302_warn from "@/assets/icons/AG302_warn.svg";
 // import AG501 from "@/assets/icons/AG501.svg";
@@ -90,11 +90,17 @@ import { gcoordLngLat } from "sino-tool-v3";
 // import SA200 from "@/assets/icons/SA200.svg";
 // import SA200_warn from "@/assets/icons/SA200_warn.svg";
 // import {markerTypeIcon,markerTypeIconSmall} from '@/utils/enumerate'
-import useAppStore from "@/store/app";
-const appStore = useAppStore();
-console.log(appStore)
-const L = window.L;
 
+const L = window.L;
+const mapFontSize=computed(()=>{
+  let fontSize=16;
+  if(currentZoom.value<=10){
+    fontSize=12;
+  }else if(currentZoom.value==11){
+    fontSize=14;
+  }
+  return fontSize
+})
 const { t, locale } = useI18n();
 const props = defineProps({
   mapTile: {
@@ -168,7 +174,11 @@ watch(
     markerGroup.clearLayers();
 
     createMarker(markerData);
-  }
+    setTimeout(() => {
+      handleMapCenter(props.mapCenter || "");
+    }, 100);
+  },
+  { deep: true }
 );
 const markerDataHiddenNow = ref<any>([]);
 watch(
@@ -262,20 +272,42 @@ let mapTileOptions = reactive({
 });
 if (locale.value.includes("zh")) {
   mapTileOptions.id = 0;
+  mapTileOptions.list[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "GaoDe",
+    mapType: "Satellite",
+  };
 } else {
   mapTileOptions.id = 2;
+  mapTileOptions.list[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "Google",
+    mapType: "Satellite",
+  };
 }
 watch(
   () => locale.value,
   (value) => {
-    if(value ==='zh') {
-      
+    if (value === "zh") {
       mapTileOptions.id = 0;
-      mapTileChange()
+      mapTileOptions.list[0] = {
+        id: 0,
+        lable: "sinoMap.SatellitesMap",
+        mapName: "GaoDe",
+        mapType: "Satellite",
+      };
+      mapTileChange();
     } else {
-      
       mapTileOptions.id = 2;
-      mapTileChange()
+      mapTileOptions.list[0] = {
+        id: 0,
+        lable: "sinoMap.SatellitesMap",
+        mapName: "Google",
+        mapType: "Satellite",
+      };
+      mapTileChange();
     }
   },
   { deep: true }
@@ -298,13 +330,15 @@ watch(
 
 onMounted(() => {
   initMap();
-  createMarker(props.markerData);
-  createLine(props.lineData);
+
+  // createLine(props.lineData);
+  handleMapCenter(props.mapCenter || "");
 });
 
 // 创建地图marker点
 function createMarker(list: any) {
   mapRenderModeLength.value += list.length;
+
   list.forEach((item: any) => {
     let marker: any;
     const position: any = gcoordLngLat(item.markerLng, item.markerLat);
@@ -332,15 +366,13 @@ function createMarker(list: any) {
     marker.markerType = item.markerType; // marker对象上设置唯一标识
     marker.driveState = item.driveState;
     marker.onlineTcp = item.onlineTcp;
+
     markerArr.push(marker);
     markerAddToMap(item.markerType, marker);
 
     // changeZoom()
   });
   map.zoomIn();
-  setTimeout(() => {
-    handleMapCenter(props.mapCenter || "");
-  }, 50);
 }
 // 删除地图marker点
 function removeMarker(list: any) {
@@ -363,18 +395,18 @@ function removeMarker(list: any) {
   });
 }
 function markerAddToMap(markerType: string, marker: any) {
-  if (mapRenderMode == "canvas") {
-    props.markerDataHidden.includes(markerType)
-      ? ""
-      : markerCanvasGroup.addMarker(marker);
-  }
-  if (mapRenderMode == "dom") {
-    props.markerDataHidden.includes(markerType) ? "" : markerGroup.addLayer(marker);
-  }
-  if (mapRenderMode == "polymer") {
-    props.markerDataHidden.includes(markerType)
-      ? ""
-      : markerClusterGroup.addLayer(marker);
+  if (!props.markerDataHidden.includes(markerType)) {
+    switch (mapRenderMode) {
+      case "canvas":
+        markerCanvasGroup.addMarker(marker);
+        break;
+      case "dom":
+        markerGroup.addLayer(marker);
+        break;
+      case "cluster":
+        markerClusterGroup.addLayer(marker);
+        break;
+    }
   }
 }
 // 修改地图marker点
@@ -550,7 +582,13 @@ function createIcon(item: any) {
     });
   }
 }
-
+const canvasLabel = new L.CanvasLabel({
+  defaultLabelStyle: {
+    collisionFlg: false,
+    //scale: 1.5,
+    zIndex: 10000,
+  },
+});
 // 初始化加载地图
 function initMap() {
   map = L.map("map", {
@@ -560,7 +598,7 @@ function initMap() {
     // zoom: props.mapCenter.zoom, //初始缩放值
     zoomControl: false, //是否启用地图缩放控件
     attributionControl: false, //是否启用地图属性控件
-
+    renderer: canvasLabel,
     zoomSnap: 1,
     zoomAnimation: mapRenderMode == "canvas" ? false : true,
   });
@@ -570,7 +608,7 @@ function initMap() {
   initCanvasGroup();
   mapTileChange();
   // initRanging();
-  mapzoomChange();
+  mapZoomChange();
 }
 
 function initCanvasGroup() {
@@ -636,6 +674,7 @@ function mapTileChange() {
 }
 // 处理地图定位
 function handleMapCenter(data: any) {
+  console.log("handleCenter");
   if (!data) {
     let latLng: any = [];
     if (props.mapCenter.center) {
@@ -789,30 +828,6 @@ function createMarkerIcon(item: any) {
     icon = driveState == 0 ? AG360_warn : AG360;
   }
 
-  // if (markerType.includes("AG360")) {
-  //   icon = driveState == 0 ? AG360_warn : AG360;
-  // } else if (markerType.includes("AG501") && markerType != "AG501Pro") {
-  //   icon = driveState == 0 ? AG501_warn : AG501;
-  // } else if (markerType == "AG501Pro") {
-  //   icon = driveState == 0 ? AG501Pro_warn : AG501Pro;
-  // } else if (markerType.includes("AG502")) {
-  //   icon = driveState == 0 ? AG502_warn : AG502;
-  // } else if (markerType.includes("AG302") && markerType != "AG302Android") {
-  //   icon = driveState == 0 ? AG302_warn : AG302;
-  // } else if (markerType == "AG302Android") {
-  //   icon = driveState == 0 ? AG302Android_warn : AG302Android;
-  // } else if (item.markerType.includes("MC100")) {
-  //   icon = driveState == 0 ? MC100_warn : MC100;
-  // } else if (item.markerType.includes("MT801")) {
-  //   icon = driveState == 0 ? MT801_warn : MT801;
-  // } else if (item.markerType.includes("MT802")) {
-  //   icon = driveState == 0 ? MT802_warn : MT802;
-  // } else if (item.markerType.includes("SA200")) {
-  //   icon = driveState == 0 ? SA200_warn : SA200;
-  // } else {
-  //   icon = driveState == 0 ? AGunknown_warn : AGunknown;
-  // }
-
   return icon;
 }
 function createMarkerIconSmall(item: any) {
@@ -906,55 +921,29 @@ function changeMarkerIcon() {
       markerAddToMap(v.markerType, v);
     });
   }
-  updateMarkerVisible(markerDataHiddenNow.value);
+  
   map.setView(map.getCenter());
+setTimeout(() => {
+  updateMarkerVisible(markerDataHiddenNow.value);
+},100)
+
 }
+const currentView = ref<any[]>([]);
 // 地图缩放处理事件
-function mapzoomChange() {
-  let flag1 = false;
-  let flag2 = false;
-  if (mapRenderMode == "canvas") {
+function mapZoomChange() {
+  if (isCanvasMap) {
     map.on("mouseup", () => {
       //解决地图移动时，其他图层和canvas不同步
-      changeZoom();
+      //点击地图时会触发，如果是测距点击地图则不changeZoom
+      !pickupMode ? changeZoom() : (currentView.value = getMapView(map));
     });
   }
+
   map.on("zoomend", function () {
-    let zoom = map.getZoom();
-    currentZoom.value = zoom;
-    let fontSize: number;
-    if (zoom <= 10) {
-      fontSize = zoom / 5;
-      flag2 = false;
-    } else {
-      fontSize = 14;
-      flag2 = true;
-    }
-    setProperty();
-    function setProperty() {
-      document.documentElement.style.setProperty("--map-font-size", `${fontSize}px`);
-    }
-    if (flag1 != flag2) {
-      setlatLng();
-    }
-    function setlatLng() {
-      flag1 = flag2;
-      markerArr.forEach((item: any) => {
-        if (item.getTooltip()) {
-          item.getTooltip().setLatLng(item.getLatLng());
-        }
-        // 特殊处理
-        let icon = item.getIcon();
-        if (icon.options.className) {
-          zoom <= 10
-            ? (icon.options.iconSize = [50, 10])
-            : (icon.options.iconSize = [300, 20]);
-          item.setIcon(icon);
-        }
-      });
-    }
-    map.setView(map.getCenter());
-    map.fitBounds(map.getBounds());
+    currentView.value = getMapView(map);
+    currentZoom.value = map.getZoom();
+    //动态设置地图标注字体大小
+    document.documentElement.style.setProperty("--map-font-size", `${mapFontSize.value}px`);
   });
 }
 

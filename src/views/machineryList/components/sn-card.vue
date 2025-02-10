@@ -46,7 +46,7 @@
                                 item.totalArea ? (item.totalArea).toFixed(2) : "--"
                             }}</span>
                         </el-col>
-                        <el-col :span="14" v-if="locale.includes('en')">
+                        <el-col :span="14" v-if="locale.includes('en') || locale.includes('jp')">
                             <span class="bold">{{
                                 item.todayArea ? (item.todayArea/15).toFixed(2) : "--"
                             }}</span>
@@ -94,7 +94,7 @@
                                 item.totalArea ? (item.totalArea).toFixed(2) : "--"
                             }}</span>
                         </el-col>
-                        <el-col :span="14" v-if="locale.includes('en')">
+                        <el-col :span="14" v-if="locale.includes('en') || locale.includes('jp')">
                             <span class="bold">{{
                                 item.todayArea ? (item.todayArea/15).toFixed(2) : "--"
                             }}</span>

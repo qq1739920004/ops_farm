@@ -76,7 +76,7 @@
                   <div style="width: 40%" v-if="locale.includes('zh')">
                     {{ item.todayArea ? item.todayArea.toFixed(2) : "--" }}
                   </div>
-                  <div style="width: 40%" v-if="locale.includes('en')">
+                  <div style="width: 40%" v-if="locale.includes('en') || locale.includes('jp')">
                     {{ item.todayArea ? (item.todayArea/15).toFixed(2) : "--" }}
                   </div>
                   <div style="width: 35%">
@@ -94,7 +94,7 @@
                   <div class="r" v-if="locale.includes('zh')">
                     {{ Math.floor(item.beforeArea * 100) / 100 || "/" }}
                   </div>
-                  <div class="r" v-if="locale.includes('en')">
+                  <div class="r" v-if="locale.includes('en') || locale.includes('jp')">
                     {{ Math.floor(item.beforeArea * 100/15) / 100 || "/" }}
                   </div>
                 </div>
@@ -141,7 +141,7 @@
                   <div style="width: 50%" v-if="locale.includes('zh')">
                     {{ item.todayArea ? item.todayArea.toFixed(2) : "--" }}
                   </div>
-                  <div style="width: 50%" v-if="locale.includes('en')">
+                  <div style="width: 50%" v-if="locale.includes('en') || locale.includes('jp')">
                     {{ item.todayArea ? (item.todayArea/15).toFixed(2) : "--" }}
                   </div>
                   <div style="width: 35%">
@@ -159,7 +159,7 @@
                   <div class="r" v-if="locale.includes('zh')">
                     {{ Math.floor(item.beforeArea * 100) / 100 || "/" }}
                   </div>
-                  <div class="r" v-if="locale.includes('en')">
+                  <div class="r" v-if="locale.includes('en') || locale.includes('jp')">
                     {{ Math.floor(item.beforeArea * 100/15) / 100 || "/" }}
                   </div>
                 </div>
@@ -195,7 +195,7 @@
           <div class="value" v-if="locale.includes('zh')">
             {{ chartValue.beforeAreaSum }}
           </div>
-          <div class="value" v-if="locale.includes('en')">
+          <div class="value" v-if="locale.includes('en') || locale.includes('jp')">
             {{( chartValue.beforeAreaSum/15 ).toFixed(2)}}
           </div>
           <div class="title">{{ t("statisticsReport.CumulativeDuration") }}(h):</div>

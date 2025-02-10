@@ -1130,7 +1130,7 @@ function openRemote_markerPopup(arg: any) {
     top: 10px;
     position: absolute;
     z-index: 999;
-    width: 360px;
+    width: 380px;
     background: url("@/assets/monitoring/bg_1.png") no-repeat center center;
     background-size: cover;
 

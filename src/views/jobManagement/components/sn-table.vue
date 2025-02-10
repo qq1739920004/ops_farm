@@ -27,7 +27,7 @@
     </el-table-column>
     <el-table-column :label="$t('work.acreage')" align="center">
       <template #="{ row }" v-if="locale.includes('zh')"> {{ row.workedArea }}{{ $t("work.are") }}</template>
-      <template #="{ row }" v-if="locale.includes('en')"> {{ (row.workedArea/15).toFixed(2) }}{{ $t("work.are") }}</template>
+      <template #="{ row }"v-if="locale.includes('en') || locale.includes('jp')"> {{ (row.workedArea/15).toFixed(2) }}{{ $t("work.are") }}</template>
     </el-table-column>
     <el-table-column :label="$t('work.acTime')" align="center" width="180">
       <template #="{ row }"

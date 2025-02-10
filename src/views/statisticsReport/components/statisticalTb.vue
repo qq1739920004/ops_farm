@@ -7,7 +7,7 @@
       class="all_select_tb"
       row-key="sn"
     >
-      <el-table-column fixed type="index" :label="$t('message.serialNumber')" width="60">
+      <el-table-column fixed type="index" :label="$t('devicelist.item')" width="60">
       </el-table-column>
       <el-table-column fixed prop="companyName" :label="t('work.dealerName')" width="122">
       </el-table-column>

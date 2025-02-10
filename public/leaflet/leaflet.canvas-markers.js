@@ -466,7 +466,10 @@
                 },
                 _drawLabel: function(t, n) {
                     var i = t.options.icon.options;
-                    this._context.fillText(t.canvas_label, n.x - i.iconAnchor[0], n.y - i.iconAnchor[1])
+                    this._context.font=i.font;
+                    this._context.fillStyle=i.fillStyle;
+                    this._context.fillText(t.canvas_label, n.x - i.textAnchor[0], n.y - i.textAnchor[1])
+                    //this._context.fillText(t.canvas_label, n.x - 0, n.y - 0)
                 },
                 _reset: function() {
                     var n = this._map.containerPointToLayerPoint([0, 0]);

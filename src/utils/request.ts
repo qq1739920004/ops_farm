@@ -68,6 +68,7 @@ service.interceptors.response.use(
     return Promise.reject(new Error(message || 'Error'));
   },
   (error: any) => {
+    console.log(error)
     loadingInstance.close()
     const { status } = error.response;
     if (status == 401) {

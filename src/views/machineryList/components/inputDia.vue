@@ -160,7 +160,7 @@ const submitBtn = async () => {
     return;
   }
   if (locale.value.includes("zh")) {
-    uploadData.type = "";
+    uploadData.type = '';
   } else {
     uploadData.type = 1;
   }
@@ -168,9 +168,12 @@ const submitBtn = async () => {
 };
 
 const getTemplate = async () => {
+
   let params: any;
   if (locale.value.includes("zh")) {
     params = {};
+  } else if (locale.value.includes("jp")) {
+    params = { type: 2 };
   } else {
     params = { type: 1 };
   }
@@ -210,7 +213,6 @@ const successResult = (data: any) => {
         dialogVisible.value = false;
       }
     } else {
-      
       dialogVisible.value = false;
     }
   }

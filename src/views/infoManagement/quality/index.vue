@@ -54,11 +54,7 @@
           :label="$t('work.item')"
           align="center"
         />
-        <el-table-column :label="$t('work.labelSN')" align="center">
-          <template #="{ row }">
-            {{ row.npn || "/" }}
-          </template>
-        </el-table-column>
+     
         <el-table-column :label="$t('work.guarantee')" align="center">
           <template #="{ row }">
             <div
@@ -74,7 +70,7 @@
               <el-tag
                 style="
                   color: rgba(255, 112, 112, 1);
-                  width: 78px;
+          
                   height: 26px;
                   opacity: 1;
                   border-radius: 4px;
@@ -178,11 +174,7 @@
           :label="$t('work.item') + ':'"
           align="center"
         />
-        <el-table-column :label="$t('work.labelSN')" align="center">
-          <template #="{ row }">
-            {{ row.npn || "/" }}
-          </template>
-        </el-table-column>
+      
         <el-table-column :label="$t('work.guarantee')" align="center">
           <template #="{ row }">
             <div
@@ -198,7 +190,7 @@
               <el-tag
                 style="
                   color: rgba(255, 112, 112, 1);
-                  width: 68px;
+        
                   height: 26px;
                   opacity: 1;
                   border-radius: 4px;
@@ -297,11 +289,7 @@
           :label="$t('work.item')"
           align="center"
         />
-        <el-table-column :label="$t('work.labelSN')" width="200" align="center">
-          <template #="{ row }">
-            {{ row.npn || "/" }}
-          </template>
-        </el-table-column>
+       
         <el-table-column :label="$t('work.guarantee')" align="center">
           <template #="{ row }">
             <div
@@ -317,7 +305,7 @@
               <el-tag
                 style="
                   color: rgba(255, 112, 112, 1);
-                  width: 68px;
+
                   height: 26px;
                   opacity: 1;
                   border-radius: 4px;

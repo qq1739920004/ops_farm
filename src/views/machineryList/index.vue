@@ -41,7 +41,7 @@
         </div>
         <div class="button_area">
           <el-button
-            v-auth="787"
+            v-auth="2176"
             style="margin-right: 5px"
             type="primary"
             @click="gotoUpgrade"
@@ -98,7 +98,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import InputDia from "./components/inputDia.vue";
 import upGradeDia from "./components/upgradeDia.vue";
 import Pagination from "@/components/Pagination/index.vue";
@@ -115,6 +115,7 @@ import {
 } from "@/api/machineryList/sn-card/type";
 import { getProvinceDataNewList_API } from "@/api/machineryList/sn-card/index";
 let $route = useRoute();
+const router = useRouter();
 // 控制table显示与否
 const tableShow = ref<boolean>(true);
 
@@ -156,8 +157,17 @@ const gotoInput = () => {
   inputD.value.dialogVisible = true;
 };
 
+// const gotoUpgrade = () => {
+//   upgradeD.value.dialogVisible = true;
+// };
+
 const gotoUpgrade = () => {
-  upgradeD.value.dialogVisible = true;
+  router.push({
+    path: "machineryList/upgrade",
+    query: {
+    
+    },
+  });
 };
 const changeSort = (val: string) => {
   pageInfo.order = val;

@@ -303,7 +303,7 @@ const toggleSelection = (rows?: any) => {
   }
 };
 const clearSelection = () => {
-  exportIds.value = [];
+  exportIds.value = []; 
   multipleTableRef.value!.clearSelection();
   allSelected.value = false;
   isall.value = 0;
