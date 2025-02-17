@@ -12,7 +12,8 @@
     <div class="search_box">
       <!--    :placeholder="$t('messages.SNLabelSNcarName')" -->
       <el-autocomplete
-        :style="{ width: labelWidth }"
+        popper-class="my-autocomplete"
+        :trigger-on-focus="false"
         v-model="searchSn"
         :fetch-suggestions="querySearch"
         @select="handleSelect"
@@ -67,8 +68,10 @@
         </li>
 
         <li>
-          <div v-if="locale.includes('zh')">{{ dataStatistics.workArea?.todayArea.toFixed(2) }}</div>
-          <div v-else>{{ (dataStatistics.workArea?.todayArea/15).toFixed(2) }}</div>
+          <div v-if="locale.includes('zh')">
+            {{ dataStatistics.workArea?.todayArea.toFixed(2) }}
+          </div>
+          <div v-else>{{ (dataStatistics.workArea?.todayArea / 15).toFixed(2) }}</div>
           <div>{{ $t("messages.todaysOperation") }}</div>
         </li>
         <li>
@@ -104,7 +107,7 @@
               <span ref="refName" @mouseover="onMouseOver" v-else>
                 {{
                   dataStatistics.workArea
-                    ? (dataStatistics.workArea?.totalArea / 15*10000).toFixed(2)
+                    ? ((dataStatistics.workArea?.totalArea / 15) * 10000).toFixed(2)
                     : ""
                 }}
               </span>
@@ -113,8 +116,8 @@
 
           <!-- <div v-if="locale =='zh'">{{ $t("messages.cumulativeOperation") }}</div>
           <div v-if="locale =='en'">km²</div> -->
-          
-         <div >{{ $t("messages.cumulativeOperation") }}</div>
+
+          <div>{{ $t("messages.cumulativeOperation") }}</div>
         </li>
         <li>
           <div>{{ dataStatistics.workDuration?.todayDuration }}</div>
@@ -178,7 +181,7 @@
           </div>
         </li>
       </ul>
-      <ul class="center" style="margin-left:10px"> 
+      <ul class="center" style="margin-left: 10px">
         <li v-for="(item, index) in dataStatistics.type" :key="index">
           <label>
             <el-checkbox
@@ -397,7 +400,7 @@ getOnlineFarmPosition();
 
 // sn、车辆名、公司名、电话 搜索
 function querySearch(queryString: string, cb: any) {
-  // if (!queryString) return;
+  if (!queryString) return;
   let filterData = markerData.value.filter((item: any) => {
     if (item.sn && item.sn.includes(queryString)) {
       return true;
@@ -429,12 +432,13 @@ function querySearch(queryString: string, cb: any) {
   return;
 }
 const handleOb = reactive<any>({
-  markerId:''
-})
+  markerId: "",
+});
 // 搜索框确认选择
 function handleSelect(item: any) {
+
   if (!item.markerId) return;
- handleOb.markerId = item.markerId
+  handleOb.markerId = item.markerId;
 }
 
 // 处理socketData数据
@@ -688,6 +692,7 @@ async function getOnlineFarmPosition() {
   markerData.value = onlineFarmMachines;
 
   route.query.markerId ? (mapCenter.markerId = route.query.markerId) : "";
+  // route.query.markerId ? (searchSn.value = mapCenter.markerId) : "";
   mapCenter.center = onlineFarmMachines.map((item: any) => {
     return [item.posY, item.posX];
   });
@@ -768,12 +773,12 @@ function createMarkerPopup(item: any) {
     null: null,
   };
   const snTypeReflect: any = {
-    0: t('messages.invalidSolution'),
-    1: t('messages.singleSolution'),
-    2: t('messages.differenceSolution'),
-    3: t('messages.floatingSolution'),
-    4: t('messages.fixedSolution'),
-    15:t('messages.SatelliteBaseSolution'),
+    0: t("messages.invalidSolution"),
+    1: t("messages.singleSolution"),
+    2: t("messages.differenceSolution"),
+    3: t("messages.floatingSolution"),
+    4: t("messages.fixedSolution"),
+    15: t("messages.SatelliteBaseSolution"),
   };
   const diffSource: any = {
     0: t("messages.radioStation"),
@@ -814,7 +819,12 @@ function createMarkerPopup(item: any) {
     openRemote = true;
   }
 
-  const cardUsage = item.cardUsage == 1 ? t('messages.card1') : item.cardUsage == 2 ? t('messages.card2') : t('messages.doubleCard');
+  const cardUsage =
+    item.cardUsage == 1
+      ? t("messages.card1")
+      : item.cardUsage == 2
+      ? t("messages.card2")
+      : t("messages.doubleCard");
   const popup = `<div class="map_popup">
 
         <ul class="popup_container">
@@ -1004,7 +1014,7 @@ function createMarkerIcon(item: any) {
   return icon;
 }
 function createMarkerIconSmall(item: any) {
-    const { terminalType, driveState, onlineTcp } = item;
+  const { terminalType, driveState, onlineTcp } = item;
   let icon: string = "";
   if (onlineTcp === 0) {
     icon = gray;
@@ -1024,14 +1034,14 @@ function dmsTrans(decimal: any) {
     let float = decimal - int;
     let decimal2: any = float * 60;
     let int2 = parseInt(decimal2);
-    if(int2 <0) {
-      int2 = -int2
+    if (int2 < 0) {
+      int2 = -int2;
     }
-   
+
     let float2 = decimal2 - int2;
     let decimal3 = float2 * 60;
-    if(decimal3<0) {
-      decimal3 = -decimal3
+    if (decimal3 < 0) {
+      decimal3 = -decimal3;
     }
     return `${int}°${int2}'${decimal3.toFixed(3)}''`;
   } catch (err) {
@@ -1439,7 +1449,6 @@ function openRemote_markerPopup(arg: any) {
       display: flex;
       justify-content: space-around;
 
-
       .btn {
         display: flex;
         justify-content: center;
@@ -1483,17 +1492,16 @@ function openRemote_markerPopup(arg: any) {
   justify-content: center;
   padding-right: 18px;
 }
-  :deep(.el-select__wrapper) {
-    background: transparent;
+:deep(.el-select__wrapper) {
+  background: transparent;
 
-    box-shadow: none !important;
-    color: #fff;
-  }
-  :deep(.el-select__wrapper .el-tooltip__trigger .el-tooltip__trigger) {
-    box-shadow: none !important;
-  }
-  :deep(.el-select__placeholder) {
-    color: #fff;
-  }
-
+  box-shadow: none !important;
+  color: #fff;
+}
+:deep(.el-select__wrapper .el-tooltip__trigger .el-tooltip__trigger) {
+  box-shadow: none !important;
+}
+:deep(.el-select__placeholder) {
+  color: #fff;
+}
 </style>

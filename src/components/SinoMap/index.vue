@@ -91,7 +91,7 @@ import { gcoordLngLat,getMapView } from "sino-tool-v3";
 // import SA200_warn from "@/assets/icons/SA200_warn.svg";
 // import {markerTypeIcon,markerTypeIconSmall} from '@/utils/enumerate'
 
-const L = window.L;
+// const L = window.L;
 const mapFontSize=computed(()=>{
   let fontSize=16;
   if(currentZoom.value<=10){
@@ -164,19 +164,30 @@ let pickedPoints: any = [];
 let rangingArray: any = reactive([]);
 const defaultMapCenter = [31.086444, 121.734942];
 const defaultMapZoom = 4;
-
+watch(
+  () => props.mapCenter,
+  (mapCenter) => {
+    setTimeout(() => {
+      handleMapCenter(mapCenter);
+    },10)
+  },
+  { deep: true }
+);
 watch(
   () => props.markerData,
-  (markerData) => {
+  (markerData,markerDataOld) => {
+    if(markerDataOld === markerData){
+      return 
+    }
     // 清空marker点
+    console.log('createMarker改变')
     markerArr.length = 0;
     markerClusterGroup.clearLayers();
     markerGroup.clearLayers();
-
     createMarker(markerData);
-    setTimeout(() => {
-      handleMapCenter(props.mapCenter || "");
-    }, 100);
+    // setTimeout(() => {
+    //   handleMapCenter(props.mapCenter || "");
+    // }, 100);
   },
   { deep: true }
 );
@@ -332,11 +343,12 @@ onMounted(() => {
   initMap();
 
   // createLine(props.lineData);
-  handleMapCenter(props.mapCenter || "");
+  handleMapCenter(props.mapCenter);
 });
-
+const markerDataN = ref<any>([])
 // 创建地图marker点
 function createMarker(list: any) {
+  markerDataN.value = list
   mapRenderModeLength.value += list.length;
 
   list.forEach((item: any) => {
@@ -346,7 +358,7 @@ function createMarker(list: any) {
     if (icon) {
       marker = L.marker(position, {
         icon,
-        zIndexOffset: item.onlineTcp ? 1000 : 500,
+        zIndexOffset: item.onlineTcp ===1 ? 1000 : 999,
         riseOnHover: true,
       });
     } else {
@@ -360,7 +372,6 @@ function createMarker(list: any) {
           direction: "top",
           offset: [0, -15],
         })
-        .openTooltip();
     }
     marker.markerId = item.markerId; // marker对象上设置唯一标识
     marker.markerType = item.markerType; // marker对象上设置唯一标识
@@ -372,7 +383,8 @@ function createMarker(list: any) {
 
     // changeZoom()
   });
-  map.zoomIn();
+
+  // changeZoom()
 }
 // 删除地图marker点
 function removeMarker(list: any) {
@@ -407,6 +419,7 @@ function markerAddToMap(markerType: string, marker: any) {
         markerClusterGroup.addLayer(marker);
         break;
     }
+    
   }
 }
 // 修改地图marker点
@@ -431,7 +444,7 @@ function updateMarker(item: any) {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
       const newMarker = L.marker(position, {
         icon,
-        zIndexOffset: item.onlineTcp ? 1000 : 500,
+        zIndexOffset: item.onlineTcp ===1 ? 1000 : 999,
         riseOnHover: true,
       }).bindPopup(item.markerPopup) as any;
       newMarker.markerId = currentMarker.markerId;
@@ -462,7 +475,7 @@ function updateMarker(item: any) {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
       const newMarker = L.marker(position, {
         icon,
-        zIndexOffset: item.onlineTcp ? 1000 : 500,
+        zIndexOffset:item.onlineTcp ===1 ? 1000 : 999,
         riseOnHover: true,
       }).bindPopup(item.markerPopup) as any;
       newMarker.markerId = currentMarker.markerId;
@@ -484,8 +497,8 @@ function updateMarker(item: any) {
   }
 }
 function changeZoom() {
-  map.setZoom(map.getZoom() + 1);
-  map.setZoom(map.getZoom() - 1);
+  map.setZoom(map.getZoom() + 1, { animate: false });
+  map.setZoom(map.getZoom() - 1, { animate: false });
 }
 // 修改地图marker显隐藏
 function updateMarkerVisible(list: any) {
@@ -568,12 +581,6 @@ function createIcon(item: any) {
   if (item.markerTitle) {
     return L.divIcon({
       className: "custom-icon",
-      // html:  item.markerTitle,
-      // '<div style="transform: rotate(' +
-      // (item.markerRotate || 0) +
-      // 'deg)">' +
-      // item.markerTitle +
-      // "</div>",
       html: `<div style="transform: rotate(${item.markerRotate || 0}deg)">
    ${item.markerTitle}
     </div>`,
@@ -589,6 +596,7 @@ const canvasLabel = new L.CanvasLabel({
     zIndex: 10000,
   },
 });
+const mapInstance=ref<any>();
 // 初始化加载地图
 function initMap() {
   map = L.map("map", {
@@ -600,9 +608,10 @@ function initMap() {
     attributionControl: false, //是否启用地图属性控件
     renderer: canvasLabel,
     zoomSnap: 1,
-    zoomAnimation: mapRenderMode == "canvas" ? false : true,
-  });
+    zIndex: 9999,
 
+  });
+  mapInstance.value=map;
   markerGroup.addTo(map);
   markerClusterGroup.addTo(map);
   initCanvasGroup();
@@ -816,7 +825,10 @@ function getRelativeIcon(iconUrl: any) {
 watch(
   () => iconChangeLimit.value,
   (_value) => {
-    changeMarkerIcon();
+    if(isIconChange.value){
+      changeMarkerIcon();
+    }
+  
   }
 );
 function createMarkerIcon(item: any) {
@@ -863,15 +875,14 @@ function createMarkerIconSmall(item: any) {
 function changeMarkerIcon() {
   initCanvasGroup();
   const newMarkers: any = [];
-  if (isIconChange.value) {
-    if (iconChangeLimit.value) {
+  if (iconChangeLimit.value) {
       //显示大图标
       markerArr.forEach((marker: any, index: number) => {
         // if(!markerTypeIcon[marker.markerType]){return}
         const normalIcon = getRelativeIcon(createMarkerIcon(marker));
         const newMarker = L.marker(marker.getLatLng(), {
           icon: normalIcon,
-          zIndexOffset: marker.onlineTcp ? 1000 : 500,
+          zIndexOffset: marker.onlineTcp ===1 ? 1000 : 999,
           riseOnHover: true,
         }).bindPopup(marker.getPopup()) as any;
         newMarker.markerId = marker.markerId;
@@ -888,7 +899,7 @@ function changeMarkerIcon() {
         const smallIcon = getRelativeIcon(createMarkerIconSmall(marker));
         const newMarker = L.marker(marker.getLatLng(), {
           icon: smallIcon,
-          zIndexOffset: marker.onlineTcp ? 1000 : 500,
+          zIndexOffset:marker.onlineTcp ===1 ? 1000 : 999,
           riseOnHover: true,
         }).bindPopup(marker.getPopup()) as any;
         newMarker.markerId = marker.markerId;
@@ -899,23 +910,6 @@ function changeMarkerIcon() {
         markerArr.splice(index, 1, newMarker);
       });
     }
-  } else {
-    markerArr.forEach((marker: any, index: number) => {
-      // if(!markerTypeIcon[marker.markerType]){return}
-      const normalIcon = getRelativeIcon(createMarkerIcon(marker));
-      const newMarker = L.marker(marker.getLatLng(), {
-        icon: normalIcon,
-        zIndexOffset: marker.onlineTcp ? 1000 : 500,
-        riseOnHover: true,
-      }).bindPopup(marker.getPopup()) as any;
-      newMarker.markerId = marker.markerId;
-      newMarker.markerType = marker.markerType;
-      newMarker.driveState = marker.driveState;
-      newMarker.onlineTcp = marker.onlineTcp;
-      newMarkers.push(newMarker);
-      markerArr.splice(index, 1, newMarker);
-    });
-  }
   if (newMarkers.length) {
     newMarkers.forEach((v: any) => {
       markerAddToMap(v.markerType, v);
@@ -925,7 +919,7 @@ function changeMarkerIcon() {
   map.setView(map.getCenter());
 setTimeout(() => {
   updateMarkerVisible(markerDataHiddenNow.value);
-},100)
+},1)
 
 }
 const currentView = ref<any[]>([]);
@@ -942,8 +936,11 @@ function mapZoomChange() {
   map.on("zoomend", function () {
     currentView.value = getMapView(map);
     currentZoom.value = map.getZoom();
+    console.log(currentZoom.value)
     //动态设置地图标注字体大小
     document.documentElement.style.setProperty("--map-font-size", `${mapFontSize.value}px`);
+    
+    
   });
 }
 
