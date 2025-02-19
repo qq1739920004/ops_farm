@@ -71,7 +71,8 @@
         <el-table
           :data="fileListData"
           style="width: 100%"
-          @selection-change="handleSelectionChange"
+          @select="handleSelectionChange"
+          @select-all="handleSelectAll"
         >
           <el-table-column type="selection" width="55" />
           <el-table-column type="index" :label="$t('work.item') + ':'" :width="60">
@@ -213,6 +214,10 @@ const changeType = () => {
   getModel();
 };
 const upfradeConfirm = () => {
+  newRecords.value = {
+    mid: "",
+    version: "",
+  };
   if (snList.value.length === 0) {
     ElMessage.warning(t("messages.pleaseSelectDevice"));
   } else {
@@ -227,7 +232,7 @@ const currentChange = (val: any) => {
 
 const areaOptions = [
   {
-    label: "北京市",
+    label: "北京市", 
     value: 11,
   },
   {
@@ -368,13 +373,20 @@ const areaOptions = [
     value: 71,
   },
 ];
-
-const handleSelectionChange = (val: any) => {
-  if (val.length === pageInfo.pageSize || val.lenght === total.value) {
+const handleSelectAll = (val: any) => {
+  if (val.length !== 0) {
     isAll.value = 1;
   } else {
     isAll.value = 0;
   }
+};
+const handleSelectionChange = (val: any) => {
+  if (val.length === total.value) {
+    isAll.value = 1;
+  } else {
+    isAll.value = 0;
+  }
+
   snList.value = val.map((item: any) => {
     return item[0].value;
   });
@@ -448,10 +460,10 @@ const confirmUpgrade = async () => {
       filepath: newRecords.value.version.filepath,
       filesize: newRecords.value.version.filesize,
     });
-    ElMessage.success(t('work.upgradeSuccess'))
-    dialogVisible.value = false
+    ElMessage.success(t("work.upgradeSuccess"));
+    dialogVisible.value = false;
   } catch {
-    dialogVisible.value = false
+    dialogVisible.value = false;
   }
 };
 getModel();

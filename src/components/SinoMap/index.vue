@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import gcoord from "gcoord";
+// import gcoord from "gcoord";
 // @ts-ignore
 // import L from "leaflet";
 // import "leaflet/dist/leaflet.css";
