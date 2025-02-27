@@ -8,13 +8,13 @@
           style="width: 111px"
           v-model="mapId"
           placeholder=""
-          @change="hangleSelectChange"
+          @change="mapTileChange"
         >
           <el-option
-            v-for="(item, index) in mapOptions"
-            :key="index"
-            :label="item.mapName"
-            :value="item.mapId"
+            v-for="item in mapOptions"
+            :key="item.id"
+            :label="t(item.lable)"
+            :value="item.id"
           />
         </el-select>
       </div>
@@ -46,15 +46,15 @@
     <div class="color_list">
       <div class="out_area">
         <div class="cycle1"></div>
-        <div>{{ $t('job.fix') }}</div>
+        <div>{{ $t("job.fix") }}</div>
       </div>
       <div class="out_area">
         <div class="cycle2"></div>
-        <div>{{ $t('job.others') }}</div>
+        <div>{{ $t("job.others") }}</div>
       </div>
       <div class="out_area">
         <div class="cycle3"></div>
-        <div>{{ $t('job.SatelliteBase') }}</div>
+        <div>{{ $t("job.SatelliteBase") }}</div>
       </div>
     </div>
     <div class="demo-date-picker">
@@ -95,7 +95,7 @@
           :loading="loading"
           :disabled="loading"
         >
-          {{$t('work.search')}}
+          {{ $t("work.search") }}
         </el-button>
       </div>
     </div>
@@ -122,7 +122,7 @@ import { useRoute } from "vue-router";
 import { mapTitleLayers } from "./mapTitleLayers";
 import { useI18n } from "vue-i18n";
 import c from "@/assets/jobManage/c.png";
-
+const { t, locale } = useI18n();
 const route = useRoute();
 const pickedPoints = ref<any[]>([]);
 // 提交的车辆数组
@@ -202,7 +202,7 @@ const changeA = () => {
     pageInfoData.et = formartDate(value2.value);
   }
 };
-const { t, locale } = useI18n();
+
 // 地图相关
 let map = <any>null;
 const originPoint = ref<any>([31.172800343248, 121.406021546488]);
@@ -210,34 +210,57 @@ const originZoom = ref<any>(5);
 // const tileLayer = reactive<any>([])
 // const tileUrl = reactive<any>({})
 // Object.assign(tileUrl, mapTitleLayers)
-if (locale.value.includes("zh")) {
-  mapId.value = 0;
-} else {
-  mapId.value = 2;
-}
-const mapOptions = reactive([
-  {
-    mapName: t("sinoMap.SatellitesMap"),
-    mapId: 0,
-  },
-  {
-    mapName: t("sinoMap.AMAP"),
-    mapId: 1,
-  },
-  {
-    mapId: 2,
+const mapId = ref(0);
 
-    mapName: t("sinoMap.googleMap"),
+
+const mapOptions = reactive<any>([
+  {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "GaoDe",
+    mapType: "Satellite",
+  },
+  {
+    id: 1,
+    lable: "sinoMap.AMAP",
+    mapName: "GaoDe",
+    mapType: "Normal",
+  },
+  {
+    id: 2,
+    lable: "sinoMap.googleMap",
+    mapName: "Google",
+    mapType: "Normal",
   },
   // {
   //   mapName: "天地图",
   //   mapId: 3,
   // },
 ]);
+if (locale.value.includes("zh")) {
+  mapId.value = 0;
+  mapOptions[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "GaoDe",
+    mapType: "Satellite",
+  };
+} else {
+  mapId.value = 2;
+  mapOptions[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "Google",
+    mapType: "Satellite",
+  };
+}
 const markerCollect = reactive<any>({
   marker: [],
 });
-
+function mapTileChange() {
+  const mapTitleOption = mapOptions.find((item: any) => item.id == mapId.value);
+  changeTileLayer(mapTitleOption?.mapName, mapTitleOption?.mapType);
+}
 function initMap() {
   map = L.map("child6_map", {
     attributionControl: false,
@@ -245,7 +268,7 @@ function initMap() {
     zoomControl: false,
     zoomAnimation: false,
   }).setView(originPoint.value, originZoom.value);
-  handleMapChange(mapId.value);
+  mapTileChange();
   map.on("click", function (event: any) {
     if (pickupMode.value) {
       let point = event.latlng;
@@ -292,27 +315,59 @@ const clearDistance = () => {
     mapId.style.cursor = "grab";
   }
 };
-const handleMapChange = (mapId: any) => {
-  switch (mapId) {
-    case 0:
-      changeTileLayer("Google", "Satellite");
-      break;
-    case 1:
-      changeTileLayer("GaoDe", "Normal");
-      break;
-    case 2:
-      changeTileLayer("Google", "Normal");
-      break;
-    case 3:
-      changeTileLayer("TianDiTu", "Normal");
-      break;
-  }
-};
+watch(
+  () => locale.value,
+  (value) => {
+    if (value === "zh") {
+      mapId.value = 0;
+      mapOptions[0] = {
+        id: 0,
+        lable: "sinoMap.SatellitesMap",
+        mapName: "GaoDe",
+        mapType: "Satellite",
+      };
+      mapTileChange();
+    } else {
+      mapId.value = 2;
+      mapOptions[0] = {
+        id: 0,
+        lable: "sinoMap.SatellitesMap",
+        mapName: "Google",
+        mapType: "Satellite",
+      };
+      mapTileChange();
+    }
+  },
+  { deep: true }
+);
+if (locale.value.includes("zh")) {
+  mapId.value = 0;
+  mapOptions[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "GaoDe",
+    mapType: "Satellite",
+  };
+} else {
+  mapId.value = 0;
+  mapOptions[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "Google",
+    mapType: "Satellite",
+  };
+}
+// 设置图商
+let currentLayers: any = [];
 // 设置图商
 function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
   if (!map) {
     console.warn("未初始化底图实例");
     return;
+  }
+  if (currentLayers.length) {
+    currentLayers.forEach((layer: any) => layer.remove());
+    currentLayers = [];
   }
   let mapUrl = mapTitleLayers[mapName][mapType];
   let options: any = {};
@@ -324,14 +379,13 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
     options.key = mapTitleLayers[mapName]["key"];
   }
   for (let key in mapUrl) {
-    L.tileLayer(mapUrl[key], options).addTo(map);
+    let layer = L.tileLayer(mapUrl[key], options).addTo(map);
+    currentLayers.push(layer);
   }
 }
 
 // 更改底地图
-const hangleSelectChange = () => {
-  handleMapChange(mapId.value);
-};
+
 // 保存记录
 const saveMarker = (markerObj: any) => {
   try {
@@ -353,7 +407,7 @@ const getSingleCarTrick = async () => {
     .then(async (res: any) => {
       if (!res.data || res.data.records.length === 0 || res.data.records === null) {
         loading.value = false;
-        ElMessage.warning(t('work.noTrace'));
+        ElMessage.warning(t("work.noTrace"));
         return;
       } else {
         total = res.data.total;
@@ -369,7 +423,7 @@ const getSingleCarTrick = async () => {
             });
             pageInfoData.currentPage++;
           }
-          ElMessage.success(t('work.taceSuccess'));
+          ElMessage.success(t("work.taceSuccess"));
           let line = L.polyline(turePoint, {
             color: "#5C5C5C",
             weight: 1,
@@ -408,7 +462,7 @@ const getSingleCarTrick = async () => {
             return coorTransform([item2.posX as never, item2.posY as never], mapId.value); // 转换坐标
           });
 
-          ElMessage.success(t('work.taceSuccess'));
+          ElMessage.success(t("work.taceSuccess"));
           let line = L.polyline(PointListTransed, { color: "#5C5C5C", weight: 1 }).addTo(
             map
           );
@@ -715,6 +769,81 @@ const removeMarker = () => {
 :deep(.el-select) {
   --el-select-input-focus-border-color: transparent;
 }
+:deep(.map_popup) {
+  width: 220px;
+
+  color: #fff;
+  .name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+  }
+  div {
+    width: 100%;
+    margin-top: 5px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    div {
+      width: 100px;
+
+      margin-right: 20px;
+    }
+  }
+}
+:deep(.leaflet-popup) {
+  width: 220px;
+  color: white;
+  .leaflet-popup-content-wrapper {
+    background-color: rgba(0, 0, 0, 0.67);
+    color: var(--color-scheme);
+  }
+
+  .leaflet-popup-content {
+    width: auto !important;
+  }
+
+  .leaflet-popup-tip {
+    background-color: rgba(0, 0, 0, 0.67);
+  }
+}
+.time {
+  margin-left: 10px;
+  height: 32px;
+  background: url("@/assets/monitoring/inputBack.png");
+  background-size: 100% 100%;
+  :deep(.el-input__wrapper) {
+    background: transparent !important;
+    box-shadow: none;
+    padding: 0;
+    color: white;
+
+    .el-range-separator,
+    .el-range-input {
+      color: #fff;
+    }
+    .el-icon {
+      color: #4cb04f;
+      margin-left: 5px;
+    }
+  }
+}
+:deep(.el-select) {
+  --el-select-input-focus-border-color: transparent;
+}
+:deep(.el-select__wrapper) {
+  background: url("@/assets/monitoring/inputBack.png");
+  background-size: 100% 100%;
+  box-shadow: none !important;
+  color: #fff;
+}
+:deep(.el-select__wrapper .el-tooltip__trigger .el-tooltip__trigger) {
+  box-shadow: none !important;
+}
+:deep(.el-select__placeholder) {
+  color: #fff;
+}
+.map_utils_item {
   :deep(.el-select__wrapper) {
     background: transparent;
 
@@ -727,4 +856,5 @@ const removeMarker = () => {
   :deep(.el-select__placeholder) {
     color: #fff;
   }
+}
 </style>

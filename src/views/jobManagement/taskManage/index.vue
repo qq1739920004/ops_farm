@@ -8,13 +8,13 @@
           style="width: 111px"
           v-model="mapId"
           placeholder=""
-          @change="hangleSelectChange"
+          @change="mapTileChange"
         >
           <el-option
-            v-for="(item, index) in mapOptions"
-            :key="index"
-            :label="item.mapName"
-            :value="item.mapId"
+            v-for="item in mapOptions"
+            :key="item.id"
+            :label="t(item.lable)"
+            :value="item.id"
           />
         </el-select>
       </div>
@@ -181,23 +181,25 @@ const pickedPoints = ref<any[]>([]);
 // let ViewGroup = <any>null;
 let calculationObj = <any[]>reactive([]);
 const mapId = ref(0);
-if (locale.value.includes("zh")) {
-  mapId.value = 0;
-} else {
-  mapId.value = 2;
-}
-const mapOptions = reactive([
+
+const mapOptions = reactive<any>([
   {
-    mapName: t("sinoMap.SatellitesMap"),
-    mapId: 0,
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "GaoDe",
+    mapType: "Satellite",
   },
   {
-    mapName: t("sinoMap.AMAP"),
-    mapId: 1,
+    id: 1,
+    lable: "sinoMap.AMAP",
+    mapName: "GaoDe",
+    mapType: "Normal",
   },
   {
-    mapId: 2,
-    mapName: t("sinoMap.googleMap"),
+    id: 2,
+    lable: "sinoMap.googleMap",
+    mapName: "Google",
+    mapType: "Normal",
   },
   // {
   //   mapName: "天地图",
@@ -257,13 +259,14 @@ const changeRadio = (item: any) => {
     }, 100);
   }
 };
+
 function initMap() {
   map = L.map("child6_map", {
     attributionControl: false,
     closePopupOnClick: false,
     zoomControl: false,
   }).setView(originPoint.value, originZoom.value);
-  handleMapChange(mapId.value);
+  mapTileChange();
   map.on("click", function (event: any) {
     if (pickupMode.value) {
       let point = event.latlng;
@@ -294,39 +297,17 @@ function initMap() {
       }
     }
   });
-  //  ViewGroup = L.layerGroup().addTo(map);
-
-  //   // 显示/隐藏 图层组
-
-  //   ViewGroup.eachLayer((item:any) => {
-  //     item.setOpacity(1);
-  //   });
-
-  //   ViewGroup.eachLayer((item:any) => {
-  //     item.setOpacity(0);
-  //   });
 }
-const handleMapChange = (mapId: any) => {
-  switch (mapId) {
-    case 0:
-      changeTileLayer("Google", "Satellite");
-      break;
-    case 1:
-      changeTileLayer("GaoDe", "Normal");
-      break;
-    case 2:
-      changeTileLayer("Google", "Normal");
-      break;
-    case 3:
-      changeTileLayer("TianDiTu", "Normal");
-      break;
-  }
-};
+let currentLayers: any = [];
 // 设置图商
 function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
   if (!map) {
     console.warn("未初始化底图实例");
     return;
+  }
+  if (currentLayers.length) {
+    currentLayers.forEach((layer: any) => layer.remove());
+    currentLayers = [];
   }
   let mapUrl = mapTitleLayers[mapName][mapType];
   let options: any = {};
@@ -338,7 +319,8 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
     options.key = mapTitleLayers[mapName]["key"];
   }
   for (let key in mapUrl) {
-    L.tileLayer(mapUrl[key], options).addTo(map);
+    let layer = L.tileLayer(mapUrl[key], options).addTo(map);
+    currentLayers.push(layer);
   }
 }
 // const changeTileLayer = (mapName = 'Google', mapType = 'Satellite') => {
@@ -398,9 +380,10 @@ const clearDistance = () => {
   }
 };
 // 更改底地图
-const hangleSelectChange = () => {
-  handleMapChange(mapId.value);
-};
+function mapTileChange() {
+  const mapTitleOption = mapOptions.find((item: any) => item.id == mapId.value);
+  changeTileLayer(mapTitleOption?.mapName, mapTitleOption?.mapType);
+}
 // 保存记录
 const saveMarker = (workId: any, markerObj: any) => {
   try {
@@ -417,7 +400,48 @@ const saveMarker2 = (workId: any, markerObj: any) => {
     console.log(err);
   }
 };
-
+watch(
+  () => locale.value,
+  (value) => {
+    if (value === "zh") {
+      mapId.value = 0;
+      mapOptions[0] = {
+        id: 0,
+        lable: "sinoMap.SatellitesMap",
+        mapName: "GaoDe",
+        mapType: "Satellite",
+      };
+      mapTileChange();
+    } else {
+      mapId.value = 2;
+      mapOptions[0] = {
+        id: 0,
+        lable: "sinoMap.SatellitesMap",
+        mapName: "Google",
+        mapType: "Satellite",
+      };
+      mapTileChange();
+    }
+  },
+  { deep: true }
+);
+if (locale.value.includes("zh")) {
+  mapId.value = 0;
+  mapOptions[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "GaoDe",
+    mapType: "Satellite",
+  };
+} else {
+  mapId.value = 0;
+  mapOptions[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "Google",
+    mapType: "Satellite",
+  };
+}
 // 农业分类
 // const workTypeReflect = reactive<any>({
 //   1: t("devicelist.status1"),
@@ -468,7 +492,7 @@ const loadWorkData = (workId: any) => {
           let nameTitle: any = item;
           emptyIds.value = false;
           if (res.data[item].length === 0) {
-            ElMessage.warning(`${item}${t('messages.noTaskData')}`);
+            ElMessage.warning(`${item}${t("messages.noTaskData")}`);
           } else {
             let PointListTransed = res.data[item].map((item2: any) => {
               return coorTransform(
@@ -960,7 +984,7 @@ const getPaddyWorkList = async (flag: Boolean) => {
   });
   paddyWorkList.value = res.data.records;
   if (res.data.records.length === 0) {
-    ElMessage.warning(t('messages.noTaskData'));
+    ElMessage.warning(t("messages.noTaskData"));
     loadValue.value = [];
   }
   let tem = res.data.records;

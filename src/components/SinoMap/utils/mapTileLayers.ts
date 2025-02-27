@@ -19,7 +19,7 @@ export const mapTileLayers: any = {
         key: "174705aebfe31b79b3587279e211cb9a",
     },
 
-   
+
     GaoDe: {
         Normal: {
             Map: 'http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}'

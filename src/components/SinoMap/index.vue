@@ -497,8 +497,8 @@ function updateMarker(item: any) {
   }
 }
 function changeZoom() {
-  map.setZoom(map.getZoom() + 1, { animate: false });
-  map.setZoom(map.getZoom() - 1, { animate: false });
+  // map.setZoom(map.getZoom() + 1, { animate: false });
+  // map.setZoom(map.getZoom() - 1, { animate: false });
 }
 // 修改地图marker显隐藏
 function updateMarkerVisible(list: any) {

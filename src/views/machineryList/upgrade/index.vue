@@ -218,7 +218,7 @@ const upfradeConfirm = () => {
     mid: "",
     version: "",
   };
-  if (snList.value.length === 0) {
+  if (snList.value.length === 0 && isAll.value === 0 ) {
     ElMessage.warning(t("messages.pleaseSelectDevice"));
   } else {
     dialogVisible.value = true;
@@ -229,7 +229,7 @@ const currentChange = (val: any) => {
   pageInfo.pageSize = val.pageSize;
   getpageModelSnList();
 };
-
+111111
 const areaOptions = [
   {
     label: "北京市", 

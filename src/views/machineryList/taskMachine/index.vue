@@ -8,13 +8,13 @@
           style="width: 111px"
           v-model="mapId"
           placeholder=""
-          @change="hangleSelectChange"
+          @change="mapTileChange"
         >
           <el-option
-            v-for="(item, index) in mapOptions"
-            :key="index"
-            :label="item.mapName"
-            :value="item.mapId"
+            v-for="item in mapOptions"
+            :key="item.id"
+            :label="t(item.lable)"
+            :value="item.id"
           />
         </el-select>
       </div>
@@ -212,34 +212,55 @@ const originZoom = ref<any>(5);
 // Object.assign(tileUrl, mapTitleLayers)
 const mapId = ref(0);
 
-if (locale.value.includes("zh")) {
-  mapId.value = 0;
-} else {
-  mapId.value = 2;
-}
-const mapOptions = reactive([
-  {
-    mapName: t("sinoMap.SatellitesMap"),
-    mapId: 0,
-  },
-  {
-    mapName: t("sinoMap.AMAP"),
-    mapId: 1,
-  },
-  {
-    mapId: 2,
 
-    mapName: t("sinoMap.googleMap"),
+const mapOptions = reactive<any>([
+  {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "GaoDe",
+    mapType: "Satellite",
+  },
+  {
+    id: 1,
+    lable: "sinoMap.AMAP",
+    mapName: "GaoDe",
+    mapType: "Normal",
+  },
+  {
+    id: 2,
+    lable: "sinoMap.googleMap",
+    mapName: "Google",
+    mapType: "Normal",
   },
   // {
   //   mapName: "天地图",
   //   mapId: 3,
   // },
 ]);
+if (locale.value.includes("zh")) {
+  mapId.value = 0;
+  mapOptions[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "GaoDe",
+    mapType: "Satellite",
+  };
+} else {
+  mapId.value = 2;
+  mapOptions[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "Google",
+    mapType: "Satellite",
+  };
+}
 const markerCollect = reactive<any>({
   marker: [],
 });
-
+function mapTileChange() {
+  const mapTitleOption = mapOptions.find((item: any) => item.id == mapId.value);
+  changeTileLayer(mapTitleOption?.mapName, mapTitleOption?.mapType);
+}
 function initMap() {
   map = L.map("child6_map", {
     attributionControl: false,
@@ -247,7 +268,7 @@ function initMap() {
     zoomControl: false,
     zoomAnimation: false,
   }).setView(originPoint.value, originZoom.value);
-  handleMapChange(mapId.value);
+  mapTileChange();
   map.on("click", function (event: any) {
     if (pickupMode.value) {
       let point = event.latlng;
@@ -294,27 +315,59 @@ const clearDistance = () => {
     mapId.style.cursor = "grab";
   }
 };
-const handleMapChange = (mapId: any) => {
-  switch (mapId) {
-    case 0:
-      changeTileLayer("Google", "Satellite");
-      break;
-    case 1:
-      changeTileLayer("GaoDe", "Normal");
-      break;
-    case 2:
-      changeTileLayer("Google", "Normal");
-      break;
-    case 3:
-      changeTileLayer("TianDiTu", "Normal");
-      break;
-  }
-};
+watch(
+  () => locale.value,
+  (value) => {
+    if (value === "zh") {
+      mapId.value = 0;
+      mapOptions[0] = {
+        id: 0,
+        lable: "sinoMap.SatellitesMap",
+        mapName: "GaoDe",
+        mapType: "Satellite",
+      };
+      mapTileChange();
+    } else {
+      mapId.value = 2;
+      mapOptions[0] = {
+        id: 0,
+        lable: "sinoMap.SatellitesMap",
+        mapName: "Google",
+        mapType: "Satellite",
+      };
+      mapTileChange();
+    }
+  },
+  { deep: true }
+);
+if (locale.value.includes("zh")) {
+  mapId.value = 0;
+  mapOptions[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "GaoDe",
+    mapType: "Satellite",
+  };
+} else {
+  mapId.value = 0;
+  mapOptions[0] = {
+    id: 0,
+    lable: "sinoMap.SatellitesMap",
+    mapName: "Google",
+    mapType: "Satellite",
+  };
+}
+// 设置图商
+let currentLayers: any = [];
 // 设置图商
 function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
   if (!map) {
     console.warn("未初始化底图实例");
     return;
+  }
+  if (currentLayers.length) {
+    currentLayers.forEach((layer: any) => layer.remove());
+    currentLayers = [];
   }
   let mapUrl = mapTitleLayers[mapName][mapType];
   let options: any = {};
@@ -326,14 +379,13 @@ function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
     options.key = mapTitleLayers[mapName]["key"];
   }
   for (let key in mapUrl) {
-    L.tileLayer(mapUrl[key], options).addTo(map);
+    let layer = L.tileLayer(mapUrl[key], options).addTo(map);
+    currentLayers.push(layer);
   }
 }
 
 // 更改底地图
-const hangleSelectChange = () => {
-  handleMapChange(mapId.value);
-};
+
 // 保存记录
 const saveMarker = (markerObj: any) => {
   try {
