@@ -78,7 +78,7 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { ref, reactive, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, reactive, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { carDealer_API } from "@/api/machineryList/index";
 import { CarStatPaddyChart_API } from "@/api/inSight/index";
 import { getCarDealerList_API } from "@/api/jobManagement/index";
@@ -108,6 +108,10 @@ const changeBlur1 = () => {
 const changeBlur2 = () => {
   getCarChart();
 };
+const dateData = ref<any>([]);
+const farmData = ref<any>([]);
+const beforeArea = ref<any>([]);
+const beforeDuration = ref<any>([])
 const getCarChart = async () => {
   const res = await CarStatPaddyChart_API({
     ...pageInfo,
@@ -119,15 +123,15 @@ const getCarChart = async () => {
   if (data.length == 0) {
     ElMessage.warning(t("work.noData"));
   }
-  const dateData = data.timeList;
-  const farmData = data.carStatPaddyOneVOS;
-  const beforeArea = farmData.map((item: any) => {
+  dateData.value = data.timeList;
+  farmData.value = data.carStatPaddyOneVOS;
+  beforeArea.value = farmData.value.map((item: any) => {
     return item.beforeArea;
   });
-  const beforeDuration = farmData.map((item: any) => {
+   beforeDuration.value = farmData.value.map((item: any) => {
     return item.beforeDuration;
   });
-  ChartCreate(dateData, beforeArea, beforeDuration);
+  ChartCreate(dateData.value, beforeArea.value, beforeDuration.value);
 };
 
 function initChart() {
@@ -141,15 +145,6 @@ function ChartCreate(date: any, x: any, y: any) {
   const valueListx = x;
   const valueListy = y;
   option = {
-    // title: {
-    //   //标题组件
-    //   text: ` 面积(千亩)`, //'循环泵历史状态',
-    //   textStyle: {
-    //     fontSize: 14,
-    //     fontWeight: 400,
-    //     color: "#565656",
-    //   },
-    // },
     tooltip: {
       trigger: "axis",
     },
@@ -266,7 +261,7 @@ function ChartCreate(date: any, x: any, y: any) {
     ],
     series: [
       {
-        name: `${t("work.acreage")}`,
+        name: t("work.acreage"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListx,
@@ -377,6 +372,7 @@ function timestampToTime(timestamp: any) {
   var s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
   return Y + M + D + h + m + s;
 }
+
 const getDealerList = async () => {
   const res: any = await carDealer_API();
   if (res.data.length > 1) {
@@ -414,6 +410,15 @@ const onYearClick = () => {
   getCarChart();
 };
 
+watch(
+  () => locale.value,
+  () => {
+    carChart.clear();
+
+  ChartCreate(dateData.value, beforeArea.value, beforeDuration.value);
+  },
+  { deep: true }
+);
 getDealerList();
 
 onMounted(() => {

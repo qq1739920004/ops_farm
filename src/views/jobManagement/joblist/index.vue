@@ -319,7 +319,8 @@ const openExportDia = () => {
 //今天
 const onDayClick = () => {
   isActive.value = 1;
-  value1.value = new Date();
+  value1.value = new Date(new Date().toLocaleDateString())
+  ;
   value2.value = new Date();
   pageInfo.st = formartDate(value1.value);
   pageInfo.et = formartDate(value2.value);
@@ -329,7 +330,8 @@ const onDayClick = () => {
 const onMonthClick = () => {
   isActive.value = 2;
   value2.value = new Date();
-  const start = new Date();
+  const start = new Date(new Date().toLocaleDateString())
+  ;
   start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
   value1.value = start;
   pageInfo.st = formartDate(value1.value);
@@ -340,7 +342,8 @@ const onMonthClick = () => {
 const onYearClick = () => {
   isActive.value = 3;
   value2.value = new Date();
-  const start = new Date();
+  const start = new Date(new Date().toLocaleDateString())
+  ;
   start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
   value1.value = start;
   pageInfo.st = formartDate(value1.value);

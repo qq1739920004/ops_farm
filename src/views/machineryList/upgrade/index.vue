@@ -374,6 +374,7 @@ const areaOptions = [
   },
 ];
 const handleSelectAll = (val: any) => {
+  snList.value = []
   if (val.length !== 0) {
     isAll.value = 1;
   } else {

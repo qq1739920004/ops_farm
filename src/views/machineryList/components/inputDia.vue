@@ -257,6 +257,9 @@ watch(
 .dialog-footer {
   display: flex;
   justify-content: center;
-  margin-top: -20px;
+
+}
+.upload-demo {
+  width: 40px;
 }
 </style>

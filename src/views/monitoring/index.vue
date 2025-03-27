@@ -436,7 +436,6 @@ const handleOb = reactive<any>({
 });
 // 搜索框确认选择
 function handleSelect(item: any) {
-
   if (!item.markerId) return;
   handleOb.markerId = item.markerId;
 }

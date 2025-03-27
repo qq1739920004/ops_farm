@@ -25,14 +25,22 @@
             <!-- <el-option value="AG360" label="AG360" /> -->
             <el-option value="AG502" label="AG502" />
             <el-option value="AG501" label="AG501" />
+            <el-option value="AG501Pro" label="AG501Pro" />
             <el-option value="AG502_JP" label="AG502JP" />
             <el-option value="AG501Pro_JP" label="AG501PROJP" />
             <el-option value="MT802" label="MT802" />
-            <el-option value="MT901" label="MT901" />
+            <el-option value="MT901D" label="MT901" />
           </el-select>
         </div>
         <div>
-          <el-button type="primary" @click="openExportDia">
+          <el-button
+     
+            type="primary"
+            v-auth="2256"
+            @click="gotoInput"
+            >{{ $t("messages.enter") }}</el-button
+          >
+          <el-button type="primary" @click="openExportDia" v-auth="2268">
             <el-icon class="el-icon--left"> <SvgIcon icon="export" size="16" /> </el-icon
             >{{ $t("work.export") }}</el-button
           >
@@ -54,7 +62,7 @@
           :label="$t('work.item')"
           align="center"
         />
-     
+
         <el-table-column :label="$t('work.guarantee')" align="center">
           <template #="{ row }">
             <div
@@ -70,7 +78,7 @@
               <el-tag
                 style="
                   color: rgba(255, 112, 112, 1);
-          
+
                   height: 26px;
                   opacity: 1;
                   border-radius: 4px;
@@ -174,7 +182,7 @@
           :label="$t('work.item') + ':'"
           align="center"
         />
-      
+
         <el-table-column :label="$t('work.guarantee')" align="center">
           <template #="{ row }">
             <div
@@ -190,7 +198,7 @@
               <el-tag
                 style="
                   color: rgba(255, 112, 112, 1);
-        
+
                   height: 26px;
                   opacity: 1;
                   border-radius: 4px;
@@ -279,7 +287,7 @@
       <el-table
         @selection-change="handleSelectionChange"
         :data="records"
-        v-show="scence == '3'"
+        v-show="scence == '3' ||scence == '8'"
         stripe
       >
         <el-table-column type="selection" width="55" />
@@ -289,7 +297,7 @@
           :label="$t('work.item')"
           align="center"
         />
-       
+
         <el-table-column :label="$t('work.guarantee')" align="center">
           <template #="{ row }">
             <div
@@ -426,10 +434,11 @@
               <!-- <el-option value="AG360" label="AG360" /> -->
               <el-option value="AG502" label="AG502" />
               <el-option value="AG501" label="AG501" />
+              <el-option value="AG501Pro" label="AG501Pro" />
               <el-option value="AG502_JP" label="AG502JP" />
               <el-option value="AG501Pro_JP" label="AG501PROJP" />
               <el-option value="MT802" label="MT802" />
-              <el-option value="MT901" label="MT901" />
+              <el-option value="MT901D" label="MT901" />
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('work.labelSN')" prop="npn">
@@ -469,10 +478,12 @@
     </div>
     <G502Dia @push="pushValue" ref="G502D" :newRecords="newRecords"></G502Dia>
     <G501Dia @push="pushValue" ref="G501D" :newRecords="newRecords"></G501Dia>
+    <G501DiaPro @push="pushValue" ref="G501DPRO" :newRecords="newRecords"></G501DiaPro>
     <G502DiaJp @push="pushValue" ref="G502DJP" :newRecords="newRecords"></G502DiaJp>
     <G502Dia @push="pushValue" ref="GMT802" :newRecords="newRecords"></G502Dia>
     <G502Dia @push="pushValue" ref="GMT901" :newRecords="newRecords"></G502Dia>
     <G502DiaJp @push="pushValue" ref="AG501PRO_JP" :newRecords="newRecords"></G502DiaJp>
+    <InputDia ref="inputD"></InputDia>
   </div>
 </template>
 
@@ -480,7 +491,9 @@
 import G502Dia from "../components/G502Dia.vue";
 import G502DiaJp from "../components/G502DiaJp.vue";
 import G501Dia from "../components/G501Dia.vue";
+import G501DiaPro from "../components/G501DiaPro.vue";
 import Pagination from "@/components/Pagination/index.vue";
+import InputDia from "./inputDia.vue";
 import { reactive, ref, nextTick, watch } from "vue";
 // carModuleInfoOperationDelete_API
 import {
@@ -513,10 +526,11 @@ const records = ref<RecordsObj[]>([]);
 const dialogVisible = ref<boolean>(false);
 const G502D = ref();
 const G502DJP = ref();
-const AG501PRO_JP = ref()
+const AG501PRO_JP = ref();
 const GMT802 = ref();
 const GMT901 = ref();
 const G501D = ref();
+const G501DPRO = ref();
 const multipleSelection = ref<RecordsObj[]>([]);
 const newRecords = reactive<newRecordsObj>({
   carImuSn: "",
@@ -535,7 +549,10 @@ const newRecords = reactive<newRecordsObj>({
   userName: "",
   tel: "",
 });
-
+const gotoInput = () => {
+  inputD.value.dialogVisible = true;
+};
+const inputD = ref();
 let formRef = ref();
 const pushValue = () => {
   getInfoMangementInfo();
@@ -588,13 +605,16 @@ const changeBlur = () => {
   if (pageInfo.terminalType == "AG501") {
     scence.value = "3";
   }
+  if (pageInfo.terminalType == "AG501Pro") {
+    scence.value = "8";
+  }
   if (pageInfo.terminalType == "AG502_JP") {
     scence.value = "4";
   }
   if (pageInfo.terminalType == "MT802") {
     scence.value = "5";
   }
-  if (pageInfo.terminalType == "MT901") {
+  if (pageInfo.terminalType == "MT901D") {
     scence.value = "6";
   }
   if (pageInfo.terminalType == "AG501Pro_JP") {
@@ -621,6 +641,9 @@ const edit = (row: any) => {
   }
   if (scence.value == "3") {
     G501D.value.dialogVisible = true;
+  }
+  if (scence.value == "8") {
+    G501DPRO.value.dialogVisible = true;
   }
   if (scence.value == "4") {
     G502DJP.value.dialogVisible = true;
@@ -651,9 +674,10 @@ const edit = (row: any) => {
   nextTick(() => {
     formRef?.value.clearValidate();
     G501D.value.formRef?.clearValidate();
+    G501DPRO.value.formRef?.clearValidate();
     G502D.value.formRef?.clearValidate();
     G502DJP.value.formRef?.clearValidate();
-    AG501PRO_JP.value.formRef?.clearValidate()
+    AG501PRO_JP.value.formRef?.clearValidate();
     GMT802.value.formRef?.clearValidate();
     GMT901.value.formRef?.clearValidate();
   });
@@ -665,6 +689,7 @@ watch(
       dialogVisible.value = false;
       G502D.value.dialogVisible = true;
       G501D.value.dialogVisible = false;
+      G501DPRO.value.dialogVisible = false;
       G502DJP.value.dialogVisible = false;
       AG501PRO_JP.value.dialogVisible = false;
       GMT802.value.dialogVisible = false;
@@ -683,6 +708,7 @@ watch(
       G501D.value.dialogVisible = true;
       G502D.value.dialogVisible = false;
       G502DJP.value.dialogVisible = false;
+      G501DPRO.value.dialogVisible = false;
       AG501PRO_JP.value.dialogVisible = false;
       GMT802.value.dialogVisible = false;
       GMT901.value.dialogVisible = false;
@@ -690,6 +716,7 @@ watch(
     if (newRecords.terminalType == "AG502_JP") {
       dialogVisible.value = false;
       G502DJP.value.dialogVisible = true;
+      G501DPRO.value.dialogVisible = false;
       AG501PRO_JP.value.dialogVisible = false;
       G502D.value.dialogVisible = false;
       G501D.value.dialogVisible = false;
@@ -701,15 +728,17 @@ watch(
       G501D.value.dialogVisible = false;
       G502D.value.dialogVisible = false;
       G502DJP.value.dialogVisible = false;
+      G501DPRO.value.dialogVisible = false;
       AG501PRO_JP.value.dialogVisible = false;
       GMT802.value.dialogVisible = true;
       GMT901.value.dialogVisible = false;
     }
-    if (newRecords.terminalType == "MT901") {
+    if (newRecords.terminalType == "MT901D") {
       dialogVisible.value = false;
       G502DJP.value.dialogVisible = false;
       AG501PRO_JP.value.dialogVisible = false;
       G502D.value.dialogVisible = false;
+      G501DPRO.value.dialogVisible = false;
       G501D.value.dialogVisible = false;
       GMT802.value.dialogVisible = false;
       GMT901.value.dialogVisible = true;
@@ -719,9 +748,20 @@ watch(
       G502DJP.value.dialogVisible = false;
       G502D.value.dialogVisible = false;
       G501D.value.dialogVisible = false;
+      G501DPRO.value.dialogVisible = false;
       GMT802.value.dialogVisible = false;
       GMT901.value.dialogVisible = false;
       AG501PRO_JP.value.dialogVisible = true;
+    }
+    if (newRecords.terminalType == "AG501Pro") {
+      dialogVisible.value = false;
+      G502DJP.value.dialogVisible = false;
+      G502D.value.dialogVisible = false;
+      G501D.value.dialogVisible = false;
+      G501DPRO.value.dialogVisible = true;
+      GMT802.value.dialogVisible = false;
+      GMT901.value.dialogVisible = false;
+      AG501PRO_JP.value.dialogVisible = false;
     }
   }
 );
@@ -733,30 +773,31 @@ const editSubmit = async () => {
 };
 const openDialog = () => {
   // dialogVisible.value = true;
-  G502D.value.dialogVisible = true
+  newRecords.carImuSn = "";
+  newRecords.hubSn = "";
+  newRecords.antennaTwo = "";
+  newRecords.wheelImuSn = "";
+  newRecords.id = null;
+  newRecords.superCattleModuleInfo = "";
+  newRecords.sn = "";
+  newRecords.npn = "";
+  newRecords.steeringWheelSn = "";
+  newRecords.antennaOne = "";
+  newRecords.type = "all";
+  newRecords.motorSn = "";
+  newRecords.terminalType = "";
+  newRecords.userName = "";
+  newRecords.tel = "";
+  G502D.value.dialogVisible = true;
+
   nextTick(() => {
     G501D.value.formRef?.clearValidate();
-    formRef.value.clearValidate();
     G502D.value.formRef?.clearValidate();
     G502DJP.value.formRef?.clearValidate();
     GMT802.value.formRef?.clearValidate();
     GMT901.value.formRef?.clearValidate();
-    AG501PRO_JP.value.formRef?.clearValidate()
-    newRecords.carImuSn = "";
-    newRecords.hubSn = "";
-    newRecords.antennaTwo = "";
-    newRecords.wheelImuSn = "";
-    newRecords.id = null;
-    newRecords.superCattleModuleInfo = "";
-    newRecords.sn = "";
-    newRecords.npn = "";
-    newRecords.steeringWheelSn = "";
-    newRecords.antennaOne = "";
-    newRecords.type = "all";
-    newRecords.motorSn = "";
-    newRecords.terminalType = "";
-    newRecords.userName = "";
-    newRecords.tel = "";
+    AG501PRO_JP.value.formRef?.clearValidate();
+    G501DPRO.value.formRef?.clearValidate();
   });
 };
 //  const removeTradeMark = (id: any) => {

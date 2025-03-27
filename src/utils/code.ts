@@ -24,5 +24,6 @@ export const errorCode: any = {
     1101: 'code.code1101',
     1102: 'code.code1102',
     1103: 'code.code1103',
-    1104: 'code.code1104'
+    1104: 'code.code1104',
+    1228:'code.code1228'
 }

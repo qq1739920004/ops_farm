@@ -17,6 +17,7 @@
     "axios": "^1.4.0",
     "axios-jsonp": "^1.0.4",
     "binary-extensions": "^3.0.0",
+    "coordtransform": "^2.1.2",
     "cross-env": "^7.0.3",
     "echarts": "^5.4.3",
     "element-plus": "^2.3.8",

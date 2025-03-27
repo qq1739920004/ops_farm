@@ -39,7 +39,7 @@
               <div class="block">
                 <el-date-picker
                   v-model="timeRange"
-                  type="daterange"
+                  type="datetimerange"
                   start-placeholder="Start Date"
                   end-placeholder="End Date"
                   @change="changteTime"
@@ -82,13 +82,15 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { ref, reactive, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, reactive, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { carDealer_API } from "@/api/machineryList/index";
 import { alarmRecordChart_API } from "@/api/inSight/index";
 import { getCarDealerList_API } from "@/api/jobManagement/index";
 import { ElMessage } from "element-plus";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import * as echarts from "echarts";
+
+const { locale } = useI18n();
 const { t } = useI18n();
 const timeRange = ref<any>([
   new Date(new Date().setHours(23, 59, 59, 999)).getTime() - 3600 * 1000 * 24 * 30,
@@ -96,17 +98,17 @@ const timeRange = ref<any>([
 ]);
 const isActive = ref<number>(2);
 const contentList: any = {
-  1001: t("content.LOSS_COURSE"),
-  1002: t("content.LOSS_LOCATION"),
-  1003: t("content.LOSS_MOTOR_VALUE_MAX"),
-  1005: t("content.LOSS_MOTOR_VALUE"),
-  1006: t("content.LOSS_FRONT_GYRO"),
-  1007: t("content.LOSS_BODY_GYRO"),
-  1008: t("content.LOSS_MOTOR"),
-  1009: t("content.LOSS_SMART_WHEEL"),
-  1010: t("content.LOSS_RTK_DATA"),
-  1011: t("content.LOSS_LOCATION_BUT_SIGNAL"),
-  1012: t("content.LOSS_BASE_LINE"),
+  1001: "content.LOSS_COURSE",
+  1002: "content.LOSS_LOCATION",
+  1003: "content.LOSS_MOTOR_VALUE_MAX",
+  1005: "content.LOSS_MOTOR_VALUE",
+  1006: "content.LOSS_FRONT_GYRO",
+  1007: "content.LOSS_BODY_GYRO",
+  1008: "content.LOSS_MOTOR",
+  1009: "content.LOSS_SMART_WHEEL",
+  1010: "content.LOSS_RTK_DATA",
+  1011: "content.LOSS_LOCATION_BUT_SIGNAL",
+  1012: "content.LOSS_BASE_LINE",
 };
 const pageInfo = reactive<any>({
   id: "",
@@ -125,6 +127,20 @@ const changeBlur1 = () => {
 const changeBlur2 = () => {
   getCarChart();
 };
+const dateData = ref<any>([]);
+const farmData = ref<any>([]);
+const sumCount = ref<any>([]);
+const a = ref<any>([]);
+const b = ref<any>([]);
+const c = ref<any>([]);
+const d = ref<any>([]);
+const e = ref<any>([]);
+const f = ref<any>([]);
+const g = ref<any>([]);
+const h = ref<any>([]);
+const i = ref<any>([]);
+const j = ref<any>([]);
+const k = ref<any>([]);
 const getCarChart = async () => {
   const res = await alarmRecordChart_API({
     ...pageInfo,
@@ -134,51 +150,65 @@ const getCarChart = async () => {
   carChartValue.value = res.data;
   const data = res.data;
   if (data.length == 0) {
-    ElMessage.warning(t('work.noData'));
+    ElMessage.warning(t("work.noData"));
   }
-  const dateData = data.timeList;
-  const farmData = data.alarmRecordOneVos;
-  const sumCount = data.sumList.map((item: any) => {
+  dateData.value = data.timeList;
+  farmData.value = data.alarmRecordOneVos;
+  sumCount.value = data.sumList.map((item: any) => {
     return item.count;
   });
-  const a = farmData.map((item: any) => {
+  a.value = farmData.value.map((item: any) => {
     return item[0].count;
   });
-  const b = farmData.map((item: any) => {
+  b.value = farmData.value.map((item: any) => {
     return item[1].count;
   });
-  const c = farmData.map((item: any) => {
+  c.value = farmData.value.map((item: any) => {
     return item[2].count;
   });
-  const d = farmData.map((item: any) => {
+  d.value = farmData.value.map((item: any) => {
     return item[4].count;
   });
-  const e = farmData.map((item: any) => {
+  e.value = farmData.value.map((item: any) => {
     return item[5].count;
   });
-  const f = farmData.map((item: any) => {
+  f.value = farmData.value.map((item: any) => {
     return item[6].count;
   });
-  const g = farmData.map((item: any) => {
+  g.value = farmData.value.map((item: any) => {
     return item[7].count;
   });
-  const h = farmData.map((item: any) => {
+  h.value = farmData.value.map((item: any) => {
     return item[8].count;
   });
-  const i = farmData.map((item: any) => {
+  i.value = farmData.value.map((item: any) => {
     return item[9].count;
   });
-  const j = farmData.map((item: any) => {
+  j.value = farmData.value.map((item: any) => {
     return item[10].count;
   });
-  const k = farmData.map((item: any) => {
+  k.value = farmData.value.map((item: any) => {
     return item[11].count;
   });
 
   //   const beforeDuration = farmData.map((item: any) => {
   //     return item.beforeDuration;
   //   });
-  ChartCreate(dateData, a, b, c, d, e, f, g, h, i, j, k, sumCount);
+  ChartCreate(
+    dateData.value,
+    a.value,
+    b.value,
+    c.value,
+    d.value,
+    e.value,
+    f.value,
+    g.value,
+    h.value,
+    i.value,
+    j.value,
+    k.value,
+    sumCount.value
+  );
 };
 
 function initChart() {
@@ -305,7 +335,7 @@ function ChartCreate(
     ],
     series: [
       {
-        name: contentList[1001],
+        name: t("content.LOSS_COURSE"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueLista,
@@ -315,7 +345,7 @@ function ChartCreate(
         },
       },
       {
-        name: contentList[1002],
+        name: t("content.LOSS_LOCATION"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListb,
@@ -324,7 +354,7 @@ function ChartCreate(
         },
       },
       {
-        name: contentList[1003],
+        name: t("content.LOSS_MOTOR_VALUE_MAX"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListc,
@@ -334,7 +364,7 @@ function ChartCreate(
         },
       },
       {
-        name: contentList[1005],
+        name: t("content.LOSS_MOTOR_VALUE"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListd,
@@ -343,7 +373,7 @@ function ChartCreate(
         },
       },
       {
-        name: contentList[1006],
+        name: t("content.LOSS_FRONT_GYRO"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListe,
@@ -353,7 +383,7 @@ function ChartCreate(
         },
       },
       {
-        name: contentList[1007],
+        name: t("content.LOSS_BODY_GYRO"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListf,
@@ -362,7 +392,7 @@ function ChartCreate(
         },
       },
       {
-        name: contentList[1008],
+        name: t("content.LOSS_MOTOR"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListg,
@@ -372,7 +402,7 @@ function ChartCreate(
         },
       },
       {
-        name: contentList[1009],
+        name: t("content.LOSS_SMART_WHEEL"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListh,
@@ -381,7 +411,7 @@ function ChartCreate(
         },
       },
       {
-        name: contentList[1010],
+        name: t("content.LOSS_RTK_DATA"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListi,
@@ -391,7 +421,7 @@ function ChartCreate(
         },
       },
       {
-        name: contentList[1011],
+        name: t("content.LOSS_LOCATION_BUT_SIGNAL"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListj,
@@ -400,7 +430,7 @@ function ChartCreate(
         },
       },
       {
-        name: contentList[1012],
+        name: t("content.LOSS_BASE_LINE"),
         showSymbol: true, //是否默认展示圆点
         type: "line",
         data: valueListk,
@@ -433,17 +463,17 @@ function ChartCreate(
       icon: "rectangle",
       formatter: function (name: any) {
         let data = [
-          { name: contentList[1001], value: sumCount[0] || 0 },
-          { name: contentList[1002], value: sumCount[1] || 0 },
-          { name: contentList[1003], value: sumCount[2] || 0 },
-          { name: contentList[1005], value: sumCount[4] || 0 },
-          { name: contentList[1006], value: sumCount[5] || 0 },
-          { name: contentList[1007], value: sumCount[6] || 0 },
-          { name: contentList[1008], value: sumCount[7] || 0 },
-          { name: contentList[1009], value: sumCount[8] || 0 },
-          { name: contentList[1010], value: sumCount[9] || 0 },
-          { name: contentList[1011], value: sumCount[10] || 0 },
-          { name: contentList[1012], value: sumCount[11] || 0 },
+          { name: t(contentList[1001]), value: sumCount[0] || 0 },
+          { name: t(contentList[1002]), value: sumCount[1] || 0 },
+          { name: t(contentList[1003]), value: sumCount[2] || 0 },
+          { name: t(contentList[1005]), value: sumCount[4] || 0 },
+          { name: t(contentList[1006]), value: sumCount[5] || 0 },
+          { name: t(contentList[1007]), value: sumCount[6] || 0 },
+          { name: t(contentList[1008]), value: sumCount[7] || 0 },
+          { name: t(contentList[1009]), value: sumCount[8] || 0 },
+          { name: t(contentList[1010]), value: sumCount[9] || 0 },
+          { name: t(contentList[1011]), value: sumCount[10] || 0 },
+          { name: t(contentList[1012]), value: sumCount[11] || 0 },
         ];
         let tarValue = 0; // 目前的数值，由于data数据是string型，所以有这步
 
@@ -477,7 +507,28 @@ function ChartCreate(
     carChart.resize();
   });
 }
-
+watch(
+  () => locale.value,
+  () => {
+    carChart.clear();
+    ChartCreate(
+      dateData.value,
+      a.value,
+      b.value,
+      c.value,
+      d.value,
+      e.value,
+      f.value,
+      g.value,
+      h.value,
+      i.value,
+      j.value,
+      k.value,
+      sumCount.value
+    );
+  },
+  { deep: true }
+);
 // 获取经销商下车辆列表
 const getDealerCarList = async () => {
   const res: any = await getCarDealerList_API(pageInfo.companyId);

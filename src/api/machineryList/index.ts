@@ -122,4 +122,11 @@ export function terminalTypeList_API(){
     })
 } 
 
-
+// 下载模板
+export function import_API() {
+    return request<any, any>({
+        url: '/farm/carModuleInfo/import',
+        method: 'get',
+        responseType: 'blob',
+    })
+}
