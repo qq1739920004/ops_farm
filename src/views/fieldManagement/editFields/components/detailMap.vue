@@ -35,7 +35,7 @@
         @click="offDraw"
         v-if="isEdit"
         :disabled="isDraw"
-        >结束编辑</el-button
+        >{{ t("work.doneEdit") }}</el-button
       >
       <el-button
         style="width: 100px"
@@ -43,7 +43,7 @@
         @click="drawPolygons"
         v-if="!isEdit"
         :disabled="isDraw"
-        >编辑田块</el-button
+        >{{ t("work.editField") }}</el-button
       >
       <el-button type="primary" @click="deleteDraw" v-if="pointsArray.length > 0">
         <el-icon> <Delete /> </el-icon
@@ -55,7 +55,7 @@
         type="primary"
         @click="mapRanging"
         :disabled="isEdit"
-        >编辑AB线</el-button
+        >{{ t("work.editAB") }}</el-button
       >
       <el-button type="primary" @click="clearMapRanging" v-if="rangingArray.length > 0">
         <el-icon> <Delete /> </el-icon
@@ -442,7 +442,10 @@ const deleteDraw = () => {
   polyGonArray = [];
   pointsArray.value = [];
   area.value = calculatePolygonArea([...detailPolygonData.value, ...pointsArray.value]);
-  length.value = calculatePolygonPerimeter([...detailPolygonData.value, ...pointsArray.value]);
+  length.value = calculatePolygonPerimeter([
+    ...detailPolygonData.value,
+    ...pointsArray.value,
+  ]);
 };
 let polyGonArray: any = [];
 const isEdit = ref(false);
@@ -485,9 +488,9 @@ function drawPolygons() {
     polyGonArray.forEach((item: any, index: any) => {
       console.log(item);
       item.bindPopup(
-        `  <div  onclick='openRealTimeChart_markerPopup(${index})'>${t(
+        `  <div style='cursor:pointer'   onclick='openRealTimeChart_markerPopup(${index})'>${t(
           "work.delete"
-        )}${index}</div>`
+        )}</div>`
       );
     });
 
@@ -728,9 +731,9 @@ const drawPolygon = (polytrueData: any) => {
       fillOpacity: 0.44,
     }).addTo(map);
     polygon.bindPopup(
-      `  <button   onclick='deleteArea(${polygon._leaflet_id},${index})'>${t(
-        "work.delete"
-      )}${index}</button >`
+      `  <div style='cursor:pointer'    onclick='deleteArea(${
+        polygon._leaflet_id
+      },${index})'>${t("work.delete")}</div >`
     );
     polygonArr.push(polygon);
   });
@@ -758,9 +761,9 @@ function createLine(list: any) {
 
           let ABline: any = L.polyline(arr, { color: "red" }).addTo(map);
           ABline.bindPopup(
-            `  <button   onclick='deleteLine(${ABline._leaflet_id},${index})'>${t(
-              "work.delete"
-            )}${index}</button >`
+            `  <div  style='cursor:pointer'   onclick='deleteLine(${
+              ABline._leaflet_id
+            },${index})'>${t("work.delete")}${index}</div >`
           );
           ABlineArray.push(ABline);
         }
@@ -1183,12 +1186,15 @@ defineExpose({
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 99999;
+  z-index: 999;
 }
 .btm_plo2 {
   position: absolute;
   top: 50px;
   right: 10px;
-  z-index: 99999;
+  z-index: 999;
+}
+:deep(.leaflet-popup-content) {
+  cursor: pointer;
 }
 </style>

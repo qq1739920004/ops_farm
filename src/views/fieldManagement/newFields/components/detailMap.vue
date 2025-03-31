@@ -54,15 +54,15 @@
         @click="offDraw"
         v-if="isEdit"
         :disabled="isDraw"
-        >结束编辑</el-button
+        >{{ t("work.doneEdit") }}</el-button
       >
       <el-button
-        style="width: 100px"
+        style="min-width: 100px"
         type="primary"
         @click="drawPolygons"
         v-if="!isEdit"
         :disabled="isDraw"
-        >编辑田块</el-button
+        >{{ t("work.editField") }}</el-button
       >
       <el-button type="primary" @click="deleteDraw" v-if="pointsArray.length > 0">
         <el-icon> <Delete /> </el-icon
@@ -70,11 +70,11 @@
     </el-button-group>
     <el-button-group class="btm_plo2">
       <el-button
-        style="width: 100px"
+        style="min-width: 100px"
         type="primary"
         @click="mapRanging"
         :disabled="isEdit"
-        >编辑AB线</el-button
+        >{{ t("work.editAB") }}</el-button
       >
       <el-button type="primary" @click="clearMapRanging" v-if="rangingArray.length > 0">
         <el-icon> <Delete /> </el-icon
@@ -478,9 +478,9 @@ function drawPolygons() {
     polyGonArray.forEach((item: any, index: any) => {
       console.log(item);
       item.bindPopup(
-        `  <div  onclick='openRealTimeChart_markerPopup(${index})'>${t(
+        `  <div class='popup_click ' onclick='openRealTimeChart_markerPopup(${index})'>${t(
           "work.delete"
-        )}${index}</div>`
+        )}</div>`
       );
     });
 
@@ -1229,12 +1229,15 @@ defineExpose({
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 99999;
+  z-index: 999;
 }
 .btm_plo2 {
   position: absolute;
   top: 50px;
   right: 10px;
-  z-index: 99999;
+  z-index: 999;
+}
+:deep(.leaflet-popup-content) {
+  cursor: pointer;
 }
 </style>

@@ -364,7 +364,7 @@
           "
           >{{ $t("devicelist.details") }}</el-button
         >
-        <el-button
+        <!-- <el-button
           :style="
             locale == 'en' ? 'width: 75px' : locale == 'jp' ? 'width:75px' : 'width:55px'
           "
@@ -372,7 +372,7 @@
           type="primary"
           @click="gotoalarm(row.id, row.sn)"
           >{{ $t("menus.alarmView") }}</el-button
-        >
+        > -->
       </template>
     </el-table-column>
   </el-table>
@@ -480,9 +480,9 @@ const pageInfo = reactive<any>({
   order: "1",
 });
 const isChangfa = import.meta.env.MODE === "changFa";
-const gotoalarm = (id: any, sn: any) => {
-  router.push({ path: "/machineryList/alarmView", query: { id: id, sn: sn } });
-};
+// const gotoalarm = (id: any, sn: any) => {
+//   router.push({ path: "/machineryList/alarmView", query: { id: id, sn: sn } });
+// };
 const changesort = (val: any) => {
   switch (val.order) {
     case "ascending":

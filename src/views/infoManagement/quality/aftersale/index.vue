@@ -85,7 +85,7 @@
                                 <span style="color: var(--el-input-text-color,var(--el-text-color-regular))"> {{
                                     topvalue.npn || '/' }}</span>
                             </el-form-item>
-                            <el-form-item :label="$t('work.PlateSN')+':'" label-width="125px" prop="sn">
+                            <el-form-item :label="$t('devicelist.deviceSN')+':'" label-width="125px" prop="sn">
                                 <el-input v-model="topvalue.sn">
                                     <template #append>
                                         <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">{{$t('work.replace')}}</el-button>
@@ -100,7 +100,7 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence != '1'" :label="$t('work.BodySN')+':'" label-width="125px" prop="carImuSn">
+                            <el-form-item  :label="$t('work.BodySN')+':'" label-width="125px" prop="carImuSn">
                                 <el-input v-model="topvalue.carImuSn">
                                     <template #append>
                                         <el-button @click="changeCarImuSnBtn(topvalue.carImuSn)"
@@ -108,7 +108,7 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence != '1'" :label="$t('work.frontWheelSN')+':'" label-width="125px" prop="wheelImuSn">
+                            <el-form-item  :label="$t('work.frontWheelSN')+':'" label-width="125px" prop="wheelImuSn">
                                 <el-input v-model="topvalue.wheelImuSn">
                                     <template #append>
                                         <el-button @click="changeWheelImuSnBtn(topvalue.wheelImuSn)"
@@ -116,36 +116,44 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence != '1'" :label="$t('work.Antenna1_SN')+':'" label-width="125px" prop="antennaOne">
-                                <el-input v-model="topvalue.antennaOne">
+                            <el-form-item  :label="$t('devicelist.owner')+':'" label-width="125px" prop="username">
+                                <el-input v-model="topvalue.wheelImuSn">
                                     <template #append>
-                                        <el-button @click="changeAntennaOneBtn(topvalue.antennaOne)"
+                                        <el-button @click="changeWheelImuSnBtn(topvalue.username)"
                                             class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item v-if="scence == '2'" :label="$t('work.Antenna2_SN')+':'" label-width="125px" prop="antennaTwo">
+                            <el-form-item  :label="$t('devicelist.tel')+':'" label-width="125px" prop="tel">
+                                <el-input v-model="topvalue.antennaOne">
+                                    <template #append>
+                                        <el-button @click="changeAntennaOneBtn(topvalue.tel)"
+                                            class="change_btn">{{$t('work.replace')}}</el-button>
+                                    </template>
+                                </el-input>
+                            </el-form-item>
+                            <!-- <el-form-item  :label="$t('work.Antenna2_SN')+':'" label-width="125px" prop="antennaTwo">
                                 <el-input v-model="topvalue.antennaTwo">
                                     <template #append>
                                         <el-button @click="changeAntennaTwoBtn(topvalue.antennaTwo)"
                                             class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
-                            </el-form-item>
-                            <el-form-item v-if="scence == '1'" label="HUB SN:" label-width="125px" prop="hubSn">
+                            </el-form-item> -->
+                            <!-- <el-form-item  label="HUB SN:" label-width="125px" prop="hubSn">
                                 <el-input v-model="topvalue.hubSn">
                                     <template #append>
                                         <el-button @click="changeHubSnBtn(topvalue.hubSn)" class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
-                            </el-form-item>
-                            <el-form-item v-if="scence == '1'" :label="$t('work.gnssPoleSN')+':'" label-width="125px" prop="sn">
+                            </el-form-item> -->
+                            <!-- <el-form-item  :label="$t('work.gnssPoleSN')+':'" label-width="125px" prop="sn">
                                 <el-input v-model="topvalue.sn">
                                     <template #append>
                                         <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
-                            </el-form-item>
+                            </el-form-item> -->
                         </el-form>
                     </div>
                 </div>

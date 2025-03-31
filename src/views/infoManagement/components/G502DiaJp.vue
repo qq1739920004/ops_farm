@@ -16,28 +16,37 @@
       >
         <el-form-item :label="$t('work.deviceType')" prop="terminalType">
           <el-select
-            v-model="newRecords.terminalType"
+            style="width: 100%"
+            v-model="props.newRecords.terminalType"
             class="m-2"
             :placeholder="$t('work.pleaseSelect')"
-            width="120px"
-            style="width: 100%"
             prop="terminalType"
           >
             <!-- <el-option value="AG360" label="AG360" /> -->
-            <el-option value="AG502" label="AG502" />
-            <el-option value="AG501" label="AG501" />
-            <el-option value="AG501Pro" label="AG501Pro" />
-            <el-option value="AG502_JP" label="AG502JP" />
-            <el-option value="AG501Pro_JP" label="AG501PROJP" />
-            <el-option value="MT802" label="MT802" />
-            <el-option value="MT901D" label="MT901" />
+            <el-option
+              v-for="(item, index) in terminalList"
+              :key="index"
+              :value="item"
+              :label="item"
+            >
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('work.labelSN')" prop="npn">
           <el-input v-model="newRecords.npn"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('work.PlateSN')" prop="sn">
+        <el-form-item :label="$t('devicelist.deviceSN')" prop="sn">
           <el-input v-model="newRecords.sn"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('work.motorSN')" prop="motorSn">
+          <el-input v-model="newRecords.motorSn"></el-input>
+        </el-form-item>
+
+        <el-form-item :label="$t('work.BodySN')" prop="carImuSn">
+          <el-input v-model="newRecords.carImuSn"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('work.frontWheelSN')" prop="wheelImuSn">
+          <el-input v-model="newRecords.wheelImuSn"></el-input>
         </el-form-item>
         <el-form-item :label="$t('devicelist.owner')" prop="userName">
           <el-input v-model="newRecords.userName"></el-input>
@@ -84,6 +93,7 @@ import {
   carModuleInfoSave_API,
   carModuleInfoUpdate_API,
 } from "@/api/infoManagement/index";
+import { terminalTypeList_API } from "@/api/machineryList/index";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const formRef = ref();
@@ -111,6 +121,12 @@ defineExpose({
   formRef,
 });
 const emits = defineEmits(["push"]);
+const terminalList = ref<any>([]);
+const getTerminalType = async () => {
+  const res = await terminalTypeList_API();
+  terminalList.value = res.data;
+};
+getTerminalType();
 const editSubmit = async () => {
   props.newRecords.num = 1;
   Object.assign(ApiData, props.newRecords);
@@ -171,6 +187,9 @@ const rules = {
   terminalType: [{ required: true, message: t("messages.plzenter"), trigger: "blur" }],
   npn: [{ required: true, message: t("messages.plzenter"), trigger: "blur" }],
   sn: [{ required: true, message: t("messages.plzenter"), trigger: "blur" }],
+  motorSn: [{ required: true, message: t("messages.plzenter"), trigger: "blur" }],
+  carImuSn: [{ required: true, message: t("messages.plzenter"), trigger: "blur" }],
+  wheelImuSn: [{ required: true, message: t("messages.plzenter"), trigger: "blur" }],
   userName: [{ required: true, message: t("messages.plzenter"), trigger: "blur" }],
   tel: [{ required: true, message: t("messages.plzenter"), trigger: "blur" }],
 };

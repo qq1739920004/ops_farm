@@ -22,24 +22,27 @@
             :placeholder="$t('work.deviceType')"
             @change="changeBlur"
           >
+            <el-option
+              v-for="(item, index) in terminalList"
+              :key="index"
+              :value="item"
+              :label="item"
+            >
+            </el-option>
             <!-- <el-option value="AG360" label="AG360" /> -->
-            <el-option value="AG502" label="AG502" />
+            <!-- <el-option value="AG502" label="AG502" />
             <el-option value="AG501" label="AG501" />
             <el-option value="AG501Pro" label="AG501Pro" />
             <el-option value="AG502_JP" label="AG502JP" />
             <el-option value="AG501Pro_JP" label="AG501PROJP" />
             <el-option value="MT802" label="MT802" />
-            <el-option value="MT901D" label="MT901" />
+            <el-option value="MT901D" label="MT901" /> -->
           </el-select>
         </div>
         <div>
-          <el-button
-     
-            type="primary"
-            v-auth="2256"
-            @click="gotoInput"
-            >{{ $t("messages.enter") }}</el-button
-          >
+          <el-button type="primary" v-auth="2256" @click="gotoInput">{{
+            $t("messages.enter")
+          }}</el-button>
           <el-button type="primary" @click="openExportDia" v-auth="2268">
             <el-icon class="el-icon--left"> <SvgIcon icon="export" size="16" /> </el-icon
             >{{ $t("work.export") }}</el-button
@@ -49,12 +52,8 @@
           }}</el-button>
         </div>
       </div>
-      <el-table
-        @selection-change="handleSelectionChange"
-        :data="records"
-        v-show="scence == '1' || scence == '4' || scence == '7'"
-        stripe
-      >
+
+      <el-table @selection-change="handleSelectionChange" :data="records" stripe>
         <el-table-column type="selection" width="55" />
         <el-table-column
           type="index"
@@ -62,128 +61,10 @@
           :label="$t('work.item')"
           align="center"
         />
+        <el-table-column :label="$t('work.labelSN')" align="center" prop="npn" />
+        <el-table-column :label="$t('devicelist.deviceSN')" align="center" prop="sn" />
 
-        <el-table-column :label="$t('work.guarantee')" align="center">
-          <template #="{ row }">
-            <div
-              v-if="
-                row.warrantyDate &&
-                Date.parse(row.warrantyDate.toString()) >
-                  Date.parse(new Date().toString())
-              "
-            >
-              {{ row.warrantyDate.split(" ")[0] }}
-            </div>
-            <div v-if="!row.warrantyDate">
-              <el-tag
-                style="
-                  color: rgba(255, 112, 112, 1);
-
-                  height: 26px;
-                  opacity: 1;
-                  border-radius: 4px;
-                  background: rgba(255, 212, 212, 1);
-                  border: 1px solid rgba(255, 212, 212, 1);
-                "
-                class="mx-1"
-                type="danger"
-                effect="dark"
-                >{{ $t("work.noactive") }}</el-tag
-              >
-            </div>
-            <div
-              v-if="
-                row.warrantyDate &&
-                Date.parse(row.warrantyDate.toString()) <=
-                  Date.parse(new Date().toString())
-              "
-            >
-              <el-tag
-                style="
-                  color: rgba(42, 130, 228, 1);
-                  width: 78px;
-                  height: 26px;
-                  opacity: 1;
-                  border-radius: 4px;
-                  background: rgba(171, 210, 255, 1);
-                  border: 1px solid rgba(171, 210, 255, 1);
-                "
-                class="mx-1"
-                effect="dark"
-                >{{ $t("work.due") }}</el-tag
-              >
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.gnssPoleSN')" align="center">
-          <template #="{ row }">
-            {{ row.sn || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column label="HUB SN" align="center">
-          <template #="{ row }">
-            {{ row.hubSn || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.motorSN')" align="center">
-          <template #="{ row }">
-            {{ row.motorSn || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.steeringSN')" align="center">
-          <template #="{ row }">
-            {{ row.steeringWheelSn || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.bobyIMUSN')" align="center">
-          <template #="{ row }">
-            {{ row.carImuSn || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.frontSN')" align="center">
-          <template #="{ row }">
-            {{ row.wheelImuSn || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.operation')" align="center" width="200">
-          <template #="{ row }">
-            <div class="edit-btn">
-              <el-button
-                v-auth="446"
-                type="primary"
-                link
-                @click="edit(row)"
-                :disabled="row.warrantyDate ? true : false"
-                >{{ $t("work.edit") }}
-              </el-button>
-              <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
-              <el-button
-                v-auth="505"
-                class="aftersale_btn"
-                type="primary"
-                link
-                @click="gotoAfterSale(row)"
-                >{{ $t("work.afterSale") }}</el-button
-              >
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-table
-        @selection-change="handleSelectionChange"
-        :data="records"
-        v-show="scence == '2' || scence == '5' || scence == '6'"
-        stripe
-      >
-        <el-table-column type="selection" width="55" />
-        <el-table-column
-          type="index"
-          width="80"
-          :label="$t('work.item') + ':'"
-          align="center"
-        />
-
-        <el-table-column :label="$t('work.guarantee')" align="center">
+        <!-- <el-table-column :label="$t('work.guarantee')" align="center">
           <template #="{ row }">
             <div
               v-if="
@@ -234,147 +115,25 @@
               >
             </div>
           </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.PlateSN')" align="center">
-          <template #="{ row }">
-            {{ row.sn || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.MotorSN')" align="center">
-          <template #="{ row }">
-            {{ row.motorSn || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.BodySN')" align="center">
-          <template #="{ row }">
-            {{ row.carImuSn || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.Antenna3_SN')" align="center">
-          <template #="{ row }">
-            {{ row.antennaOne || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.Antenna2_SN')" align="center">
-          <template #="{ row }">
-            {{ row.antennaTwo || "/" }}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.operation')" align="center" width="200">
-          <template #="{ row }">
-            <div class="edit-btn">
-              <el-button
-                v-auth="446"
-                type="primary"
-                link
-                @click="edit(row)"
-                :disabled="row.warrantyDate ? true : false"
-                >{{ $t("work.edit") }}
-              </el-button>
-              <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
-              <el-button
-                v-auth="505"
-                class="aftersale_btn"
-                type="primary"
-                link
-                @click="gotoAfterSale(row)"
-                >{{ $t("work.afterSale") }}</el-button
-              >
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-table
-        @selection-change="handleSelectionChange"
-        :data="records"
-        v-show="scence == '3' ||scence == '8'"
-        stripe
-      >
-        <el-table-column type="selection" width="55" />
-        <el-table-column
-          type="index"
-          width="80"
-          :label="$t('work.item')"
-          align="center"
-        />
-
-        <el-table-column :label="$t('work.guarantee')" align="center">
-          <template #="{ row }">
-            <div
-              v-if="
-                row.warrantyDate &&
-                Date.parse(row.warrantyDate.toString()) >
-                  Date.parse(new Date().toString())
-              "
-            >
-              {{ row.warrantyDate.split(" ")[0] }}
-            </div>
-            <div v-if="!row.warrantyDate">
-              <el-tag
-                style="
-                  color: rgba(255, 112, 112, 1);
-
-                  height: 26px;
-                  opacity: 1;
-                  border-radius: 4px;
-                  background: rgba(255, 212, 212, 1);
-                  border: 1px solid rgba(255, 212, 212, 1);
-                "
-                class="mx-1"
-                type="danger"
-                effect="dark"
-                >{{ $t("work.noactive") }}</el-tag
-              >
-            </div>
-            <div
-              v-if="
-                row.warrantyDate &&
-                Date.parse(row.warrantyDate.toString()) <=
-                  Date.parse(new Date().toString())
-              "
-            >
-              <el-tag
-                style="
-                  color: rgba(42, 130, 228, 1);
-                  width: 68px;
-                  height: 26px;
-                  opacity: 1;
-                  border-radius: 4px;
-                  background: rgba(171, 210, 255, 1);
-                  border: 1px solid rgba(171, 210, 255, 1);
-                "
-                class="mx-1"
-                effect="dark"
-                >{{ $t("work.due") }}</el-tag
-              >
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('work.PlateSN')" align="center">
-          <template #="{ row }">
-            {{ row.sn || "/" }}
-          </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column :label="$t('work.MotorSN')" align="center">
           <template #="{ row }">
             {{ row.motorSn }}
           </template>
         </el-table-column>
-        <!-- <el-table-column :label="$t('work.BodySN')" align="center">
-                    <template #="{ row }">
-                        {{ row.carImuSn || '/' }}
-                    </template>
-                </el-table-column> -->
-        <el-table-column :label="$t('work.frontSN')" align="center">
+
+        <el-table-column :label="$t('work.BodySN')" align="carImuSn">
           <template #="{ row }">
             {{ row.wheelImuSn || "/" }}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('work.Antenna3_SN')" align="center">
+        <el-table-column :label="$t('work.frontWheelSN')" align="wheelImuSn">
           <template #="{ row }">
             {{ row.antennaOne || "/" }}
           </template>
         </el-table-column>
+        <el-table-column :label="$t('devicelist.owner')" align="center" prop="userName" />
+        <el-table-column :label="$t('devicelist.tel')" align="center" prop="tel" />
         <el-table-column :label="$t('work.operation')" align="center" width="200">
           <template #="{ row }">
             <div class="edit-btn">
@@ -399,6 +158,7 @@
           </template>
         </el-table-column>
       </el-table>
+
       <Pagination
         :total="total"
         :currentPage="pageInfo.currentPage"
@@ -407,6 +167,7 @@
       >
       </Pagination>
     </div>
+
     <div class="dialog">
       <el-dialog
         style="border-radius: 8px"
@@ -495,6 +256,7 @@ import G501DiaPro from "../components/G501DiaPro.vue";
 import Pagination from "@/components/Pagination/index.vue";
 import InputDia from "./inputDia.vue";
 import { reactive, ref, nextTick, watch } from "vue";
+import { terminalTypeList_API } from "@/api/machineryList/index";
 // carModuleInfoOperationDelete_API
 import {
   carModuleInfo_API,
@@ -549,6 +311,12 @@ const newRecords = reactive<newRecordsObj>({
   userName: "",
   tel: "",
 });
+const terminalList = ref<any>([]);
+const getTerminalType = async () => {
+  const res = await terminalTypeList_API();
+  terminalList.value = res.data;
+};
+getTerminalType();
 const gotoInput = () => {
   inputD.value.dialogVisible = true;
 };
@@ -601,24 +369,20 @@ const changeBlur = () => {
   // }
   if (pageInfo.terminalType == "AG502") {
     scence.value = "2";
-  }
-  if (pageInfo.terminalType == "AG501") {
+  } else if (pageInfo.terminalType == "AG501") {
     scence.value = "3";
-  }
-  if (pageInfo.terminalType == "AG501Pro") {
+  } else if (pageInfo.terminalType == "AG501Pro") {
     scence.value = "8";
-  }
-  if (pageInfo.terminalType == "AG502_JP") {
+  } else if (pageInfo.terminalType == "AG502_JP") {
     scence.value = "4";
-  }
-  if (pageInfo.terminalType == "MT802") {
+  } else if (pageInfo.terminalType == "MT802") {
     scence.value = "5";
-  }
-  if (pageInfo.terminalType == "MT901D") {
+  } else if (pageInfo.terminalType == "MT901D") {
     scence.value = "6";
-  }
-  if (pageInfo.terminalType == "AG501Pro_JP") {
+  } else if (pageInfo.terminalType == "AG501Pro_JP") {
     scence.value = "7";
+  } else {
+    scence.value = "9";
   }
   getInfoMangementInfo();
 };
@@ -656,6 +420,9 @@ const edit = (row: any) => {
   }
   if (scence.value == "7") {
     AG501PRO_JP.value.dialogVisible = true;
+  }
+  if ((scence.value = "9")) {
+    G502D.value.dialogVisible = true;
   }
   newRecords.carImuSn = row.carImuSn;
   newRecords.hubSn = row.hubSn;
@@ -703,7 +470,7 @@ watch(
     //   GMT802.value.dialogVisible = false;
     //   GMT901.value.dialogVisible = false;
     // }
-    if (newRecords.terminalType == "AG501") {
+    else if (newRecords.terminalType == "AG501") {
       dialogVisible.value = false;
       G501D.value.dialogVisible = true;
       G502D.value.dialogVisible = false;
@@ -712,8 +479,7 @@ watch(
       AG501PRO_JP.value.dialogVisible = false;
       GMT802.value.dialogVisible = false;
       GMT901.value.dialogVisible = false;
-    }
-    if (newRecords.terminalType == "AG502_JP") {
+    } else if (newRecords.terminalType == "AG502_JP") {
       dialogVisible.value = false;
       G502DJP.value.dialogVisible = true;
       G501DPRO.value.dialogVisible = false;
@@ -722,8 +488,7 @@ watch(
       G501D.value.dialogVisible = false;
       GMT802.value.dialogVisible = false;
       GMT901.value.dialogVisible = false;
-    }
-    if (newRecords.terminalType == "MT802") {
+    } else if (newRecords.terminalType == "MT802") {
       dialogVisible.value = false;
       G501D.value.dialogVisible = false;
       G502D.value.dialogVisible = false;
@@ -732,8 +497,7 @@ watch(
       AG501PRO_JP.value.dialogVisible = false;
       GMT802.value.dialogVisible = true;
       GMT901.value.dialogVisible = false;
-    }
-    if (newRecords.terminalType == "MT901D") {
+    } else if (newRecords.terminalType == "MT901D") {
       dialogVisible.value = false;
       G502DJP.value.dialogVisible = false;
       AG501PRO_JP.value.dialogVisible = false;
@@ -742,8 +506,7 @@ watch(
       G501D.value.dialogVisible = false;
       GMT802.value.dialogVisible = false;
       GMT901.value.dialogVisible = true;
-    }
-    if (newRecords.terminalType == "AG501Pro_JP") {
+    } else if (newRecords.terminalType == "AG501Pro_JP") {
       dialogVisible.value = false;
       G502DJP.value.dialogVisible = false;
       G502D.value.dialogVisible = false;
@@ -752,8 +515,7 @@ watch(
       GMT802.value.dialogVisible = false;
       GMT901.value.dialogVisible = false;
       AG501PRO_JP.value.dialogVisible = true;
-    }
-    if (newRecords.terminalType == "AG501Pro") {
+    } else if (newRecords.terminalType == "AG501Pro") {
       dialogVisible.value = false;
       G502DJP.value.dialogVisible = false;
       G502D.value.dialogVisible = false;
@@ -762,6 +524,15 @@ watch(
       GMT802.value.dialogVisible = false;
       GMT901.value.dialogVisible = false;
       AG501PRO_JP.value.dialogVisible = false;
+    } else {
+      dialogVisible.value = false;
+      G502D.value.dialogVisible = true;
+      G501D.value.dialogVisible = false;
+      G501DPRO.value.dialogVisible = false;
+      G502DJP.value.dialogVisible = false;
+      AG501PRO_JP.value.dialogVisible = false;
+      GMT802.value.dialogVisible = false;
+      GMT901.value.dialogVisible = false;
     }
   }
 );

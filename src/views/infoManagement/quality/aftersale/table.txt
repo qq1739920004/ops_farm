@@ -1,0 +1,471 @@
+      <el-table
+        @selection-change="handleSelectionChange"
+        :data="records"
+        v-show="scence == '1' || scence == '4' || scence == '7'"
+        stripe
+      >
+        <el-table-column type="selection" width="55" />
+        <el-table-column
+          type="index"
+          width="80"
+          :label="$t('work.item')"
+          align="center"
+        />
+
+        <el-table-column :label="$t('work.guarantee')" align="center">
+          <template #="{ row }">
+            <div
+              v-if="
+                row.warrantyDate &&
+                Date.parse(row.warrantyDate.toString()) >
+                  Date.parse(new Date().toString())
+              "
+            >
+              {{ row.warrantyDate.split(" ")[0] }}
+            </div>
+            <div v-if="!row.warrantyDate">
+              <el-tag
+                style="
+                  color: rgba(255, 112, 112, 1);
+
+                  height: 26px;
+                  opacity: 1;
+                  border-radius: 4px;
+                  background: rgba(255, 212, 212, 1);
+                  border: 1px solid rgba(255, 212, 212, 1);
+                "
+                class="mx-1"
+                type="danger"
+                effect="dark"
+                >{{ $t("work.noactive") }}</el-tag
+              >
+            </div>
+            <div
+              v-if="
+                row.warrantyDate &&
+                Date.parse(row.warrantyDate.toString()) <=
+                  Date.parse(new Date().toString())
+              "
+            >
+              <el-tag
+                style="
+                  color: rgba(42, 130, 228, 1);
+                  width: 78px;
+                  height: 26px;
+                  opacity: 1;
+                  border-radius: 4px;
+                  background: rgba(171, 210, 255, 1);
+                  border: 1px solid rgba(171, 210, 255, 1);
+                "
+                class="mx-1"
+                effect="dark"
+                >{{ $t("work.due") }}</el-tag
+              >
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.gnssPoleSN')" align="center">
+          <template #="{ row }">
+            {{ row.sn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column label="HUB SN" align="center">
+          <template #="{ row }">
+            {{ row.hubSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.motorSN')" align="center">
+          <template #="{ row }">
+            {{ row.motorSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.steeringSN')" align="center">
+          <template #="{ row }">
+            {{ row.steeringWheelSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.bobyIMUSN')" align="center">
+          <template #="{ row }">
+            {{ row.carImuSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.frontSN')" align="center">
+          <template #="{ row }">
+            {{ row.wheelImuSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.operation')" align="center" width="200">
+          <template #="{ row }">
+            <div class="edit-btn">
+              <el-button
+                v-auth="446"
+                type="primary"
+                link
+                @click="edit(row)"
+                :disabled="row.warrantyDate ? true : false"
+                >{{ $t("work.edit") }}
+              </el-button>
+              <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
+              <el-button
+                v-auth="505"
+                class="aftersale_btn"
+                type="primary"
+                link
+                @click="gotoAfterSale(row)"
+                >{{ $t("work.afterSale") }}</el-button
+              >
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-table
+        @selection-change="handleSelectionChange"
+        :data="records"
+        v-show="scence == '2' || scence == '5' || scence == '6'"
+        stripe
+      >
+        <el-table-column type="selection" width="55" />
+        <el-table-column
+          type="index"
+          width="80"
+          :label="$t('work.item') + ':'"
+          align="center"
+        />
+
+        <el-table-column :label="$t('work.guarantee')" align="center">
+          <template #="{ row }">
+            <div
+              v-if="
+                row.warrantyDate &&
+                Date.parse(row.warrantyDate.toString()) >
+                  Date.parse(new Date().toString())
+              "
+            >
+              {{ row.warrantyDate.split(" ")[0] }}
+            </div>
+            <div v-if="!row.warrantyDate">
+              <el-tag
+                style="
+                  color: rgba(255, 112, 112, 1);
+
+                  height: 26px;
+                  opacity: 1;
+                  border-radius: 4px;
+                  background: rgba(255, 212, 212, 1);
+                  border: 1px solid rgba(255, 212, 212, 1);
+                "
+                class="mx-1"
+                type="danger"
+                effect="dark"
+                >{{ $t("work.noactive") }}</el-tag
+              >
+            </div>
+            <div
+              v-if="
+                row.warrantyDate &&
+                Date.parse(row.warrantyDate.toString()) <=
+                  Date.parse(new Date().toString())
+              "
+            >
+              <el-tag
+                style="
+                  color: rgba(42, 130, 228, 1);
+                  width: 68px;
+                  height: 26px;
+                  opacity: 1;
+                  border-radius: 4px;
+                  background: rgba(171, 210, 255, 1);
+                  border: 1px solid rgba(171, 210, 255, 1);
+                "
+                class="mx-1"
+                effect="dark"
+                >{{ $t("work.due") }}</el-tag
+              >
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.PlateSN')" align="center">
+          <template #="{ row }">
+            {{ row.sn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.MotorSN')" align="center">
+          <template #="{ row }">
+            {{ row.motorSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.BodySN')" align="center">
+          <template #="{ row }">
+            {{ row.carImuSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.Antenna3_SN')" align="center">
+          <template #="{ row }">
+            {{ row.antennaOne || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.Antenna2_SN')" align="center">
+          <template #="{ row }">
+            {{ row.antennaTwo || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.operation')" align="center" width="200">
+          <template #="{ row }">
+            <div class="edit-btn">
+              <el-button
+                v-auth="446"
+                type="primary"
+                link
+                @click="edit(row)"
+                :disabled="row.warrantyDate ? true : false"
+                >{{ $t("work.edit") }}
+              </el-button>
+              <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
+              <el-button
+                v-auth="505"
+                class="aftersale_btn"
+                type="primary"
+                link
+                @click="gotoAfterSale(row)"
+                >{{ $t("work.afterSale") }}</el-button
+              >
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-table
+        @selection-change="handleSelectionChange"
+        :data="records"
+        v-show="scence == '1' || scence == '4' || scence == '7'"
+        stripe
+      >
+        <el-table-column type="selection" width="55" />
+        <el-table-column
+          type="index"
+          width="80"
+          :label="$t('work.item')"
+          align="center"
+        />
+
+        <el-table-column :label="$t('work.guarantee')" align="center">
+          <template #="{ row }">
+            <div
+              v-if="
+                row.warrantyDate &&
+                Date.parse(row.warrantyDate.toString()) >
+                  Date.parse(new Date().toString())
+              "
+            >
+              {{ row.warrantyDate.split(" ")[0] }}
+            </div>
+            <div v-if="!row.warrantyDate">
+              <el-tag
+                style="
+                  color: rgba(255, 112, 112, 1);
+
+                  height: 26px;
+                  opacity: 1;
+                  border-radius: 4px;
+                  background: rgba(255, 212, 212, 1);
+                  border: 1px solid rgba(255, 212, 212, 1);
+                "
+                class="mx-1"
+                type="danger"
+                effect="dark"
+                >{{ $t("work.noactive") }}</el-tag
+              >
+            </div>
+            <div
+              v-if="
+                row.warrantyDate &&
+                Date.parse(row.warrantyDate.toString()) <=
+                  Date.parse(new Date().toString())
+              "
+            >
+              <el-tag
+                style="
+                  color: rgba(42, 130, 228, 1);
+                  width: 78px;
+                  height: 26px;
+                  opacity: 1;
+                  border-radius: 4px;
+                  background: rgba(171, 210, 255, 1);
+                  border: 1px solid rgba(171, 210, 255, 1);
+                "
+                class="mx-1"
+                effect="dark"
+                >{{ $t("work.due") }}</el-tag
+              >
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.gnssPoleSN')" align="center">
+          <template #="{ row }">
+            {{ row.sn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column label="HUB SN" align="center">
+          <template #="{ row }">
+            {{ row.hubSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.motorSN')" align="center">
+          <template #="{ row }">
+            {{ row.motorSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.steeringSN')" align="center">
+          <template #="{ row }">
+            {{ row.steeringWheelSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.bobyIMUSN')" align="center">
+          <template #="{ row }">
+            {{ row.carImuSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.frontSN')" align="center">
+          <template #="{ row }">
+            {{ row.wheelImuSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.operation')" align="center" width="200">
+          <template #="{ row }">
+            <div class="edit-btn">
+              <el-button
+                v-auth="446"
+                type="primary"
+                link
+                @click="edit(row)"
+                :disabled="row.warrantyDate ? true : false"
+                >{{ $t("work.edit") }}
+              </el-button>
+              <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
+              <el-button
+                v-auth="505"
+                class="aftersale_btn"
+                type="primary"
+                link
+                @click="gotoAfterSale(row)"
+                >{{ $t("work.afterSale") }}</el-button
+              >
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-table
+        @selection-change="handleSelectionChange"
+        :data="records"
+        v-show="scence == '2' || scence == '5' || scence == '6'"
+        stripe
+      >
+        <el-table-column type="selection" width="55" />
+        <el-table-column
+          type="index"
+          width="80"
+          :label="$t('work.item') + ':'"
+          align="center"
+        />
+
+        <el-table-column :label="$t('work.guarantee')" align="center">
+          <template #="{ row }">
+            <div
+              v-if="
+                row.warrantyDate &&
+                Date.parse(row.warrantyDate.toString()) >
+                  Date.parse(new Date().toString())
+              "
+            >
+              {{ row.warrantyDate.split(" ")[0] }}
+            </div>
+            <div v-if="!row.warrantyDate">
+              <el-tag
+                style="
+                  color: rgba(255, 112, 112, 1);
+
+                  height: 26px;
+                  opacity: 1;
+                  border-radius: 4px;
+                  background: rgba(255, 212, 212, 1);
+                  border: 1px solid rgba(255, 212, 212, 1);
+                "
+                class="mx-1"
+                type="danger"
+                effect="dark"
+                >{{ $t("work.noactive") }}</el-tag
+              >
+            </div>
+            <div
+              v-if="
+                row.warrantyDate &&
+                Date.parse(row.warrantyDate.toString()) <=
+                  Date.parse(new Date().toString())
+              "
+            >
+              <el-tag
+                style="
+                  color: rgba(42, 130, 228, 1);
+                  width: 68px;
+                  height: 26px;
+                  opacity: 1;
+                  border-radius: 4px;
+                  background: rgba(171, 210, 255, 1);
+                  border: 1px solid rgba(171, 210, 255, 1);
+                "
+                class="mx-1"
+                effect="dark"
+                >{{ $t("work.due") }}</el-tag
+              >
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.PlateSN')" align="center">
+          <template #="{ row }">
+            {{ row.sn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.MotorSN')" align="center">
+          <template #="{ row }">
+            {{ row.motorSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.BodySN')" align="center">
+          <template #="{ row }">
+            {{ row.carImuSn || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.Antenna3_SN')" align="center">
+          <template #="{ row }">
+            {{ row.antennaOne || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.Antenna2_SN')" align="center">
+          <template #="{ row }">
+            {{ row.antennaTwo || "/" }}
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('work.operation')" align="center" width="200">
+          <template #="{ row }">
+            <div class="edit-btn">
+              <el-button
+                v-auth="446"
+                type="primary"
+                link
+                @click="edit(row)"
+                :disabled="row.warrantyDate ? true : false"
+                >{{ $t("work.edit") }}
+              </el-button>
+              <!-- <el-button v-auth="445" @click="removeTradeMark(row.id)" type="danger" link>{{$t('work.delete')}}</el-button> -->
+              <el-button
+                v-auth="505"
+                class="aftersale_btn"
+                type="primary"
+                link
+                @click="gotoAfterSale(row)"
+                >{{ $t("work.afterSale") }}</el-button
+              >
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>

@@ -129,6 +129,7 @@ const zh = {
     projectManagement: '项目管理',
     deviceManage: '设备管理',
     landManage: '地块管理',
+    taskManagement:'任务管理'
 
   },
   devicelist: {
@@ -243,6 +244,18 @@ const zh = {
     enterRemark: "请输入备注",
     continueAssignment: "继续指派",
     pleaseSelect: "请选择",
+    doneEdit:'结束编辑',
+    editAB:'编辑AB线',
+    isShared:'已分享',
+    noShared:'未分享',
+    farmName:'农场名称',
+    searchField:'搜索地块',
+    searchAddress:'搜索地址',
+    FieldName:'田块名称',
+    FiledLength:'田块周长',
+    editField:'编辑田块',
+    FieldArea:'田块面积',
+    newField:'创建田块',
     completeProcessing: "完成处理",
     assignment: "指派",
     type: "作业类型",

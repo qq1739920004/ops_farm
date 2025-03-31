@@ -13,7 +13,7 @@
       <el-input
         v-model="pageInfo.keyword"
         @change="changeKeyWord"
-        placeholder="Please input"
+        :placeholder="t('work.searchField')"
         clearable
       >
       </el-input>
@@ -26,7 +26,7 @@
         clearable
         reserve-keyword
         style="width: 230px; color: #fff"
-        :placeholder="t('work.enterValue')"
+        :placeholder="t('work.searchAddress')"
         :remote-method="remoteMethod"
         @change="handleSelectBranchCom"
       >
@@ -54,7 +54,7 @@
           filterable
           style="width: 100%"
           v-model="pageInfo.farm"
-          :placeholder="$t('work.pleaseSelect')"
+          :placeholder="$t('work.farmName')"
           transfer="true"
           :popper-append-to-body="false"
         >
@@ -72,7 +72,6 @@
         infinite-scroll-immediate="false"
         class="infinite-list"
         style="overflow: auto"
-        :infinite-scroll-disabled="loading"
         @click="clickLeft"
       >
         <li
@@ -88,8 +87,8 @@
             <div class="bottom">
               {{ item.creator || "--" }} | {{ item.modifier || "--" }}
             </div>
-            <div v-if="item.shared" class="shared_area">已分享</div>
-            <div v-else class="unshared_area">未分享</div>
+            <div v-if="item.shared" class="shared_area">{{ t("work.isShared") }}</div>
+            <div v-else class="unshared_area">{{ t("work.noShared") }}</div>
             <div
               class="arrow_area"
               @click.stop="getBlock(index, item.id, item.boundaries)"
@@ -161,26 +160,25 @@
         </el-row>
       </div>
     </div>
+    <el-dialog v-model="dialogVisible" :title="t('work.share')" center width="500px">
+      <div class="dia_select">
+        {{ t("work.shareDevice") }}:
+        <el-select-v2
+          style="width: 240px; margin-left: 10px"
+          filterable
+          v-model="pickedSn"
+          :options="options"
+          :placeholder="$t('work.pleaseSelect')"
+        >
+        </el-select-v2>
+      </div>
+      <div class="dia_select1">
+        <el-button type="primary" @click="shareCar(fieldInfo.id)">{{
+          t("work.share")
+        }}</el-button>
+      </div>
+    </el-dialog>
   </div>
-
-  <el-dialog v-model="dialogVisible" :title="$t('work.share')" center width="500px">
-    <div class="dia_select">
-      {{ t("work.shareDevice") }}:
-      <el-select-v2
-        style="width: 240px; margin-left: 10px"
-        filterable
-        v-model="pickedSn"
-        :options="options"
-        :placeholder="$t('work.pleaseSelect')"
-      >
-      </el-select-v2>
-    </div>
-    <div class="dia_select1">
-      <el-button type="primary" @click="shareCar(fieldInfo.id)">{{
-        t("work.share")
-      }}</el-button>
-    </div>
-  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -213,6 +211,7 @@ const fieldInfo = ref<any>({});
 let options = <any>[];
 const words = ref();
 const farmList = ref<any>([]);
+const total = ref(0);
 const infoShow = ref(false);
 const pickedSn = ref("");
 const mapCenter = ref<any>({
@@ -259,8 +258,10 @@ const shareCar = async (id: any) => {
 };
 const fieldList = ref<any>([]);
 const load = () => {
-  pageInfo.currentPage++;
-  getFieldData();
+  if (pageInfo.currentPage * pageInfo.pageSize < total.value) {
+    pageInfo.currentPage++;
+    getFieldData();
+  }
 };
 const goEdit = (id: any) => {
   router.push({ path: `/fieldManagement/editFields`, query: { id: id } });
@@ -307,6 +308,7 @@ const getBlock = async (index: any, id: any, boundaries: any) => {
 };
 const getFieldData = async () => {
   const { data } = await filedPage_API(pageInfo);
+  total.value = data.total;
   if (fieldList.value.length >= data.total) {
     loading.value = true;
   } else {
@@ -385,6 +387,7 @@ getFarmList();
     top: 10px;
     width: 264px;
     z-index: 99999;
+    --el-text-color-placeholder: #fff;
     :deep(.el-input__wrapper) {
       background: url("@/assets/monitoring/inputBack.png") no-repeat center center;
       background-size: 105% 105%;
@@ -478,8 +481,7 @@ getFarmList();
   z-index: 999;
 }
 .infinite-list {
-  min-height: 100px;
-  height: 630px;
+  height: 620px;
   width: 100%;
   margin: 0;
 }

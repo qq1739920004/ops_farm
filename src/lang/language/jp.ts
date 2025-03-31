@@ -129,6 +129,7 @@ const jp = {
       projectManagement: 'プロジェクトマネジメント',
       deviceManage: 'デバイス管理',
       landManage: 'プロット管理',
+      taskManagement:'タスク管理'
   
     },
     devicelist: {
@@ -201,6 +202,18 @@ const jp = {
       share:'共有する',
       shareDevice:'共有デバイス',
       shareSuccess:'共有に成功しました',
+      doneEdit:'完了',
+      editAB:'AB作業ラインを調整する',
+      isShared:'共有済み',
+      noShared:'未共有',
+      farmName:'農場名',
+      searchField:'圃場を検索',
+      searchAddress:'所在地検索',
+      FieldName:'田区名',
+      FiledLength:'田区周長',
+      FieldArea:'田区面積',
+      newField:'新規圃場',
+      editField:'圃場を編集する',
       satelliteBaseExpiration: "スターベースの期限切れ",
       basicInformation: "基本情報",
       moduleInformation: "モジュール情報",

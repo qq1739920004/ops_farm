@@ -2,23 +2,25 @@
 <template>
   <div class="outarea">
     <div class="left_area">
-      <div class="top_line" @click="gotoback">
-        <svg
-          t="1742801953306"
-          class="icon"
-          viewBox="0 0 1024 1024"
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          p-id="5868"
-          width="24"
-          height="24"
-        >
-          <path
-            d="M569.664 352.896c130.986667 0 237.162667 106.176 237.162667 237.162667 0 130.986667-106.176 237.184-237.162667 237.184H213.909333v79.061333h355.754667c174.656 0 316.224-141.589333 316.224-316.245333 0-174.634667-141.568-316.224-316.224-316.224h-283.52l100.266667-100.245334-55.893334-55.893333L134.826667 313.386667l195.669333 195.669333 55.893333-55.893333-100.266666-100.245334h283.52z"
-            fill="#2c2c2c"
-            p-id="5869"
-          ></path></svg
-        >编辑田块
+      <div class="top_line">
+        <div class="point_area" @click="gotoback">
+          <svg
+            t="1742801953306"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="5868"
+            width="24"
+            height="24"
+          >
+            <path
+              d="M569.664 352.896c130.986667 0 237.162667 106.176 237.162667 237.162667 0 130.986667-106.176 237.184-237.162667 237.184H213.909333v79.061333h355.754667c174.656 0 316.224-141.589333 316.224-316.245333 0-174.634667-141.568-316.224-316.224-316.224h-283.52l100.266667-100.245334-55.893334-55.893333L134.826667 313.386667l195.669333 195.669333 55.893333-55.893333-100.266666-100.245334h283.52z"
+              fill="#2c2c2c"
+              p-id="5869"
+            ></path></svg
+          >{{ t("work.editField") }}
+        </div>
       </div>
       <el-form
         style="width: 100%"
@@ -27,7 +29,7 @@
         :rules="rules"
         label-width="100px"
       >
-        <el-form-item label="农场名称" prop="farm">
+        <el-form-item :label="t('work.farmName')" prop="farm">
           <div class="select_inner">
             <el-select
               v-show="!addSelf"
@@ -67,25 +69,27 @@
             </el-button>
           </div>
         </el-form-item>
-        <el-form-item label="田块名称" prop="name">
+        <el-form-item :label="t('work.FieldName')" prop="name">
           <el-input disabled style="width: 200px" v-model="fieldList.name"></el-input>
         </el-form-item>
-        <el-form-item label="田块周长" prop="perimeter">
+        <el-form-item :label="t('work.FiledLength')" prop="perimeter">
           <el-input
             disabled
             style="width: 200px"
             v-model="fieldList.perimeter"
           ></el-input>
         </el-form-item>
-        <el-form-item label="田块面积" prop="area">
+        <el-form-item :label="t('work.FieldArea')" prop="area">
           <el-input disabled style="width: 200px" v-model="fieldList.area"></el-input>
         </el-form-item>
-        <el-form-item label="描述" prop="description">
+        <el-form-item :label="t('work.describe')" prop="description">
           <el-input style="width: 200px" v-model="fieldList.description"></el-input>
         </el-form-item>
       </el-form>
       <div class="btn_area">
-        <el-button type="primary" @click="editField"> 编辑田块 </el-button>
+        <el-button type="primary" @click="editField">
+          {{ t("work.editField") }}
+        </el-button>
       </div>
     </div>
 
@@ -98,7 +102,7 @@
           clearable
           reserve-keyword
           style="width: 230px; color: #fff"
-          :placeholder="t('work.enterValue')"
+          :placeholder="t('work.searchAddress')"
           :remote-method="remoteMethod"
           @change="handleSelectBranchCom"
         >
@@ -229,7 +233,12 @@ function handleSelectBranchCom(e: any) {
     const a = remoteOptions.value.find((item: any) => {
       return item.name === e;
     });
-    mapCenter.value.center = [[gcoordLngLat(a.location.lng, a.location.lat)[1],gcoordLngLat(a.location.lng, a.location.lat)[0]]];
+    mapCenter.value.center = [
+      [
+        gcoordLngLat(a.location.lng, a.location.lat)[1],
+        gcoordLngLat(a.location.lng, a.location.lat)[0],
+      ],
+    ];
     mapCenter.value.zoom = 16;
   }
 }
@@ -304,10 +313,14 @@ const gotoback = () => {
     justify-content: center;
   }
   .top_line {
-    height: 32px;
     width: 100%;
-    display: flex;
-    align-items: center;
+    .point_area {
+      cursor: pointer;
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      height: 42px;
+    }
   }
   .select_inner {
     cursor: pointer;
@@ -335,6 +348,28 @@ const gotoback = () => {
     left: 10px;
     top: 10px;
     z-index: 99999;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(
+        to right,
+        rgba(145, 145, 145, 0),
+        rgba(247, 247, 247, 0.53),
+        rgba(145, 145, 145, 0)
+      )
+      1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    :deep(.el-select__wrapper) {
+      background: url("@/assets/monitoring/inputBack.png") no-repeat center center;
+      background-size: 105% 105%;
+      color: white;
+    }
+    :deep(.el-select__placeholder) {
+      color: #fff;
+    }
+    :deep(.el-select__input) {
+      color: white;
+    }
   }
   .search_area {
     position: absolute;

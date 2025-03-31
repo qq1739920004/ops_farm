@@ -2,16 +2,16 @@
   <div class="app_container">
     <div class="top">
       <div class="chart1">
-        <div class="chart_title">{{t('statisticsReport.realTime')}}</div>
+        <div class="chart_title">{{ t("statisticsReport.realTime") }}</div>
         <Chartone :farmMachineData="farmMachineData"></Chartone>
       </div>
       <div class="chart2">
-        <div class="chart_title">{{t('statisticsReport.internetStatus')}}</div>
+        <div class="chart_title">{{ t("statisticsReport.internetStatus") }}</div>
 
         <chart-net :data="networkData"></chart-net>
       </div>
       <div class="chart3">
-        <div class="chart_title">{{t('statisticsReport.onlineRanking')}}</div>
+        <div class="chart_title">{{ t("statisticsReport.onlineRanking") }}</div>
         <Chartthree :farmMachineData="farmMachineData"> </Chartthree>
       </div>
     </div>
@@ -38,133 +38,142 @@
         ></chartBase>
       </div>
       <div class="chart7">
-        <chartBase
-          :options="optionCarjobStatistics"
-          :istimeBox="false"
-        ></chartBase>
+        <chartBase :options="optionCarjobStatistics" :istimeBox="false"></chartBase>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Chartone from './components/chartone.vue'
-import chartNet from './components/chartNet.vue'
-import Chartthree from './components/chartthree.vue'
-import chartBase from './components/chartBase.vue'
+import Chartone from "./components/chartone.vue";
+import chartNet from "./components/chartNet.vue";
+import Chartthree from "./components/chartthree.vue";
+import chartBase from "./components/chartBase.vue";
 import socket from "@/store/socket";
 
-import { fnOption } from './components/fnStatistics'
-import { transportOption } from './components/transportStatistics'
-import { visitOption } from './components/visitStatistics'
-import {carjobOption} from './components/carjobStatistics';
-import { ref, shallowRef,onMounted,onUnmounted,watchEffect} from 'vue'
-import {getStatisticsReportfarmMachineAPI,getStatisticsReportcarjobAPI,getStatisticsReportnetworkAPI,getStatisticsWxAPI,getStatisticsRemoteAPI,getStatisticsStatAPI} from '@/api/statisticsReport/index'
-import type {FarmMachineObj,getStatisticsReportnetworkAPIResponse} from '@/api/statisticsReport/type'
-import type {EChartsOption} from 'echarts'
+import { fnOption } from "./components/fnStatistics";
+import { transportOption } from "./components/transportStatistics";
+import { visitOption } from "./components/visitStatistics";
+import { carjobOption } from "./components/carjobStatistics";
+import { ref, shallowRef, onMounted, onUnmounted, watchEffect } from "vue";
+import {
+  getStatisticsReportfarmMachineAPI,
+  getStatisticsReportcarjobAPI,
+  getStatisticsReportnetworkAPI,
+  getStatisticsWxAPI,
+  getStatisticsRemoteAPI,
+  getStatisticsStatAPI,
+} from "@/api/statisticsReport/index";
+import type {
+  FarmMachineObj,
+  getStatisticsReportnetworkAPIResponse,
+} from "@/api/statisticsReport/type";
+import type { EChartsOption } from "echarts";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
-type timeType={
-    st:string,
-    et:string
-}
-let date = new Date()
-  let day = date.getDate() // 今天
-  let month = date.getMonth() + 1 // 当月
-  let year = date.getFullYear() // 年份
-let time:timeType={
-  st:`${year}-${month}-01 00:00:00`,
-  et:`${year}-${month}-${day} 23:59:59`
-}
-const realTime=socket()
-const farmMachineData=ref<FarmMachineObj>()
-const networkData=ref<getStatisticsReportnetworkAPIResponse['data']['onlineFarmMachines']>()
-let optionfnStatistics=shallowRef<EChartsOption>({})
-let optionTransportStatistics=shallowRef<EChartsOption>({})
-let optionVisitStatistics=shallowRef<EChartsOption>({})
-  let optionCarjobStatistics=shallowRef<EChartsOption>({})
+type timeType = {
+  st: string;
+  et: string;
+};
+let date = new Date();
+let day = date.getDate(); // 今天
+let month = date.getMonth() + 1; // 当月
+let year = date.getFullYear(); // 年份
+let time: timeType = {
+  st: `${year}-${month}-01 00:00:00`,
+  et: `${year}-${month}-${day} 23:59:59`,
+};
+const realTime = socket();
+const farmMachineData = ref<FarmMachineObj>();
+const networkData = ref<
+  getStatisticsReportnetworkAPIResponse["data"]["onlineFarmMachines"]
+>();
+let optionfnStatistics = shallowRef<EChartsOption>({});
+let optionTransportStatistics = shallowRef<EChartsOption>({});
+let optionVisitStatistics = shallowRef<EChartsOption>({});
+let optionCarjobStatistics = shallowRef<EChartsOption>({});
 
-onMounted(()=>{
-  realTime.connect()
-    getStatisticsReportfarmMachine()
-    getStatisticsWx(time)
-    getStatisticsRemote(time)
-    getStatisticsStat(time)
-    getStatisticsReportnetwork()
-    getStatisticsReportcarjob()
-})
-onUnmounted(()=>{
-  realTime.close()
-})
+onMounted(() => {
+  realTime.connect();
+  getStatisticsReportfarmMachine();
+  getStatisticsWx(time);
+  getStatisticsRemote(time);
+  getStatisticsStat(time);
+  getStatisticsReportnetwork();
+  getStatisticsReportcarjob();
+});
+onUnmounted(() => {
+  realTime.close();
+});
 // 农机数据统计
-const getStatisticsReportfarmMachine=async()=>{
-   try{
-    const res=await getStatisticsReportfarmMachineAPI()
-    farmMachineData.value=res.data
-   }catch(err){
-    console.log(err)
-   }
-}
+const getStatisticsReportfarmMachine = async () => {
+  try {
+    const res = await getStatisticsReportfarmMachineAPI();
+    farmMachineData.value = res.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 // 功能统计，参数同步统计
-const getStatisticsWx=async(time:timeType)=>{
-    try{
-      let res= await getStatisticsWxAPI({
-        st:time.st,
-        et:time.et
-      })
-      watchEffect(()=>fnOption(res.data,optionfnStatistics,t))
-   }catch(err){
-    optionfnStatistics.value={}
-    console.log(err)
-   }
-}
+const getStatisticsWx = async (time: timeType) => {
+  try {
+    let res = await getStatisticsWxAPI({
+      st: time.st,
+      et: time.et,
+    });
+    watchEffect(() => fnOption(res.data, optionfnStatistics, t));
+  } catch (err) {
+    optionfnStatistics.value = {};
+    console.log(err);
+  }
+};
 // 远程校准次数、设置数据链次数、注册次数，小程序合并接口
-const getStatisticsRemote=async(time:timeType)=>{
-    try{
-      let res= await getStatisticsRemoteAPI({
-        st:time.st,
-        et:time.et
-      })
+const getStatisticsRemote = async (time: timeType) => {
+  try {
+    let res = await getStatisticsRemoteAPI({
+      st: time.st,
+      et: time.et,
+    });
 
-      watchEffect(()=>transportOption(res.data,optionTransportStatistics,t))
-   }catch(err){
-    optionTransportStatistics.value={}
-    console.log(err)
-   }
-}
+    watchEffect(() => transportOption(res.data, optionTransportStatistics, t));
+  } catch (err) {
+    optionTransportStatistics.value = {};
+    console.log(err);
+  }
+};
 //访问次数统计
-const getStatisticsStat=async(time:timeType)=>{
-    try{
-      let res= await getStatisticsStatAPI({
-        st:time.st,
-        et:time.et
-      })
-      watchEffect(()=>visitOption(res.data,optionVisitStatistics,t))
-   }catch(err){
-    optionVisitStatistics.value={}
-    console.log(err)
-   }
-}
+const getStatisticsStat = async (time: timeType) => {
+  try {
+    let res = await getStatisticsStatAPI({
+      st: time.st,
+      et: time.et,
+    });
+    watchEffect(() => visitOption(res.data, optionVisitStatistics, t));
+  } catch (err) {
+    optionVisitStatistics.value = {};
+    console.log(err);
+  }
+};
 //网络状况
-const getStatisticsReportnetwork=async()=>{
-    try{
-      let res= await getStatisticsReportnetworkAPI()
-      networkData.value=res.data.onlineFarmMachines
-   }catch(err){
-    console.log(err)
-   }
-}
+const getStatisticsReportnetwork = async () => {
+  try {
+    let res = await getStatisticsReportnetworkAPI();
+    networkData.value = res.data.onlineFarmMachines;
+  } catch (err) {
+    console.log(err);
+  }
+};
 //作业面积统计
-const getStatisticsReportcarjob=async()=>{
-    try{
-      let res= await getStatisticsReportcarjobAPI()
-      watchEffect(()=>carjobOption(res.data,optionCarjobStatistics,t))
-   }catch(err){
-    optionCarjobStatistics.value={}
-    console.log(err)
-   }
-}
+const getStatisticsReportcarjob = async () => {
+  try {
+    let res = await getStatisticsReportcarjobAPI();
+    watchEffect(() => carjobOption(res.data, optionCarjobStatistics, t));
+  } catch (err) {
+    optionCarjobStatistics.value = {};
+    console.log(err);
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -172,9 +181,9 @@ const getStatisticsReportcarjob=async()=>{
   font-size: 24px;
   margin: 16px 0px 0px 26px;
 }
-.app_container{
+.app_container {
   width: 100%;
-  padding:8px 0px;
+  padding: 8px 0px;
   box-sizing: border-box;
   margin: 0;
   border: 0;

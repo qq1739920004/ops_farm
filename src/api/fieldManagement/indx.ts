@@ -67,10 +67,20 @@ export function listVehicle_API() {
 
     })
 }
-export function shareCar_API(params: any){
-    return request<any,any>({
-        url:'/farm/block/share',
-        method:'get',
+export function shareCar_API(params: any) {
+    return request<any, any>({
+        url: '/farm/block/share',
+        method: 'get',
         params
     })
 }
+
+export function pageTask_API(params: any) {
+    return request<any, any>({
+        url: '/farm/task/pageTask',
+        method: 'get',
+        params
+    })
+}
+
+

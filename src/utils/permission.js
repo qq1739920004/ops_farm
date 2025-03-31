@@ -66,6 +66,10 @@ function formatRoute(menuPermissions) {
       //   };
       // }
     } else {
+      // 1737删除
+      if(item.children[2]){
+        item.children.splice(2,1)
+      }
       item.component = Layout;
       item.meta = {
         title: item.name,
@@ -75,7 +79,7 @@ function formatRoute(menuPermissions) {
       return item;
     }
   });
-
+  console.log(serializeRoutes)
   setFirstRouter(serializeRoutes);
   changeRouterFormat(serializeRoutes);
   setRouterParams(serializeRoutes);
