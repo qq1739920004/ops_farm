@@ -24,7 +24,7 @@
       </div>
       <div class="table_area">
         <div
-          class="car_table"
+          class="car_table" 
           v-for="(item, index) in carList"
           :key="index"
           @click="gotoDetail(item.id)"
@@ -33,7 +33,7 @@
             <div class="title_line">
               {{ item.name }}
             </div>
-            <div class="brand_line">{{ item.brand }}|{{ item.model }}</div>
+            <div class="brand_line">{{ item.brand }}|{{ item.model }} </div>
             <div class="img_line">
               <el-image
                 v-if="item.imageUrl"
@@ -48,7 +48,7 @@
                 v-else
                 class="el_img"
                 style="width: 258px; height: 196px; background-color: #f7f7f7"
-                :src="normalImg"
+                :src="carM"
                 preview-teleported="true"
                 fit="scale-down"
               >
@@ -111,7 +111,7 @@
             <el-form-item :label="$t('work.model')" prop="model">
               <el-input v-model="carParams.model"></el-input>
             </el-form-item>
-            <el-form-item label="绑定设备" prop="carId">
+            <el-form-item :label="$t('work.bindDevice')" prop="carId">
               <el-select-v2
                 style="width: 192px"
                 filterable
@@ -182,9 +182,9 @@
             </el-upload>
           </div>
           <div class="addImg">
-            <el-button type="primary" @click="uploadImg">添加图片</el-button>
+            <el-button type="primary" @click="uploadImg">{{ t('work.addPic') }}</el-button>
           </div>
-          <div class="addImg">图片类型png.图片大小10M以内</div>
+          <div class="addImg">{{ t('work.picLimit') }}</div>
         </div>
       </div>
       <template #footer>
@@ -214,6 +214,7 @@ import { useI18n } from "vue-i18n";
 import startCar from "@/assets/common/car.png";
 import speed from "@/assets/common/speed.png";
 import oil from "@/assets/common/oil.png";
+import carM from '@/assets/common/car.png'
 const { t } = useI18n();
 const keyword = ref<any>("");
 const normalImg = ref("");

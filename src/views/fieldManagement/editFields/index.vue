@@ -1,25 +1,26 @@
 <!--  -->
 <template>
-  <div class="outarea">
+  <div class="map_container">
     <div class="left_area">
       <div class="top_line">
         <div class="point_area" @click="gotoback">
           <svg
-            t="1742801953306"
+            t="1743580668850"
             class="icon"
             viewBox="0 0 1024 1024"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
-            p-id="5868"
-            width="24"
-            height="24"
+            p-id="5555"
+            width="18"
+            height="18"
           >
             <path
-              d="M569.664 352.896c130.986667 0 237.162667 106.176 237.162667 237.162667 0 130.986667-106.176 237.184-237.162667 237.184H213.909333v79.061333h355.754667c174.656 0 316.224-141.589333 316.224-316.245333 0-174.634667-141.568-316.224-316.224-316.224h-283.52l100.266667-100.245334-55.893334-55.893333L134.826667 313.386667l195.669333 195.669333 55.893333-55.893333-100.266666-100.245334h283.52z"
-              fill="#2c2c2c"
-              p-id="5869"
-            ></path></svg
-          >{{ t("work.editField") }}
+              d="M665.93501234 247.77260247H143.58881976l155.34459258-155.34459259c15.53445925-15.53445925 15.53445925-38.83614815 0-54.37060741-15.53445925-15.53445925-38.83614815-15.53445925-54.3706074 0L23.19676049 257.48163951c-7.76722963 7.76722963-11.65084445 17.47626667-11.65084444 27.1853037s3.88361482 19.41807408 11.65084444 27.18530371l219.42423705 219.42423704c15.53445925 15.53445925 38.83614815 15.53445925 54.3706074 0 15.53445925-15.53445925 15.53445925-38.83614815 0-54.37060742L145.53062716 325.44489876H665.93501234c145.63555555 0 262.144 116.50844445 262.144 262.144s-116.50844445 262.144-262.144 262.144H267.86449383c-21.35988148 0-38.83614815 17.47626667-38.83614815 38.83614816s17.47626667 38.83614815 38.83614815 38.83614814h398.07051851c188.35531852 0 339.8162963-151.46097778 339.81629631-339.8162963s-151.46097778-339.8162963-339.81629631-339.81629629z"
+              fill="#ffffff"
+              p-id="5556"
+            ></path>
+          </svg>
+          {{ t("work.editField") }}
         </div>
       </div>
       <el-form
@@ -92,47 +93,44 @@
         </el-button>
       </div>
     </div>
-
-    <div class="map_container">
-      <div class="select_area">
-        <el-select
-          v-model="words"
-          filterable
-          remote
-          clearable
-          reserve-keyword
-          style="width: 230px; color: #fff"
-          :placeholder="t('work.searchAddress')"
-          :remote-method="remoteMethod"
-          @change="handleSelectBranchCom"
+    <div class="select_area">
+      <el-select
+        v-model="words"
+        filterable
+        remote
+        clearable
+        reserve-keyword
+        style="width: 230px; color: #fff"
+        :placeholder="t('work.searchAddress')"
+        :remote-method="remoteMethod"
+        @change="handleSelectBranchCom"
+      >
+        <el-option
+          v-for="(item, index) in remoteOptions"
+          :key="item.uuid"
+          :label="item.name"
+          :value="item.name"
         >
-          <el-option
-            v-for="(item, index) in remoteOptions"
-            :key="item.uuid"
-            :label="item.name"
-            :value="item.name"
+          <span style="float: left">{{ item.name }}</span>
+          <span
+            style="float: right; color: var(--el-text-color-secondary); font-size: 13px"
           >
-            <span style="float: left">{{ item.name }}</span>
-            <span
-              style="float: right; color: var(--el-text-color-secondary); font-size: 13px"
-            >
-              {{ item.province }}{{ item.city }} {{ item.district }}
-            </span>
-          </el-option>
-        </el-select>
-      </div>
-      <detail-map
-        ref="sinoMapRef"
-        :mapCenter="mapCenter"
-        :polygonData="polygonData"
-        :lineData="lineData"
-        :markerData="markerData"
-        @areaValue="getArea"
-        @lengthValue="getLength"
-        @boundries="getBoundaries"
-        @pickedPoints="getPickerPoints"
-      />
+            {{ item.province }}{{ item.city }} {{ item.district }}
+          </span>
+        </el-option>
+      </el-select>
     </div>
+    <detail-map
+      ref="sinoMapRef"
+      :mapCenter="mapCenter"
+      :polygonData="polygonData"
+      :lineData="lineData"
+      :markerData="markerData"
+      @areaValue="getArea"
+      @lengthValue="getLength"
+      @boundries="getBoundaries"
+      @pickedPoints="getPickerPoints"
+    />
   </div>
 </template>
 
@@ -295,54 +293,68 @@ const gotoback = () => {
 
 <style lang="scss" scoped>
 .outarea {
-  padding: 3px 0;
   height: 100%;
   width: 100%;
   display: flex;
 }
-.left_area {
-  padding-left: 10px;
-  width: 23%;
-  margin: 5px;
-  border-radius: 5px;
-  height: 100%;
-  background-color: #fff;
-  .btn_area {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-  }
-  .top_line {
-    width: 100%;
-    .point_area {
-      cursor: pointer;
-      width: fit-content;
-      display: flex;
-      align-items: center;
-      height: 42px;
-    }
-  }
-  .select_inner {
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    img {
-      margin-left: 10px;
-      width: 26px;
-      height: 26px;
-    }
-  }
-}
 .map_container {
-  position: relative;
   height: 100%;
-  margin: 5px;
-  border-radius: 5px;
-  width: 77%;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
   position: relative;
+
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  .left_area {
+    position: absolute;
+    left: 10px;
+    top: 50px;
+    padding-left: 10px;
+    width: 22%;
+    margin: 5px;
+    border-radius: 5px;
+    z-index: 9999;
+    position: absolute;
+
+    height: 735px;
+    padding: 4px;
+    background-color: rgba(16, 34, 15, 0.68);
+    color: #fff;
+    background-size: 130% 130%;
+    z-index: 999;
+    :deep(.el-form-item__label) {
+      color: #fff;
+    }
+    .btn_area {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+    }
+    .top_line {
+      width: 100%;
+      .point_area {
+        cursor: pointer;
+        width: fit-content;
+        display: flex;
+        align-items: center;
+        height: 42px;
+      }
+    }
+    .select_inner {
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      img {
+        margin-left: 10px;
+        width: 26px;
+        height: 26px;
+      }
+    }
+  }
   .select_area {
     position: absolute;
     left: 10px;

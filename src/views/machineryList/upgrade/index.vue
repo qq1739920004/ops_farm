@@ -170,7 +170,7 @@ import {
 } from "@/api/machineryList/ungrade/index";
 
 const { t } = useI18n();
-const terminalOptions = ["AG502", "AG501Pro"];
+const terminalOptions = ["AG502", "AG501Pro", "MT901D"];
 let pageInfo = reactive<any>({
   key: "",
   currentPage: 1,
@@ -219,7 +219,7 @@ const upfradeConfirm = () => {
     version: "",
   };
 
-  if (snList.value.length === 0 && isAll.value === 0 ) {
+  if (snList.value.length === 0 && isAll.value === 0) {
     ElMessage.warning(t("messages.pleaseSelectDevice"));
   } else {
     dialogVisible.value = true;
@@ -232,7 +232,7 @@ const currentChange = (val: any) => {
 };
 const areaOptions = [
   {
-    label: "北京市", 
+    label: "北京市",
     value: 11,
   },
   {
@@ -374,7 +374,7 @@ const areaOptions = [
   },
 ];
 const handleSelectAll = (val: any) => {
-  snList.value = []
+  snList.value = [];
   if (val.length !== 0) {
     isAll.value = 1;
   } else {
@@ -394,7 +394,15 @@ const handleSelectionChange = (val: any) => {
 };
 
 const getModel = async () => {
-  const res = await getmodelTitleList_API(terminalType.value === "AG502" ? 9008 : 9018);
+  let num: any;
+  if (terminalType.value === "AG502") {
+    num = 9008;
+  } else if (terminalType.value === "AG501Pro") {
+    num = 9018;
+  } else {
+    num = 9034;
+  }
+  const res = await getmodelTitleList_API(num);
   nameList.value = res.data.map((item: any) => {
     return { name: item.name, mid: item.mid };
   });

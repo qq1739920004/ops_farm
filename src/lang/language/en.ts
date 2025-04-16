@@ -42,6 +42,7 @@ const en = {
     Pleaseenterafilename: 'Please Enter File Name',
     dealerCantBeEmpty: 'Dealer cannot be empty',
     plzenter: 'Please enter',
+    plzTaskName:'Please Enter Task Name',
     addSuccess: 'Add Success',
     activeSuccess: 'Active Success',
     noRecord: 'There is no record of any changes',
@@ -129,7 +130,9 @@ const en = {
     projectManagement: 'Project Mgmt.',
     deviceManage: 'Device Mgt',
     landManage: 'Land Mgt',
-    taskManagement:'Task Mgt'
+    taskManagement:'Task Mgt',
+    VehicleManagement:'Vehicle Mgt',
+    FieldManagement:'Field Plot Mgt'
   },
   devicelist: {
     owner: 'Owner',
@@ -187,6 +190,9 @@ const en = {
     registrationCode: "Registration Code",
     nettingDuration: "Netting Duration",
     describe: 'describe',
+    addPic:'Add Image',
+    picLimit:'The size of the image is less than 10M',
+    bindDevice:'Bind Device',
     warrantyPeriod: "Warranty Period",
     softwareDuration: "Software Duration",
     satelliteBaseDuration: "Satellite Base Duration",
@@ -245,6 +251,11 @@ const en = {
     unknown: 'unknown sol',
     time: "Time",
     content: "Content",
+    startTime:'Start Time',
+    endTime:'End Time',
+    allTime:'Total time',
+    totalMile:'Total mileage',
+    RollAngle:'Roll angle',
     parameterChangeRecord: "Parameter Change Record",
     changeTime: "Change Time",
     parameterName: "Parameter Name",
@@ -456,7 +467,11 @@ const en = {
     currentSpeed: 'Current speed',
     currentFuel: 'Current fuel consumption',
     allArea: 'Total Area',
-    circumference: 'circumference'
+    circumference: 'circumference',
+    startPoint:'Starting Point',
+    endPoint:'Completion Point',
+    lowSpeed:'Low Speed',
+    highSpeed:'High Speed'
 
   },
   perception: {

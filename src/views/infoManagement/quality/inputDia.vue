@@ -26,13 +26,13 @@
               prop="terminalType"
             >
               <!-- <el-option value="AG360" label="AG360" /> -->
-              <el-option value="AG502" label="AG502" />
-              <el-option value="AG501" label="AG501" />
-              <el-option value="AG501Pro" label="AG501Pro" />
-              <el-option value="AG502_JP" label="AG502JP" />
-              <el-option value="AG501Pro_JP" label="AG501PROJP" />
-              <el-option value="MT802" label="MT802" />
-              <el-option value="MT901D" label="MT901" />
+              <el-option
+                v-for="(item, index) in terminalList"
+                :key="index"
+                :value="item"
+                :label="item"
+              >
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('messages.file') + ':'" prop="date">
@@ -65,12 +65,9 @@
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button
-            style="color: var(--el-color-primary)"
-            text
-            @click="getTemplate"
-            >{{ $t("messages.Downloadtemplate") }}</el-button
-          >
+          <el-button style="color: var(--el-color-primary)" text @click="getTemplate">{{
+            $t("messages.Downloadtemplate")
+          }}</el-button>
           <el-button
             type="primary"
             style="
@@ -92,7 +89,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from "vue";
-import {  import_API } from "@/api/machineryList/index";
+import { import_API } from "@/api/machineryList/index";
 import type { UploadInstance } from "element-plus";
 import { ElMessage } from "element-plus";
 import useUserStore from "@/store/user";
@@ -106,9 +103,11 @@ const uploadRef = ref<UploadInstance>();
 let uploadData = reactive<any>({
   terminalType: "",
 });
+const terminalList = ref<any>([]);
 const actionUrl = import.meta.env.VITE_APP_BASE_API + `/farm/carModuleInfo/batchImport`;
 defineExpose({
   dialogVisible,
+  terminalList,
 });
 const rules = {
   terminalType: [{ required: true, message: t("work.pleaseSelect"), trigger: "change" }],
@@ -152,7 +151,6 @@ const submitBtn = async () => {
 };
 
 const getTemplate = async () => {
-
   import_API().then((res) => {
     let name = "template.xlsx";
     const type = "application/vnd.ms-excel;charset=utf-8"; //excel文件
@@ -193,7 +191,6 @@ const successResult = (data: any) => {
     }
   }
 };
-
 </script>
 
 <style lang="scss" scoped>

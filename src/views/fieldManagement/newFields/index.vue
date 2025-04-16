@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="outarea">
+  <div class="map_container">
     <div class="left_area">
       <div class="top_line">
         <div class="point_area" @click="gotoback">
@@ -90,44 +90,41 @@
         <el-button type="primary" @click="addField"> {{ t("work.newField") }} </el-button>
       </div>
     </div>
-
-    <div class="map_container">
-      <div class="select_area">
-        <el-select
-          v-model="words"
-          filterable
-          remote
-          clearable
-          reserve-keyword
-          style="width: 230px; color: #fff"
-          :placeholder="t('work.searchAddress')"
-          :remote-method="remoteMethod"
-          @change="handleSelectBranchCom"
+    <div class="select_area">
+      <el-select
+        v-model="words"
+        filterable
+        remote
+        clearable
+        reserve-keyword
+        style="width: 230px; color: #fff"
+        :placeholder="t('work.searchAddress')"
+        :remote-method="remoteMethod"
+        @change="handleSelectBranchCom"
+      >
+        <el-option
+          v-for="(item, index) in remoteOptions"
+          :key="item.uuid"
+          :label="item.name"
+          :value="item.name"
         >
-          <el-option
-            v-for="(item, index) in remoteOptions"
-            :key="item.uuid"
-            :label="item.name"
-            :value="item.name"
+          <span style="float: left">{{ item.name }}</span>
+          <span
+            style="float: right; color: var(--el-text-color-secondary); font-size: 13px"
           >
-            <span style="float: left">{{ item.name }}</span>
-            <span
-              style="float: right; color: var(--el-text-color-secondary); font-size: 13px"
-            >
-              {{ item.province }}{{ item.city }} {{ item.district }}
-            </span>
-          </el-option>
-        </el-select>
-      </div>
-      <detail-map
-        ref="sinoMapRef"
-        :mapCenter="mapCenter"
-        @areaValue="getArea"
-        @lengthValue="getLength"
-        @boundries="getBoundaries"
-        @pickedPoints="getPickerPoints"
-      />
+            {{ item.province }}{{ item.city }} {{ item.district }}
+          </span>
+        </el-option>
+      </el-select>
     </div>
+    <detail-map
+      ref="sinoMapRef"
+      :mapCenter="mapCenter"
+      @areaValue="getArea"
+      @lengthValue="getLength"
+      @boundries="getBoundaries"
+      @pickedPoints="getPickerPoints"
+    />
   </div>
 </template>
 
@@ -226,55 +223,65 @@ const gotoback = () => {
 </script>
 
 <style lang="scss" scoped>
-.outarea {
-  padding: 3px 0;
+
+.map_container {
   height: 100%;
   width: 100%;
-  display: flex;
-}
-.left_area {
-  padding-left: 10px;
-  width: 23%;
-  margin: 5px;
-  border-radius: 5px;
-  height: 100%;
-  background-color: #fff;
-  .btn_area {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-  }
-  .top_line {
-    width: 100%;
-    .point_area {
-      cursor: pointer;
-      width: fit-content;
-      display: flex;
-      align-items: center;
-      height: 42px;
-    }
-  }
-  .select_inner {
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    img {
-      margin-left: 10px;
-      width: 26px;
-      height: 26px;
-    }
-  }
-}
-.map_container {
-  position: relative;
-  height: 100%;
-  margin: 5px;
-  border-radius: 5px;
-  width: 77%;
   overflow-x: hidden;
   overflow-y: hidden;
   position: relative;
+
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  .left_area {
+    position: absolute;
+    left: 10px;
+    top: 50px;
+    padding-left: 10px;
+    width: 22%;
+    margin: 5px;
+    border-radius: 5px;
+    z-index: 9999;
+    position: absolute;
+
+    height: 735px;
+    padding: 4px;
+    background-color: rgba(16, 34, 15, 0.68);
+    color: #fff;
+    background-size: 130% 130%;
+    z-index: 999;
+    :deep(.el-form-item__label) {
+      color: #fff;
+    }
+    .btn_area {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+    }
+    .top_line {
+      width: 100%;
+      .point_area {
+        cursor: pointer;
+        width: fit-content;
+        display: flex;
+        align-items: center;
+        height: 42px;
+      }
+    }
+    .select_inner {
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      img {
+        margin-left: 10px;
+        width: 26px;
+        height: 26px;
+      }
+    }
+  }
   .select_area {
     position: absolute;
     left: 10px;

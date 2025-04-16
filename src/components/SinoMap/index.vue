@@ -648,7 +648,8 @@ function initMap() {
     attributionControl: false, //是否启用地图属性控件
     renderer: canvasLabel,
     zoomSnap: 1,
-    zIndex: 9999,
+    zIndex: 9999,// 移除缩放控件
+
   });
   mapInstance.value = map;
   markerGroup.addTo(map);

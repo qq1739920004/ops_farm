@@ -75,7 +75,6 @@
 import { ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
 import { useI18n } from "vue-i18n";
-import { terminalTypeList_API } from "@/api/machineryList/index";
 const { t } = useI18n();
 import {
   carModuleInfoSave_API,
@@ -102,16 +101,13 @@ const props = defineProps({
 });
 const terminalList = ref<any>([]);
 const emits = defineEmits(["push"]);
-const getTerminalType = async () => {
-  const res = await terminalTypeList_API();
-  terminalList.value = res.data;
-};
-getTerminalType();
+
 const ApiData = reactive<any>({});
 const dialogVisible = ref<boolean>(false);
-defineExpose({
+  defineExpose({
   dialogVisible,
   formRef,
+  terminalList,
 });
 const editSubmit = async () => {
   Object.assign(ApiData, props.newRecords);

@@ -83,4 +83,12 @@ export function pageTask_API(params: any) {
     })
 }
 
+export function taskDetail_API(params: any) {
+    return request<any, any>({
+        url: '/farm/task/detail',
+        method: 'get',
+        params
+    })
+}
+
 

@@ -93,7 +93,6 @@ import {
   carModuleInfoSave_API,
   carModuleInfoUpdate_API,
 } from "@/api/infoManagement/index";
-import { terminalTypeList_API } from "@/api/machineryList/index";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const formRef = ref();
@@ -112,21 +111,17 @@ const props = defineProps({
       num: 1,
     },
   },
+
 });
+const terminalList = ref<any>([]);
 const ApiData = reactive<any>({});
 const dialogVisible = ref<boolean>(false);
-defineExpose({
-  //
+  defineExpose({
   dialogVisible,
   formRef,
+  terminalList,
 });
 const emits = defineEmits(["push"]);
-const terminalList = ref<any>([]);
-const getTerminalType = async () => {
-  const res = await terminalTypeList_API();
-  terminalList.value = res.data;
-};
-getTerminalType();
 const editSubmit = async () => {
   props.newRecords.num = 1;
   Object.assign(ApiData, props.newRecords);

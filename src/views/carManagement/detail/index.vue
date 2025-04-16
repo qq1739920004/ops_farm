@@ -7,7 +7,7 @@
           <div class="img_line">
             <el-image
               class="el_img1"
-              :src="detailList.imageUrl ? detailList.imageUrl : normalImg"
+              :src="detailList.imageUrl ? detailList.imageUrl : carM"
               preview-teleported="true"
               fit="scale-down"
             >
@@ -145,7 +145,7 @@
             <el-form-item :label="$t('work.model')" prop="model">
               <el-input v-model="carParams.model"></el-input>
             </el-form-item>
-            <el-form-item label="绑定设备" prop="carId">
+            <el-form-item :label="$t('work.bindDevice')" prop="carId">
               <el-select-v2
                 style="width: 192px"
                 filterable
@@ -216,9 +216,11 @@
             </el-upload>
           </div>
           <div class="addImg">
-            <el-button type="primary" @click="uploadImg">添加图片</el-button>
+            <el-button type="primary" @click="uploadImg">{{
+              t("work.addPic")
+            }}</el-button>
           </div>
-          <div class="addImg">图片类型png.图片大小10M以内</div>
+          <div class="addImg">{{ t("work.picLimit") }}</div>
         </div>
       </div>
       <template #footer>
@@ -240,7 +242,7 @@ import { useI18n } from "vue-i18n";
 import detailMap from "./components/detailMap.vue";
 import { statPage_API } from "@/api/inSight/index.ts";
 import {
-  detail_API,
+  detail_API, 
   uploadImg_API,
   getBindSnVO_API,
   updateVehicle_API,
@@ -252,12 +254,14 @@ import oil1 from "@/assets/common/oil.png";
 import speed from "@/assets/common/greSpeed.png";
 import frame from "@/assets/common/frame.png";
 import startCar from "@/assets/common/car.png";
+import carM from '@/assets/common/car.png'
 const { t } = useI18n();
 const detailList = ref<any>({});
 let markerData = ref<any>([]);
 const carParams = ref<any>({});
 const route = useRoute();
 const normalImg = ref("");
+
 const dialogVisible = ref(false);
 const carFormRef = ref();
 let optionsList = ref<any>([]);
@@ -285,7 +289,7 @@ const rules = {
   name: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
   brand: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
   model: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
-  carId:[{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  carId: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
 };
 getDetailData();
 const trueImg = ref("");

@@ -48,13 +48,19 @@
             >{{ $t("devicelist.upgrade") }}</el-button
           >
           <el-button
-            style="margin-right: 20px"
+            style=""
             type="primary"
             v-auth="568"
             @click="gotoInput"
             >{{ $t("devicelist.inputDealerDevice") }}</el-button
           >
-
+          <el-button
+            style="margin-right: 20px"
+            type="primary"
+            v-auth="2356"
+            @click="gotoInputDaTian"
+            >导入大田补贴</el-button
+          >
           <!-- <el-button-group class="button_group2">
           <el-button
             icon="Expand"
@@ -91,6 +97,7 @@
       <sn-card :provinceCountData="provinceCountData" />
     </div> -->
     <InputDia ref="inputD"></InputDia>
+    <InputDaTian ref="inputT"></InputDaTian>
     <upGradeDia ref="upgradeD"></upGradeDia>
   </div>
 </template>
@@ -100,6 +107,7 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 import { useRoute, useRouter } from "vue-router";
 import InputDia from "./components/inputDia.vue";
+import InputDaTian from "./components/inputDaTian.vue";
 import upGradeDia from "./components/upgradeDia.vue";
 import Pagination from "@/components/Pagination/index.vue";
 import { reactive, ref, onMounted } from "vue";
@@ -118,7 +126,7 @@ let $route = useRoute();
 const router = useRouter();
 // 控制table显示与否
 const tableShow = ref<boolean>(true);
-
+const inputT = ref()
 const total = ref<number>(10);
 // 经销商列表
 const dealerList = ref<carDealerObj[]>([]);
@@ -156,7 +164,9 @@ const currentChange = (val: any) => {
 const gotoInput = () => {
   inputD.value.dialogVisible = true;
 };
-
+const gotoInputDaTian = () => {
+  inputT.value.dialogVisible = true;
+}
 // const gotoUpgrade = () => {
 //   upgradeD.value.dialogVisible = true;
 // };

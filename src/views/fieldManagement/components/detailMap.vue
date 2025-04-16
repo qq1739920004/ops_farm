@@ -62,7 +62,8 @@ import yellow from "@/assets/monitoring/yellow.svg";
 import gray from "@/assets/monitoring/gray.svg";
 import { gcoordLngLat, getMapView } from "sino-tool-v3";
 import { idText } from "typescript";
-
+//引入turf.js
+import * as turf from "@turf/turf";
 // const L = window.L;
 const mapFontSize = computed(() => {
   let fontSize = 16;
@@ -129,6 +130,10 @@ const props = defineProps({
       weight: 4,
     },
   },
+  nameList:{
+    type:Array,
+    default:[]
+  }
 });
 let pickupMode: boolean = false; // 是否地图拾取模式
 let pickedPoints: any = [];
@@ -158,6 +163,7 @@ watch(
   () => props.polygonData,
   (polygonData) => {
     createPolygon(polygonData);
+    // 创建纯文字标记
   },
   { deep: true }
 );
@@ -519,7 +525,7 @@ function createIcon(item: any) {
       html: `<div style="transform: rotate(${item.markerRotate || 0}deg)">
      ${item.markerTitle}
       </div>`,
-      iconSize: [40, 10], // 图标的大小 [宽度, 高度]
+      iconSize: [100, 30], // 图标的大小 [宽度, 高度]
       // iconAnchor: [null, null], // 图标的锚点位置 [水平, 垂直]
     });
   }
@@ -610,9 +616,10 @@ function createMarker(list: any) {
     });
   });
 }
+
 // 创建多面形
 function createPolygon(list: any) {
-  if (list.length ===0) {
+  if (list.length === 0) {
     return;
   }
   polygonArr.forEach((item: any) => {
@@ -621,8 +628,10 @@ function createPolygon(list: any) {
   polygonArr.length = 0;
   // 双重polylineData数组
   const polytrueData: any = [];
+  const nameData:any = []
+  
   // 处理数据格式
-  list.map((item: any) => {
+  list.map((item: any) =>  {
     item.forEach((it: any) => {
       it.boundaries.forEach((inner: any, index: any) => {
         let innerList = inner.map((point: any) => {
@@ -630,20 +639,34 @@ function createPolygon(list: any) {
           return position;
         });
         polytrueData.push(innerList);
+        nameData.push(it.id)
       });
     });
-    return polytrueData;
+
   });
-  drawPolygon(polytrueData);
+  drawPolygon(polytrueData,nameData);
 }
-const drawPolygon = (polytrueData: any) => {
+const drawPolygon = (polytrueData: any,nameData:any) => {
   let pickPoints: any = [];
-  polytrueData.map((item: any) => {
+  polytrueData.map((item: any,index:any) => {
     pickPoints.push(item);
     var polygon = L.polygon(item, {
       color: "#83FFA4",
       fillColor: "#4CB04F",
       fillOpacity: 0.44,
+    }).addTo(map);
+    // 获取多边形中心点
+    var center: any = turf.centroid(polygon.toGeoJSON()).geometry.coordinates;
+    center = center.reverse(); // Leaflet使用[lat,lng]格式
+
+    // 在中心点添加文本标记
+    L.marker(center, {
+      icon: L.divIcon({
+        className: "polygon-label",
+        html:
+         ` <div class="text-content" style="width:100px; padding: 5px">${nameData[index]}</div>`,
+        iconSize: [32, 32], // 图标的大小 [宽度, 高度]
+      }),
     }).addTo(map);
     polygonArr.push(polygon);
   });
@@ -932,8 +955,17 @@ function mapZoomChange() {
       "--map-font-size",
       `${mapFontSize.value}px`
     );
+    const zoom = map.getZoom();
+    const baseSize = 16; // 基准字体大小(在zoom=10时)
+    const currentSize = baseSize * Math.pow(1.0, zoom - 10); // 1.2为缩放因子
+
+    // 更新所有可缩放文字
+    document.querySelectorAll(".text-content").forEach((el:any) => {
+      el.style.fontSize = `${currentSize}px`;
+    });
   });
 }
+
 // 清除地图测距
 function clearMapRanging() {
   if (rangingArray.length) {
@@ -1118,5 +1150,17 @@ defineExpose({
   background-color: transparent;
   box-shadow: none;
   color: white;
+}
+/* 自定义文字样式 */
+.custom-text {
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.text-icon {
+  font-weight: bold;
+  color: #333;
 }
 </style>

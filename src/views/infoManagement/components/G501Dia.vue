@@ -100,19 +100,20 @@ const props = defineProps({
       type: "all",
     },
   },
+  terminalList: {
+    type: Array,
+    default: [],
+  },
 });
 const terminalList = ref<any>([]);
 const emits = defineEmits(["push"]);
-const getTerminalType = async () => {
-  const res = await terminalTypeList_API();
-  terminalList.value = res.data
-};
-getTerminalType();
+
 const ApiData = reactive<any>({});
 const dialogVisible = ref<boolean>(false);
 defineExpose({
   dialogVisible,
   formRef,
+  terminalList,
 });
 const editSubmit = async () => {
   Object.assign(ApiData, props.newRecords);

@@ -21,6 +21,7 @@
             class="m-2"
             :placeholder="$t('work.deviceType')"
             @change="changeBlur"
+            clearable
           >
             <el-option
               v-for="(item, index) in terminalList"
@@ -132,7 +133,7 @@
             {{ row.antennaOne || "/" }}
           </template>
         </el-table-column>
-        <el-table-column :label="$t('devicelist.owner')" align="center" prop="userName" />
+        <el-table-column :label="$t('devicelist.owner')" align="center" prop="username" />
         <el-table-column :label="$t('devicelist.tel')" align="center" prop="tel" />
         <el-table-column :label="$t('work.operation')" align="center" width="200">
           <template #="{ row }">
@@ -237,13 +238,48 @@
         </template>
       </el-dialog>
     </div>
-    <G502Dia @push="pushValue" ref="G502D" :newRecords="newRecords"></G502Dia>
-    <G501Dia @push="pushValue" ref="G501D" :newRecords="newRecords"></G501Dia>
-    <G501DiaPro @push="pushValue" ref="G501DPRO" :newRecords="newRecords"></G501DiaPro>
-    <G502DiaJp @push="pushValue" ref="G502DJP" :newRecords="newRecords"></G502DiaJp>
-    <G502Dia @push="pushValue" ref="GMT802" :newRecords="newRecords"></G502Dia>
-    <G502Dia @push="pushValue" ref="GMT901" :newRecords="newRecords"></G502Dia>
-    <G502DiaJp @push="pushValue" ref="AG501PRO_JP" :newRecords="newRecords"></G502DiaJp>
+    <G502Dia
+      @push="pushValue"
+      ref="G502D"
+      :newRecords="newRecords"
+      :terminalList="terminalList"
+    ></G502Dia>
+    <G501Dia
+      @push="pushValue"
+      ref="G501D"
+      :newRecords="newRecords"
+      :terminalList="terminalList"
+    ></G501Dia>
+    <G501DiaPro
+      @push="pushValue"
+      ref="G501DPRO"
+      :newRecords="newRecords"
+      :terminalList="terminalList"
+    ></G501DiaPro>
+    <G502DiaJp
+      @push="pushValue"
+      ref="G502DJP"
+      :newRecords="newRecords"
+      :terminalList="terminalList"
+    ></G502DiaJp>
+    <G502Dia
+      @push="pushValue"
+      ref="GMT802"
+      :newRecords="newRecords"
+      :terminalList="terminalList"
+    ></G502Dia>
+    <G502Dia
+      @push="pushValue"
+      ref="GMT901"
+      :newRecords="newRecords"
+      :terminalList="terminalList"
+    ></G502Dia>
+    <G502DiaJp
+      @push="pushValue"
+      ref="AG501PRO_JP"
+      :newRecords="newRecords"
+      :terminalList="terminalList"
+    ></G502DiaJp>
     <InputDia ref="inputD"></InputDia>
   </div>
 </template>
@@ -274,7 +310,7 @@ import { useRouter } from "vue-router";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 const pageInfo = reactive<PageObj>({
   key: "",
-  terminalType: "AG502",
+  terminalType: "",
   currentPage: 1,
   pageSize: 10,
 });
@@ -315,6 +351,14 @@ const terminalList = ref<any>([]);
 const getTerminalType = async () => {
   const res = await terminalTypeList_API();
   terminalList.value = res.data;
+  G501D.value.terminalList = terminalList.value;
+  G502DJP.value.terminalList = terminalList.value;
+  AG501PRO_JP.value.terminalList = terminalList.value;
+  GMT802.value.terminalList = terminalList.value;
+  G502D.value.terminalList = terminalList.value;
+  GMT901.value.terminalList = terminalList.value;
+  G501DPRO.value.terminalList = terminalList.value;
+  inputD.value.terminalList = terminalList.value;
 };
 getTerminalType();
 const gotoInput = () => {
