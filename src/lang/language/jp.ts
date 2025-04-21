@@ -229,6 +229,7 @@ const jp = {
     operationWork: "宿題",
     noData: "データはまだありません",
     goBack: "帰る",
+    daTian:'大田補助金の導入',
     unit: "単位",
     clear: "粛清",
     creator: "作成者",

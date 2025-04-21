@@ -59,7 +59,7 @@
             type="primary"
             v-auth="2356"
             @click="gotoInputDaTian"
-            >导入大田补贴</el-button
+            >{{ $t("work.daTian") }}</el-button
           >
           <!-- <el-button-group class="button_group2">
           <el-button

@@ -213,6 +213,7 @@ const zh = {
     vehicleAge: "车龄",
     operationWork: "作业",
     noData: "暂无数据",
+    daTian:'导入大田块补贴',
     goBack: "返回",
     unit: "单位",
     clear: "清除",

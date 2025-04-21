@@ -5,7 +5,7 @@
       @close="closeInputList"
       style="border-radius: 8px"
       v-model="dialogVisible"
-      title="导入大田补贴"
+      :title="t('work.daTian')"
       width="30%"
       center
     >
@@ -46,7 +46,6 @@
       </div>
       <template #footer>
         <span class="dialog-footer">
-
           <el-button
             type="primary"
             style="
@@ -78,8 +77,7 @@ const formRef = ref();
 const dialogVisible = ref<boolean>(false);
 const fileName = ref();
 const uploadRef = ref<UploadInstance>();
-let uploadData = reactive<any>({
-});
+let uploadData = reactive<any>({});
 const actionUrl = import.meta.env.VITE_APP_BASE_API + `/farm/car/importImei`;
 defineExpose({
   dialogVisible,
@@ -112,13 +110,11 @@ const submitBtn = async () => {
   uploadRef.value!.submit();
 };
 
-
 const successResult = (data: any) => {
   // ElMessage({ type: 'success', message: '上传成功!', duration: 1000 })
   // dialogVisible.value = false
 
   if (data.code !== 0) {
-   
     ElMessage({
       type: "error",
       message: data.message,

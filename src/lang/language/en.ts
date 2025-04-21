@@ -179,6 +179,7 @@ const en = {
     creatorTel: 'Creator Tel',
     editSuccess: 'Edit Success',
     goBack: "Go Back",
+    daTian:'Introduced Daejeon subsidy',
     unit: "Unit",
     clear: "Clear",
     details: "Details",
