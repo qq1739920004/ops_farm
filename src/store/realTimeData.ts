@@ -17,7 +17,7 @@ const realTimeStore = defineStore("realTime", {
         startRealTimeData() {
       // let cookie =document.cookie.split('loginSysCookie=')[1].split('#').join('_')
           let auth=localStorage.getItem('Authorization') || ''
-          this.ws = new WebSocket(`ws://${import.meta.env.VITE_APP_BASE_WSURL}/websocket?token=${auth}`);
+          this.ws = new WebSocket(`${window.CONFIG_BASE_WS}?token=${auth}`);
           this.ws.onopen = () => {
               console.log('连接成功');
           };

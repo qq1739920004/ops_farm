@@ -721,6 +721,24 @@ function createPolygon(list: any) {
   });
   drawPolygon(polytrueData);
 }
+ function disablePopup() {
+      polygonArr.forEach(polygon => {
+        polygon.off('click'); // 移除点击事件
+        // 或者完全移除 popup
+        // polygon.unbindPopup();
+      });
+    }
+    
+    // 启用多边形弹窗
+    function enablePopup() {
+      polygonArr.forEach(polygon => {
+        polygon.on('click', function(e) {
+          e.target.openPopup();
+        });
+        // 或者重新绑定 popup
+        // polygon.bindPopup("这是一个多边形");
+      });
+    }
 const drawPolygon = (polytrueData: any) => {
   let pickPoints: any = [];
   polytrueData.map((item: any, index: any) => {
@@ -763,7 +781,7 @@ function createLine(list: any) {
           ABline.bindPopup(
             `  <div  style='cursor:pointer'   onclick='deleteLine(${
               ABline._leaflet_id
-            },${index})'>${t("work.delete")}${index}</div >`
+            },${index})'>${t("work.delete")}</div >`
           );
           ABlineArray.push(ABline);
         }
@@ -892,6 +910,7 @@ const mapClick = (event: any) => {
       try {
         setRangeStyle("grab");
         map.off("click", mapClick);
+        enablePopup()
       } catch (err) {
         console.log(err);
       }
@@ -903,6 +922,7 @@ const isDraw = ref(false);
 // 地图测距
 function mapRanging() {
   isDraw.value = true;
+  disablePopup()
   try {
     // @ts-ignore
     setRangeStyle("crosshair");

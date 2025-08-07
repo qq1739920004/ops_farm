@@ -96,13 +96,14 @@
           ></span>
           <span v-else>({{ $t("work.offline") }}) <span class="circle2"></span> </span>
         </div>
-        <div class="tit">{{ $t("work.drivingStatus") }}:</div>
-        <!-- 0:未自动驾驶 1：{{$t('work.goOnline')}} 2：{{$t('work.online')}} -->
+        <!-- <div class="tit">{{ $t("work.drivingStatus") }}:</div>
         <div class="data" v-if="NewDetail.driveState == 0">
           {{ $t("work.notAutonomousDriving") }}
-        </div>
-        <div class="data" v-if="NewDetail.driveState == 1">{{ $t("work.goOnline") }}</div>
-        <div class="data" v-if="NewDetail.driveState == 2">{{ $t("work.online") }}</div>
+        </div> -->
+        <div class="tit">{{ $t("work.daTianNum") }}:</div>
+        <div class="data">{{ NewDetail.imei }}</div>
+        <!-- <div class="data" v-if="NewDetail.driveState == 1">{{ $t("work.goOnline") }}</div>
+        <div class="data" v-if="NewDetail.driveState == 2">{{ $t("work.online") }}</div> -->
         <div class="tit">{{ $t("work.companyName") }}:</div>
         <div class="data">{{ NewDetail.companyName }}</div>
       </div>

@@ -56,12 +56,12 @@
         <el-form-item :label="$t('work.frontWheelSN')" prop="wheelImuSn">
           <el-input v-model="newRecords.wheelImuSn"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('devicelist.owner')" prop="userName">
+        <!-- <el-form-item :label="$t('devicelist.owner')" prop="userName">
           <el-input v-model="newRecords.userName"></el-input>
         </el-form-item>
         <el-form-item :label="$t('devicelist.tel')" prop="tel">
           <el-input v-model="newRecords.tel"></el-input>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
 
       <template #footer>
@@ -96,8 +96,8 @@ const props = defineProps({
       id: null,
       npn: "",
       sn: "",
-      tel: "",
-      userName: "",
+      // tel: "",
+      // userName: "",
       wheelImuSn: "",
       carImuSn: "",
       motorSn: "",

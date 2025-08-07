@@ -739,13 +739,13 @@ function date(date: any) {
 const uploadBack = (val: any) => {
   axios
     .post(
-      `${import.meta.env.VITE_APP_BASE_NGW}/lu/ftp/upload`,
+      `${window.CONFIG_NEW}/lu/ftp/upload`,
       { start: date(dateValue.value[0]), end: date(dateValue.value[1]), sn: val },
       { headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" } }
     )
     .then(() => {
       // ElMessage({ type: "success", message: "回传成功", duration: 1000 });
-    });
+    }); 
 };
 const closeRemoteAdjust = () => {
   workPattern.value.type = "3";

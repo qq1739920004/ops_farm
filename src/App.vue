@@ -9,15 +9,15 @@ import { ElConfigProvider } from "element-plus";
 import { nextTick } from "vue";
 import useAppStore from "@/store/app";
 import { useI18n } from "vue-i18n";
-
-const { t} = useI18n();
+import { getWSUrl_API } from "@/api/request/index";
+const { t } = useI18n();
 const isChangfa = import.meta.env.MODE === "changFa";
 nextTick(() => {
-  document.title = isChangfa ? "常发农装" : t('messages.systemName');
+  document.title = isChangfa ? "常发农装" : t("messages.systemName");
 });
 const appStore = useAppStore();
-const changeFavicon = (link:any) => {
-  let $favicon:any = document.querySelector('link[rel="icon"]');
+const changeFavicon = (link: any) => {
+  let $favicon: any = document.querySelector('link[rel="icon"]');
   if ($favicon !== null) {
     $favicon.href = link;
   } else {
@@ -27,6 +27,15 @@ const changeFavicon = (link:any) => {
     document.head.appendChild($favicon);
   }
 };
+const getWSUrl = async () => {
+  const { data } = await getWSUrl_API();
+  window.CONFIG_BASE_WS = data.CONFIG_BASE_WS;
+  window.CONFIG_DOWNLOAD_WS = data.CONFIG_DOWNLOAD_WS
+  window.CONFIG_NEW = data.CONFIG_NEW
+  console.log(window)
+};
+getWSUrl();
+
 //根据传递的参数修改Favicon
 const changeIco = () => {
   // 得到图标地址
@@ -38,7 +47,7 @@ const changeIco = () => {
   }
   changeFavicon(iconUrl);
 };
-changeIco()
+changeIco();
 </script>
 
 <style scoped lang="scss"></style>

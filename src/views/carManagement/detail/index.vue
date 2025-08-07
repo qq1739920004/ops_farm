@@ -220,7 +220,7 @@
               t("work.addPic")
             }}</el-button>
           </div>
-          <div class="addImg">{{ t("work.picLimit") }}</div>
+          <!-- <div class="addImg">{{ t("work.picLimit") }}</div> -->
         </div>
       </div>
       <template #footer>
@@ -350,12 +350,12 @@ const checkFileType = (file: any) => {
   const fileName = file.name;
   const fileType = fileName.substring(fileName.lastIndexOf("."));
   // jpeg,.png,.jpg,.bmp,.gif
-  if (fileType === ".png") {
-    // 不处理
-  } else {
-    ElMessage.error(t("work.plzImg") + "(.png)");
-    return false;
-  }
+  // if (fileType === ".png") {
+  //   // 不处理
+  // } else {
+  //   ElMessage.error(t("work.plzImg") + "(.png)");
+  //   return false;
+  // }
 };
 const Upload = () => {};
 const contentList: any = {

@@ -38,7 +38,7 @@ const current = ref(1)
 const pageSize = ref(10)
 const parentSn = route.query.sn
 const parentPid = route.query.pid
-const baseUrl = import.meta.env.VITE_APP_BASE_DOWNLOAD
+const baseUrl = window.CONFIG_DOWNLOAD_WS
 const loading = ref(false)
 const getFileList = async () => {
     loading.value = true;
@@ -47,7 +47,7 @@ const getFileList = async () => {
         size: pageSize.value,
         sn: parentSn
     }
-    axios.post(`${import.meta.env.VITE_APP_BASE_NGW}/lu/log/filesForSn`, postData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' } }).then((res: any) => {
+    axios.post(`${window.CONFIG_NEW}/lu/log/filesForSn`, postData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' } }).then((res: any) => {
         loading.value = false;
         fileListData.value = []
         fileListData.value.push({ isBack: true, name: '回传文件' })

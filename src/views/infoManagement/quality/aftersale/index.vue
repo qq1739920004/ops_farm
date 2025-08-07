@@ -116,22 +116,22 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item  :label="$t('devicelist.owner')+':'" label-width="125px" prop="username">
+                            <!-- <el-form-item  :label="$t('devicelist.owner')+':'" label-width="125px" prop="username">
                                 <el-input v-model="topvalue.wheelImuSn">
                                     <template #append>
                                         <el-button @click="changeWheelImuSnBtn(topvalue.username)"
                                             class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
-                            </el-form-item>
-                            <el-form-item  :label="$t('devicelist.tel')+':'" label-width="125px" prop="tel">
+                            </el-form-item> -->
+                            <!-- <el-form-item  :label="$t('devicelist.tel')+':'" label-width="125px" prop="tel">
                                 <el-input v-model="topvalue.antennaOne">
                                     <template #append>
                                         <el-button @click="changeAntennaOneBtn(topvalue.tel)"
                                             class="change_btn">{{$t('work.replace')}}</el-button>
                                     </template>
                                 </el-input>
-                            </el-form-item>
+                            </el-form-item> -->
                             <!-- <el-form-item  :label="$t('work.Antenna2_SN')+':'" label-width="125px" prop="antennaTwo">
                                 <el-input v-model="topvalue.antennaTwo">
                                     <template #append>

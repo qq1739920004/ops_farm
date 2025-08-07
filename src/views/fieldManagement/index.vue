@@ -9,6 +9,7 @@
       :boundariesID="boundariesID"
       :markerData="markerData"
       :nameList="nameList"
+      @clickId="clickId"
     />
 
     <div class="select_area">
@@ -138,7 +139,7 @@
         </el-row>
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.creator") }}:</el-col>
-          <el-col :span="12"> {{ fieldInfo.createTime }}</el-col>
+          <el-col :span="12"> {{ fieldInfo.creator }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.modifyTime") }}:</el-col>
@@ -160,7 +161,7 @@
               link
               type="primary"
               size="small"
-              @click="checkShare(fieldInfo.id)"
+              @click="checkShare(fieldInfo.id, fieldInfo.createType)"
               >{{ t("work.shareDevice") }}</el-button
             >
           </el-col>
@@ -168,8 +169,12 @@
       </div>
     </div>
     <el-dialog v-model="dialogVisible" :title="t('work.share')" center width="500px">
+      <div class="top_att" v-if="creatorType ===1">
+        {{ t("work.patAtt") }}
+      </div>
       <div class="dia_select">
         {{ t("work.shareDevice") }}:
+
         <el-select-v2
           style="width: 240px; margin-left: 10px"
           filterable
@@ -179,6 +184,7 @@
         >
         </el-select-v2>
       </div>
+
       <div class="dia_select1">
         <el-button type="primary" @click="shareCar(fieldInfo.id)">{{
           t("work.share")
@@ -292,7 +298,10 @@ const deleteFields = async (id: any) => {
     reReqList();
   } catch {}
 };
-const checkShare = async (id: any) => {
+// 1平台 2终端
+const creatorType = ref<any>(1);
+const checkShare = async (id: any, type: any) => {
+  creatorType.value = type;
   try {
     await share_API({ id: id });
     dialogVisible.value = true;
@@ -331,19 +340,20 @@ const getFieldData = async () => {
     const name = data.records.map((item: any) => {
       return item.name;
     });
-    const boundaries = data.records.map((item: any,index:any) => {
+    const boundaries = data.records.map((item: any, index: any) => {
       return {
         id: name[index],
         boundaries: item.boundaries,
+        clickId:item.id
       };
     });
-    const referenceLines = data.records.map((item: any,index:any) => {
+    const referenceLines = data.records.map((item: any, index: any) => {
       return {
         id: name[index],
         referenceLines: item.referenceLines,
       };
     });
-    const obstacles = data.records.map((item: any,index:any) => {
+    const obstacles = data.records.map((item: any, index: any) => {
       return {
         id: name[index],
         obstacles: item.obstacles,
@@ -361,6 +371,11 @@ getFieldData();
 //   boundariesID.value = [];
 //   choosenIndex.value = "";
 // };
+
+function clickId(index: any, id: any, boundaries: any){
+getBlock(index,id,boundaries)
+}
+
 function remoteMethod(e: any) {
   wordsSearch(e);
 }
@@ -407,7 +422,7 @@ getFarmList();
     top: 24px;
     z-index: 99999;
     :deep(.el-select__wrapper) {
-      background: url("@/assets/monitoring/inputBack.png") no-repeat center center;
+      background: url("@/assets/monitoring/inputBack.png") no-repeat center center; 
       background-size: 105% 105%;
       color: white;
     }
@@ -620,5 +635,9 @@ getFarmList();
   align-items: center;
   justify-content: center;
   margin-top: 40px;
+}
+.top_att {
+  color: red;
+  padding: 10px 50px;
 }
 </style>

@@ -7,6 +7,7 @@
           <div>{{ t("work.vehicleType") }}</div>
           <div class="select_area">
             <el-select
+              filterable
               v-model="terminalType"
               @change="changeType"
               :placeholder="$t('work.pleaseSelect')"
@@ -27,6 +28,7 @@
             <el-select
               v-model="value[index]"
               clearable
+              filterable
               multiple
               collapse-tags
               :placeholder="$t('work.pleaseSelect')"
@@ -47,6 +49,7 @@
             <el-select
               clearable
               multiple
+              filterable
               collapse-tags
               v-model="areaValue"
               :placeholder="$t('work.pleaseSelect')"
@@ -116,6 +119,7 @@
         >
           <el-form-item :label="$t('work.firmwareType')" prop="mid">
             <el-select
+              filterable
               v-model="newRecords.mid"
               @change="changeMid"
               :placeholder="$t('work.pleaseSelect')"
@@ -130,8 +134,10 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('work.firmwareVersion')" prop="version">
+          
             <el-select
               v-model="newRecords.version"
+              filterable
               style="width: 240px"
               :placeholder="$t('work.pleaseSelect')"
             >
@@ -139,7 +145,7 @@
                 v-for="(item, index) in firmwareList"
                 :key="index"
                 :label="item.filename"
-                :value="item"
+                :value="item.id"
               />
             </el-select>
           </el-form-item>
@@ -170,7 +176,7 @@ import {
 } from "@/api/machineryList/ungrade/index";
 
 const { t } = useI18n();
-const terminalOptions = ["AG502", "AG501Pro", "MT901D"];
+const terminalOptions = ["AG502", "AG501Pro", "MT901D", "SA1000"];
 let pageInfo = reactive<any>({
   key: "",
   currentPage: 1,
@@ -399,8 +405,10 @@ const getModel = async () => {
     num = 9008;
   } else if (terminalType.value === "AG501Pro") {
     num = 9018;
-  } else {
+  } else if (terminalType.value === "MT901D") {
     num = 9034;
+  } else {
+    num = 9036;
   }
   const res = await getmodelTitleList_API(num);
   nameList.value = res.data.map((item: any) => {
@@ -449,8 +457,15 @@ const confirmUpgrade = async () => {
   lis.map((item: any, index) => {
     value.value[index] ? (item.stringList = value.value[index]) : (item.stringList = []);
   });
+  let postValue:any
+   firmwareList.value.find((item: any) => {
+        if(item.id ===newRecords.value.version) {
+          postValue = item
+        }
+      })
+
   try {
-    const res = await modeUpgrade_API({
+   await modeUpgrade_API({
       modelPageDTO: {
         key: "",
         currentPage: pageInfo.currentPage,
@@ -463,11 +478,11 @@ const confirmUpgrade = async () => {
       snList: snList.value,
       updateModel: 9,
       upgradeWay: 0,
-      mid: newRecords.value.version.mid,
-      versionName: newRecords.value.version.versionName,
-      versionCode: newRecords.value.version.versionCode,
-      filepath: newRecords.value.version.filepath,
-      filesize: newRecords.value.version.filesize,
+      mid: postValue.mid,
+      versionName: postValue.versionName,
+      versionCode: postValue.versionCode,
+      filepath: postValue.filepath,
+      filesize: postValue.filesize,
     });
     ElMessage.success(t("work.upgradeSuccess"));
     dialogVisible.value = false;

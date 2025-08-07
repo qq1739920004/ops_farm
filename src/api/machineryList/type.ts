@@ -114,7 +114,8 @@ export interface carNewDetailObj {
     warrantyDate: string,
     netDate: string,
     satelliteDate: string,
-    p300Version: string
+    p300Version: string,
+    imei?:string
 
 
 }

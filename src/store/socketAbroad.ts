@@ -6,7 +6,7 @@ const useSocketStore = defineStore("socketAbroad", () => {
     let ws: any = null
     let socketData = ref({})
     function connect() {        
-        ws = new WebSocket(`${import.meta.env.VITE_APP_BASE_WSURL}/websocket?Authorization=${userStore.Authorization}&isAbroad=true`);
+        ws = new WebSocket(`${window.CONFIG_BASE_WS}?Authorization=${userStore.Authorization}&isAbroad=true`);
         ws.onopen = () => {
             console.warn('socket连接成功');
         };

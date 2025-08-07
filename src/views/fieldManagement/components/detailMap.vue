@@ -130,10 +130,10 @@ const props = defineProps({
       weight: 4,
     },
   },
-  nameList:{
-    type:Array,
-    default:[]
-  }
+  nameList: {
+    type: Array,
+    default: [],
+  },
 });
 let pickupMode: boolean = false; // 是否地图拾取模式
 let pickedPoints: any = [];
@@ -315,6 +315,9 @@ onMounted(() => {
   // createLine(props.lineData);
   handleMapCenter(props.mapCenter);
 });
+
+const emits = defineEmits(["clickId"]);
+
 // 删除全部
 function deleteAllMarkers() {
   ABlineArray.forEach((item: any) => {
@@ -622,16 +625,18 @@ function createPolygon(list: any) {
   if (list.length === 0) {
     return;
   }
+  console.log(list);
   polygonArr.forEach((item: any) => {
     item.remove();
   });
   polygonArr.length = 0;
   // 双重polylineData数组
   const polytrueData: any = [];
-  const nameData:any = []
-  
+  const nameData: any = [];
+  const clickIdData: any = [];
+  const boundariesData:any = []
   // 处理数据格式
-  list.map((item: any) =>  {
+  list.map((item: any) => {
     item.forEach((it: any) => {
       it.boundaries.forEach((inner: any, index: any) => {
         let innerList = inner.map((point: any) => {
@@ -639,16 +644,17 @@ function createPolygon(list: any) {
           return position;
         });
         polytrueData.push(innerList);
-        nameData.push(it.id)
+        nameData.push(it.id);
+        clickIdData.push(it.clickId);
+        boundariesData.push(it.boundaries)
       });
     });
-
   });
-  drawPolygon(polytrueData,nameData);
+  drawPolygon(polytrueData, nameData, clickIdData,boundariesData);
 }
-const drawPolygon = (polytrueData: any,nameData:any) => {
+const drawPolygon = (polytrueData: any, nameData: any, clickIdData: any,boundariesData:any) => {
   let pickPoints: any = [];
-  polytrueData.map((item: any,index:any) => {
+  polytrueData.map((item: any, index: any) => {
     pickPoints.push(item);
     var polygon = L.polygon(item, {
       color: "#83FFA4",
@@ -663,11 +669,13 @@ const drawPolygon = (polytrueData: any,nameData:any) => {
     L.marker(center, {
       icon: L.divIcon({
         className: "polygon-label",
-        html:
-         ` <div class="text-content" style="width:100px; padding: 5px">${nameData[index]}</div>`,
+        html: ` <div class="text-content" style="width:100px; padding: 5px">${nameData[index]}</div>`,
         iconSize: [32, 32], // 图标的大小 [宽度, 高度]
       }),
     }).addTo(map);
+    polygon.on("click", function (e) {
+      emits("clickId", index,clickIdData[index],boundariesData[index]);
+    });
     polygonArr.push(polygon);
   });
   map.fitBounds(pickPoints);
@@ -960,7 +968,7 @@ function mapZoomChange() {
     const currentSize = baseSize * Math.pow(1.0, zoom - 10); // 1.2为缩放因子
 
     // 更新所有可缩放文字
-    document.querySelectorAll(".text-content").forEach((el:any) => {
+    document.querySelectorAll(".text-content").forEach((el: any) => {
       el.style.fontSize = `${currentSize}px`;
     });
   });

@@ -1,0 +1,5 @@
+{
+    "CONFIG_BASE_WS": "wss://cloud.sinognss.com/websocket",
+    "CONFIG_DOWNLOAD_WS": "wss://cloud.sinognss.com",
+    "CONFIG_NEW": "https://cloud.sinognss.com/"
+}
