@@ -1,1 +1,0 @@
-import{_ as e,b as n,h as s,__tla as l}from"./index-56dfad53.js";let t,_=Promise.all([(()=>{try{return l}catch{}})()]).then(async()=>{const a={};function r(o,c){return s(),n("div")}t=e(a,[["render",r]])});export{_ as __tla,t as default};

@@ -242,7 +242,7 @@ import { useI18n } from "vue-i18n";
 import detailMap from "./components/detailMap.vue";
 import { statPage_API } from "@/api/inSight/index.ts";
 import {
-  detail_API, 
+  detail_API,
   uploadImg_API,
   getBindSnVO_API,
   updateVehicle_API,
@@ -254,7 +254,7 @@ import oil1 from "@/assets/common/oil.png";
 import speed from "@/assets/common/greSpeed.png";
 import frame from "@/assets/common/frame.png";
 import startCar from "@/assets/common/car.png";
-import carM from '@/assets/common/car.png'
+import carM from "@/assets/common/car.png";
 const { t } = useI18n();
 const detailList = ref<any>({});
 let markerData = ref<any>([]);
@@ -295,7 +295,7 @@ getDetailData();
 const trueImg = ref("");
 const uploadImg = async () => {
   if (!trueImg.value) {
-    return ElMessage.warning("请选择图片");
+    return ElMessage.warning(t("work.plzImg"));
   }
   let formDataE = new FormData();
   formDataE.append("file", trueImg.value);
@@ -373,10 +373,15 @@ const contentList: any = {
 };
 const editVehicles = async () => {
   await carFormRef.value.validate();
+  console.log(trueImg.value);
+  console.log(carParams.value.imageUrl.startsWith("blob:"));
+  if (trueImg.value && carParams.value.imageUrl.startsWith("blob:")) {
+    return ElMessage.warning(t("work.plzImg"));
+  }
   try {
     await updateVehicle_API(carParams.value);
     dialogVisible.value = false;
-    ElMessage.success(t("messages.editSuccess"));
+    ElMessage.success(t("work.editSuccess"));
     getDetailData();
   } catch {}
 };

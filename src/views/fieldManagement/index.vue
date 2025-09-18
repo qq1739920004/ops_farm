@@ -83,15 +83,20 @@
           :class="index === choosenIndex ? 'chooseLi' : ''"
           @click.stop="getBlock(index, item.id, item.boundaries)"
         >
+          <div style=""><leftMap :polygon-data="item.boundaries"  :mapCenter="mapCenter" :map-key="item.id" /></div>
           <div class="left">
             <div class="top">
-              <img src="@/assets/common/filed.png" alt="" /> {{ item.name }}
+              <img src="@/assets/common/filed.png" alt="" />
+              <div class="trun_area">
+                <TruncatedString :text="item.name" :maxLength="4" />
+              </div>
+              <div v-if="item.shared" class="shared_area">{{ t("work.isShared") }}</div>
+              <div v-else class="unshared_area">{{ t("work.noShared") }}</div>
             </div>
             <div class="bottom">
               {{ item.creator || "--" }} | {{ item.modifier || "--" }}
             </div>
-            <div v-if="item.shared" class="shared_area">{{ t("work.isShared") }}</div>
-            <div v-else class="unshared_area">{{ t("work.noShared") }}</div>
+
             <div class="arrow_area">
               <img src="@/assets/common/rightArrow.png" alt="" />
             </div>
@@ -169,7 +174,7 @@
       </div>
     </div>
     <el-dialog v-model="dialogVisible" :title="t('work.share')" center width="500px">
-      <div class="top_att" v-if="creatorType ===1">
+      <div class="top_att" v-if="creatorType === 1">
         {{ t("work.patAtt") }}
       </div>
       <div class="dia_select">
@@ -197,6 +202,7 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import detailMap from "./components/detailMap.vue";
+import leftMap from "./components/leftMap.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { gcoordLngLat } from "sino-tool-v3";
 import {
@@ -344,7 +350,7 @@ const getFieldData = async () => {
       return {
         id: name[index],
         boundaries: item.boundaries,
-        clickId:item.id
+        clickId: item.id,
       };
     });
     const referenceLines = data.records.map((item: any, index: any) => {
@@ -372,8 +378,8 @@ getFieldData();
 //   choosenIndex.value = "";
 // };
 
-function clickId(index: any, id: any, boundaries: any){
-getBlock(index,id,boundaries)
+function clickId(index: any, id: any, boundaries: any) {
+  getBlock(index, id, boundaries);
 }
 
 function remoteMethod(e: any) {
@@ -418,11 +424,11 @@ getFarmList();
 
   .select_area {
     position: absolute;
-    left: 284px;
+    left: 374px;
     top: 24px;
     z-index: 99999;
     :deep(.el-select__wrapper) {
-      background: url("@/assets/monitoring/inputBack.png") no-repeat center center; 
+      background: url("@/assets/monitoring/inputBack.png") no-repeat center center;
       background-size: 105% 105%;
       color: white;
     }
@@ -464,8 +470,7 @@ getFarmList();
 .info_box {
   position: absolute;
   top: 72px;
-  left: 284px;
-
+  left: 374px;
   width: 264px;
   padding: 4px 8px;
   background-color: rgba(16, 34, 15, 0.68);
@@ -489,7 +494,7 @@ getFarmList();
   top: 10px;
   left: 10px;
   height: 735px;
-  width: 264px;
+  width: 354px;
   padding: 4px;
   background-color: rgba(16, 34, 15, 0.68);
   color: #fff;
@@ -519,11 +524,11 @@ getFarmList();
   margin: 0;
 }
 .infinite-list .infinite-list-item {
-  padding: 0 5%;
+  padding: 0 2% 0 1%;
   cursor: pointer;
   display: flex;
   align-items: center;
-  height: 70px;
+  height: 80px;
   width: 100%;
   border-bottom: 2px solid;
   border-image: linear-gradient(
@@ -534,9 +539,11 @@ getFarmList();
     )
     1;
 }
+
 .infinite-list .infinite-list-item + .list-item {
   margin-top: 10px;
 }
+
 .list_line {
   display: flex;
   img {
@@ -553,7 +560,7 @@ getFarmList();
       cursor: pointer;
       position: absolute;
       top: calc(50% - 11px);
-      right: -3px;
+      right: -23px;
       z-index: 999999;
       img {
         width: 14px;
@@ -566,8 +573,7 @@ getFarmList();
       // border: 1px solid rgba(160, 176, 172, 1);
       color: rgba(160, 176, 172, 1);
       border-radius: 10px;
-      position: absolute;
-      right: 35px;
+
       top: calc(50% - 11px);
       display: flex;
       height: 22px;
@@ -579,8 +585,7 @@ getFarmList();
       // border: 1px solid rgba(54, 177, 110, 1);
       color: rgba(54, 177, 110, 1);
       border-radius: 10px;
-      position: absolute;
-      right: 35px;
+
       top: calc(50% - 11px);
       display: flex;
       height: 22px;
@@ -639,5 +644,14 @@ getFarmList();
 .top_att {
   color: red;
   padding: 10px 50px;
+}
+.trun_area {
+  display: flex;
+  align-items: center;
+  width: 60px;
+}
+.map_left {
+  width: 180px;
+  height: 80px;
 }
 </style>

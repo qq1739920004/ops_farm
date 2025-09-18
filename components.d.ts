@@ -19,5 +19,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SinoMap: typeof import('./src/components/SinoMap/index.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon/index.vue')['default']
+    TruncatedString: typeof import('./src/components/TruncatedString/TruncatedString.vue')['default']
   }
 }

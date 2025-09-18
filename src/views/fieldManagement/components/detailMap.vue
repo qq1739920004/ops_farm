@@ -625,7 +625,6 @@ function createPolygon(list: any) {
   if (list.length === 0) {
     return;
   }
-  console.log(list);
   polygonArr.forEach((item: any) => {
     item.remove();
   });
