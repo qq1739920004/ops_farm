@@ -48,14 +48,14 @@
           <template #default="scope">
             <div class="operation-buttons">
               <el-button type="primary" text @click="editFarm(scope.row.id)">{{ t("work.edit") }}</el-button>
-              <el-button type="primary" text @click="">{{
+              <el-button type="primary" text @click="gotoDetails(scope.row.id)">{{
                 t("devicelist.details")
               }}</el-button>
               <el-button type="primary" text @click="">{{ t("work.delete") }}</el-button>
               <el-button
                 :style="
                   locale == 'en'
-                    ? 'width: 85px'
+                    ? 'width: 85px' 
                     : locale == 'jp'
                     ? 'width:95px'
                     : 'width:65px'
@@ -128,7 +128,14 @@ const newFarm = () => {
   router.push({
     path: "farmManagement/newFarm",
   });
-};
+};const gotoDetails = (id:any) => {
+    router.push({
+    path: "farmManagement/details",
+    query:{
+      id:id
+    }
+  });
+}
 const editFarm = (id:any) => {
     router.push({
     path: "farmManagement/editFarm",

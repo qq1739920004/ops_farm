@@ -31,23 +31,28 @@
       >
         <el-form-item :label="t('work.farmName')" prop="name">
           <div class="select_inner">
-            <el-input style="width: 200px" v-model="fieldList.name"></el-input>
+            <el-input style="width: 200px" v-model="fieldList.name" disabled></el-input>
           </div>
         </el-form-item>
 
         <el-form-item :label="t('farm.farmIntro')" prop="farmIntro">
-          <el-input style="width: 200px" v-model="fieldList.farmIntro"></el-input>
+          <el-input
+            style="width: 200px"
+            v-model="fieldList.farmIntro"
+            disabled
+          ></el-input>
         </el-form-item>
         <el-form-item :label="t('work.address')" prop="address">
-          <el-input style="width: 200px" v-model="fieldList.address"></el-input>
+          <el-input style="width: 200px" v-model="fieldList.address" disabled></el-input>
         </el-form-item>
         <el-form-item :label="t('work.remark')" prop="remark">
-          <el-input style="width: 200px" v-model="fieldList.remark"></el-input>
+          <el-input style="width: 200px" v-model="fieldList.remark" disabled></el-input>
         </el-form-item>
         <el-form-item label="系统图片" prop="systemLogo">
           <div class="uploadImg_area">
             <div class="image_area">
               <el-upload
+                disabled
                 class="avatar-uploader"
                 action=""
                 :http-request="Upload"
@@ -73,11 +78,6 @@
                   </div>
                 </template>
               </el-upload>
-              <div class="addImg">
-                <el-button type="primary" @click="uploadImg">{{
-                  t("work.addPic")
-                }}</el-button>
-              </div>
             </div>
 
             <!-- <div class="addImg">{{ t('work.picLimit') }}</div> -->
@@ -87,6 +87,7 @@
           <div class="uploadImg_area">
             <div class="image_area">
               <el-upload
+                disabled
                 class="avatar-uploader"
                 action=""
                 :http-request="Upload"
@@ -115,22 +116,12 @@
                   </div>
                 </template>
               </el-upload>
-              <div class="addImg">
-                <el-button type="primary" @click="uploadImg2">{{
-                  t("work.addPic")
-                }}</el-button>
-              </div>
             </div>
 
             <!-- <div class="addImg">{{ t('work.picLimit') }}</div> -->
           </div>
         </el-form-item>
       </el-form>
-      <div class="btn_area">
-        <el-button type="primary" @click="editField">
-          {{ t("farm.editFarm") }}
-        </el-button>
-      </div>
     </div>
     <div class="select_area">
       <el-select
@@ -457,10 +448,7 @@ const gotoback = () => {
   cursor: pointer;
 }
 
-.upload-btn:hover {
-  border-color: #409eff;
-  background-color: #f0f7ff;
-}
+
 .addImg {
   margin-left: 15px;
   z-index: 99999;

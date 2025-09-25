@@ -642,7 +642,9 @@ const zh = {
   farm:{
     enterDp:'进入大屏',
     PicMgt:'图层管理',
-    farmIntro:'农场简介'
+    farmIntro:'农场简介',
+    newFarm:'新建农场',
+    editFarm:'编辑农场'
   }
 }
 export default zh
