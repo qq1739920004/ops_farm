@@ -428,6 +428,28 @@ const deleteDraw = () => {
 let polyGonArray: any = [];
 const isEdit = ref(false);
 const pointsArray = ref<any>([]);
+const polygons = ref([]);
+// 禁用所有多边形交互
+const disablePolygonsInteraction = () => {
+  polygons.value.forEach((polygon) => {
+    polygon.setStyle({ interactive: false });
+    // Leaflet原生方法：通过设置鼠标事件穿透
+    if (polygon._path) {
+      polygon._path.style.pointerEvents = "none";
+    }
+  });
+};
+
+// 启用所有多边形交互
+const enablePolygonsInteraction = () => {
+  polygons.value.forEach((polygon) => {
+    polygon.setStyle({ interactive: true });
+    if (polygon._path) {
+      polygon._path.style.pointerEvents = "auto";
+    }
+  });
+};
+
 function drawPolygons() {
   points = [];
   isEdit.value = true;
@@ -436,6 +458,7 @@ function drawPolygons() {
     fillColor: "#4CB04F",
     fillOpacity: 0.44,
   }).addTo(map);
+  polygons.value.push(polygon);
   map.off("dblclick"); //首次绘制时取消默认双击放大地图事件
   map.on("click", onClick);
   function onClick(e) {
@@ -935,6 +958,7 @@ const mapClick = (event: any) => {
       try {
         setRangeStyle("grab");
         map.off("click", mapClick);
+        enablePolygonsInteraction()
       } catch (err) {
         console.log(err);
       }
@@ -949,6 +973,7 @@ function mapRanging() {
   try {
     // @ts-ignore
     setRangeStyle("crosshair");
+    disablePolygonsInteraction()
     map.on("click", mapClick);
   } catch (err) {
     console.log(err);

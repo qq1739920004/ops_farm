@@ -329,7 +329,7 @@ onMounted(() => {
 
   // createLine(props.lineData);
   handleMapCenter(props.mapCenter);
-  if (props.ggaData) {
+  if (props.ggaData.length>0) {
     handleGGaData(props.ggaData);
   }
 });

@@ -134,7 +134,8 @@ const en = {
     landManage: 'Land Mgt',
     taskManagement:'Task Mgt',
     VehicleManagement:'Vehicle Mgt',
-    FieldManagement:'Field Plot Mgt'
+    FieldManagement:'Field Plot Mgt',
+    FarmManagement:'Farm Mgt'
   },
   devicelist: {
     owner: 'Owner',

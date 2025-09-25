@@ -130,3 +130,10 @@ export function import_API() {
         responseType: 'blob',
     })
 }
+export function pageList_API(params:any){
+    return request<any,any>({
+        url:'/farm/farm-base/page',
+        method:'get',
+        params
+    })
+}

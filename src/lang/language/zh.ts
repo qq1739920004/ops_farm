@@ -134,7 +134,8 @@ const zh = {
     landManage: '地块管理',
     taskManagement:'任务管理',
     VehicleManagement:'车辆管理',
-     FieldManagement: '田块管理'
+     FieldManagement: '田块管理',
+     FarmManagement:'农场管理'
   },
   devicelist: {
     owner: '车主姓名',
@@ -638,6 +639,10 @@ const zh = {
     Export: '导出数据',
     lineData: '折线图'
   },
-
+  farm:{
+    enterDp:'进入大屏',
+    PicMgt:'图层管理',
+    farmIntro:'农场简介'
+  }
 }
 export default zh

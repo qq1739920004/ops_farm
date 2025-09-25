@@ -134,7 +134,8 @@ const jp = {
     landManage: 'プロット管理',
     taskManagement: 'タスク管理',
     VehicleManagement: '車両管理',
-    FieldManagement: '田区管理'
+    FieldManagement: '田区管理',
+     FarmManagement:'農場管理'
 
   },
   devicelist: {

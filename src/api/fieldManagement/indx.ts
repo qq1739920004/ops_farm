@@ -29,6 +29,13 @@ export function block_API(params: any) {
         params
     })
 }
+export function farmDetail_API(params: any) {
+    return request<any, any>({
+        url: '/farm/farm-base/detail',
+        method: 'get',
+        params
+    })
+}
 
 export function addBlock_API(data: any) {
     return request<any, any>({
@@ -37,7 +44,13 @@ export function addBlock_API(data: any) {
         data
     })
 }
-
+export function addFarm_API(data: any) {
+    return request<any, any>({
+        url: '/farm/farm-base/add',
+        method: 'post',
+        data
+    })
+}
 export function deleteBlock_API(params: any) {
     return request<any, any>({
         url: '/farm/block/deleteBlock',
@@ -49,6 +62,12 @@ export function deleteBlock_API(params: any) {
 export function updateBlock_API(data: any) {
     return request<any, any>({
         url: '/farm/block/updateBlock',
+        method: 'PUT',
+        data
+    })
+} export function updateFarm_API(data: any) {
+    return request<any, any>({
+        url: '/farm/farm-base/update',
         method: 'PUT',
         data
     })

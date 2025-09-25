@@ -128,7 +128,7 @@
       <div class="info_line">
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8">
-            {{ t("work.allArea") + "(m²)" }}:</el-col
+            {{ t("work.allArea") + "(mu)" }}:</el-col
           >
           <el-col :span="12"> {{ fieldInfo.area }}</el-col>
         </el-row>
