@@ -3,7 +3,7 @@
 // const app = createApp(App)
 
 import '@/styles/index.scss'
-import '@/views/perception/perception.scss'
+import '@/views/machineMgt/perception/perception.scss'
 // 本地SVG图标
 import 'virtual:svg-icons-register';
 

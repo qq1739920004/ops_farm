@@ -4,7 +4,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 export const constantRoutes = [ 
   {
     path: '/perception',
-    component: () => import("@/views/perception/index.vue"),
+    component: () => import("@/views/machineMgt/perception/index.vue"),
     hidden: false,
 
   },

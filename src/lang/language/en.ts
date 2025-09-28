@@ -108,6 +108,7 @@ const en = {
     userCenter: 'User Center',
     logOut: 'Log Out',
     machineryList: "Device Mgmt.",
+    machinerySituation:'Device Overview',
     jobList: 'Task List',
     projectMan: 'Task Mgmt.',
     qualityMgt: 'Warranty Mgmt.',

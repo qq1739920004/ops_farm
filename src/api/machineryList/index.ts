@@ -137,3 +137,11 @@ export function pageList_API(params:any){
         params
     })
 }
+
+export function deleteFarm_API(params:any){
+    return request<any,any>({
+        url:'/farm/farm-base/delete',
+        method:'delete',
+        params
+    })
+}

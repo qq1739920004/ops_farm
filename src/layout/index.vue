@@ -14,7 +14,25 @@
               color="#fff"
               size="24"
             />
-           
+            <div class="route_select">
+              <div v-if="showSelect" class="select-container">
+                <el-select
+                  v-if="dataReady"
+                  style="width: 200px"
+                  v-model="selectedValue"
+                  placeholder="请选择农场"
+                  clearable
+                >
+                  <el-option
+                    v-for="farm in selectOptions"
+                    :key="farm.id"
+                    :value="farm.id"
+                    :label="farm.name"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
           </div>
 
           <Navbar />
@@ -40,12 +58,7 @@
   <div v-if="appStore.device == 'mobile'" class="app-layout-mobile">
     <el-container>
       <el-header height="50px">
-        <SvgIcon
-          @click="changeDrawerVisible"
-          icon="exit-fold"
-          color="#fff"
-          size="24"
-        />
+        <SvgIcon @click="changeDrawerVisible" icon="exit-fold" color="#fff" size="24" />
         <Navbar />
       </el-header>
       <el-main> <AppMain /></el-main>
@@ -57,21 +70,48 @@
 </template>
 
 <script setup lang="ts">
-import { watchEffect, ref } from "vue";
+import { watchEffect, ref, watch, onMounted } from "vue";
 import SlideBar from "./components/SlideBar/index.vue";
 import Navbar from "./components/Navbar.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import Breadcrumb from "./components/Breadcrumb/index.vue";
+import { farmList_API } from "@/api/fieldManagement/indx";
 import AppMain from "./components/AppMain.vue";
 import { useWindowSize } from "@vueuse/core";
 import useAppStore from "@/store/app";
 // import usePermissionStore from "@/store/permission";
 // const permissionStore = usePermissionStore();
-
+import { useRoute } from "vue-router";
+import { useStorage } from "@vueuse/core";
+onMounted(() => {
+  getFarmList();
+});
+const selectedValue = useStorage('farmId', '', localStorage, {
+  serializer: {
+    read: (v) => {
+      if (v === '' || v === null || v === undefined) return ''
+      const num = Number(v)
+      return isNaN(num) ? '' : num
+    },
+    write: (v) => {
+      if (v === '' || v === null || v === undefined) return ''
+      return String(v)
+    }
+  }
+})
+const dataReady = ref(false);
+// 在组件或组合式函数中
+const route = useRoute();
 const appStore = useAppStore();
 const { width } = useWindowSize();
 const WIDTH = 750;
+const showSelect = ref(false); // 是否显示单选框
+const selectOptions = ref<any>([]);
 
+// 检查路由是否以 smartFarm 开头
+const checkRoute = () => {
+  showSelect.value = route.path.startsWith("/smartFarm");
+};
 let drawerVisible = ref(false);
 let collapse = ref(false);
 
@@ -83,6 +123,23 @@ watchEffect(() => {
     appStore.updateDevice("desktop");
   }
 });
+watch(
+  () => route.path,
+  () => {
+    checkRoute();
+  },
+  { deep: true }
+);
+async function getFarmList() {
+  try {
+    const { data } = await farmList_API();
+    selectOptions.value = data;
+    setTimeout(() => {
+    dataReady.value = true;
+  }, 10);
+  } catch {}  
+}
+checkRoute();
 
 function changeDrawerVisible() {
   drawerVisible.value = !drawerVisible.value;
@@ -143,5 +200,18 @@ function changeCollapse() {
 .el-main {
   height: 100%;
   padding: 0;
+}
+.route_select {
+  color: #fff;
+}
+
+.select-container {
+  :deep(.el-select__wrapper) {
+    background-color: transparent;
+    color: #fff;
+  }
+  :deep(.el-select__selected-item) {
+    color: #fff;
+  }
 }
 </style>

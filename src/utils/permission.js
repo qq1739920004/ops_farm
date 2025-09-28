@@ -66,8 +66,8 @@ function formatRoute(menuPermissions) {
       //   };
       // }
     } else {
-      // 1737删除
-      if(item.children[2]){
+      // 1737删除 告警统计
+      if(item.children[2] &&item.children[2].id =='1737'){
         item.children.splice(2,1)
       }
       item.component = Layout;

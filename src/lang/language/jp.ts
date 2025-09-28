@@ -109,6 +109,7 @@ const jp = {
     userCenter: 'ユーザーセンター',
     logOut: '「ログアウト',
     machineryList: '農業機械管理',
+     machinerySituation:'農業機械概要',
     projectMgt: 'ジョブ管理',
     jobList: 'ジョブのリスト',
     projectMan: 'ジョブ管理',

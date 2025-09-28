@@ -108,6 +108,7 @@ const zh = {
     monitoring: '态势监控',
     userCenter: '用户中心',
     logOut: '退出登录',
+    machinerySituation:'农机概况',
     machineryList: '农机管理',
     projectMgt: '作业管理',
     jobList: '作业列表',
@@ -134,7 +135,7 @@ const zh = {
     landManage: '地块管理',
     taskManagement:'任务管理',
     VehicleManagement:'车辆管理',
-     FieldManagement: '田块管理',
+     FieldManagement: '地块管理',
      FarmManagement:'农场管理'
   },
   devicelist: {
@@ -644,7 +645,12 @@ const zh = {
     PicMgt:'图层管理',
     farmIntro:'农场简介',
     newFarm:'新建农场',
-    editFarm:'编辑农场'
+    editFarm:'编辑农场',
+    deleteFarm:'确认删除此农场吗',
+    notSet:'不设置',
+    set:'设置',
+    plzFarmId:'请选择归属农场',
+    color:'颜色'
   }
 }
 export default zh
