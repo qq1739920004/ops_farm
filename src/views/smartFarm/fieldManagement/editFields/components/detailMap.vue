@@ -478,6 +478,7 @@ const pointsArray = ref<any>([]);
 function drawPolygons() {
   points = [];
   isEdit.value = true;
+  
   // @ts-ignore
   polygon = new L.polygon(points, {
     color: "#83FFA4",
@@ -534,6 +535,10 @@ function drawPolygons() {
       fillColor: '#83FFA4',
       fillOpacity: 0.44,
     }).addTo(map);
+    setTimeout(() => {
+      offDraw();
+    }, 10);
+   
   }
 }
 function calculateDistance(lat1: any, lng1: any, lat2: any, lng2: any) {

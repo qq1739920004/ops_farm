@@ -122,19 +122,12 @@
                 class="time-picker"
               />
 
-              <!-- 作物选择 -->
-              <el-select
+              <el-cascader
                 v-model="crop.cropDictId"
-                placeholder="请选择作物"
-                class="crop-select"
-              >
-                <el-option
-                  v-for="item in cropOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
+                :options="cropOptions"
+                :props="cascaderProps"
+                clearable
+              />
 
               <!-- 删除按钮（至少保留一项） -->
               <el-button
@@ -189,6 +182,7 @@
     <detail-map
       ref="sinoMapRef"
       :mapCenter="mapCenter"
+      :polygonData="polygonData"
       @areaValue="getArea"
       @lengthValue="getLength"
       @boundries="getBoundaries"
@@ -198,20 +192,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, watch, reactive } from "vue";
 import detailMap from "./components/detailMap.vue";
 import router from "@/router";
 import { useI18n } from "vue-i18n";
 import { useStorage } from "@vueuse/core";
+import { useRoute } from "vue-router";
 const { t } = useI18n();
-import { farmList_API, addBlock_API, suggest_API } from "@/api/fieldManagement/indx";
+const route = useRoute();
+import {
+  farmList_API,
+  addBlock_API,
+  suggest_API,
+  farmDetail_API,
+  sysDict_API,
+} from "@/api/fieldManagement/indx";
 import { gcoordLngLat } from "sino-tool-v3";
 import { ElMessage } from "element-plus";
-
+const polygonData = ref<any>([]);
 const words = ref(null);
 const formRef = ref<any>();
 const farmList = ref<any>([]);
 const isSHowColorPicker = ref(false);
+
+const getDetails = async () => {
+  const { data } = await farmDetail_API({ id: fieldList.farmId });
+
+  const boundaries = JSON.parse(data.locationContour).map((item: any) => {
+    return {
+      id: route.query.id,
+      boundaries: item,
+    };
+  });
+
+  polygonData.value[0] = boundaries;
+  console.log(polygonData.value);
+};
 
 const mapCenter = ref<any>({
   markerId: null,
@@ -219,6 +235,13 @@ const mapCenter = ref<any>({
   zoom: 4,
 });
 const remoteOptions = ref<any>([]);
+
+const cascaderProps = {
+  value: "id", // 指定 value 对应的字段名
+  label: "bizValue", // 指定 label 对应的字段名
+  children: "children", // 指定子节点对应的字段名（默认就是children，可省略）,
+  checkStrictly: true,
+};
 // 关键字查询
 async function wordsSearch(e: any) {
   if (e) {
@@ -228,13 +251,14 @@ async function wordsSearch(e: any) {
     }
   }
 }
-const cropOptions = [
-  { label: "小麦", value: "wheat" },
-  { label: "玉米", value: "corn" },
-  { label: "水稻", value: "rice" },
-  { label: "大豆", value: "soybean" },
-  { label: "棉花", value: "cotton" },
-];
+const cropOptions = ref<any>([]);
+const getCropArray = async () => {
+  const { data } = await sysDict_API({
+    dicKey: "crop_type",
+  });
+  cropOptions.value = data;
+};
+getCropArray();
 function remoteMethod(e: any) {
   wordsSearch(e);
 }
@@ -277,6 +301,14 @@ const fieldList = reactive({
   boundaries: [],
   obstacles: [],
 });
+getDetails();
+watch(
+  () => fieldList.farmId,
+  () => {
+    getDetails();
+  }
+);
+
 function handleSelectBranchCom(e: any) {
   if (e) {
     const a = remoteOptions.value.find((item: any) => {
@@ -335,22 +367,26 @@ const addField = async () => {
     params.push({
       plantingEndTime: item.timeRange[1],
       plantingStartTime: item.timeRange[0],
-      cropDictId: item.cropDictId
+      cropDictId: item.cropDictId[item.cropDictId.length - 1],
     });
   });
   let uploadParams = {
-    farmId:fieldList.farmId,
+    farmId: fieldList.farmId,
     name: fieldList.name,
     perimeter: fieldList.perimeter,
-    color: fieldList.color || '#83FFA4',
+    color: fieldList.color || "#83FFA4",
     area: fieldList.area,
     description: fieldList.description,
     referenceLines: fieldList.referenceLines,
-    crops: params,
+    blockCrops: params,
     boundaries: fieldList.boundaries,
-    obstacles: params.obstacles,
+    obstacles: fieldList.obstacles,
   };
+  try {
     await addBlock_API(uploadParams);
+    ElMessage.success(t("messages.addSuccess"));
+    router.go(-1);
+  } catch {}
 };
 async function getFarmList() {
   const { data } = await farmList_API();

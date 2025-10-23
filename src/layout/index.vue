@@ -21,7 +21,7 @@
                   style="width: 200px"
                   v-model="selectedValue"
                   placeholder="请选择农场"
-                  clearable
+                 
                 >
                   <el-option
                     v-for="farm in selectOptions"
@@ -134,6 +134,7 @@ async function getFarmList() {
   try {
     const { data } = await farmList_API();
     selectOptions.value = data;
+    selectedValue.value = selectOptions.value[0].id
     setTimeout(() => {
     dataReady.value = true;
   }, 10);

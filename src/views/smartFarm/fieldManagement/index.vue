@@ -9,6 +9,7 @@
       :boundariesID="boundariesID"
       :markerData="markerData"
       :nameList="nameList"
+      :colorList="colorList"
       @clickId="clickId"
     />
 
@@ -129,18 +130,23 @@
               :polygon-data="item.boundaries"
               :mapCenter="mapCenter"
               :map-key="item.id"
+              :color="colorList[index]"
+              :init-delay="index * 10"
             />
           </div>
           <div class="left">
             <div class="top">
               <!-- <img src="@/assets/common/filed.png" alt="" /> -->
               <div class="trun_area">
-                <TruncatedString :text="item.name" :maxLength="4" />
+                <TruncatedString :text="item.name" :maxLength="18" />
               </div>
               <!-- <div v-if="item.shared" class="shared_area">{{ t("work.isShared") }}</div>
               <div v-else class="unshared_area">{{ t("work.noShared") }}</div> -->
+              <!-- <div class="unshared_area">
+                {{ t("statisticsReport.thousandArea") }}:
+              </div> -->
               <div class="unshared_area">
-                {{ t("statisticsReport.thousandArea") }}:{{ item.area.toFixed(2) || "" }}
+                {{ item.area ? item.area.toFixed(2) : 0 }}{{ t('work.are') }}
               </div>
             </div>
             <div class="bottom">
@@ -202,23 +208,27 @@
         </el-row>
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.modifier") }}:</el-col>
-          <el-col :span="12"> {{ fieldInfo.modifier }}</el-col>
+          <el-col  :span="12"> {{ fieldInfo.modifier }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.describe") }}:</el-col>
-          <el-col :span="12"> {{ fieldInfo.description }}</el-col>
+          <el-col class="wrap-col" :span="12"> {{ fieldInfo.description }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.address") }}:</el-col>
           <el-col :span="12">
             {{ fieldInfo.address }}
-            <el-button
+            <!-- <el-button
               link
               type="primary"
               size="small"
               @click="checkShare(fieldInfo.id, fieldInfo.createType)"
               >{{ t("work.shareDevice") }}</el-button
-            >
+            > -->
+            <div style="display: flex">
+              <el-button link type="primary" size="small">分享边界</el-button>
+              <el-button link type="primary" size="small">分享作业线</el-button>
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -277,6 +287,7 @@ const markerData = ref<any>([]);
 const choosenIndex = ref<any>("");
 const polygonData = ref<any>([]);
 const nameList = ref<any>([]);
+const colorList = ref<any>([]);
 const boundariesID = ref<any>([]);
 const loading = ref(false);
 const fieldInfo = ref<any>({});
@@ -299,8 +310,9 @@ const pageInfo = reactive<any>({
   keyword: "",
   farmId: useStorage("farmId", ""),
   currentPage: 1,
-  pageSize: 9,
+  pageSize: 900,
 });
+
 watch(
   () => pageInfo.farmId,
   () => {
@@ -310,7 +322,7 @@ watch(
 );
 const reReqList = () => {
   pageInfo.currentPage = 1;
-  pageInfo.pageSize = 9;
+  pageInfo.pageSize = 900;
   fieldList.value = [];
   loading.value = false;
   choosenIndex.value = "";
@@ -319,6 +331,7 @@ const reReqList = () => {
   infoShow.value = false;
   polygonData.value = [];
   nameList.value = [];
+  colorList.value = [];
   lineData.value = [];
   markerData.value = [];
   getFieldData();
@@ -418,6 +431,9 @@ const getFieldData = async () => {
     const name = data.records.map((item: any) => {
       return item.name;
     });
+    const color = data.records.map((item: any) => {
+      return item.color;
+    });
     const boundaries = data.records.map((item: any, index: any) => {
       return {
         id: name[index],
@@ -441,6 +457,7 @@ const getFieldData = async () => {
     polygonData.value.push(boundaries);
     lineData.value.push(referenceLines);
     markerData.value.push(obstacles);
+    colorList.value.push(...color);
   }
 };
 getFieldData();
@@ -673,7 +690,6 @@ async function wordsSearch(e: any) {
     .top {
       height: 50%;
       width: 85%;
-      display: flex;
       align-items: center;
     }
     .bottom {
@@ -787,11 +803,21 @@ async function wordsSearch(e: any) {
 }
 
 .dropdown-item:hover {
-  background-color: #f5f7fa;
+  background-color: #f5f7fa; 
 }
 
 .item-icon {
   margin-right: 8px;
   font-size: 16px;
+}
+.wrap-col {
+  /* 确保容器有明确宽度（el-col 通常由 span 控制，可省略） */
+  width: 100%;
+  /* 强制文本换行（默认 normal 即可，但如果被覆盖需显式设置） */
+  white-space: normal;
+  /* 可选：当单词过长时强制拆分换行（针对英文/数字） */
+  word-break: break-all; /* 或 break-word */
+  /* 可选：添加边框便于观察 */
+  
 }
 </style>

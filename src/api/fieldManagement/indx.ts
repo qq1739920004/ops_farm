@@ -110,4 +110,10 @@ export function taskDetail_API(params: any) {
     })
 }
 
-
+export function sysDict_API(params: any) {
+    return request<any, any>({
+        url:`/farm/sysDict/tree`,
+        method: 'get',
+        params
+    })
+}

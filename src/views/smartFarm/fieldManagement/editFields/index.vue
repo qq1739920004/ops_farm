@@ -124,19 +124,12 @@
                 class="time-picker"
               />
 
-              <!-- 作物选择 -->
-              <el-select
+              <el-cascader
                 v-model="crop.cropDictId"
-                placeholder="请选择作物"
-                class="crop-select"
-              >
-                <el-option
-                  v-for="item in cropOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
+                :options="cropOptions"
+                :props="cascaderProps"
+                clearable
+              />
 
               <!-- 删除按钮（至少保留一项） -->
               <el-button
@@ -197,6 +190,7 @@
       :lineData="lineData"
       :markerData="markerData"
       :color="fieldList.color"
+      
       @areaValue="getArea"
       @lengthValue="getLength"
       @boundries="getBoundaries"
@@ -218,7 +212,7 @@ const route = useRoute();
 const { t } = useI18n();
 import {
   farmList_API,
-  addBlock_API,
+  sysDict_API,
   suggest_API,
   block_API,
   updateBlock_API,
@@ -226,7 +220,12 @@ import {
 const words = ref(null);
 const formRef = ref<any>();
 const isSHowColorPicker = ref(false);
-
+const cascaderProps = {
+  value: "id", // 指定 value 对应的字段名
+  label: "bizValue", // 指定 label 对应的字段名
+  children: "children", // 指定子节点对应的字段名（默认就是children，可省略）,
+  checkStrictly: true,
+};
 const farmList = ref<any>([]);
 const filedDetail = ref<any>({});
 const mapCenter = ref<any>({
@@ -255,17 +254,17 @@ const getDetails = async () => {
   const { data } = await block_API({ id: route.query.id });
   filedDetail.value = data;
   fieldList.id = data.id;
-  fieldList.farmId = data.farmId?data.farmId:'';
+  fieldList.farmId = data.farmId ? data.farmId : "";
   let params: any = [];
-  if (data.crops&&data.crops.length > 0) {
-    data.crops.map((item: any) => {
+  if (data.blockCrops && data.blockCrops.length > 0) {
+    data.blockCrops.map((item: any) => {
       params.push({
         timeRange: [item.plantingStartTime, item.plantingEndTime],
         cropDictId: item.cropDictId,
+        id: item.id || '',
       });
     });
   }
-
   fieldList.crops = params;
   fieldList.name = data.name;
   fieldList.perimeter = data.perimeter;
@@ -300,13 +299,15 @@ const getDetails = async () => {
   markerData.value[0] = obstacles;
 };
 getDetails();
-const cropOptions = [
-  { label: "小麦", value: "wheat" },
-  { label: "玉米", value: "corn" },
-  { label: "水稻", value: "rice" },
-  { label: "大豆", value: "soybean" },
-  { label: "棉花", value: "cotton" },
-];
+
+const cropOptions = ref<any>([]);
+const getCropArray = async () => {
+  const { data } = await sysDict_API({
+    dicKey: "crop_type",
+  });
+  cropOptions.value = data;
+};
+getCropArray();
 // 关键字查询
 async function wordsSearch(e: any) {
   if (e) {
@@ -381,7 +382,11 @@ const editField = async () => {
         params.push({
           plantingEndTime: item.timeRange[1],
           plantingStartTime: item.timeRange[0],
-          cropDictId: "",
+          id:item.id||'',
+          cropDictId:
+            item.cropDictId instanceof Array
+              ? item.cropDictId[item.cropDictId.length - 1]
+              : item.cropDictId,
         });
       });
       let uploadParams = {
@@ -393,13 +398,14 @@ const editField = async () => {
         area: fieldList.area,
         description: fieldList.description,
         referenceLines: fieldList.referenceLines,
-        crops: params,
+        blockCrops: params,
         boundaries: fieldList.boundaries,
-        obstacles: params.obstacles,
+        obstacles: fieldList.obstacles,
       };
       try {
         await updateBlock_API(uploadParams);
         ElMessage.success(t("work.updateSuccess"));
+        router.go(-1);
       } catch {}
     })
     .catch(() => {});
@@ -421,7 +427,7 @@ function handleClear() {
   fieldList.color = "";
   isSHowColorPicker.value = false;
 }
-const radio = ref("1");
+const radio = ref("2");
 const changeRadio = () => {
   if (radio.value === "1") {
     fieldList.color = "";

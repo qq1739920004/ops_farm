@@ -40,6 +40,16 @@
       :name="name"
     >
     </RemoteAdjustDia501>
+     <RemoteAdjustDiaOthers
+      ref="RemoteD501Others"
+      :terminalType="terminalType"
+      :paramVersionnum="paramVersionnum"
+      :paramType="paramType"
+      :carId="carId"
+      :sn="sn"
+      :name="name"
+    >
+    </RemoteAdjustDiaOthers>
     <RemoteAdjustDia_360
       ref="RemoteD360"
       :terminalType="terminalType"
@@ -59,6 +69,7 @@ import RemoteAdjustDia360 from "./components/remoteAdjust.vue";
 import RemoteAdjustDia302 from "./components/remoteAdjust302.vue";
 import RemoteAdjustDia502 from "./components/remoteAdjust502.vue";
 import RemoteAdjustDia501 from "./components/remoteAdjust501Pro.vue";
+import RemoteAdjustDiaOthers from "./components/remoteAdjust501Others.vue";
 import RemoteAdjustDia_360 from "./components/remoteAdjust360.vue";
 const props = defineProps([
   "terminalType",
@@ -80,6 +91,7 @@ const RemoteD = ref();
 const RemoteD302 = ref();
 const RemoteD502 = ref();
 const RemoteD501 = ref();
+const RemoteD501Others = ref()
 const RemoteD360 = ref();
 const gotoRemote = () => {
   console.log(terminalType.value)
@@ -95,9 +107,9 @@ const gotoRemote = () => {
   } else if (terminalType.value == "AG501Pro") {
     RemoteD501.value.dialogVisible = true;
   } else if (terminalType.value.includes("MT")) {
-    RemoteD501.value.dialogVisible = true;
+    RemoteD501Others.value.dialogVisible = true;
   } else if (terminalType.value =="AG501_CF") {
-    RemoteD501.value.dialogVisible = true;
+    RemoteD501Others.value.dialogVisible = true;
   } else {
     RemoteD502.value.dialogVisible = true;
   }

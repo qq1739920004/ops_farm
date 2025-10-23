@@ -8,18 +8,21 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     404: typeof import('./src/components/404/index.vue')['default']
+    copy: typeof import('./src/components/remoteAdjust/components/remoteAdjust501Pro copy.vue')['default']
     CustomColorPicker: typeof import('./src/components/CustomColorPicker/index.vue')['default']
     NoPermission: typeof import('./src/components/noPermission/index.vue')['default']
     Pagination: typeof import('./src/components/Pagination/index.vue')['default']
     RemoteAdjust: typeof import('./src/components/remoteAdjust/index.vue')['default']
     RemoteAdjust302: typeof import('./src/components/remoteAdjust/components/remoteAdjust302.vue')['default']
     RemoteAdjust360: typeof import('./src/components/remoteAdjust/components/remoteAdjust360.vue')['default']
+    RemoteAdjust501Others: typeof import('./src/components/remoteAdjust/components/remoteAdjust501Others.vue')['default']
     RemoteAdjust501Pro: typeof import('./src/components/remoteAdjust/components/remoteAdjust501Pro.vue')['default']
     RemoteAdjust502: typeof import('./src/components/remoteAdjust/components/remoteAdjust502.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SinoMap: typeof import('./src/components/SinoMap/index.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon/index.vue')['default']
+    TreeCascader: typeof import('./src/components/TreeCascader/index.vue')['default']
     TruncatedString: typeof import('./src/components/TruncatedString/TruncatedString.vue')['default']
   }
 }

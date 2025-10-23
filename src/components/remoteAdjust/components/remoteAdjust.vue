@@ -147,7 +147,7 @@
         style="max-width: 1012px; margin-bottom: 20px"
       >
         <el-row style="margin-bottom: 10px">
-          <el-col :span="18" :offset="6">
+          <el-col :span="18" :offset="3">
             <el-form-item class="item" :label="t('work.differentialSetting')">
               <el-select v-model="workPattern.type" style="width: 225px; height: 32px">
                 <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
@@ -175,7 +175,7 @@
         </el-row>
         <div v-show="workPattern.type != '3'">
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item class="item" :label="$t('work.serverIP')" prop="insideHost">
                 <el-input
                   style="width: 187px; height: 32px"
@@ -185,7 +185,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item class="item" :label="$t('work.port')" prop="insidePort">
                 <el-input
                   style="width: 187px; height: 32px"
@@ -195,7 +195,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item
                 class="item"
                 :label="$t('work.sourceNode')"
@@ -216,7 +216,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item
                 class="item"
                 :label="$t('work.username')"
@@ -230,7 +230,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item
                 class="item"
                 :label="$t('work.password')"
@@ -247,18 +247,17 @@
           </el-row>
         </div>
         <el-row style="margin-bottom: 10px">
-          <el-col :span="18" :offset="6">
+          <el-col :span="18" :offset="3">
             <el-form-item class="item" :label="$t('work.logUpload')">
               <el-date-picker
-                style="width: 227px; height: 32px"
+
                 v-model="dateValue"
-                type="daterange"
+                type="datetimerange"
                 range-separator="-"
                 @change="changeDate"
                 :disabled-date="disabledDate"
                 start-placeholder="Start date"
                 end-placeholder="End date"
-                size="large"
               />
               <el-button
                 type="primary"
@@ -280,7 +279,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 10px">
-          <el-col :span="12" :offset="6">
+          <el-col :span="12" :offset="3">
             <el-form-item class="item" :label="$t('work.dataStorage')">
               <el-switch
                 v-auth="474"
@@ -312,7 +311,7 @@
           {{ $t("work.dualAntennaOneMachine") }}
         </div>
         <el-row style="margin-top: 40px">
-          <el-col :span="14" :offset="6">
+          <el-col :span="14" :offset="3">
             <el-form-item class="item" :label="t('work.moduleSelection')" prop="radio1">
               <el-radio-group
                 @change="changeRadio1"
@@ -334,7 +333,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="14" :offset="6">
+          <el-col :span="14" :offset="3">
             <el-form-item class="item" :label="$t('work.versionType')" prop="radio2">
               <el-radio-group
                 @change="changeRadio2"
@@ -354,7 +353,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
-          <el-col :span="14" :offset="6">
+          <el-col :span="14" :offset="3">
             <el-form-item
               class="item"
               :label="$t('work.versionSelection') + '：'"
@@ -444,7 +443,7 @@ import {
   GetcarProductpackage_API,
   packageUpgradeCar_API,
 } from "@/api/machineryList/remoteAdjust/index";
-import { carNewDetail_API, logOpen_API } from "@/api/machineryList/index";
+import { carNewDetail_API, logOpen_API,setFileUpload } from "@/api/machineryList/index";
 import type { TabsPaneContext } from "element-plus";
 import { useRouter } from "vue-router";
 import axios from "axios";
@@ -576,14 +575,13 @@ function date(date: any) {
 }
 
 const uploadBack = (val: any) => {
-  axios
-    .post(
-      `${window.CONFIG_NEW}/lu/ftp/upload`,
-      { start: date(dateValue.value[0]), end: date(dateValue.value[1]), sn: val },
-      { headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" } }
-    )
-    .then(() => {
-      // ElMessage({ type: "success", message: "回传成功", duration: 1000 });
+  setFileUpload({
+   
+    start: date(dateValue.value[0]),
+    end: date(dateValue.value[1]),
+    sn: val,
+  }) .then(() => {
+       ElMessage({ type: "success", message: "回传成功", duration: 1000 });
     });
 };
 const switchStatus = ref<boolean>(false);

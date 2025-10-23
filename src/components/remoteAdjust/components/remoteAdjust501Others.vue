@@ -289,9 +289,9 @@
         </div>
         <el-row style="margin-bottom: 10px">
           <el-col :span="18" :offset="3">
-            <el-form-item class="item" :label="$t('work.logUpload')">
+            <!-- <el-form-item class="item" :label="$t('work.logUpload')">
               <el-date-picker
-          
+                style="width: 227px; height: 32px"
                 v-model="dateValue"
                 type="datetimerange"
                 range-separator="-"
@@ -299,7 +299,7 @@
                 :disabled-date="disabledDate"
                 start-placeholder="Start date"
                 end-placeholder="End date"
-              
+                size="large"
               />
               <el-button
                 type="primary"
@@ -317,7 +317,13 @@
                 @click="toFileList"
                 >{{ t("work.fileView") }}</el-button
               >
-            </el-form-item>
+            </el-form-item> -->
+            <el-row>
+              <el-col align="center">
+                <!--  AG502以及AG502_Android的 -->
+                {{ t("work.unploadUnv") }}
+              </el-col>
+            </el-row>
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 10px">

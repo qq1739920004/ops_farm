@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import request2 from '@/utils/request2'
 import { carNewListResponseData, carNewDetailResponseData, carDealerResponseData, carStatusObj, activationCodeObj, PageInfoObj, singleCarTrackResponseData } from '@/api/machineryList/type'
 // 农机列表API接口// 分页查询
 export function carNewList_API(data: string) {
@@ -144,4 +145,16 @@ export function deleteFarm_API(params:any){
         method:'delete',
         params
     })
+}
+
+export function setFileUpload(params:any) {
+  return request2({
+    url: "/lu/ftp/upload",
+
+    method: "post",
+    data: params,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+    },
+  });
 }

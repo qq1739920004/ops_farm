@@ -114,6 +114,10 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  colorList: {
+    type: Array,
+    default: [],
+  },
   polygonData: {
     type: Array,
     default: [],
@@ -140,7 +144,7 @@ let pickedPoints: any = [];
 let rangingArray: any = reactive([]);
 let ABlineArray: any = [];
 let polygonArr: any = [];
-let markerNameArr:any = []
+let markerNameArr: any = [];
 let cycleArray: any = [];
 const defaultMapCenter = [31.086444, 121.734942];
 const defaultMapZoom = 4;
@@ -327,9 +331,9 @@ function deleteAllMarkers() {
   polygonArr.forEach((item: any) => {
     map.removeLayer(item);
   });
-  markerNameArr.forEach((item:any) => {
-    map.removeLayer(item)
-  })
+  markerNameArr.forEach((item: any) => {
+    map.removeLayer(item);
+  });
   cycleArray.forEach((item: any) => {
     map.removeLayer(item);
   });
@@ -637,7 +641,7 @@ function createPolygon(list: any) {
   const polytrueData: any = [];
   const nameData: any = [];
   const clickIdData: any = [];
-  const boundariesData:any = []
+  const boundariesData: any = [];
   // 处理数据格式
   list.map((item: any) => {
     item.forEach((it: any) => {
@@ -649,19 +653,25 @@ function createPolygon(list: any) {
         polytrueData.push(innerList);
         nameData.push(it.id);
         clickIdData.push(it.clickId);
-        boundariesData.push(it.boundaries)
+        boundariesData.push(it.boundaries);
       });
     });
   });
-  drawPolygon(polytrueData, nameData, clickIdData,boundariesData);
+  drawPolygon(polytrueData, nameData, clickIdData, boundariesData);
 }
-const drawPolygon = (polytrueData: any, nameData: any, clickIdData: any,boundariesData:any) => {
+const drawPolygon = (
+  polytrueData: any,
+  nameData: any,
+  clickIdData: any,
+  boundariesData: any
+) => {
   let pickPoints: any = [];
   polytrueData.map((item: any, index: any) => {
     pickPoints.push(item);
+
     var polygon = L.polygon(item, {
-      color: "#83FFA4",
-      fillColor: "#4CB04F",
+      color: props.colorList[index] as string,
+      fillColor: props.colorList[index] as string,
       fillOpacity: 0.44,
     }).addTo(map);
     // 获取多边形中心点
@@ -669,7 +679,7 @@ const drawPolygon = (polytrueData: any, nameData: any, clickIdData: any,boundari
     center = center.reverse(); // Leaflet使用[lat,lng]格式
 
     // 在中心点添加文本标记
-   var marker =  L.marker(center, {
+    var marker = L.marker(center, {
       icon: L.divIcon({
         className: "polygon-label",
         html: ` <div class="text-content" style="width:100px; padding: 5px">${nameData[index]}</div>`,
@@ -677,10 +687,10 @@ const drawPolygon = (polytrueData: any, nameData: any, clickIdData: any,boundari
       }),
     }).addTo(map);
     polygon.on("click", function (e) {
-      emits("clickId", index,clickIdData[index],boundariesData[index]);
+      emits("clickId", index, clickIdData[index], boundariesData[index]);
     });
     polygonArr.push(polygon);
-    markerNameArr.push(marker)
+    markerNameArr.push(marker);
   });
   map.fitBounds(pickPoints);
 };
@@ -691,7 +701,7 @@ function createLine(list: any) {
   }
   list.forEach((item: any) => {
     item.forEach((it: any) => {
-      if (it.referenceLines.length) {
+      if (it.referenceLines && it.referenceLines.length > 0) {
         it.referenceLines.forEach((line: any) => {
           if (line.s72 === 0) {
             let arr = [
@@ -1103,7 +1113,7 @@ defineExpose({
 .map_utils {
   position: absolute;
   bottom: 10px;
-  left: 10px;
+  right: 10px;
   z-index: 999;
   display: flex;
   .map_utils_item {

@@ -188,7 +188,7 @@
         style="max-width: 1012px; margin-bottom: 20px"
       >
         <el-row style="margin-bottom: 10px">
-          <el-col :span="18" :offset="6">
+          <el-col :span="18" :offset="3">
             <el-form-item class="item" :label="t('work.differentialSetting')">
               <el-select v-model="workPattern.type" style="width: 187px; height: 32px">
                 <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
@@ -216,7 +216,7 @@
         </el-row>
         <div v-show="workPattern.type != '3'">
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item class="item" :label="$t('work.serverIP')" prop="insideHost">
                 <el-input
                   style="width: 187px; height: 32px"
@@ -226,7 +226,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item class="item" :label="$t('work.port')" prop="insidePort">
                 <el-input
                   style="width: 187px; height: 32px"
@@ -236,7 +236,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item
                 class="item"
                 :label="$t('work.sourceNode')"
@@ -257,7 +257,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item
                 class="item"
                 :label="$t('work.username')"
@@ -271,7 +271,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item
                 class="item"
                 :label="$t('work.password')"
@@ -288,7 +288,7 @@
           </el-row>
         </div>
         <el-row style="margin-bottom: 10px">
-          <el-col :span="18" :offset="6">
+          <el-col :span="18" :offset="3">
             <el-form-item class="item" :label="$t('work.logUpload')">
               <el-row>
                 <el-col align="center">
@@ -300,7 +300,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 10px">
-          <!-- <el-col :span="12" :offset="6">
+          <!-- <el-col :span="12" :offset="3">
             <el-form-item class="item" :label="$t('work.dataStorage')">
               <el-switch
                 v-auth="474"
@@ -321,7 +321,7 @@
                 style="max-width: 1012px;margin-bottom:20px">
 
                 <el-row>
-                    <el-col :span="12" :offset="6">
+                    <el-col :span="12" :offset="3">
                         <el-form-item class="item" :label="$t('work.versionType')" prop="name" style="margin-top: 20px;">
                             <el-radio-group @change="changeRadio2" text-color="var(--el-color-primary)"
                                 style="transform: translateY(-5px);" v-model="formLabelAlign.radio2" class="ml-4">
@@ -335,7 +335,7 @@
 
                 </el-row>
                 <el-row style="margin-bottom: 20px;">
-                    <el-col :span="14" :offset="6">
+                    <el-col :span="14" :offset="3">
                         <el-form-item class="item" :label="$t('work.versionSelection') + '：'" prop="name">
                             <el-select v-if="productList.length >= 1" style=" width: 187px;
                 height: 32px;" v-model="formLabelAlign.filename">

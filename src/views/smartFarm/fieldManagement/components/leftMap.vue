@@ -1,6 +1,6 @@
 <template>
   <div class="SinoMap_component">
-    <div :id="mapContainerId" style="height: 70px; width: 110px"></div>
+    <div :id="mapContainerId" style="height: 70px; width: 110px">{{ polygonBounds }}</div>
   </div>
 </template>
 
@@ -27,6 +27,10 @@ const props = defineProps({
       markerId: null,
     }),
   },
+  color: {
+    type: String,
+    default: "#4CB04F",
+  },
   mapCenter: {
     type: Object,
     default: () => ({
@@ -35,6 +39,7 @@ const props = defineProps({
       zoom: 4,
     }),
   },
+  initDelay: { type: Number, default: 0 },
   mapRenderMode: {
     type: String,
     default: "", // 原生dom渲染， 或者 polymer 聚合引擎；
@@ -79,12 +84,11 @@ const props = defineProps({
 const mapContainerId = computed(() => `leaflet-map-${props.mapKey}`);
 const defaultMapCenter = [31.086444, 121.734942];
 const defaultMapZoom = 4;
-
-
+const polygonBounds = ref();
 let mapInstance: any = null; // map实例对象
 let markerArr: any = []; // marker坐标点数字
 
-// 地图瓦片图选项 
+// 地图瓦片图选项
 let mapTileOptions = reactive({
   id: props.mapTile[0],
   list: [
@@ -156,11 +160,11 @@ mapTileOptions.list = mapTileOptions.list.filter((item: any) =>
 );
 onMounted(() => {
   // 确保容器DOM存在且未被初始化
+  setTimeout(() => {
+    initMap();
+  }, props.initDelay);
 
   // 添加瓦片图层
-  initMap();
-  handleMapCenter(props.mapCenter);
-  createPolygon(props.polygonData);
 });
 
 // 初始化加载地图
@@ -181,6 +185,8 @@ function initMap() {
   });
 
   mapTileChange();
+  handleMapCenter(props.mapCenter);
+  createPolygon(props.polygonData);
 }
 
 // 图商发生变化
@@ -253,21 +259,19 @@ function createPolygon(list: any) {
   }
   let polytrueData: any = [];
 
-  list.forEach((it: any) => {
-    let innerList = it.map((point: any) => {
-      let position = gcoordLngLat(point.split(",")[1], point.split(",")[0]);
-      return position;
-    });
-    polytrueData.push(innerList);
+  let it = list[0];
+  let innerList = it.map((point: any) => {
+    let position = gcoordLngLat(point.split(",")[1], point.split(",")[0]);
+    return position;
   });
-  polytrueData.map((item: any, index: any) => {
-    var polygon = L.polygon(item, {
-      color: "#83FFA4",
-      fillColor: "#4CB04F",
-      fillOpacity: 0.44,
-    }).addTo(mapInstance);
-    mapInstance.fitBounds(polytrueData);
-  });
+  polytrueData = innerList;
+
+  var polygon = L.polygon(polytrueData, {
+    color: props.color,
+    fillColor: props.color,
+    fillOpacity: 0.44,
+  }).addTo(mapInstance);
+  mapInstance.fitBounds(polytrueData);
 }
 
 defineExpose({

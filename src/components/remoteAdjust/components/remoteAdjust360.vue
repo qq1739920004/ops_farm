@@ -22,7 +22,7 @@
         <el-tab-pane :label="$t('work.calibrationParameters')" name="2"></el-tab-pane>
         <el-tab-pane :label="$t('work.basicP')" name="3"></el-tab-pane>
         <el-tab-pane :label="$t('work.advanceP')" name="4"></el-tab-pane>
-        <el-tab-pane :label="$t('work.onlineUpgrade')" name="6" ></el-tab-pane>
+        <el-tab-pane :label="$t('work.onlineUpgrade')" name="6"></el-tab-pane>
         <el-tab-pane
           :label="$t('work.remoteSetting')"
           name="5"
@@ -188,7 +188,7 @@
         style="max-width: 1012px; margin-bottom: 20px"
       >
         <el-row style="margin-bottom: 10px">
-          <el-col :span="18" :offset="6">
+          <el-col :span="18" :offset="3">
             <el-form-item class="item" :label="t('work.differentialSetting')">
               <el-select v-model="workPattern.type" style="width: 225px; height: 32px">
                 <el-option :label="$t('work.builtInNetwork')" :value="'1'" />
@@ -216,7 +216,7 @@
         </el-row>
         <div v-show="workPattern.type != '3'">
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item class="item" :label="$t('work.serverIP')" prop="insideHost">
                 <el-input
                   style="width: 187px; height: 32px"
@@ -226,7 +226,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item class="item" :label="$t('work.port')" prop="insidePort">
                 <el-input
                   style="width: 187px; height: 32px"
@@ -236,7 +236,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item
                 class="item"
                 :label="$t('work.sourceNode')"
@@ -257,7 +257,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item
                 class="item"
                 :label="$t('work.username')"
@@ -271,7 +271,7 @@
             </el-col>
           </el-row>
           <el-row style="margin-bottom: 10px">
-            <el-col :span="12" :offset="6">
+            <el-col :span="12" :offset="3">
               <el-form-item
                 class="item"
                 :label="$t('work.password')"
@@ -288,25 +288,25 @@
           </el-row>
         </div>
         <el-row style="margin-bottom: 10px">
-          <el-col :span="18" :offset="6">
+          <el-col :span="18" :offset="3">
             <el-form-item class="item" :label="$t('work.logUpload')">
               <el-date-picker
-                style="width: 227px; height: 32px"
+
                 v-model="dateValue"
-                type="daterange"
+                type="datetimerange"
                 range-separator="-"
                 @change="changeDate"
                 :disabled-date="disabledDate"
                 start-placeholder="Start date"
                 end-placeholder="End date"
-                size="large"
+        
               />
               <el-button
                 type="primary"
                 v-auth="532"
                 style="margin-left: 20px"
                 @click="uploadBack"
-                >{{ t('work.return') }}</el-button
+                >{{ t("work.return") }}</el-button
               >
               <el-button
                 type="primary"
@@ -315,13 +315,13 @@
                 class="btn3"
                 style=""
                 @click="toFileList"
-                >{{t('work.fileView')}}</el-button
+                >{{ t("work.fileView") }}</el-button
               >
             </el-form-item>
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 10px">
-          <el-col :span="12" :offset="6">
+          <el-col :span="12" :offset="3">
             <el-form-item class="item" :label="$t('work.dataStorage')">
               <el-switch
                 v-auth="474"
@@ -353,7 +353,7 @@
           {{ $t("work.dualAntennaOneMachine") }}
         </div>
         <el-row style="margin-top: 40px">
-          <el-col :span="14" :offset="6">
+          <el-col :span="14" :offset="3">
             <el-form-item class="item" :label="t('work.moduleSelection')" prop="radio1">
               <el-radio-group
                 @change="changeRadio1"
@@ -375,7 +375,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="14" :offset="6">
+          <el-col :span="14" :offset="3">
             <el-form-item class="item" :label="$t('work.versionType')" prop="radio2">
               <el-radio-group
                 @change="changeRadio2"
@@ -395,7 +395,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
-          <el-col :span="14" :offset="6">
+          <el-col :span="14" :offset="3">
             <el-form-item
               class="item"
               :label="$t('work.versionSelection') + '：'"
@@ -490,7 +490,7 @@ import {
   GetcarProductpackage_API,
   packageUpgradeCar_API,
 } from "@/api/machineryList/remoteAdjust/index";
-import { carNewDetail_API, logOpen_API } from "@/api/machineryList/index";
+import { carNewDetail_API, logOpen_API, setFileUpload } from "@/api/machineryList/index";
 import type { TabsPaneContext } from "element-plus";
 import { useRouter } from "vue-router";
 import axios from "axios";
@@ -498,7 +498,7 @@ const router = useRouter();
 const basicTitleData = ref<any | null>([]);
 const activeName = ref("1");
 const isChangfa = import.meta.env.MODE === "changFa";
-console.log('111111',isChangfa)
+console.log("111111", isChangfa);
 const handleClick = (tab: TabsPaneContext) => {
   activeIndex.value = tab.props.name as never;
 };
@@ -737,15 +737,14 @@ function date(date: any) {
   return result;
 }
 const uploadBack = (val: any) => {
-  axios
-    .post(
-      `${window.CONFIG_NEW}/lu/ftp/upload`,
-      { start: date(dateValue.value[0]), end: date(dateValue.value[1]), sn: val },
-      { headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" } }
-    )
-    .then(() => {
+  setFileUpload({
+   
+    start: date(dateValue.value[0]),
+    end: date(dateValue.value[1]),
+    sn: val,
+  }) .then(() => {
       // ElMessage({ type: "success", message: "回传成功", duration: 1000 });
-    }); 
+    });
 };
 const closeRemoteAdjust = () => {
   workPattern.value.type = "3";
@@ -760,9 +759,9 @@ const closeRemoteAdjust = () => {
 // 更新基本参数
 const updatebasicParams = async () => {
   await pidFormRef.value.validate();
-  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
-    confirmButtonText: t('work.submit'),
-    cancelButtonText: t('work.cancel'),
+  ElMessageBox.confirm(t("work.overwriteConfirmation"), "Warning", {
+    confirmButtonText: t("work.submit"),
+    cancelButtonText: t("work.cancel"),
     type: "warning",
   })
     .then(() => {
@@ -771,7 +770,7 @@ const updatebasicParams = async () => {
 
       updateBasicParm_API(updateInfo.value).then(() => {
         try {
-          ElMessage({ type: "success", message: t('work.modificationSuccess') });
+          ElMessage({ type: "success", message: t("work.modificationSuccess") });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -815,9 +814,9 @@ const openRemoteAdjust = () => {
 // 更新车辆参数
 const updateCarParams = async () => {
   await carFormRef.value.validate();
-  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
-    confirmButtonText: t('work.submit'),
-    cancelButtonText: t('work.cancel'),
+  ElMessageBox.confirm(t("work.overwriteConfirmation"), "Warning", {
+    confirmButtonText: t("work.submit"),
+    cancelButtonText: t("work.cancel"),
     type: "warning",
   })
     .then(() => {
@@ -825,7 +824,7 @@ const updateCarParams = async () => {
       updateInfo.value.paramJson = JSON.stringify(paramParamsData);
       paramCarParamUpdate_API(updateInfo.value).then(() => {
         try {
-          ElMessage({ type: "success", message: t('work.modificationSuccess') });
+          ElMessage({ type: "success", message: t("work.modificationSuccess") });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -837,9 +836,9 @@ const updateCarParams = async () => {
 // 更新校准参数更新校准数据
 const updateCalibParams = async () => {
   await calibFormRef.value.validate();
-  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
-    confirmButtonText: t('work.submit'),
-    cancelButtonText: t('work.cancel'),
+  ElMessageBox.confirm(t("work.overwriteConfirmation"), "Warning", {
+    confirmButtonText: t("work.submit"),
+    cancelButtonText: t("work.cancel"),
     type: "warning",
   })
     .then(() => {
@@ -847,7 +846,7 @@ const updateCalibParams = async () => {
       updateInfo.value.paramJson = JSON.stringify(CalibParamsData);
       updateCalibParam_API(updateInfo.value).then(() => {
         try {
-          ElMessage({ type: "success", message: t('work.modificationSuccess') });
+          ElMessage({ type: "success", message: t("work.modificationSuccess") });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -859,7 +858,7 @@ const pibParamRules = computed(() => {
   let rules = {} as any;
   for (let key in basicTitleData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message:  t('work.enterValue'), trigger: "blur" };
+    let rule1 = { required: true, message: t("work.enterValue"), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(basicTitleData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -923,9 +922,9 @@ const getExtendSourceNode = () => {
 
 const updateAdvanced1Params = async () => {
   await advanceFormRef.value.validate();
-  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
-    confirmButtonText: t('work.submit'),
-    cancelButtonText: t('work.cancel'),
+  ElMessageBox.confirm(t("work.overwriteConfirmation"), "Warning", {
+    confirmButtonText: t("work.submit"),
+    cancelButtonText: t("work.cancel"),
     type: "warning",
   })
     .then(() => {
@@ -933,7 +932,7 @@ const updateAdvanced1Params = async () => {
       updateInfo.value.paramJson = JSON.stringify(advanced1ParamsData);
       advanced1ParamUpdate_API(updateInfo.value).then(() => {
         try {
-          ElMessage({ type: "success", message: t('work.modificationSuccess') });
+          ElMessage({ type: "success", message: t("work.modificationSuccess") });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -944,9 +943,9 @@ const updateAdvanced1Params = async () => {
 // 更新差分数据moudleRef
 const updateChafenData = async () => {
   await moudleRef.value.validate();
-  ElMessageBox.confirm(t('work.overwriteConfirmation'), "Warning", {
-    confirmButtonText: t('work.submit'),
-    cancelButtonText: t('work.cancel'),
+  ElMessageBox.confirm(t("work.overwriteConfirmation"), "Warning", {
+    confirmButtonText: t("work.submit"),
+    cancelButtonText: t("work.cancel"),
     type: "warning",
   })
     .then(() => {
@@ -960,7 +959,7 @@ const updateChafenData = async () => {
         insidePassword: chaFenlist.value.insidePassword,
       }).then(() => {
         try {
-          ElMessage({ type: "success", message: t('work.modificationSuccess') });
+          ElMessage({ type: "success", message: t("work.modificationSuccess") });
         } catch {
           // ElMessage({ type: 'error', message: '修改失败' })
         }
@@ -996,7 +995,7 @@ const updateProductList = async () => {
       updateModel: formLabelAlign.radio1 === "11001" ? "11" : "12",
       upgradeWay: 1,
     });
-    ElMessage({ type: "success", message: t('work.modificationSuccess') });
+    ElMessage({ type: "success", message: t("work.modificationSuccess") });
   } catch {
     // ElMessage({ type: 'error', message: '修改失败' })
   }
@@ -1014,7 +1013,7 @@ const parseVerification = (objItem: { type: string; name: string; range: string 
     let rule1 = {
       min: 1,
       max: 20,
-      message:t('work.lengthBetween1And20'),
+      message: t("work.lengthBetween1And20"),
       trigger: "blur",
     };
     temRule.push(rule1);
@@ -1032,13 +1031,13 @@ const parseVerification = (objItem: { type: string; name: string; range: string 
           return testRe.test(input);
         };
         if (!value && value !== 0) {
-          return callback(new Error( t('work.enterValue')));
+          return callback(new Error(t("work.enterValue")));
         }
         if (!checkNumber(value)) {
-          return callback(new Error(t('work.paramShould')));
+          return callback(new Error(t("work.paramShould")));
         }
         if (value < min || value > max) {
-          return callback(new Error(`${t('work.range')} ${min} - ${max} `));
+          return callback(new Error(`${t("work.range")} ${min} - ${max} `));
         }
         callback();
       };
@@ -1060,10 +1059,10 @@ const parseVerification = (objItem: { type: string; name: string; range: string 
           return testRe.test(input);
         };
         if (!value && value !== 0) {
-          return callback(new Error( t('work.enterValue')));
+          return callback(new Error(t("work.enterValue")));
         }
         if (!checkNumber(value)) {
-          return callback(new Error(t('work.paramShould')));
+          return callback(new Error(t("work.paramShould")));
         }
         callback();
       };
@@ -1081,13 +1080,13 @@ const parseVerification = (objItem: { type: string; name: string; range: string 
           return Number(element);
         });
         if (!value && value !== 0) {
-          return callback(new Error( t('work.enterValue')));
+          return callback(new Error(t("work.enterValue")));
         }
         if (!checkNumber(value)) {
-          return callback(new Error(t('work.paramShould')));
+          return callback(new Error(t("work.paramShould")));
         }
         if (value < min || value > max) {
-          return callback(new Error(`${t('work.range')} ${min}-${max}`));
+          return callback(new Error(`${t("work.range")} ${min}-${max}`));
         }
         callback();
       };
@@ -1101,7 +1100,7 @@ const advance1ParamRules = computed(() => {
   let rules = {} as any;
   for (let key in advance1TitleData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message:  t('work.enterValue'), trigger: "blur" };
+    let rule1 = { required: true, message: t("work.enterValue"), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(advance1TitleData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -1113,7 +1112,7 @@ const carParamRules = computed(() => {
   let rules = {} as any;
   for (let key in carParamsData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message:  t('work.enterValue'), trigger: "blur" };
+    let rule1 = { required: true, message: t("work.enterValue"), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(carParamsData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -1125,7 +1124,7 @@ const CalibParamRules = computed(() => {
   let rules = {} as any;
   for (let key in CalibTitleData.value) {
     let temRule = [] as any;
-    let rule1 = { required: true, message:  t('work.enterValue'), trigger: "blur" };
+    let rule1 = { required: true, message: t("work.enterValue"), trigger: "blur" };
     temRule.push(rule1);
     let rule2 = parseVerification(CalibTitleData.value[key]);
     temRule.push.apply(temRule, rule2);
@@ -1135,15 +1134,15 @@ const CalibParamRules = computed(() => {
 });
 
 const rules = {
-  type: [{ required: true, message:  t('work.enterValue'), trigger: "blur" }],
-  insideHost: [{ required: true, message:  t('work.enterValue'), trigger: "blur" }],
-  insidePort: [{ required: true, message:  t('work.enterValue'), trigger: "blur" }],
-  insideSourceNode: [{ required: true, message:  t('work.enterValue'), trigger: "blur" }],
-  insideUsername: [{ required: true, message:  t('work.enterValue'), trigger: "blur" }],
-  insidePassword: [{ required: true, message:  t('work.enterValue'), trigger: "blur" }],
-  radio1: [{ required: true, message:  t('work.enterValue'), trigger: "blur" }],
-  radio2: [{ required: true, message:  t('work.enterValue'), trigger: "blur" }],
-  filename: [{ required: true, message:  t('work.enterValue'), trigger: "blur" }],
+  type: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  insideHost: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  insidePort: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  insideSourceNode: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  insideUsername: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  insidePassword: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  radio1: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  radio2: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  filename: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
 };
 
 // 时间格式转换
@@ -1171,7 +1170,7 @@ const formartDate = (val: Date) => {
 
 .top {
   position: absolute;
-    top: 81px;
+  top: 81px;
   left: 20px;
 
   span {

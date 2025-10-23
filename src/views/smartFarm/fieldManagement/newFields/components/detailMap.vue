@@ -1,6 +1,6 @@
 <template>
   <div class="SinoMap_component">
-    <div id="map"></div>
+    <div id="map" :class="{ 'crosshair-cursor': isDrawing }"></div>
     <div class="map_utils">
       <div class="map_utils_item flex-align-center">
         <el-select
@@ -101,6 +101,7 @@ import { gcj02ToWgs84 } from "@/utils/coordTransform";
 const emit = defineEmits(["areaValue", "lengthValue", "boundries", "pickedPoints"]);
 
 const { t, locale } = useI18n();
+const isDrawing = ref(false);
 const props = defineProps({
   mapTile: {
     type: Array,
@@ -382,6 +383,7 @@ const length = ref<any>("");
 const pickedPointsArray = ref<any>([]);
 const offDraw = () => {
   polygon.setLatLngs(points);
+    isDrawing.value = false;
   isEdit.value = false;
   //触发双击事件，结束绘制
   map.fire("dblclick");
@@ -453,6 +455,8 @@ const enablePolygonsInteraction = () => {
 function drawPolygons() {
   points = [];
   isEdit.value = true;
+  isDrawing.value = true;
+
   polygon = new L.polygon(points, {
     color: "#83FFA4",
     fillColor: "#83FFA4",
@@ -522,6 +526,10 @@ function drawPolygons() {
       fillColor: "#83FFA4",
       fillOpacity: 0.44,
     }).addTo(map);
+    setTimeout(() => {
+      offDraw();
+    
+    }, 10);
   }
 }
 function calculateDistance(lat1: any, lng1: any, lat2: any, lng2: any) {
@@ -787,21 +795,39 @@ function createPolygon(list: any) {
   polygonArr.length = 0;
   // 双重polylineData数组
   const polytrueData: any = [];
+  const tureP: any = [];
   // 处理数据格式
-  list.map((item: any) => {
-    item.forEach((it: any) => {
-      it.boundaries.forEach((inner: any, index: any) => {
-        let innerList = inner.map((point: any) => {
-          let position = gcoordLngLat(point.split(",")[1], point.split(",")[0]);
-          return position;
-        });
-        polytrueData.push(innerList);
+  list.map((it: any) => {
+    it.forEach((inner: any, index: any) => {
+      let innerList = inner.boundaries.map((point: any) => {
+        let position = gcoordLngLat(point.split(",")[1], point.split(",")[0]);
+        return position;
       });
+      polytrueData.push(innerList);
+      let listInner = inner.boundaries.map((point: any) => {
+        return point;
+      });
+      tureP.push(listInner);
     });
+  
     return polytrueData;
   });
-  drawPolygon(polytrueData);
+  drawPolygonFarm(polytrueData);
 }
+const drawPolygonFarm = (polytrueData: any) => {
+  let pickPoints: any = [];
+  polytrueData.map((item: any, index: any) => {
+    pickPoints.push(item);
+    var polygon: any = L.polygon(item, {
+        color: "#FFFFFF",
+    fillColor: "#FFFFFF",
+    fillOpacity: 0.2,
+    }).addTo(map);
+
+    polygonArr.push(polygon);
+  });
+  map.fitBounds(pickPoints);
+};
 const drawPolygon = (polytrueData: any) => {
   let pickPoints: any = [];
   polytrueData.map((item: any) => {
@@ -947,18 +973,19 @@ const mapClick = (event: any) => {
       let distance = pickedPoints[0].distanceTo(pickedPoints[1]); //算距离
       let polyline = L.polyline(pickedPoints, { color: "red" })
         .addTo(map)
-        .bindPopup(`相距:${distance.toFixed(3)}米`)
+        // .bindPopup(`相距:${distance.toFixed(3)}米`)
         .openPopup(); //划线
       rangingArray.push(polyline);
       map.fitBounds(pickedPoints); //适应视野
       //恢复状态
       pickupMode = false;
       isDraw.value = false;
+      isDrawing.value =false
       pickedPoints = [];
       try {
-        setRangeStyle("grab");
+      
         map.off("click", mapClick);
-        enablePolygonsInteraction()
+        enablePolygonsInteraction();
       } catch (err) {
         console.log(err);
       }
@@ -970,10 +997,11 @@ const isDraw = ref(false);
 // 地图测距
 function mapRanging() {
   isDraw.value = true;
+  isDrawing.value =true
   try {
     // @ts-ignore
-    setRangeStyle("crosshair");
-    disablePolygonsInteraction()
+    
+    disablePolygonsInteraction();
     map.on("click", mapClick);
   } catch (err) {
     console.log(err);
@@ -1094,8 +1122,9 @@ function clearMapRanging() {
   pickedPoints = [];
   pickedPoints.length = 0;
   isDraw.value = false;
+  isDrawing.value =false
   try {
-    setRangeStyle("grab");
+  
     map.off("click", mapClick);
   } catch (err) {
     console.log(err);
@@ -1264,5 +1293,13 @@ defineExpose({
 }
 :deep(.leaflet-popup-content) {
   cursor: pointer;
+}
+#map {
+  cursor: grab; /* 默认鼠标样式 */
+}
+
+/* 十字坐标型鼠标样式 - 仅在绘制状态生效 */
+.crosshair-cursor {
+  cursor: crosshair !important;
 }
 </style>

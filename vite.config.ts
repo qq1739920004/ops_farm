@@ -71,12 +71,12 @@ export default ({ mode }) => defineConfig({
     port: 8089,
     open: true, // 运行是否自动打开浏览器
     proxy: {
-      '/dev-api/lu': {
-        target: 'http://140.143.154.216:9051',
-        changeOrigin: true,
-        rewrite: (path) =>
-          path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
-      },
+      // '/dev-api/lu': {
+      //   target: 'http://140.143.154.216:9051',
+      //   changeOrigin: true,
+      //   rewrite: (path) =>
+      //     path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
+      // },
       '/dev-apino': {
         target: `http://140.207.166.210:9030`,
         changeOrigin: true,

@@ -7,6 +7,7 @@
     "
   >
     <el-menu-item
+    
       v-if="onlyOneChild.meta && !onlyOneChild.meta.hidden"
       @click="changeRouter(resolvePath(onlyOneChild.path))"
       :index="resolvePath(onlyOneChild.path)"
@@ -127,4 +128,14 @@ function resolvePath(routePath: string) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+:deep(.el-menu  .el-menu .el-menu-item) {
+  /* 基础样式 */
+  padding-left: 75px !important; /* 增加左侧缩进区分层级 */
+font-size: 14px !important;
+ 
+}
+
+
+</style>
