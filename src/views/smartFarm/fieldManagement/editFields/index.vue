@@ -221,7 +221,7 @@ const words = ref(null);
 const formRef = ref<any>();
 const isSHowColorPicker = ref(false);
 const cascaderProps = {
-  value: "id", // 指定 value 对应的字段名
+  value: "bizKey", // 指定 value 对应的字段名
   label: "bizValue", // 指定 label 对应的字段名
   children: "children", // 指定子节点对应的字段名（默认就是children，可省略）,
   checkStrictly: true,

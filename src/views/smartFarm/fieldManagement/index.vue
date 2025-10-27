@@ -5,12 +5,14 @@
       ref="sinoMapRef"
       :mapCenter="mapCenter"
       :polygonData="polygonData"
+      :polygonData2="polygonData2"
       :lineData="lineData"
       :boundariesID="boundariesID"
       :markerData="markerData"
       :nameList="nameList"
       :colorList="colorList"
       @clickId="clickId"
+      @lineSend="clickLines"
     />
 
     <!-- <div class="select_area">
@@ -146,7 +148,7 @@
                 {{ t("statisticsReport.thousandArea") }}:
               </div> -->
               <div class="unshared_area">
-                {{ item.area ? item.area.toFixed(2) : 0 }}{{ t('work.are') }}
+                {{ item.area ? item.area.toFixed(2) : 0 }}{{ t("work.are") }}
               </div>
             </div>
             <div class="bottom">
@@ -208,7 +210,7 @@
         </el-row>
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.modifier") }}:</el-col>
-          <el-col  :span="12"> {{ fieldInfo.modifier }}</el-col>
+          <el-col :span="12"> {{ fieldInfo.modifier }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.describe") }}:</el-col>
@@ -227,7 +229,14 @@
             > -->
             <div style="display: flex">
               <el-button link type="primary" size="small">分享边界</el-button>
-              <el-button link type="primary" size="small">分享作业线</el-button>
+              <el-button
+                link
+                type="primary"
+                size="small"
+                v-if="fieldInfo.haveReference"
+                @click="showlines(fieldInfo.companyId)"
+                >显示作业线</el-button
+              >
             </div>
           </el-col>
         </el-row>
@@ -256,6 +265,36 @@
         }}</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      v-model="dialogVisible2"
+      :title="t('work.share')"
+      center
+      width="500px"
+      @close="selectedCarId = ''"
+    >
+      <div class="dia_select">
+      
+        <el-select
+          filterable
+          v-model="selectedCarId"
+          class="input-with-select"
+          style="width: 300px"
+          :placeholder="$t('work.pleaseSelect')"
+        >
+          <el-option
+            v-for="item in carList2"
+            :label="item.name"
+            :value="item.id"
+            :key="item.id"
+          ></el-option>
+        </el-select>
+      </div>
+
+      <div class="dia_select1">
+        <el-button @click="dialogVisible2 = false">取消</el-button>
+        <el-button type="primary" @click="handleConfirm2">确认下发</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -272,23 +311,29 @@ import {
   suggest_API,
   farmList_API,
   block_API,
+  farmDetail_API,
   deleteBlock_API,
   share_API,
   listVehicle_API,
   shareCar_API,
+  getCarList_API,
+  pushReferenceLine_API,
 } from "@/api/fieldManagement/indx";
 import router from "@/router";
 import { useI18n } from "vue-i18n";
 const { t, locale } = useI18n();
 const sinoMapRef = ref<any>();
 const lineData = ref<any>([]);
+const dialogVisible2 = ref(false);
 const dialogVisible = ref(false);
 const markerData = ref<any>([]);
 const choosenIndex = ref<any>("");
 const polygonData = ref<any>([]);
+const polygonData2 = ref<any>([]);
 const nameList = ref<any>([]);
 const colorList = ref<any>([]);
 const boundariesID = ref<any>([]);
+const selectedCarId = ref("");
 const loading = ref(false);
 const fieldInfo = ref<any>({});
 let options = <any>[];
@@ -297,12 +342,14 @@ const farmList = ref<any>([]);
 const total = ref(0);
 const infoShow = ref(false);
 const pickedSn = ref("");
+const companyId = ref("");
 const mapCenter = ref<any>({
   markerId: null,
   center: [[121.734942, 31.086444]],
   zoom: 4,
 });
 const carList = ref<any>([]);
+const carList2 = ref<any>([]);
 const remoteOptions = ref<any>([]);
 
 const pageInfo = reactive<any>({
@@ -312,14 +359,174 @@ const pageInfo = reactive<any>({
   currentPage: 1,
   pageSize: 900,
 });
-
+const showlines = (id: any) => {
+  // {
+  //       linesId: 1234,
+  //       referenceLines: [
+  //         {
+  //           id: 12,
+  //           referenceLines: {
+  //             s72: 0,
+  //             s94: {
+  //               s73: ["31.246616964,121.46553773", "31.246616965,121.46553772"], // ab两个点
+  //             },
+  //           },
+  //         },
+  //         {
+  //           id: 13,
+  //           referenceLines: {
+  //             s72: 2,
+  //             s94: {
+  //               s73: [
+  //                 "31.246616964,121.46553773",
+  //                 "31.246616965,121.46553772",
+  //                 "31.246616965,121.46553772",
+  //                 "31.246616965,121.46553772",
+  //               ], // abcd四个点
+  //               s81: 0, // 基准线  0:AB 1:BC 2:CD 3:DA
+  //               s82: 0, // 掉头方向 0:无方向 1:左掉头 2:右掉头
+  //               s83: 5.0, //转弯半径 m
+  //               s84: 2.2, // 边界距离 m
+  //               s85: 1, //跨行数
+  //             },
+  //           },
+  //         },
+  //         {
+  //           id: 14,
+  //           referenceLines: {
+  //             s72: 4,
+  //             s94: {
+  //               s73: ["31.246616964,121.46553773"], // 单点
+  //               s83: 5.0, // 同心圆最小半径
+  //             },
+  //           },
+  //         },
+  //         {
+  //           id: 15,
+  //           referenceLines: {
+  //             s72: 5,
+  //             s94: {
+  //               s73: ["31.246616964,121.46553773", "31.246616965,121.46553772"], // 任意点
+  //               s76: 2, // 曲线点个数
+  //             },
+  //           },
+  //         },
+  //         {
+  //           id: 16,
+  //           referenceLines: {
+  //             s72: 6,
+  //             s94: {
+  //               s73: ["31.246616964,121.46553773", "31.246616965,121.46553772"], // 任意点
+  //             },
+  //           },
+  //         },
+  //         {
+  //           id: 17,
+  //           referenceLines: {
+  //             s72: 7,
+  //             s94: {
+  //               s73: [
+  //                 "31.246616964,121.46553773",
+  //                 "31.246616965,121.46553772",
+  //                 "31.246616964,121.46553773",
+  //               ], // 三个点
+  //               s83: 5.0, // 圆半径
+  //             },
+  //           },
+  //         },
+  //         {
+  //           id: 18,
+  //           referenceLines: {
+  //             s72: 8,
+  //             s94: {
+  //               s73: [
+  //                 "31.246616964,121.46553773",
+  //                 "31.246616965,121.46553772",
+  //                 "31.246616965,121.46553772",
+  //                 "31.246616964,121.46553773",
+  //               ], // 任意首尾封闭点集
+  //             },
+  //           },
+  //         },
+  //         {
+  //           id: 19,
+  //           referenceLines: {
+  //             s72: -101,
+  //             s94: {
+  //               s73: ["31.246616964,121.46553773"], // 单点
+  //               s77: 0.4887, // 航向
+  //             },
+  //           },
+  //         },
+  //         {
+  //           id: 20,
+  //           referenceLines: {
+  //             s72: -102,
+  //             s94: {
+  //               s73: ["31.246616964,121.46553773", "31.246616965,121.46553772"],
+  //               //两点
+  //               s82: 0, // 田块方向  1:左 2:右
+  //               s83: 5.0, // 转弯半径 m
+  //               s84: 2.2, // 边界距离 m
+  //               s85: 1, //跨行数
+  //             },
+  //           },
+  //         },
+  //       ],
+  //     },
+  lineData.value.push({
+    linesId: fieldInfo.value.id,
+    referenceLines: fieldInfo.value.referenceLines,
+  });
+  companyId.value = id;
+};
+const getCarList2 = async () => {
+  const res = await getCarList_API({
+    companyId: companyId.value,
+  });
+  carList2.value = res.data;
+};
+const handleConfirm2 = async () => {
+  if (!selectedCarId.value) {
+    ElMessage.warning("请选择车辆");
+  } else {
+    try {
+      await pushReferenceLine_API({
+        ReferenceLineId: lineValue.value,
+        vehicleId: selectedCarId.value,
+      });
+      ElMessage.success("下发成功");
+      dialogVisible2.value = false;
+      lineValue.value = "";
+      selectedCarId.value = "";
+    } catch {}
+  }
+};
 watch(
   () => pageInfo.farmId,
   () => {
     changeKeyWord();
+    getDetails();
   },
   { deep: true }
 );
+
+const locationContour = ref([]);
+const getDetails = async () => {
+  const { data } = await farmDetail_API({ id: pageInfo.farmId });
+
+  locationContour.value = JSON.parse(data.locationContour);
+  const boundaries = locationContour.value.map((item: any) => {
+    return {
+      id: pageInfo.farmId,
+      boundaries: item,
+    };
+  });
+
+  polygonData2.value[0] = boundaries;
+};
+getDetails();
+
 const reReqList = () => {
   pageInfo.currentPage = 1;
   pageInfo.pageSize = 900;
@@ -441,12 +648,12 @@ const getFieldData = async () => {
         clickId: item.id,
       };
     });
-    const referenceLines = data.records.map((item: any, index: any) => {
-      return {
-        id: name[index],
-        referenceLines: item.referenceLines,
-      };
-    });
+    // const referenceLines = data.records.map((item: any, index: any) => {
+    //   return {
+    //     id: name[index],
+    //     referenceLines: item.referenceLines,
+    //   };
+    // });
     const obstacles = data.records.map((item: any, index: any) => {
       return {
         id: name[index],
@@ -455,7 +662,7 @@ const getFieldData = async () => {
     });
     nameList.value.push(...name);
     polygonData.value.push(boundaries);
-    lineData.value.push(referenceLines);
+    // lineData.value.push(referenceLines);
     markerData.value.push(obstacles);
     colorList.value.push(...color);
   }
@@ -466,11 +673,16 @@ getFieldData();
 //   boundariesID.value = [];
 //   choosenIndex.value = "";
 // };
+const lineValue = ref("");
 
 function clickId(index: any, id: any, boundaries: any) {
   getBlock(index, id, boundaries);
 }
-
+function clickLines(lineId: any) {
+  lineValue.value = lineId;
+  getCarList2();
+  dialogVisible2.value = true;
+}
 function remoteMethod(e: any) {
   wordsSearch(e);
 }
@@ -803,7 +1015,7 @@ async function wordsSearch(e: any) {
 }
 
 .dropdown-item:hover {
-  background-color: #f5f7fa; 
+  background-color: #f5f7fa;
 }
 
 .item-icon {
@@ -818,6 +1030,5 @@ async function wordsSearch(e: any) {
   /* 可选：当单词过长时强制拆分换行（针对英文/数字） */
   word-break: break-all; /* 或 break-word */
   /* 可选：添加边框便于观察 */
-  
 }
 </style>

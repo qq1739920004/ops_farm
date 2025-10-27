@@ -84,7 +84,10 @@ import useAppStore from "@/store/app";
 import { useRoute } from "vue-router";
 import { useStorage } from "@vueuse/core";
 onMounted(() => {
-  getFarmList();
+   if(localStorage.getItem('isBlock') ==='true'){
+      getFarmList();
+    }
+  
 });
 const selectedValue = useStorage('farmId', '', localStorage, {
   serializer: {

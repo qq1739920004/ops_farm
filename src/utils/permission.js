@@ -67,8 +67,17 @@ function formatRoute(menuPermissions) {
       // }
     } else {
       // 1737删除 告警统计
-      if(item.children[2] &&item.children[2].id =='1737'){
-        item.children.splice(2,1)
+      if (item.children[2] && item.children[2].id == '1737') {
+        item.children.splice(2, 1)
+      }
+      console.log('iddd', item.id)
+      if (item.id === 2598) {
+        if(item.isHavePermission){
+localStorage.setItem('isBlock', true)
+        } else {
+          localStorage.setItem('isBlock', false)
+        }
+        
       }
       item.component = Layout;
       item.meta = {
@@ -205,22 +214,22 @@ function formatRoute(menuPermissions) {
   // 设置默认菜单数据
   function setDefaultRoute() {
     if (serializeRoutes.length > 0) {
-      const firstRoute=serializeRoutes.find(i=>!i.hidden);
-      let redirect='/noPermission';//所有菜单都无权限默认跳转到无权限页面
+      const firstRoute = serializeRoutes.find(i => !i.hidden);
+      let redirect = '/noPermission';//所有菜单都无权限默认跳转到无权限页面
       asyncRoutes.unshift({
         path: "/",
         component: Layout,
-        redirect:redirect
+        redirect: redirect
       });
-      if(!firstRoute){return}
-      const firstChildren=firstRoute.children.find(i=>!i.hidden);
-      if(!firstChildren){return}
+      if (!firstRoute) { return }
+      const firstChildren = firstRoute.children.find(i => !i.hidden);
+      if (!firstChildren) { return }
       let character = firstChildren.path ? "/" : "";
-      redirect= firstRoute.path +character +firstChildren.path;
-      asyncRoutes[0].redirect=redirect;
-    } 
-   }
+      redirect = firstRoute.path + character + firstChildren.path;
+      asyncRoutes[0].redirect = redirect;
+    }
   }
+}
 
 
 // 初始化按钮权限

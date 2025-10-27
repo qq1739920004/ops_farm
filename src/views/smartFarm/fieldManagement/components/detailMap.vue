@@ -61,10 +61,11 @@ import green from "@/assets/monitoring/green.svg";
 import yellow from "@/assets/monitoring/yellow.svg";
 import gray from "@/assets/monitoring/gray.svg";
 import { gcoordLngLat, getMapView } from "sino-tool-v3";
-import { idText } from "typescript";
+
 //引入turf.js
 import * as turf from "@turf/turf";
 // const L = window.L;
+
 const mapFontSize = computed(() => {
   let fontSize = 16;
   if (currentZoom.value <= 10) {
@@ -75,7 +76,12 @@ const mapFontSize = computed(() => {
   return fontSize;
 });
 const { t, locale } = useI18n();
+
 const props = defineProps({
+  companyId: {
+    type: Number,
+    default: "",
+  },
   mapTile: {
     type: Array,
     default: [0, 1, 2],
@@ -122,6 +128,10 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  polygonData2: {
+    type: Array,
+    default: [],
+  },
 
   boundariesID: {
     type: Array,
@@ -142,9 +152,19 @@ const props = defineProps({
 let pickupMode: boolean = false; // 是否地图拾取模式
 let pickedPoints: any = [];
 let rangingArray: any = reactive([]);
-let ABlineArray: any = [];
+let type0_Line: any = [];
+let type2_Line: any = [];
+let type4_Line: any = [];
+let type5_Line: any = [];
+let type6_Line: any = [];
+let type7_Line: any = [];
+let type8_Line: any = [];
+let type101_Line: any = [];
+let type102_Line: any = [];
 let polygonArr: any = [];
+let polygonArr2: any = [];
 let markerNameArr: any = [];
+const targetZoom = 17;
 let cycleArray: any = [];
 const defaultMapCenter = [31.086444, 121.734942];
 const defaultMapZoom = 4;
@@ -158,6 +178,12 @@ watch(
   { deep: true }
 );
 watch(
+  () => props.companyId,
+  () => {
+    getCarList();
+  }
+);
+watch(
   () => props.lineData,
   (lineData) => {
     createLine(lineData);
@@ -168,6 +194,14 @@ watch(
   () => props.polygonData,
   (polygonData) => {
     createPolygon(polygonData);
+    // 创建纯文字标记
+  },
+  { deep: true }
+);
+watch(
+  () => props.polygonData2,
+  (polygonData2) => {
+    createPolygon2(polygonData2);
     // 创建纯文字标记
   },
   { deep: true }
@@ -321,13 +355,40 @@ onMounted(() => {
   handleMapCenter(props.mapCenter);
 });
 
-const emits = defineEmits(["clickId"]);
-
-// 删除全部
-function deleteAllMarkers() {
-  ABlineArray.forEach((item: any) => {
+const emits = defineEmits(["clickId", "lineSend"]);
+// referLines清除
+function clearAllreferLines() {
+  type0_Line.forEach((item: any) => {
     map.removeLayer(item);
   });
+  type2_Line.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+  type4_Line.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+  type5_Line.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+  type6_Line.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+  type7_Line.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+  type8_Line.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+  type101_Line.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+  type102_Line.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+}
+// 删除全部
+function deleteAllMarkers() {
+  clearAllreferLines();
   polygonArr.forEach((item: any) => {
     map.removeLayer(item);
   });
@@ -335,6 +396,9 @@ function deleteAllMarkers() {
     map.removeLayer(item);
   });
   cycleArray.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+  markerNameArr.forEach((item: any) => {
     map.removeLayer(item);
   });
 }
@@ -549,6 +613,7 @@ const canvasLabel = new L.CanvasLabel({
   },
 });
 const mapInstance = ref<any>();
+
 // 初始化加载地图
 function initMap() {
   map = L.map("map", {
@@ -569,6 +634,7 @@ function initMap() {
   mapTileChange();
   // initRanging();
   mapZoomChange();
+  map.on("zoomend", handleZoomEnd);
 }
 
 function initCanvasGroup() {
@@ -628,6 +694,29 @@ function createMarker(list: any) {
   });
 }
 
+function createPolygon2(list: any) {
+  polygonArr2.forEach((item: any) => {
+    item.remove();
+  });
+  polygonArr2.length = 0;
+  // 双重polylineData数组
+  const polytrueData2: any = [];
+
+  // 处理数据格式
+  list.map((it: any) => {
+    it.forEach((inner: any, index: any) => {
+      let innerList = inner.boundaries.map((point: any) => {
+        let position = gcoordLngLat(point.split(",")[1], point.split(",")[0]);
+        return position;
+      });
+      polytrueData2.push(innerList);
+    });
+
+    return polytrueData2;
+  });
+  drawPolygon2(polytrueData2);
+}
+
 // 创建多面形
 function createPolygon(list: any) {
   if (list.length === 0) {
@@ -636,7 +725,11 @@ function createPolygon(list: any) {
   polygonArr.forEach((item: any) => {
     item.remove();
   });
+  markerNameArr.forEach((item: any) => {
+    item.remove();
+  });
   polygonArr.length = 0;
+  markerNameArr.length = 0;
   // 双重polylineData数组
   const polytrueData: any = [];
   const nameData: any = [];
@@ -659,6 +752,60 @@ function createPolygon(list: any) {
   });
   drawPolygon(polytrueData, nameData, clickIdData, boundariesData);
 }
+
+const handleZoomEnd = () => {
+  const currentZoom = map.getZoom();
+  markerNameArr.forEach((marker) => {
+    if (currentZoom >= targetZoom) {
+      // 显示标记
+      // marker._icon?.style.setProperty("display", "block", "important");
+      map.addLayer(marker);
+    } else {
+      // 隐藏标记
+      map.removeLayer(marker);
+    }
+  });
+  console.log(currentZoom);
+};
+const drawPolygon2 = (polytrueData: any) => {
+  let pickPoints: any = [];
+  polytrueData.map((item: any, index: any) => {
+    pickPoints.push(item);
+    var polygon: any = L.polygon(item, {
+      color: "#FFFFFF",
+      fillColor: "#FFFFFF",
+      fillOpacity: 0.2,
+    }).addTo(map);
+
+    polygonArr2.push(polygon);
+  });
+  map.fitBounds(pickPoints);
+};
+// 示例：处理坐标的工具函数
+const parseCoordinates = (rawCoords) => {
+  // 过滤非数组的坐标
+  if (!Array.isArray(rawCoords)) return null;
+
+  // 转换每个坐标点为数字，并过滤无效值
+  const validCoords = rawCoords
+    .map((point) => {
+      // 确保坐标点是长度为2的数组
+      if (!Array.isArray(point) || point.length !== 2) return null;
+
+      // 转换为数字（处理字符串类型的坐标）
+      const lat = Number(point[0]);
+      const lng = Number(point[1]);
+
+      // 检查是否为有效数字（排除NaN）
+      if (isNaN(lat) || isNaN(lng)) return null;
+
+      return [lat, lng];
+    })
+    .filter(Boolean); // 过滤null值
+
+  // 确保至少有3个有效点（多边形至少需要3个顶点）
+  return validCoords.length >= 3 ? validCoords : null;
+};
 const drawPolygon = (
   polytrueData: any,
   nameData: any,
@@ -668,69 +815,436 @@ const drawPolygon = (
   let pickPoints: any = [];
   polytrueData.map((item: any, index: any) => {
     pickPoints.push(item);
+    const validCoords = parseCoordinates(item);
+    if (validCoords) {
+      var polygon = L.polygon(item, {
+        color: props.colorList[index] as string,
+        fillColor: props.colorList[index] as string,
+        fillOpacity: 0.44,
+      }).addTo(map);
+      // 获取多边形中心点
+      var center: any = turf.centroid(polygon.toGeoJSON()).geometry.coordinates;
+      center = center.reverse(); // Leaflet使用[lat,lng]格式
 
-    var polygon = L.polygon(item, {
-      color: props.colorList[index] as string,
-      fillColor: props.colorList[index] as string,
-      fillOpacity: 0.44,
-    }).addTo(map);
-    // 获取多边形中心点
-    var center: any = turf.centroid(polygon.toGeoJSON()).geometry.coordinates;
-    center = center.reverse(); // Leaflet使用[lat,lng]格式
-
-    // 在中心点添加文本标记
-    var marker = L.marker(center, {
-      icon: L.divIcon({
-        className: "polygon-label",
-        html: ` <div class="text-content" style="width:100px; padding: 5px">${nameData[index]}</div>`,
-        iconSize: [32, 32], // 图标的大小 [宽度, 高度]
-      }),
-    }).addTo(map);
-    polygon.on("click", function (e) {
-      emits("clickId", index, clickIdData[index], boundariesData[index]);
-    });
-    polygonArr.push(polygon);
-    markerNameArr.push(marker);
+      // 在中心点添加文本标记
+      var marker = L.marker(center, {
+        icon: L.divIcon({
+          className: "polygon-label",
+          html: ` <div class="text-content" style="width:100px; padding: 5px">${nameData[index]}</div>`,
+          iconSize: [32, 32], // 图标的大小 [宽度, 高度]
+        }),
+      }).addTo(map);
+      if (map.getZoom() < targetZoom) {
+        // marker._icon.style.display = "none"; // 隐藏标记图标
+        map.removeLayer(marker);
+      }
+      polygon.on("click", function (e) {
+        emits("clickId", index, clickIdData[index], boundariesData[index]);
+      });
+      polygonArr.push(polygon);
+      markerNameArr.push(marker);
+    } else {
+      console.error(`多边形 ${nameData[index]} 坐标无效:`, item);
+    }
   });
-  map.fitBounds(pickPoints);
+  // map.fitBounds(pickPoints);
 };
 // 创建线
+// function createLine(list: any) {
+//   if (list.length === 0) {
+//     return;
+//   }
+//   list.forEach((item: any) => {
+//     item.forEach((it: any) => {
+//       if (it.referenceLines && it.referenceLines.length > 0) {
+//         it.referenceLines.forEach((line: any) => {
+//           if (line.s72 === 0) {
+//             let arr = [
+//               gcoordLngLat(line.s94.s73[0].split(",")[1], line.s94.s73[0].split(",")[0]),
+//               gcoordLngLat(line.s94.s73[1].split(",")[1], line.s94.s73[1].split(",")[0]),
+//             ];
+
+//             let ABline = L.polyline(arr, { color: "red" }).addTo(map);
+//             type0_Line.push(ABline);
+//           }
+//         });
+//       }
+//     });
+//   });
+
+//   // list.forEach((item: any) => {
+//   //   let arr: any = [];
+//   //   item.forEach((v: any) => {
+//   //     arr.push(gcoordLngLat(v[0], v[1]));
+//   //   });
+//   //   latLng.push(arr);
+//   // });
+
+//   // const { color, weight } = props.lineStyle;
+
+//   // polyline = L.polyline(latLng, {
+//   //   color,
+//   //   weight,
+//   // }).addTo(map);
+// }
+
+// WGS84转GCJ02（火星坐标系）
+const PI = 3.1415926535897932384626;
+const a = 6378245.0; // 地球半径
+const ee = 0.00669342162296594323; // 扁率
+const wgs84ToGcj02 = (lat: any, lng: any) => {
+  // 判断是否在国内（不在国内则不转换）
+  const outOfChina = (lat: any, lng: any) => {
+    return lng < 72.004 || lng > 137.8347 || lat < 0.8293 || lat > 55.8271;
+  };
+
+  if (outOfChina(lat, lng)) {
+    return [lat, lng];
+  }
+
+  let dLat = transformLat(lng - 105.0, lat - 35.0);
+  let dLng = transformLng(lng - 105.0, lat - 35.0);
+  const radLat = (lat / 180.0) * PI;
+  let magic = Math.sin(radLat);
+  magic = 1 - ee * magic * magic;
+  const sqrtMagic = Math.sqrt(magic);
+  dLat = (dLat * 180.0) / (((a * (1 - ee)) / (magic * sqrtMagic)) * PI);
+  dLng = (dLng * 180.0) / ((a / sqrtMagic) * Math.cos(radLat) * PI);
+  const mgLat = lat + dLat;
+  const mgLng = lng + dLng;
+  return [mgLat, mgLng];
+};
+
+// 辅助计算纬度偏差
+const transformLat = (x: any, y: any) => {
+  let ret =
+    -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
+  ret += ((20.0 * Math.sin(6.0 * x * PI) + 20.0 * Math.sin(2.0 * x * PI)) * 2.0) / 3.0;
+  ret += ((20.0 * Math.sin(y * PI) + 40.0 * Math.sin((y / 3.0) * PI)) * 2.0) / 3.0;
+  ret +=
+    ((160.0 * Math.sin((y / 12.0) * PI) + 320 * Math.sin((y * PI) / 30.0)) * 2.0) / 3.0;
+  return ret;
+};
+
+// 辅助计算经度偏差
+const transformLng = (x: any, y: any) => {
+  let ret =
+    300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
+  ret += ((20.0 * Math.sin(6.0 * x * PI) + 20.0 * Math.sin(2.0 * x * PI)) * 2.0) / 3.0;
+  ret += ((20.0 * Math.sin(x * PI) + 40.0 * Math.sin((x / 3.0) * PI)) * 2.0) / 3.0;
+  ret +=
+    ((150.0 * Math.sin((x / 12.0) * PI) + 300.0 * Math.sin((x / 30.0) * PI)) * 2.0) / 3.0;
+  return ret;
+};
+
+const handleLine = (line: any) => {
+  dialogVisible.value = true;
+  console.log(line);
+};
+
+window.handleLine = handleLine;
+
+const parseAndTransformCoords = (coordStr: any) => {
+  // 先解析为WGS84的[lat, lng]
+  const [latStr, lngStr] = coordStr.split(",");
+  const wgs84Lat = parseFloat(latStr);
+  const wgs84Lng = parseFloat(lngStr);
+  if (isNaN(wgs84Lat) || isNaN(wgs84Lng)) return null;
+
+  // 转换为GCJ02坐标（高德地图使用）
+  const [gcjLat, gcjLng] = wgs84ToGcj02(wgs84Lat, wgs84Lng);
+  return [gcjLat, gcjLng];
+};
+
+// 批量转换坐标数组
+const parseAndTransformCoordList = (coordStrList: any) => {
+  return coordStrList
+    .map((coordStr: any) => parseAndTransformCoords(coordStr))
+    .filter(Boolean);
+};
+// 点击事件处理函数（在 Vue 作用域内，可访问 emit）
+const handlePopupClick = (e: any) => {
+  // 只处理 .popup-btn 的点击
+  if (e.target.classList.contains("popup-btn")) {
+    // 从 data-line-id 获取 line.id
+    const lineId = e.target.getAttribute("data-line-id");
+    // 触发 emit 传值
+    emits("lineSend", lineId);
+  }
+};
+function drawReferenceLine(line: any) {
+  const { s72, s94 } = line;
+  console.log(s72);
+
+  const coords = parseAndTransformCoordList(s94.s73);
+  if (coords.length === 0) {
+    console.warn(`类型 ${s72} 坐标无效`);
+    return;
+  }
+  switch (s72) {
+    case 0: // 直线
+      if (coords.length >= 2) {
+        let ABline = L.polyline(coords, { color: "red" }).addTo(map);
+        ABline.bindPopup(
+          `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+        );
+        // 关键：监听弹窗打开事件，绑定点击委托
+        ABline.on("popupopen", (e: any) => {
+          // 获取弹窗的 DOM 容器（Leaflet 弹窗容器类名为 .leaflet-popup-content-wrapper）
+          const popupContainer = e.popup._contentNode.parentNode;
+
+          // 给弹窗容器绑定点击事件（委托给 .popup-btn）
+          popupContainer.addEventListener("click", handlePopupClick);
+        });
+
+        // 监听弹窗关闭事件，移除事件绑定（避免重复触发）
+        ABline.on("popupclose", (e: any) => {
+          const popupContainer = e.popup._contentNode.parentNode;
+          popupContainer.removeEventListener("click", handlePopupClick);
+        });
+
+        type0_Line.push(ABline);
+      }
+      break;
+    case 2: // 2: 自动掉头（多段线）
+      let ABline2 = L.polyline(coords, {
+        color: "green",
+        weight: 2,
+        dashArray: "5, 5",
+      }).addTo(map);
+      // 可根据s81/s82等参数添加转向辅助线（示例：基准线AB标黄）
+      ABline2.bindPopup(
+        `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+      );
+      // 关键：监听弹窗打开事件，绑定点击委托
+      ABline2.on("popupopen", (e: any) => {
+        // 获取弹窗的 DOM 容器（Leaflet 弹窗容器类名为 .leaflet-popup-content-wrapper）
+        const popupContainer = e.popup._contentNode.parentNode;
+
+        // 给弹窗容器绑定点击事件（委托给 .popup-btn）
+        popupContainer.addEventListener("click", handlePopupClick);
+      });
+
+      // 监听弹窗关闭事件，移除事件绑定（避免重复触发）
+      ABline2.on("popupclose", (e: any) => {
+        const popupContainer = e.popup._contentNode.parentNode;
+        popupContainer.removeEventListener("click", handlePopupClick);
+      });
+
+      // 点击事件处理函数（在 Vue 作用域内，可访问 emit）
+      type2_Line.push(ABline2);
+      break;
+    case 4: // 4: 同心圆（单点+半径）
+      if (coords.length === 1) {
+        const center = coords[0];
+        const radius = s94.s83; // 半径（米）
+        // Leaflet的圆默认单位是米，需用L.circle
+        let ABline4 = L.circle(center, { radius, color: "blue", fill: false }).addTo(map);
+        ABline4.bindPopup(
+          `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+        );
+        // 关键：监听弹窗打开事件，绑定点击委托
+        ABline4.on("popupopen", (e: any) => {
+          // 获取弹窗的 DOM 容器（Leaflet 弹窗容器类名为 .leaflet-popup-content-wrapper）
+          const popupContainer = e.popup._contentNode.parentNode;
+
+          // 给弹窗容器绑定点击事件（委托给 .popup-btn）
+          popupContainer.addEventListener("click", handlePopupClick);
+        });
+
+        // 监听弹窗关闭事件，移除事件绑定（避免重复触发）
+        ABline4.on("popupclose", (e: any) => {
+          const popupContainer = e.popup._contentNode.parentNode;
+          popupContainer.removeEventListener("click", handlePopupClick);
+        });
+
+        // 点击事件处理函数（在 Vue 作用域内，可访问 emit）
+
+        type4_Line.push(ABline4);
+      }
+      break;
+
+    case 5: // 5: 等距曲线（多段线）
+      let ABline5 = L.polyline(coords, { color: "purple", weight: 2 }).addTo(map);
+      ABline5.bindPopup(
+        `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+      );
+      // 关键：监听弹窗打开事件，绑定点击委托
+      ABline5.on("popupopen", (e: any) => {
+        // 获取弹窗的 DOM 容器（Leaflet 弹窗容器类名为 .leaflet-popup-content-wrapper）
+        const popupContainer = e.popup._contentNode.parentNode;
+
+        // 给弹窗容器绑定点击事件（委托给 .popup-btn）
+        popupContainer.addEventListener("click", handlePopupClick);
+      });
+
+      // 监听弹窗关闭事件，移除事件绑定（避免重复触发）
+      ABline5.on("popupclose", (e: any) => {
+        const popupContainer = e.popup._contentNode.parentNode;
+        popupContainer.removeEventListener("click", handlePopupClick);
+      });
+
+      // 点击事件处理函数（在 Vue 作用域内，可访问 emit）
+
+      type5_Line.push(ABline5);
+      break;
+
+    case 6: // 6: 自由轨迹（多段线）
+      let ABline6 = L.polyline(coords, { color: "orange", weight: 2 }).addTo(map);
+
+      ABline6.bindPopup(
+        `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+      );
+      // 关键：监听弹窗打开事件，绑定点击委托
+      ABline6.on("popupopen", (e: any) => {
+        // 获取弹窗的 DOM 容器（Leaflet 弹窗容器类名为 .leaflet-popup-content-wrapper）
+        const popupContainer = e.popup._contentNode.parentNode;
+
+        // 给弹窗容器绑定点击事件（委托给 .popup-btn）
+        popupContainer.addEventListener("click", handlePopupClick);
+      });
+
+      // 监听弹窗关闭事件，移除事件绑定（避免重复触发）
+      ABline6.on("popupclose", (e: any) => {
+        const popupContainer = e.popup._contentNode.parentNode;
+        popupContainer.removeEventListener("click", handlePopupClick);
+      });
+      type6_Line.push(ABline6);
+      break;
+
+    case 7: // 7: 三点定圆
+      if (coords.length === 3) {
+        // 简化处理：用三点的外接圆（实际需计算圆心）
+        // 此处示例用第一个点为圆心，s83为半径
+        let ABline7 = L.circle(coords[0], {
+          radius: s94.s83,
+          color: "cyan",
+          fill: false,
+        }).addTo(map);
+        // 同时绘制三点连线
+        let ABline7line = L.polyline([...coords, coords[0]], {
+          color: "cyan",
+          weight: 1,
+        }).addTo(map);
+        ABline7.bindPopup(
+          `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+        );
+        // 关键：监听弹窗打开事件，绑定点击委托
+        ABline7.on("popupopen", (e: any) => {
+          // 获取弹窗的 DOM 容器（Leaflet 弹窗容器类名为 .leaflet-popup-content-wrapper）
+          const popupContainer = e.popup._contentNode.parentNode;
+
+          // 给弹窗容器绑定点击事件（委托给 .popup-btn）
+          popupContainer.addEventListener("click", handlePopupClick);
+        });
+
+        // 监听弹窗关闭事件，移除事件绑定（避免重复触发）
+        ABline7.on("popupclose", (e: any) => {
+          const popupContainer = e.popup._contentNode.parentNode;
+          popupContainer.removeEventListener("click", handlePopupClick);
+        });
+
+        type7_Line.push(ABline7, ABline7line);
+      }
+      break;
+
+    case 8: // 8: 对角耙（封闭多边形）
+      if (coords.length >= 3) {
+        let ABline8 = L.polygon(coords, { color: "brown", fill: false, weight: 2 }).addTo(
+          map
+        );
+        ABline8.bindPopup(
+          `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+        );
+        // 关键：监听弹窗打开事件，绑定点击委托
+        ABline8.on("popupopen", (e: any) => {
+          // 获取弹窗的 DOM 容器（Leaflet 弹窗容器类名为 .leaflet-popup-content-wrapper）
+          const popupContainer = e.popup._contentNode.parentNode;
+
+          // 给弹窗容器绑定点击事件（委托给 .popup-btn）
+          popupContainer.addEventListener("click", handlePopupClick);
+        });
+
+        // 监听弹窗关闭事件，移除事件绑定（避免重复触发）
+        ABline8.on("popupclose", (e: any) => {
+          const popupContainer = e.popup._contentNode.parentNode;
+          popupContainer.removeEventListener("click", handlePopupClick);
+        });
+        type8_Line.push(ABline8);
+      }
+      break;
+
+    case -101: // -101: 单点+航向（标记+箭头）
+      if (coords.length === 1) {
+        // 1. 航向角转换：弧度 → 角度（Leaflet旋转用角度）
+        const headingRadian = s94.s77; // 后台返回的弧度
+        const headingDegree = (headingRadian * 180) / Math.PI; // 转换为角度
+
+        // 2. 自定义PNG图标（带旋转）
+        // 方式1：用L.divIcon加载PNG并通过CSS旋转（推荐，灵活控制旋转）
+        const arrowIcon = L.divIcon({
+          html: `
+          <img
+            src="/icons/101arrow.png"  // PNG图标的路径（public目录下）
+            style="transform: rotate(${headingDegree}deg);"  // 动态旋转
+            width="24"  // 图标宽度（根据实际图片调整）
+            height="24" // 图标高度
+          />
+        `,
+          className: "custom-arrow-icon", // 自定义类名（可选，用于额外样式）
+          iconSize: [24, 24], // 图标尺寸（需与图片宽高一致）
+          iconAnchor: [12, 12], // 图标锚点（中心点，确保旋转轴心正确）
+        });
+        let ABline101 = L.marker(coords[0], { icon: arrowIcon }).addTo(map);
+        ABline101.bindPopup(
+          `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+        );
+        // 关键：监听弹窗打开事件，绑定点击委托
+        ABline101.on("popupopen", (e: any) => {
+          // 获取弹窗的 DOM 容器（Leaflet 弹窗容器类名为 .leaflet-popup-content-wrapper）
+          const popupContainer = e.popup._contentNode.parentNode;
+
+          // 给弹窗容器绑定点击事件（委托给 .popup-btn）
+          popupContainer.addEventListener("click", handlePopupClick);
+        });
+
+        // 监听弹窗关闭事件，移除事件绑定（避免重复触发）
+        ABline101.on("popupclose", (e: any) => {
+          const popupContainer = e.popup._contentNode.parentNode;
+          popupContainer.removeEventListener("click", handlePopupClick);
+        });
+        type6_Line.push(ABline101);
+        type101_Line.push(ABline101);
+      }
+      break;
+
+    case -102: // -102: 循环模式（多段线+转向）
+      let ABline102 = L.polyline(coords, { color: "magenta", weight: 2 }).addTo(map);
+      // 可根据s82方向添加转向箭头（示例）
+      ABline102.bindPopup(
+        `  <div  style='cursor:pointer'   onclick='handleLine(${line.id})'>下发作业线</div >`
+      );
+      type102_Line.push(ABline102);
+      break;
+
+    default:
+      console.warn(`未处理的类型: ${s72}`);
+  }
+}
+
 function createLine(list: any) {
   if (list.length === 0) {
     return;
   }
   list.forEach((item: any) => {
-    item.forEach((it: any) => {
-      if (it.referenceLines && it.referenceLines.length > 0) {
-        it.referenceLines.forEach((line: any) => {
-          if (line.s72 === 0) {
-            let arr = [
-              gcoordLngLat(line.s94.s73[0].split(",")[1], line.s94.s73[0].split(",")[0]),
-              gcoordLngLat(line.s94.s73[1].split(",")[1], line.s94.s73[1].split(",")[0]),
-            ];
+    console.log(item);
 
-            let ABline = L.polyline(arr, { color: "red" }).addTo(map);
-            ABlineArray.push(ABline);
-          }
-        });
-      }
-    });
+    if (item.referenceLines && item.referenceLines.length > 0) {
+      item.referenceLines.forEach((line: any) => {
+        drawReferenceLine(line);
+      });
+    }
   });
-
-  // list.forEach((item: any) => {
-  //   let arr: any = [];
-  //   item.forEach((v: any) => {
-  //     arr.push(gcoordLngLat(v[0], v[1]));
-  //   });
-  //   latLng.push(arr);
-  // });
-
-  // const { color, weight } = props.lineStyle;
-
-  // polyline = L.polyline(latLng, {
-  //   color,
-  //   weight,
-  // }).addTo(map);
 }
 
 // 图商发生变化
@@ -1035,7 +1549,19 @@ defineExpose({
   border-radius: 5px;
   padding: 6px 10px;
   color: #fff;
-
+  :deep(.el-select__wrapper) {
+    background-color: transparent;
+    box-shadow: none;
+    color: white;
+  }
+  :deep(.el-select__placeholder) {
+    color: white;
+  }
+  :deep(.el-select__wrapper:hover) {
+    background-color: transparent;
+    box-shadow: none;
+    color: white;
+  }
   .map_utils_item {
     height: 15px;
     padding: 0 12px;
@@ -1124,10 +1650,11 @@ defineExpose({
 :deep(.leaflet-popup) {
   color: white;
   .leaflet-popup-content-wrapper {
-    background: url("@/assets/monitoring/Union@.png");
-    background-size: contain;
-    background-size: 100% 103%;
-    color: var(--color-scheme);
+    // background: url("@/assets/monitoring/Union@.png");
+    // background-size: contain;
+    // background-size: 100% 103%;
+    // color: var(--color-scheme);
+    width: 100px;
   }
 
   .leaflet-popup-content {
@@ -1160,19 +1687,7 @@ defineExpose({
 :deep(.el-select) {
   --el-select-input-focus-border-color: transparent;
 }
-:deep(.el-select__wrapper) {
-  background-color: transparent;
-  box-shadow: none;
-  color: white;
-}
-:deep(.el-select__placeholder) {
-  color: white;
-}
-:deep(.el-select__wrapper:hover) {
-  background-color: transparent;
-  box-shadow: none;
-  color: white;
-}
+
 /* 自定义文字样式 */
 .custom-text {
   background: white;
@@ -1184,5 +1699,44 @@ defineExpose({
 .text-icon {
   font-weight: bold;
   color: #333;
+}
+
+/* 关键：通过深度选择器修改弹窗内文字颜色 */
+.custom-dialog {
+  /* 弹窗容器背景色（确保与文字对比明显） */
+  background-color: #fff;
+  :deep(.el-select__wrapper) {
+    background-color: transparent !important;
+    box-shadow: black !important;
+    color: black;
+  }
+  :deep(.el-select__placeholder) {
+    color: black !important;
+  }
+}
+
+/* 弹窗标题文字颜色 */
+:deep(.custom-dialog .el-dialog__title) {
+  color: #333 !important; /* 强制黑色 */
+}
+
+/* 弹窗内容区文字颜色（包括下拉框、提示文字等） */
+:deep(.custom-dialog .el-dialog__body) {
+  color: #333 !important;
+}
+
+/* 下拉框选项文字颜色 */
+:deep(.custom-dialog .el-select-dropdown .el-option) {
+  color: #333 !important;
+}
+
+/* 按钮文字颜色 */
+:deep(.custom-dialog .el-button) {
+  color: #333 !important;
+}
+
+/* 确认按钮（primary类型）文字颜色（通常为白色，按需调整） */
+:deep(.custom-dialog .el-button--primary) {
+  color: #fff !important;
 }
 </style>

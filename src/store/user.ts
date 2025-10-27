@@ -22,6 +22,7 @@ const useUserStore = defineStore("use", () => {
     function clearUserInfo() {
         Authorization.value = ''
         localStorage.removeItem("userInfo")
+          localStorage.removeItem("isBlock")
     }
     
     return {

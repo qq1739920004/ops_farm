@@ -117,3 +117,18 @@ export function sysDict_API(params: any) {
         params
     })
 }
+export function getCarList_API(params:any){
+    return request<any, any>({
+        url:`/farm/farm-base/listVehicle`,
+        method: 'get',
+        params
+    })
+}
+
+export function pushReferenceLine_API(params:any){
+    return request<any, any>({
+        url:'/farm/block/pushReferenceLine',
+        method: 'get',
+        params
+    })
+}

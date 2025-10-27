@@ -8,7 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     404: typeof import('./src/components/404/index.vue')['default']
-    copy: typeof import('./src/components/remoteAdjust/components/remoteAdjust501Pro copy.vue')['default']
     CustomColorPicker: typeof import('./src/components/CustomColorPicker/index.vue')['default']
     NoPermission: typeof import('./src/components/noPermission/index.vue')['default']
     Pagination: typeof import('./src/components/Pagination/index.vue')['default']
