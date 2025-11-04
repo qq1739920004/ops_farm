@@ -303,8 +303,8 @@ function parseGPGGA(gpggaStr: any) {
 function handleGGaData(data: any) {
   let latLng: any = [];
   data.forEach((item: any) => {
-    const gga: any = parseGPGGA(JSON.parse(item).deviceGGA);
-    const position = gcoordLngLat(gga.longitude, gga.latitude);
+    // const gga: any = parseGPGGA(JSON.parse(item).deviceGGA);
+    const position = gcoordLngLat(item.posY, item.posX);
     latLng.push(position);
     var circle = L.circle(position, {
       radius: 2, // 半径，单位米

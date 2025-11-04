@@ -156,15 +156,34 @@
               >
               </el-select-v2
             ></el-form-item>
+            <el-form-item :label="$t('work.vehicleType')" prop="vehicleType">
+              <el-cascader
+                style="width: 192px"
+                v-model="carParams.vehicleType"
+                :options="vehicle"
+                :props="cascaderProps"
+                clearable
+              />
+            </el-form-item>
+            <el-form-item :label="$t('work.buyTime')" prop="buyTime">
+              <el-date-picker
+                style="width: 192px"
+                v-model="carParams.buyTime"
+                type="datetime"
+                format="YYYY-MM-DD HH:mm:ss"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                clearable
+              />
+            </el-form-item>
             <el-form-item :label="$t('work.licensePlate')" prop="licensePlate">
               <el-input v-model="carParams.licensePlate"></el-input>
             </el-form-item>
             <el-form-item :label="$t('work.registrationNo')" prop="registrationNo">
               <el-input v-model="carParams.registrationNo"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('work.age')" prop="age">
+            <!-- <el-form-item :label="$t('work.age')" prop="age">
               <el-input v-model="carParams.age"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item :label="$t('work.powefr')" prop="power">
               <el-input v-model="carParams.power"></el-input>
             </el-form-item>
@@ -247,6 +266,7 @@ import {
   getBindSnVO_API,
   updateVehicle_API,
 } from "@/api/carManagement/index";
+import { sysDict_API } from "@/api/fieldManagement/indx";
 import sand from "@/assets/common/Gsand.png";
 import oil from "@/assets/common/goil.png";
 import speed1 from "@/assets/common/speed.png";
@@ -262,10 +282,23 @@ let markerData = ref<any>([]);
 const carParams = ref<any>({});
 const route = useRoute();
 const normalImg = ref("");
-
+const cascaderProps = {
+  value: "bizKey", // 指定 value 对应的字段名
+  label: "bizValue", // 指定 label 对应的字段名
+  children: "children", // 指定子节点对应的字段名（默认就是children，可省略）,
+  checkStrictly: true,
+};
 const dialogVisible = ref(false);
 const carFormRef = ref();
 let optionsList = ref<any>([]);
+const vehicle = ref([]);
+const getvehicleArray = async () => {
+  const { data } = await sysDict_API({
+    dicKey: "vehicle_type",
+  });
+  vehicle.value = data;
+};
+getvehicleArray();
 const load = () => {
   pageInfo.currentPage++;
   getStateData();
@@ -291,6 +324,8 @@ const rules = {
   brand: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
   model: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
   carId: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  vehicleType: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  buyTime: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
 };
 getDetailData();
 const trueImg = ref("");
@@ -308,7 +343,11 @@ const editCars = () => {
   dialogVisible.value = true;
   getSNList();
   carParams.value = JSON.parse(JSON.stringify(detailList.value));
+
+  carParams.value.vehicleType = [carParams.value.vehicleType.toString()];
 };
+
+
 const closeDia = () => {
   carParams.value = {};
   carFormRef.value.resetFields();
@@ -381,6 +420,10 @@ const editVehicles = async () => {
   }
   carParams.value.farmId = useStorage("farmId", "");
   try {
+    let params = { ...carParams.value };
+    params.vehicleType =
+      carParams.value.vehicleType[carParams.value.vehicleType.length - 1];
+      console.log(params)
     await updateVehicle_API(carParams.value);
     dialogVisible.value = false;
     ElMessage.success(t("work.editSuccess"));
@@ -552,7 +595,7 @@ const editVehicles = async () => {
   align-items: center;
   position: absolute;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 999;
   cursor: pointer;
 }
 .addImg {
@@ -574,7 +617,7 @@ const editVehicles = async () => {
     height: 80px;
     width: 245px;
     background-color: #fff;
-    z-index: 99999;
+    z-index: 999;
     .lat_line {
       margin-top: 10px;
       display: flex;

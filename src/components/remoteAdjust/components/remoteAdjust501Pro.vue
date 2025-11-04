@@ -291,7 +291,6 @@
           <el-col :span="18" :offset="3">
             <el-form-item class="item" :label="$t('work.logUpload')">
               <el-date-picker
-          
                 v-model="dateValue"
                 type="datetimerange"
                 range-separator="-"
@@ -299,7 +298,6 @@
                 :disabled-date="disabledDate"
                 start-placeholder="Start date"
                 end-placeholder="End date"
-              
               />
               <el-button
                 type="primary"
@@ -441,7 +439,9 @@ import {
 } from "@/api/machineryList/remoteAdjust/index";
 import { carNewDetail_API, logOpen_API, setFileUpload } from "@/api/machineryList/index";
 import type { TabsPaneContext } from "element-plus";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const activeName = ref("1");
 
 const handleClick = (tab: TabsPaneContext) => {
@@ -560,6 +560,7 @@ const formLabelAlign = reactive({
   pid: "9023",
   filename: 0,
 });
+
 // // 在线升级更新数据
 // const updateProductList = async () => {
 //     try {
@@ -765,6 +766,16 @@ const updateCarParams = async () => {
       });
     })
     .catch(() => {});
+};
+// 文件存储
+const toFileList = () => {
+  router.push({
+    path: "machineryList/file",
+    query: {
+      pid: 9018,
+      sn: props.sn,
+    },
+  });
 };
 // 更新基本参数
 const updatebasicParams = async () => {

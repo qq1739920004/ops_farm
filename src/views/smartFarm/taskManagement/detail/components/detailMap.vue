@@ -365,8 +365,7 @@ function handleGGaData(data: any) {
   // const date = data.slice(0, 100);
 
   const positionList = data.map((item: any) => {
-    const gga: any = parseGPGGA(item.deviceGGA);
-    return gcoordLngLat(gga.longitude, gga.latitude);
+    return gcoordLngLat(item.posY, item.posX);
   });
   let iconSt = L.icon({
     iconUrl: st,
@@ -386,10 +385,10 @@ function handleGGaData(data: any) {
   });
   if (radio2.value === 2) {
     data.forEach((item: any) => {
-      const gga: any = parseGPGGA(item.deviceGGA);
-      const position = gcoordLngLat(gga.longitude, gga.latitude);
+      // const gga: any = parseGPGGA(item.deviceGGA);
+      const position = gcoordLngLat(item.posY, item.posX);
 
-      drawPoint(gga, position);
+      drawPoint(item.solStat, position);
     });
   } else {
     drawline(positionList, speedList);

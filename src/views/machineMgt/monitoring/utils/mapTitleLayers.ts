@@ -35,7 +35,7 @@ export const mapTitleLayers: any = {
         Normal: {
             // Map: "http://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}"
             // Map: "https://mt2.google.cn/vt/lyrs=m@167000000&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}&s=Galil"
-            Map: "https://mt1.google.com/vt/lyrs=r&gl=cn&x={x}&y={y}&z={z}",
+            Map:'https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}',
         },
         Satellite: {
             // Map: "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}"

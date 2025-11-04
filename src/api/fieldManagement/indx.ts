@@ -132,3 +132,10 @@ export function pushReferenceLine_API(params:any){
         params
     })
 }
+export function pushFarm_API(data:any){
+    return request<any, any>({
+        url:'/farm/farm-base/push',
+        method: 'post',
+        data
+    })
+}

@@ -14,7 +14,64 @@
       @clickId="clickId"
       @lineSend="clickLines"
     />
+    <div class="line-type-color-container">
+    <div class="title_line">
+    作业线分类
+    </div>
+      <!-- 直线 - 红色 -->
+      <div class="line-type-item">
+        <div class="color-block" style="background-color: red"></div>
+        <div class="line-type-name">直线</div>
+      </div>
 
+      <!-- 自动掉头 - 绿色 -->
+      <div class="line-type-item">
+        <div class="color-block" style="background-color: green"></div>
+        <div class="line-type-name">自动掉头</div>
+      </div>
+
+      <!-- 同心圆 - 蓝色 -->
+      <div class="line-type-item">
+        <div class="color-block" style="background-color: blue"></div>
+        <div class="line-type-name">同心圆</div>
+      </div>
+
+      <!-- 等距曲线 - 紫色 -->
+      <div class="line-type-item">
+        <div class="color-block" style="background-color: purple"></div>
+        <div class="line-type-name">等距曲线</div>
+      </div>
+
+      <!-- 自由轨迹（多段线） - 橙色 -->
+      <div class="line-type-item">
+        <div class="color-block" style="background-color: orange"></div>
+        <div class="line-type-name">自由轨迹</div>
+      </div>
+
+      <!-- 三点定圆 - 青色 -->
+      <div class="line-type-item">
+        <div class="color-block" style="background-color: cyan"></div>
+        <div class="line-type-name">三点定圆</div>
+      </div>
+
+      <!-- 对角耙 - 棕色 -->
+      <div class="line-type-item">
+        <div class="color-block" style="background-color: brown"></div>
+        <div class="line-type-name">对角耙</div>
+      </div>
+
+      <!-- 单点+航向 - 亮绿色 -->
+      <div class="line-type-item">
+        <div class="color-block" style="background-color: #1afa29"></div>
+        <div class="line-type-name">单点+航向</div>
+      </div>
+
+      <!-- 循环模式 - 品红色 -->
+      <div class="line-type-item">
+        <div class="color-block" style="background-color: magenta"></div>
+        <div class="line-type-name">循环模式</div>
+      </div>
+    </div>
     <!-- <div class="select_area">
       <el-select
         v-model="words"
@@ -142,8 +199,8 @@
               <div class="trun_area">
                 <TruncatedString :text="item.name" :maxLength="18" />
               </div>
-              <!-- <div v-if="item.shared" class="shared_area">{{ t("work.isShared") }}</div>
-              <div v-else class="unshared_area">{{ t("work.noShared") }}</div> -->
+              <div v-if="item.haveReference" class="shared_area">{{ "有作业线" }}</div>
+              <div v-else class="unRef_area">{{ "无作业线" }}</div>
               <!-- <div class="unshared_area">
                 {{ t("statisticsReport.thousandArea") }}:
               </div> -->
@@ -220,29 +277,30 @@
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.address") }}:</el-col>
           <el-col :span="12">
             {{ fieldInfo.address }}
-            <!-- <el-button
-              link
-              type="primary"
-              size="small"
-              @click="checkShare(fieldInfo.id, fieldInfo.createType)"
-              >{{ t("work.shareDevice") }}</el-button
-            > -->
+
             <div style="display: flex">
-              <el-button link type="primary" size="small">分享边界</el-button>
               <el-button
+                link
+                type="primary"
+                size="small"
+                @click="checkShare(fieldInfo.id, fieldInfo.createType)"
+                >下发地块</el-button
+              >
+              <!-- <el-button link type="primary" size="small">分享边界</el-button> -->
+              <!-- <el-button
                 link
                 type="primary"
                 size="small"
                 v-if="fieldInfo.haveReference"
                 @click="showlines(fieldInfo.companyId)"
                 >显示作业线</el-button
-              >
+              > -->
             </div>
           </el-col>
         </el-row>
       </div>
     </div>
-    <el-dialog v-model="dialogVisible" :title="t('work.share')" center width="500px">
+    <el-dialog v-model="dialogVisible" :title="'下发地块'" center width="500px">
       <div class="top_att" v-if="creatorType === 1">
         {{ t("work.patAtt") }}
       </div>
@@ -267,13 +325,12 @@
     </el-dialog>
     <el-dialog
       v-model="dialogVisible2"
-      :title="t('work.share')"
+      :title="'下发作业线'"
       center
       width="500px"
       @close="selectedCarId = ''"
     >
       <div class="dia_select">
-      
         <el-select
           filterable
           v-model="selectedCarId"
@@ -360,120 +417,7 @@ const pageInfo = reactive<any>({
   pageSize: 900,
 });
 const showlines = (id: any) => {
-  // {
-  //       linesId: 1234,
-  //       referenceLines: [
-  //         {
-  //           id: 12,
-  //           referenceLines: {
-  //             s72: 0,
-  //             s94: {
-  //               s73: ["31.246616964,121.46553773", "31.246616965,121.46553772"], // ab两个点
-  //             },
-  //           },
-  //         },
-  //         {
-  //           id: 13,
-  //           referenceLines: {
-  //             s72: 2,
-  //             s94: {
-  //               s73: [
-  //                 "31.246616964,121.46553773",
-  //                 "31.246616965,121.46553772",
-  //                 "31.246616965,121.46553772",
-  //                 "31.246616965,121.46553772",
-  //               ], // abcd四个点
-  //               s81: 0, // 基准线  0:AB 1:BC 2:CD 3:DA
-  //               s82: 0, // 掉头方向 0:无方向 1:左掉头 2:右掉头
-  //               s83: 5.0, //转弯半径 m
-  //               s84: 2.2, // 边界距离 m
-  //               s85: 1, //跨行数
-  //             },
-  //           },
-  //         },
-  //         {
-  //           id: 14,
-  //           referenceLines: {
-  //             s72: 4,
-  //             s94: {
-  //               s73: ["31.246616964,121.46553773"], // 单点
-  //               s83: 5.0, // 同心圆最小半径
-  //             },
-  //           },
-  //         },
-  //         {
-  //           id: 15,
-  //           referenceLines: {
-  //             s72: 5,
-  //             s94: {
-  //               s73: ["31.246616964,121.46553773", "31.246616965,121.46553772"], // 任意点
-  //               s76: 2, // 曲线点个数
-  //             },
-  //           },
-  //         },
-  //         {
-  //           id: 16,
-  //           referenceLines: {
-  //             s72: 6,
-  //             s94: {
-  //               s73: ["31.246616964,121.46553773", "31.246616965,121.46553772"], // 任意点
-  //             },
-  //           },
-  //         },
-  //         {
-  //           id: 17,
-  //           referenceLines: {
-  //             s72: 7,
-  //             s94: {
-  //               s73: [
-  //                 "31.246616964,121.46553773",
-  //                 "31.246616965,121.46553772",
-  //                 "31.246616964,121.46553773",
-  //               ], // 三个点
-  //               s83: 5.0, // 圆半径
-  //             },
-  //           },
-  //         },
-  //         {
-  //           id: 18,
-  //           referenceLines: {
-  //             s72: 8,
-  //             s94: {
-  //               s73: [
-  //                 "31.246616964,121.46553773",
-  //                 "31.246616965,121.46553772",
-  //                 "31.246616965,121.46553772",
-  //                 "31.246616964,121.46553773",
-  //               ], // 任意首尾封闭点集
-  //             },
-  //           },
-  //         },
-  //         {
-  //           id: 19,
-  //           referenceLines: {
-  //             s72: -101,
-  //             s94: {
-  //               s73: ["31.246616964,121.46553773"], // 单点
-  //               s77: 0.4887, // 航向
-  //             },
-  //           },
-  //         },
-  //         {
-  //           id: 20,
-  //           referenceLines: {
-  //             s72: -102,
-  //             s94: {
-  //               s73: ["31.246616964,121.46553773", "31.246616965,121.46553772"],
-  //               //两点
-  //               s82: 0, // 田块方向  1:左 2:右
-  //               s83: 5.0, // 转弯半径 m
-  //               s84: 2.2, // 边界距离 m
-  //               s85: 1, //跨行数
-  //             },
-  //           },
-  //         },
-  //       ],
-  //     },
+  lineData.value = [];
   lineData.value.push({
     linesId: fieldInfo.value.id,
     referenceLines: fieldInfo.value.referenceLines,
@@ -626,6 +570,7 @@ const getBlock = async (index: any, id: any, boundaries: any) => {
 
     boundariesID.value = boundaries;
     choosenIndex.value = index;
+    showlines(fieldInfo.value.companyId);
   }
 };
 const getFieldData = async () => {
@@ -887,13 +832,27 @@ async function wordsSearch(e: any) {
       height: 22px;
       align-items: center;
     }
+    .unRef_area {
+      padding: 0 3px;
+      font-size: 14px;
+      // border: 1px solid rgba(54, 177, 110, 1);
+
+      border-radius: 10px;
+      position: absolute;
+      right: 40px;
+      top: calc(50% - 11px);
+      display: flex;
+      height: 22px;
+      align-items: center;
+    }
     .shared_area {
       padding: 0 3px;
       font-size: 14px;
       // border: 1px solid rgba(54, 177, 110, 1);
       color: rgba(54, 177, 110, 1);
       border-radius: 10px;
-
+      position: absolute;
+      right: 40px;
       top: calc(50% - 11px);
       display: flex;
       height: 22px;
@@ -1030,5 +989,48 @@ async function wordsSearch(e: any) {
   /* 可选：当单词过长时强制拆分换行（针对英文/数字） */
   word-break: break-all; /* 或 break-word */
   /* 可选：添加边框便于观察 */
+}
+.line-type-color-container {
+.title_line {
+  font-size: 15px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+  background-color: rgba(16, 34, 15, 0.68);
+
+
+  padding: 6px;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 轻微阴影增强层次感 */
+  border: 1px solid #fff;
+  border-radius: 6px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 99999;
+}
+
+/* 单个条目样式：横向排列、对齐 */
+.line-type-item {
+  display: flex; /* 横向布局 */
+  align-items: center; /* 垂直居中 */
+  padding: 4px 8px;
+}
+
+/* 颜色块样式：固定大小、圆形 */
+.color-block {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px; /* 圆形色块 */
+  margin-right: 12px; /* 与文字间距 */
+}
+
+/* 作业线类型文字样式：统一字体、颜色 */
+.line-type-name {
+  font-size: 14px;
+  color: #fff; /* 深灰色文字，提升可读性 */
+  font-family: "Microsoft YaHei", sans-serif; /* 适配中文字体 */
 }
 </style>

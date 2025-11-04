@@ -149,7 +149,7 @@
         </el-form-item>
       </el-form>
       <div class="btn_area">
-        <el-button type="primary" @click="addField"> {{ t("work.newField") }} </el-button>
+        <el-button type="primary" @click="addField">{{ t("work.save") }} </el-button>
       </div>
     </div>
     <div class="select_area">

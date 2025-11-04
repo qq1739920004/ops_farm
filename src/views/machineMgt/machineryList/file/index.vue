@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute, useRouter } from "vue-router";
-// import { getChildrenFileList_API } from '@/api/machineryList/index'
+ import { getChildrenFileList_API } from '@/api/machineryList/index'
 import axios from 'axios'
 const route = useRoute()
 const router = useRouter()
@@ -47,7 +47,17 @@ const getFileList = async () => {
         size: pageSize.value,
         sn: parentSn
     }
-    axios.post(`${window.CONFIG_NEW}/lu/log/filesForSn`, postData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' } }).then((res: any) => {
+    // axios.post(`${window.CONFIG_NEW}/lu/log/filesForSn`, postData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' } }).then((res: any) => {
+    //     loading.value = false;
+    //     fileListData.value = []
+    //     fileListData.value.push({ isBack: true, name: '回传文件' })
+    //     res.data.records?
+    //     res.data.records.forEach((item: any) => {
+    //         fileListData.value.push({ isBack: false, name: item })
+    //     }):''
+    //     total.value = res.data.total
+    // })
+     getChildrenFileList_API(postData).then((res: any) => {
         loading.value = false;
         fileListData.value = []
         fileListData.value.push({ isBack: true, name: '回传文件' })
@@ -63,8 +73,9 @@ const getFileList = async () => {
 }
 getFileList()
 const toBackFile = () => {
-    router.push({ path: `/machineryList/backFile`, query: { sn: parentSn, pid: parentPid } })
+    router.push({ path: `backFile`, query: { sn: parentSn, pid: parentPid } })
 }  
+
 </script>
 
 <style lang="scss" scoped>

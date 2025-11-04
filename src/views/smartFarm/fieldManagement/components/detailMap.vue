@@ -179,9 +179,7 @@ watch(
 );
 watch(
   () => props.companyId,
-  () => {
-    getCarList();
-  }
+  () => {}
 );
 watch(
   () => props.lineData,
@@ -765,7 +763,6 @@ const handleZoomEnd = () => {
       map.removeLayer(marker);
     }
   });
-  console.log(currentZoom);
 };
 const drawPolygon2 = (polytrueData: any) => {
   let pickPoints: any = [];
@@ -830,7 +827,11 @@ const drawPolygon = (
       var marker = L.marker(center, {
         icon: L.divIcon({
           className: "polygon-label",
-          html: ` <div class="text-content" style="width:100px; padding: 5px">${nameData[index]}</div>`,
+          html: ` <div class="text-content" style="width:100px; padding: 5px; text-shadow:  m
+    -1px -1px 0 #FFFFFF,
+     1px -1px 0 #FFFFFF,
+    -1px  1px 0 #FFFFFF,
+     1px  1px 0 #FFFFFF;">${nameData[index]}</div>`,
           iconSize: [32, 32], // 图标的大小 [宽度, 高度]
         }),
       }).addTo(map);
@@ -1233,12 +1234,11 @@ function drawReferenceLine(line: any) {
 }
 
 function createLine(list: any) {
+  clearAllreferLines();
   if (list.length === 0) {
     return;
   }
   list.forEach((item: any) => {
-    console.log(item);
-
     if (item.referenceLines && item.referenceLines.length > 0) {
       item.referenceLines.forEach((line: any) => {
         drawReferenceLine(line);
@@ -1738,5 +1738,8 @@ defineExpose({
 /* 确认按钮（primary类型）文字颜色（通常为白色，按需调整） */
 :deep(.custom-dialog .el-button--primary) {
   color: #fff !important;
+}
+.text-content {
+  color: #000000; /* 黑色字体 */
 }
 </style>

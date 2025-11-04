@@ -23,6 +23,7 @@
       </div>
       <el-table :data="farmListData" class="date-icon" style="max-width: 100%" stripe>
         <!-- 农场名称列 -->
+
         <el-table-column prop="name" label="农场名称" align="center" min-width="150" />
 
         <!-- 地址列 -->
@@ -57,6 +58,12 @@
                 t("work.delete")
               }}</el-button>
               <el-button
+                type="primary"
+                text
+                @click="openDialog(scope.row.companyId, scope.row.id, scope.row.name)"
+                >{{ "下发" }}</el-button
+              >
+              <el-button
                 :style="
                   locale == 'en'
                     ? 'width: 85px'
@@ -66,7 +73,7 @@
                 "
                 type="primary"
                 text
-                @click=""
+                @click="openExternalLink(scope.row.id)"
                 >{{ t("farm.enterDp") }}</el-button
               >
               <el-button
@@ -94,6 +101,34 @@
       >
       </Pagination>
     </div>
+    <!-- 弹窗组件 -->
+    <el-dialog
+      v-model="dialogVisible"
+      title="下发"
+      width="500px"
+      @close="handleClose"
+      center
+    >
+      <el-select
+        v-model="selectedIds"
+        multiple
+        filterable
+        clearable
+        placeholder="请选择车辆"
+      >
+        <el-option
+          v-for="vehicle in vehicleList"
+          :key="vehicle.id"
+          :label="vehicle.name"
+          :value="vehicle.id"
+        />
+      </el-select>
+
+      <template #footer>
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleDownload">确认下发</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -102,18 +137,77 @@ import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from "@/components/Pagination/index.vue";
 import { reactive, ref, onMounted } from "vue";
-import { pageList_API,deleteFarm_API } from "@/api/machineryList/index";
+import { pageList_API, deleteFarm_API } from "@/api/machineryList/index";
+import { getCarList_API, pushFarm_API } from "@/api/fieldManagement/indx";
 import { useI18n } from "vue-i18n";
 const { locale, t } = useI18n();
 let $route = useRoute();
 const router = useRouter();
 const total = ref(0);
+const farmId = ref();
+const farmName = ref();
+const selectedIds = ref([]);
 const farmListData = ref([]);
 const pageInfo = reactive({
   currentPage: 1,
   pageSize: 10,
   key: "",
 });
+const dialogVisible = ref(false);
+
+const vehicleList = ref<any>([]);
+const openDialog = (companyId: any, id: any, name: any) => {
+  dialogVisible.value = true;
+  getCarList(companyId);
+  farmId.value = id;
+  farmName.value = name;
+};
+const handleClose = () => {
+  selectedIds.value = [];
+  farmId.value = "";
+  farmName.value = "";
+};
+const openExternalLink = (id: any) => {
+  const currentBaseUrl = window.location.protocol + "//" + window.location.host;
+  const baseUrl = "http://140.207.166.210:9030";
+  // 2. 拼接目标路径（/farmScreen/dashboard）
+  let targetUrl;
+  if (window.location.host.toLowerCase().includes("localhost")) {
+    targetUrl = baseUrl + `/farmScreen/dashboard?farmId=${id}`;
+  } else {
+    targetUrl = currentBaseUrl + `/farmScreen/dashboard?farmId=${id}`;
+  }
+
+  // 3. 新开窗口跳转（窗口名称自定义，尺寸可选）
+  window.open(targetUrl, "_blank");
+};
+// 处理下载逻辑
+const handleDownload = async () => {
+  if (selectedIds.value.length === 0) {
+    ElMessage.warning("请至少选择一项");
+    return;
+  }
+
+  try {
+    await pushFarm_API({
+      vehicleIds: selectedIds.value,
+      id: farmId.value,
+      farmName: farmName.value,
+    });
+    ElMessage.success("下发成功");
+    // 关闭弹窗
+    dialogVisible.value = false;
+    // 清空选择
+    selectedIds.value = [];
+  } catch {}
+};
+const getCarList = async (companyId: any) => {
+  const res = await getCarList_API({
+    companyId: companyId,
+  });
+  vehicleList.value = res.data;
+};
+
 const currentChange = (val: any) => {
   pageInfo.currentPage = val.currentPage;
   pageInfo.pageSize = val.pageSize;
@@ -157,12 +251,12 @@ const deleteFarm = (id: any) => {
   })
     .then(async () => {
       try {
-        await deleteFarm_API({id:id});
+        await deleteFarm_API({ id: id });
         ElMessage.success(t("work.deleteSuccess"));
-        pageInfo.currentPage = 1
-        
-        pageInfo.pageSize = 10
-        pageInfo.key = ''
+        pageInfo.currentPage = 1;
+
+        pageInfo.pageSize = 10;
+        pageInfo.key = "";
         getList();
       } catch {}
     })

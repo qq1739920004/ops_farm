@@ -122,6 +122,25 @@
               >
               </el-select-v2
             ></el-form-item>
+            <el-form-item :label="$t('work.vehicleType')" prop="vehicleType">
+              <el-cascader
+                style="width: 192px"
+                v-model="carParams.vehicleType"
+                :options="vehicle"
+                :props="cascaderProps"
+                clearable
+              />
+            </el-form-item>
+            <el-form-item :label="$t('work.buyTime')" prop="buyTime">
+              <el-date-picker
+                style="width: 192px"
+                v-model="carParams.buyTime"
+                type="datetime"
+                format="YYYY-MM-DD HH:mm:ss"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                clearable
+              />
+            </el-form-item>
             <el-form-item :label="$t('work.licensePlate')" prop="licensePlate">
               <el-input v-model="carParams.licensePlate"></el-input>
             </el-form-item>
@@ -210,6 +229,7 @@ import {
   getBindSnVO_API,
   addVehicle_API,
 } from "@/api/carManagement/index";
+import { sysDict_API } from "@/api/fieldManagement/indx";
 import { useRouter } from "vue-router";
 import { useStorage } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
@@ -229,9 +249,14 @@ const pageSize = ref(10);
 const total = ref(0);
 const dialogVisible = ref(false);
 const carFormRef = ref();
-
+const cascaderProps = {
+  value: "bizKey", // 指定 value 对应的字段名
+  label: "bizValue", // 指定 label 对应的字段名
+  children: "children", // 指定子节点对应的字段名（默认就是children，可省略）,
+  checkStrictly: true,
+};
 const router = useRouter();
-let carParams = reactive({
+let carParams = reactive<any>({
   id: "",
   farmId: useStorage("farmId", ""),
   carId: "",
@@ -245,12 +270,22 @@ let carParams = reactive({
   fuel: "",
   imageUrl: "",
   companyId: "",
+  vehicleType: "",
+  buyTime: "",
 });
 const trueImg = ref("");
 const addCars = () => {
   dialogVisible.value = true;
   getSNList();
 };
+const vehicle = ref([]);
+const getvehicleArray = async () => {
+  const { data } = await sysDict_API({
+    dicKey: "vehicle_type",
+  });
+  vehicle.value = data;
+};
+getvehicleArray();
 const closeDia = () => {
   carParams.id = "";
   carParams.carId = "";
@@ -264,7 +299,8 @@ const closeDia = () => {
   carParams.fuel = "";
   carParams.imageUrl = "";
   carParams.companyId = "";
-
+  carParams.vehicleType = "";
+  carParams.buyTime = "";
   carFormRef.value.resetFields();
   trueImg.value = "";
 };
@@ -309,7 +345,27 @@ const checkFileType = (file: any) => {
 const addVehicle = async () => {
   await carFormRef.value.validate();
   try {
-    await addVehicle_API(carParams);
+    let trueCarId =
+      carParams.vehicleType instanceof Array
+        ? carParams.vehicleType[carParams.vehicleType.length - 1]
+        : carParams.vehicleType;
+
+    await addVehicle_API({
+      id: carParams.id,
+      carId: carParams.carId,
+      name: carParams.name,
+      brand: carParams.brand,
+      model: carParams.model,
+      licensePlate: carParams.licensePlate,
+      registrationNo: carParams.registrationNo,
+      age: carParams.age,
+      power: carParams.power,
+      fuel: carParams.fuel,
+      imageUrl: carParams.imageUrl,
+      companyId: carParams.companyId,
+      buyTime: carParams.buyTime,
+      vehicleType: trueCarId,
+    });
     dialogVisible.value = false;
     ElMessage.success(t("messages.addSuccess"));
     getVehicle();
@@ -342,6 +398,8 @@ const rules = {
   brand: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
   model: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
   carId: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  vehicleType: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
+  buyTime: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
 };
 
 const gotoDetail = (item: any) => {

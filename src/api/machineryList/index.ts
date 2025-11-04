@@ -65,7 +65,7 @@ export function getSingleCarTrick_API(params: PageInfoObj) {
 
 // 文件存储
 export function getChildrenFileList_API(params: any) {
-    return request<any, any>({
+    return request2<any, any>({
         url: '/lu/log/filesForSn',
         method: 'post',
         data: params,
@@ -73,7 +73,7 @@ export function getChildrenFileList_API(params: any) {
     })
 }
 export function getBackFileSnList(params: any) {
-    return request<any, any>({
+    return request2<any, any>({
         url: '/lu/log/ftpDirListFiles',
         method: 'post',
         data: params,

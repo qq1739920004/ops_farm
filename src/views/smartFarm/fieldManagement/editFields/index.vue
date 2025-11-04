@@ -22,7 +22,7 @@
               p-id="4707"
               fill="#ffffff"
             ></path></svg
-          >{{ t("work.newField") }}
+          >{{ t("work.editField") }}
         </div>
       </div>
       <el-form
@@ -152,7 +152,7 @@
       </el-form>
       <div class="btn_area">
         <el-button type="primary" @click="editField">
-          {{ t("work.editField") }}
+        {{ t("work.save") }}
         </el-button>
       </div>
     </div>
@@ -190,7 +190,6 @@
       :lineData="lineData"
       :markerData="markerData"
       :color="fieldList.color"
-      
       @areaValue="getArea"
       @lengthValue="getLength"
       @boundries="getBoundaries"
@@ -221,8 +220,8 @@ const words = ref(null);
 const formRef = ref<any>();
 const isSHowColorPicker = ref(false);
 const cascaderProps = {
-  value: "bizKey", // 指定 value 对应的字段名
-  label: "bizValue", // 指定 label 对应的字段名
+  value: "value", // 指定 value 对应的字段名
+  label: "label", // 指定 label 对应的字段名
   children: "children", // 指定子节点对应的字段名（默认就是children，可省略）,
   checkStrictly: true,
 };
@@ -250,6 +249,32 @@ const polygonData = ref<any>([]);
 const lineData = ref<any>([]);
 const markerData = ref<any>([]);
 const remoteOptions = ref<any>([]);
+const formatOptions = (rawData:any) => {
+  return rawData.map(item => ({
+    value: Number(item.bizKey),  // 转为number类型（关键）
+    label: item.bizValue,
+    children: item.children && item.children.length > 0 
+      ? formatOptions(item.children)  // 递归处理子级
+      : []
+  }));
+};
+
+const findFullPath = (options:any, targetKey:any, currentPath:any = []) => {
+  for (const option of options) {
+    // 拼接当前路径（value即bizKey的number类型）
+    const newPath = [...currentPath, option.value];
+    // 如果当前选项是最后一级（无children）且值匹配，返回完整路径
+    if (option.children.length === 0 && option.value === targetKey) {
+      return newPath;
+    }
+    // 有子级则递归查找
+    if (option.children.length > 0) {
+      const result:any = findFullPath(option.children, targetKey, newPath);
+      if (result) return result;
+    }
+  }
+  return null;
+};
 const getDetails = async () => {
   const { data } = await block_API({ id: route.query.id });
   filedDetail.value = data;
@@ -258,10 +283,12 @@ const getDetails = async () => {
   let params: any = [];
   if (data.blockCrops && data.blockCrops.length > 0) {
     data.blockCrops.map((item: any) => {
+      const path = findFullPath(cropOptions.value, item.cropDictId);
+      
       params.push({
         timeRange: [item.plantingStartTime, item.plantingEndTime],
         cropDictId: item.cropDictId,
-        id: item.id || '',
+        id: item.id || "",
       });
     });
   }
@@ -306,7 +333,9 @@ const getCropArray = async () => {
     dicKey: "crop_type",
   });
   cropOptions.value = data;
+ cropOptions.value =  formatOptions(cropOptions.value)
 };
+
 getCropArray();
 // 关键字查询
 async function wordsSearch(e: any) {
@@ -382,7 +411,7 @@ const editField = async () => {
         params.push({
           plantingEndTime: item.timeRange[1],
           plantingStartTime: item.timeRange[0],
-          id:item.id||'',
+          id: item.id || "",
           cropDictId:
             item.cropDictId instanceof Array
               ? item.cropDictId[item.cropDictId.length - 1]
