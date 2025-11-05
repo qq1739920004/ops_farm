@@ -416,13 +416,13 @@ const offDraw = () => {
 watch(
   () => area.value,
   () => {
-    emit("areaValue", area.value);
+    emit("areaValue", area.value.toFixed(2)||0);
   }
 );
 watch(
   () => length.value,
   () => {
-    emit("lengthValue", length.value);
+    emit("lengthValue", length.value.toFixed(2)||0);
   }
 );
 watch(
