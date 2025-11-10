@@ -426,7 +426,7 @@ const showlines = (id: any) => {
 };
 const getCarList2 = async () => {
   const res = await getCarList_API({
-    companyId: companyId.value,
+    farmId: companyId.value,
   });
   carList2.value = res.data;
 };

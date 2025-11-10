@@ -203,7 +203,7 @@ const handleDownload = async () => {
 };
 const getCarList = async (companyId: any) => {
   const res = await getCarList_API({
-    companyId: companyId,
+    farmId: companyId,
   });
   vehicleList.value = res.data;
 };

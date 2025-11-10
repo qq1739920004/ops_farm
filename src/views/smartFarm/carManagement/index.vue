@@ -101,10 +101,25 @@
             label-width="160px"
             :model="carParams"
             style="max-width: 1012px; margin-bottom: 20px"
-          >
-            <el-form-item :label="$t('work.vehicleName')" prop="name">
-              <el-input v-model="carParams.name"></el-input>
-            </el-form-item>
+           >
+             <el-form-item :label="$t('work.farmName')" prop="farmId">
+               <el-select
+                 style="width: 192px"
+                 v-model="carParams.farmId"
+                 :placeholder="$t('work.pleaseSelect')"
+                 clearable
+               >
+                 <el-option
+                   v-for="farm in farmOptions"
+                   :key="farm.id"
+                   :label="farm.name"
+                   :value="farm.id"
+                 />
+               </el-select>
+             </el-form-item>
+             <el-form-item :label="$t('work.vehicleName')" prop="name">
+               <el-input v-model="carParams.name"></el-input>
+             </el-form-item>
             <el-form-item :label="$t('work.brand')" prop="brand">
               <el-input v-model="carParams.brand"></el-input>
             </el-form-item>
@@ -229,7 +244,7 @@ import {
   getBindSnVO_API,
   addVehicle_API,
 } from "@/api/carManagement/index";
-import { sysDict_API } from "@/api/fieldManagement/indx";
+import { sysDict_API, farmList_API } from "@/api/fieldManagement/indx";
 import { useRouter } from "vue-router";
 import { useStorage } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
@@ -258,7 +273,7 @@ const cascaderProps = {
 const router = useRouter();
 let carParams = reactive<any>({
   id: "",
-  farmId: useStorage("farmId", ""),
+  farmId: "",
   carId: "",
   name: "",
   brand: "",
@@ -277,8 +292,10 @@ const trueImg = ref("");
 const addCars = () => {
   dialogVisible.value = true;
   getSNList();
+  getFarmOptions();
 };
 const vehicle = ref([]);
+const farmOptions = ref<any>([]);
 const getvehicleArray = async () => {
   const { data } = await sysDict_API({
     dicKey: "vehicle_type",
@@ -286,8 +303,20 @@ const getvehicleArray = async () => {
   vehicle.value = data;
 };
 getvehicleArray();
+
+const getFarmOptions = async () => {
+  try {
+    const { data } = await farmList_API();
+    farmOptions.value = data;
+  } catch (error) {
+    console.error("获取农场列表失败:", error);
+    farmOptions.value = [];
+  }
+};
+
 const closeDia = () => {
   carParams.id = "";
+  carParams.farmId = "";
   carParams.carId = "";
   carParams.name = "";
   carParams.brand = "";
@@ -352,6 +381,7 @@ const addVehicle = async () => {
 
     await addVehicle_API({
       id: carParams.id,
+      farmId: carParams.farmId,
       carId: carParams.carId,
       name: carParams.name,
       brand: carParams.brand,
@@ -385,7 +415,7 @@ const getVehicle = async () => {
   const { data } = await pageVehicle_API({
     currentPage: currentPage.value,
     pageSize: pageSize.value,
-    companyId: "",
+    farmId: useStorage("farmId", "").value,
     keyword: keyword.value,
   });
   total.value = data.total;
@@ -394,6 +424,7 @@ const getVehicle = async () => {
 getVehicle();
 
 const rules = {
+  farmId: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
   name: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
   brand: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
   model: [{ required: true, message: t("work.enterValue"), trigger: "blur" }],
