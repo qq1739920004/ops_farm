@@ -570,7 +570,7 @@ const getBlock = async (index: any, id: any, boundaries: any) => {
 
     boundariesID.value = boundaries;
     choosenIndex.value = index;
-    showlines(fieldInfo.value.companyId);
+    showlines(fieldInfo.value.farmId);
   }
 };
 const getFieldData = async () => {

@@ -102,6 +102,7 @@ import { listVehicle_API, pageTask_API } from "@/api/fieldManagement/indx";
 import detailMap from "./components/detailMap.vue";
 import { useI18n } from "vue-i18n";
 import router from "@/router";
+import { useStorage } from "@vueuse/core";
 const timeRange = ref<any>([
   new Date(new Date().setHours(23, 59, 59, 999)).getTime() - 3600 * 1000 * 24 * 30,
   new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
@@ -113,6 +114,7 @@ const pageInfo = reactive<any>({
   keyword: "",
   stTime: "",
   etTime: "",
+  farmId: useStorage("farmId", ""),
   currentPage: 1,
   pageSize: 10,
   sn: "",
@@ -150,7 +152,7 @@ const getPageList = async () => {
   // pageInfo.stTime = 1;
   // pageInfo.etTime = 1000000000000000;
   pageInfo.stTime = timeRange.value[0];
-
+  pageInfo.farmId = useStorage("farmId", "").value;
   pageInfo.etTime = timeRange.value[1];
   const res = await pageTask_API(pageInfo);
   total.value = res.data.total;

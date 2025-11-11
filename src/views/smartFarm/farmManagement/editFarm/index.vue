@@ -20,7 +20,7 @@
               p-id="4707"
               fill="#ffffff"
             ></path></svg
-          >{{ t("work.newField") }}
+          >{{ t("work.returnField") }}
         </div>
       </div>
       <el-form
@@ -256,6 +256,7 @@ const getDetails = async () => {
   fieldList.name = data.name;
   fieldList.farmIntro = data.farmIntro;
   // fieldList.address = data.address;
+  fieldList.remark = data.remark;
   fieldList.environmentPhoto = data.environmentPhoto;
   fieldList.systemLogo = data.systemLogo;
   fieldList.locationContour = JSON.parse(data.locationContour);

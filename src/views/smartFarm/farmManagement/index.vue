@@ -158,7 +158,7 @@ const dialogVisible = ref(false);
 const vehicleList = ref<any>([]);
 const openDialog = (companyId: any, id: any, name: any) => {
   dialogVisible.value = true;
-  getCarList(companyId);
+  getCarList(id);
   farmId.value = id;
   farmName.value = name;
 };
@@ -201,9 +201,9 @@ const handleDownload = async () => {
     selectedIds.value = [];
   } catch {}
 };
-const getCarList = async (companyId: any) => {
+const getCarList = async (id: any) => {
   const res = await getCarList_API({
-    farmId: companyId,
+    farmId: id,
   });
   vehicleList.value = res.data;
 };
