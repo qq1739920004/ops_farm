@@ -12,7 +12,6 @@
   flex: 1;
   background-color: var(--el-bg-color);
   border: 1px solid var(--el-border-color-light);
-  border-radius: 8px;
   padding: 16px;
   box-sizing: border-box;
 }

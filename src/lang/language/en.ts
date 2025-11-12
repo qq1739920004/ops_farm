@@ -1,3 +1,5 @@
+import loading from "element-plus/es/components/loading/index.mjs";
+
 const en = {
   messages: {
     total: "Total",
@@ -179,6 +181,8 @@ const en = {
     dealerName: 'Dealer',
     unfold: 'Unfold',
     basicP: 'Basic Params',
+    noMoreData:"no more data",
+    loading:"loading",
     advanceP: 'Advanced params1',
     creatorTel: 'Creator Tel',
     editSuccess: 'Edit Success',

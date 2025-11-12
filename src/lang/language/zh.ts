@@ -180,6 +180,8 @@ const zh = {
     advanceP: '高级参数1',
     tel: "车主手机号",
     project: "作业名称",
+    noMoreData:"到底了",
+    loading:"加载中",
     online: "在线",
     offline: "离线",
     drivingStatus: "驾驶状态",

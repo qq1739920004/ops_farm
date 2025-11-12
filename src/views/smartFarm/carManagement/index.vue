@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="car-management-page">
     <div class="car-management-page__main">
       <div class="car-management-page__left">
@@ -559,6 +559,7 @@ const addVehicle = async () => {
     dialogVisible.value = false;
     resetCarParams();
     fetchCarList(true);
+    
   } catch (error) {
     console.error("Failed to add vehicle:", error);
   }
@@ -573,6 +574,15 @@ watch(selectedCarId, (id) => {
   }
   fetchVehicleDetail(id);
 });
+
+// 监听农场切换
+watch(
+  () => farmIdStorage.value,
+  () => {
+    fetchCarList(true);
+  },
+  { deep: true }
+);
 
 const rules = {
   farmId: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }],
@@ -594,23 +604,21 @@ onMounted(() => {
 .car-management-page {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  gap: 16px;
+  height: calc(100% - 40px);
 }
 
 .car-management-page__main {
   flex: 1;
   height: 100%;
   display: flex;
-  gap: 16px;
+  gap: 1px;
 }
 
 .car-management-page__left {
-  flex: 0 0 30%;
-  min-width: 320px;
+  flex: 0 0 20%;
+  min-width: 280px;
   height: 100%;
   min-height: 0; /* enable inner scroll */
-  overflow: hidden; /* avoid page scroll bleed */
 }
 
 .car-management-page__right {
@@ -618,7 +626,7 @@ onMounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1px;
   min-height: 0; /* ensure right side fills and splits correctly */
 }
 

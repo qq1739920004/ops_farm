@@ -287,6 +287,7 @@ const addField = async () => {
     try {
       await addFarm_API(fieldList);
       ElMessage.success(t("messages.addSuccess"));
+      window.dispatchEvent(new Event('refresh-farm-list'));
       router.go(-1);
     } catch {}
   } else {

@@ -97,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import { listVehicle_API, pageTask_API } from "@/api/fieldManagement/indx";
 import detailMap from "./components/detailMap.vue";
 import { useI18n } from "vue-i18n";
@@ -148,6 +148,16 @@ const disabledDate = (time: Date) => {
   return time.getTime() > Date.now() + 8.64e7;
 };
 const isActive = ref<number>(2);
+
+// 监听农场切换
+watch(
+  () => pageInfo.farmId,
+  () => {
+    getPageList();
+  },
+  { deep: true }
+);
+
 const getPageList = async () => {
   // pageInfo.stTime = 1;
   // pageInfo.etTime = 1000000000000000;

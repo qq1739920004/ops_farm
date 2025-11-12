@@ -79,7 +79,7 @@
             class="item"
             effect="dark"
             :disabled="isShowTooltip"
-            :content="dataStatistics.workArea?.totalArea / 10000"
+            :content="formatTotalArea"
             placement="top"
           >
             <div style="text-overflow: ellipsis; overflow: hidden">
@@ -98,18 +98,10 @@
                 }}
               </span> -->
               <span ref="refName" @mouseover="onMouseOver" v-if="locale.includes('zh')">
-                {{
-                  dataStatistics.workArea
-                    ? (dataStatistics.workArea?.totalArea / 10000).toFixed(2)
-                    : ""
-                }}
+                {{ formatTotalAreaDisplay('zh') }}
               </span>
               <span ref="refName" @mouseover="onMouseOver" v-else>
-                {{
-                  dataStatistics.workArea
-                    ? ((dataStatistics.workArea?.totalArea / 15) * 10000).toFixed(2)
-                    : ""
-                }}
+                {{ formatTotalAreaDisplay('en') }}
               </span>
             </div>
           </el-tooltip>
@@ -348,6 +340,22 @@ const mapCenter = reactive<any>({
   markerId: "",
   mapCenter: [],
 });
+
+const formatTotalArea = computed(() => {
+  const total = dataStatistics.value?.workArea?.totalArea;
+  if (typeof total !== "number" || Number.isNaN(total)) return "--";
+  return locale.value.includes("zh")
+    ? (total / 10000).toFixed(2)
+    : ((total / 15) * 10000).toFixed(2);
+});
+
+const formatTotalAreaDisplay = (language: "zh" | "en") => {
+  const total = dataStatistics.value?.workArea?.totalArea;
+  if (typeof total !== "number" || Number.isNaN(total)) return "--";
+  return language === "zh"
+    ? (total / 10000).toFixed(2)
+    : ((total / 15) * 10000).toFixed(2);
+};
 
 // @ts-ignore
 window.goMachineryList_markerPopup = goMachineryList_markerPopup;

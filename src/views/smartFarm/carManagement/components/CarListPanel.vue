@@ -3,20 +3,12 @@
     <div class="car-list-panel__search">
       <div class="car-list-panel__inputs">
         <el-input
-          v-model="localSearch.name"
-          :placeholder="t('work.vehicleName')"
+          v-model="localSearch.keyword"
+          :placeholder="searchPlaceholder"
           clearable
           @clear="emitSearch"
           @keyup.enter="emitSearch"
-          @input="handleSearchChange('name', $event)"
-        />
-        <el-input
-          v-model="localSearch.sn"
-          :placeholder="t('devicelist.deviceSN')"
-          clearable
-          @clear="emitSearch"
-          @keyup.enter="emitSearch"
-          @input="handleSearchChange('sn', $event)"
+          @input="handleSearchChange($event)"
         />
         <el-button type="primary" @click="emitSearch" :loading="loading">
           <el-icon><Search /></el-icon>
@@ -55,7 +47,6 @@
         </div>
         <div class="car-card__meta">
           <span>{{ item.vehicleTypeLabel || '--' }}</span>
-          <span class="car-card__divider" />
           <span>{{ formatBrandModel(item.brand, item.model) }}</span>
         </div>
       </div>
@@ -74,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch, withDefaults } from "vue";
+import { reactive, ref, watch, computed, withDefaults } from "vue";
 import { useI18n } from "vue-i18n";
 import { Plus, Search, Loading } from "@element-plus/icons-vue";
 
@@ -107,14 +98,18 @@ const emit = defineEmits<{
 const { t } = useI18n();
 const listRef = ref<HTMLDivElement | null>(null);
 const localSearch = reactive({
-  name: "",
-  sn: "",
+  keyword: "",
 });
+
+const searchPlaceholder = computed(
+  () => `${t('work.vehicleName')}/${t('devicelist.deviceSN')}`
+);
 
 watch(
   () => props.searchForm,
   (value) => {
-    Object.assign(localSearch, { name: "", sn: "" }, value || {});
+    const { name = "", sn = "" } = value || {};
+    localSearch.keyword = name || sn || "";
   },
   {
     immediate: true,
@@ -122,9 +117,15 @@ watch(
   }
 );
 
+const buildSearchPayload = (value: string) => ({
+  name: value,
+  sn: value,
+});
+
 const emitSearch = () => {
-  emit("update:searchForm", { ...localSearch });
-  emit("search", { ...localSearch });
+  const payload = buildSearchPayload(localSearch.keyword?.trim?.() ?? localSearch.keyword);
+  emit("update:searchForm", payload);
+  emit("search", payload);
 };
 
 const emitCreate = () => {
@@ -139,9 +140,9 @@ const emitEdit = (item: any) => {
   emit("edit", item);
 };
 
-const handleSearchChange = (key: "name" | "sn", value: string) => {
-  localSearch[key] = value?.trim?.() ?? value;
-  emit("update:searchForm", { ...localSearch });
+const handleSearchChange = (value: string) => {
+  localSearch.keyword = value?.trim?.() ?? value;
+  emit("update:searchForm", buildSearchPayload(localSearch.keyword));
 };
 
 const onScroll = (event: Event) => {
@@ -170,7 +171,6 @@ const formatBrandModel = (brand?: string, model?: string) => {
   min-height: 0; /* allow inner flex child to scroll */
   background-color: var(--el-bg-color);
   border: 1px solid var(--el-border-color-light);
-  border-radius: 8px;
   padding: 16px;
   box-sizing: border-box;
 }
@@ -210,31 +210,32 @@ const formatBrandModel = (brand?: string, model?: string) => {
 }
 .car-card {
   padding: 12px;
-  border: 1px solid transparent;
   border-radius: 8px;
   background-color: var(--el-color-white);
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  color: #666;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .car-card:hover {
-  border-color: var(--el-color-primary-light-5);
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: #f5f7f6;
 }
 
 .car-card--active {
-  border-color: var(--el-color-primary);
-  box-shadow: 0px 4px 12px rgba(76, 176, 79, 0.3);
+  background-color: #e6f1eb;
 }
 
 .car-card__title {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: #666;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.car-card--active .car-card__title {
+  color: #759a81;
 }
 
 .car-card__title-row {
@@ -250,6 +251,7 @@ const formatBrandModel = (brand?: string, model?: string) => {
   color: #666;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
 }
 

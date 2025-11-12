@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { watchEffect, ref, watch, onMounted } from "vue";
+import { watchEffect, ref, watch, onMounted, onBeforeUnmount } from "vue";
 import SlideBar from "./components/SlideBar/index.vue";
 import Navbar from "./components/Navbar.vue";
 import SvgIcon from "@/components/SvgIcon/index.vue";
@@ -87,7 +87,7 @@ onMounted(() => {
    if(localStorage.getItem('isBlock') ==='true'){
       getFarmList();
     }
-  
+   window.addEventListener('refresh-farm-list', getFarmList as EventListener);
 });
 const selectedValue = useStorage('farmId', '', localStorage, {
   serializer: {
@@ -144,6 +144,10 @@ async function getFarmList() {
   } catch {}  
 }
 checkRoute();
+
+onBeforeUnmount(() => {
+  window.removeEventListener('refresh-farm-list', getFarmList as EventListener);
+})
 
 function changeDrawerVisible() {
   drawerVisible.value = !drawerVisible.value;

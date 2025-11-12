@@ -177,6 +177,8 @@ const jp = {
     basicP: '基本パラメータ',
     name: "所有者",
     builtInRadio: "内蔵ラジオ",
+    noMoreData:"no more data",
+    loading:"loading",
     advanceP: '詳細パラメータ1',
     tel: "所有者の携帯電話番号",
     project: "ジョブの名前",
