@@ -20,7 +20,7 @@
           <CarInfoPanel :vehicle="displayVehicle" :loading="loading.detail" />
         </div>
         <div class="car-management-page__right-bottom">
-          <CarExtraPanel />
+          <CarExtraPanel :vehicle="displayVehicle" />
         </div>
       </div>
     </div>

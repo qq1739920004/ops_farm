@@ -168,10 +168,10 @@ const formatBrandModel = (brand?: string, model?: string) => {
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 6px;
   min-height: 0; /* allow inner flex child to scroll */
   background-color: var(--el-bg-color);
   border: 1px solid var(--el-border-color-light);
-  padding: 16px;
   box-sizing: border-box;
 }
 
@@ -197,7 +197,6 @@ const formatBrandModel = (brand?: string, model?: string) => {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-right: 4px;
   /* hide scrollbar cross-browser */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */

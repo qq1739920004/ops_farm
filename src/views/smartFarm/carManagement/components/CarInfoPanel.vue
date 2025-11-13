@@ -107,7 +107,7 @@ const formatDate = (value?: string) => {
   height: 100%;
   background-color: var(--el-bg-color);
   border: 1px solid var(--el-border-color-light);
-  padding: 16px;
+  padding: 10px 10px;
   box-sizing: border-box;
 }
 
