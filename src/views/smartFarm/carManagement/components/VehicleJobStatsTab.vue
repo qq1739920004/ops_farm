@@ -315,17 +315,24 @@ const updateCharts = async () => {
       top: '0%', 
       textStyle: { fontSize: 16, color: '#43cf7c' } 
     },
-    tooltip: { show: false },
+    tooltip: { 
+      show: true,
+      trigger: 'item',
+      formatter: (params) => `${params.name}: ${Number(params.value).toFixed(1)} 亩`,
+      appendToBody: true,
+      extraCssText: 'z-index: 9999; position: absolute;'
+    },
     legend: {
       orient: 'vertical',
       right: '15%',
       top: 'center',
       textStyle: { color: '#a0a8b8', fontSize: 12 },
-      show: operationTypeList.length > 0
+      show: operationTypeList.length > 0,
+      tooltip: { show: false }
     },
     series: [{ 
       type: 'pie', 
-      radius: ['45%', '65%'], 
+      radius: ['45%', '80%'], 
       center: ['35%', '55%'], 
       data: pieData,
       label: { 
@@ -334,7 +341,7 @@ const updateCharts = async () => {
         color: '#fff',
         fontSize: 12,
         fontWeight: 'bold',
-        formatter: (params) => (params.value > 0 ? params.value.toFixed(1) : '')
+        formatter: (params) => (Number(params.value) > 0 ? `${Number(params.value).toFixed(1)}` : '')
       },
       labelLine: { show: false },
       emphasis: { 

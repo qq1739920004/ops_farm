@@ -1114,38 +1114,61 @@ function drawReferenceLine(line: any) {
       break;
 
     case 7: // 7: 三点定圆
-      if (coords.length === 3) {
-        // 简化处理：用三点的外接圆（实际需计算圆心）
-        // 此处示例用第一个点为圆心，s83为半径
-        let ABline7 = L.circle(coords[0], {
-          radius: s94.s83,
+      {
+        const list = s94 && Array.isArray(s94.s73) ? s94.s73 : [];
+        if (list.length < 1) {
+          console.warn(`三点定圆坐标无效`);
+          break;
+        }
+        const centerStr = list[list.length - 1];
+        const parts = typeof centerStr === "string" ? centerStr.split(",") : [];
+        if (parts.length !== 2) {
+          console.warn(`三点定圆中心点格式无效: ${centerStr}`);
+          break;
+        }
+        const a = Number(parts[0]);
+        const b = Number(parts[1]);
+        if (isNaN(a) || isNaN(b)) {
+          console.warn(`三点定圆中心点无法解析: ${centerStr}`);
+          break;
+        }
+        let lat: number, lng: number;
+        if (Math.abs(a) <= 90 && Math.abs(b) <= 180) {
+          lat = a;
+          lng = b;
+        } else if (Math.abs(b) <= 90 && Math.abs(a) <= 180) {
+          lat = b;
+          lng = a;
+        } else {
+          console.warn(`三点定圆中心点范围异常: ${centerStr}`);
+          break;
+        }
+        const [gcjLat, gcjLng] = wgs84ToGcj02(lat, lng);
+        const center = [gcjLat, gcjLng];
+        const radius = Number(s94.s83);
+        if (!radius || isNaN(radius)) {
+          console.warn(`三点定圆半径无效: s83=${s94.s83}`);
+          break;
+        }
+
+        let ABline7 = L.circle(center as any, {
+          radius,
           color: "cyan",
           fill: false,
-        }).addTo(map);
-        // 同时绘制三点连线
-        let ABline7line = L.polyline([...coords, coords[0]], {
-          color: "cyan",
-          weight: 1,
         }).addTo(map);
         ABline7.bindPopup(
           `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
         );
-        // 关键：监听弹窗打开事件，绑定点击委托
         ABline7.on("popupopen", (e: any) => {
-          // 获取弹窗的 DOM 容器（Leaflet 弹窗容器类名为 .leaflet-popup-content-wrapper）
           const popupContainer = e.popup._contentNode.parentNode;
-
-          // 给弹窗容器绑定点击事件（委托给 .popup-btn）
           popupContainer.addEventListener("click", handlePopupClick);
         });
-
-        // 监听弹窗关闭事件，移除事件绑定（避免重复触发）
         ABline7.on("popupclose", (e: any) => {
           const popupContainer = e.popup._contentNode.parentNode;
           popupContainer.removeEventListener("click", handlePopupClick);
         });
-
-        type7_Line.push(ABline7, ABline7line);
+        map.fitBounds(ABline7.getBounds());
+        type7_Line.push(ABline7);
       }
       break;
 
@@ -1176,45 +1199,82 @@ function drawReferenceLine(line: any) {
       break;
 
     case -101: // -101: 单点+航向（标记+箭头）
-      if (coords.length === 1) {
-        // 1. 航向角转换：弧度 → 角度（Leaflet旋转用角度）
-        const headingRadian = s94.s77; // 后台返回的弧度
-        const headingDegree = (headingRadian * 180) / Math.PI; // 转换为角度
+      if (coords.length >= 1) {
+        // 1. 航向角：由第一个点指向第二个点，计算地理方位角（Leaflet旋转用角度）
+        let headingDegree: number;
+        const headingFromApi = Number(s94.s77);
+        if (!isNaN(headingFromApi)) {
+          headingDegree = ((headingFromApi % 360) + 360) % 360;
+        } else if (coords.length >= 2) {
+          const [lat1, lng1] = coords[0];
+          const [lat2, lng2] = coords[1];
+          const toRad = (deg: number) => (deg * Math.PI) / 180;
+          const toDeg = (rad: number) => (rad * 180) / Math.PI;
+          const φ1 = toRad(lat1);
+          const φ2 = toRad(lat2);
+          const Δλ = toRad(lng2 - lng1);
+          const y = Math.sin(Δλ) * Math.cos(φ2);
+          const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+          headingDegree = (toDeg(Math.atan2(y, x)) + 360) % 360;
+        } else {
+          headingDegree = 0;
+        }
 
-        // 2. 自定义PNG图标（带旋转）
-        // 方式1：用L.divIcon加载PNG并通过CSS旋转（推荐，灵活控制旋转）
-        const arrowIcon = L.divIcon({
-          html: `
-          <img
-            src="/icons/101arrow.png"  // PNG图标的路径（public目录下）
-            style="transform: rotate(${headingDegree}deg);"  // 动态旋转
-            width="24"  // 图标宽度（根据实际图片调整）
-            height="24" // 图标高度
-          />
-        `,
-          className: "custom-arrow-icon", // 自定义类名（可选，用于额外样式）
-          iconSize: [24, 24], // 图标尺寸（需与图片宽高一致）
-          iconAnchor: [12, 12], // 图标锚点（中心点，确保旋转轴心正确）
-        });
-        let ABline101 = L.marker(coords[0], { icon: arrowIcon }).addTo(map);
+        // 2. 矢量箭头（多边形绘制，按米为单位控制尺寸）
+        const toRadArrow = (deg: number) => (deg * Math.PI) / 180;
+        const toDegArrow = (rad: number) => (rad * 180) / Math.PI;
+        const destinationArrow = (lat: number, lng: number, distM: number, bearingDeg: number) => {
+          const R = 6371000;
+          const br = toRadArrow(bearingDeg);
+          const φ1 = toRadArrow(lat);
+          const λ1 = toRadArrow(lng);
+          const δ = distM / R;
+          const sinφ1 = Math.sin(φ1);
+          const cosφ1 = Math.cos(φ1);
+          const sinδ = Math.sin(δ);
+          const cosδ = Math.cos(δ);
+          const sinφ2 = sinφ1 * cosδ + cosφ1 * sinδ * Math.cos(br);
+          const φ2 = Math.asin(sinφ2);
+          const y = Math.sin(br) * sinδ * cosφ1;
+          const x = cosδ - sinφ1 * sinφ2;
+          const λ2 = λ1 + Math.atan2(y, x);
+          return [toDegArrow(φ2), ((toDegArrow(λ2) + 540) % 360) - 180] as [number, number];
+        };
+
+        let ABline101Line: any;
+        if (coords.length >= 2) {
+          ABline101Line = L.polyline([coords[0], coords[1]], { color: "lime", weight: 2 }).addTo(map);
+        }
+
+        const anchor = coords.length >= 2 ? coords[1] : coords[0];
+        const arrowLengthM = 20;
+        const arrowWidthM = 12;
+        const backM = 6;
+        const baseCenter = destinationArrow(anchor[0], anchor[1], backM, (headingDegree + 180) % 360);
+        const tip = destinationArrow(anchor[0], anchor[1], arrowLengthM, headingDegree);
+        const baseLeft = destinationArrow(baseCenter[0], baseCenter[1], arrowWidthM / 2, headingDegree - 90);
+        const baseRight = destinationArrow(baseCenter[0], baseCenter[1], arrowWidthM / 2, headingDegree + 90);
+        let ABline101 = L.polygon([baseLeft, tip, baseRight], {
+          color: "lime",
+          weight: 2,
+          fill: true,
+          fillOpacity: 0.8,
+        }).addTo(map);
         ABline101.bindPopup(
-          `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+          `  <div class=\"popup-btn\"  style='cursor:pointer' data-line-id=\"${line.id}\">下发作业线</div >`
         );
-        // 关键：监听弹窗打开事件，绑定点击委托
         ABline101.on("popupopen", (e: any) => {
-          // 获取弹窗的 DOM 容器（Leaflet 弹窗容器类名为 .leaflet-popup-content-wrapper）
           const popupContainer = e.popup._contentNode.parentNode;
-
-          // 给弹窗容器绑定点击事件（委托给 .popup-btn）
           popupContainer.addEventListener("click", handlePopupClick);
         });
-
-        // 监听弹窗关闭事件，移除事件绑定（避免重复触发）
         ABline101.on("popupclose", (e: any) => {
           const popupContainer = e.popup._contentNode.parentNode;
           popupContainer.removeEventListener("click", handlePopupClick);
         });
-        type6_Line.push(ABline101);
+        if (coords.length >= 2) {
+          type101_Line.push(ABline101Line);
+          map.fitBounds([coords[0], coords[1]]);
+        }
         type101_Line.push(ABline101);
       }
       break;
