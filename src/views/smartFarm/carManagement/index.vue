@@ -154,9 +154,9 @@
               </div>
             </el-upload>
           </div>
-          <div class="addImg">
+          <!-- <div class="addImg">
             <el-button type="primary" @click="uploadImg">{{ t('work.addPic') }}</el-button>
-          </div>
+          </div> -->
         </div>
       </div>
       <template #footer>
@@ -461,7 +461,7 @@ const handleEdit = async (item: any) => {
       vehicleType: data.vehicleType ? [String(data.vehicleType)] : [],
       buyTime: data.buyTime,
     });
-    await getSNList();
+    await Promise.all([getSNList(), fetchFarmOptions()]);
     // 确保当前绑定的SN存在于选项中
     if (
       carParams.carId &&

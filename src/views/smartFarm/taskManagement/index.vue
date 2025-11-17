@@ -6,19 +6,39 @@
         <div class="left">
           <el-input
             v-model="pageInfo.keyword"
-            style="width: 240px; margin-left: 10px"
+            style="width: 180px; margin-left: 10px"
             :placeholder="$t('messages.plzTaskName')"
             clearable
             @change="getPageList"
           >
           </el-input>
           <el-select-v2
-            style="width: 240px; margin-left: 10px"
+            style="width: 180px; margin-left: 10px"
             filterable
             clearable
             v-model="pageInfo.sn"
             :options="options"
-            :placeholder="$t('work.pleaseSelect')"
+            :placeholder="$t('work.pleaseSelectCar')"
+            @change="getPageList"
+          >
+          </el-select-v2>
+          <el-select-v2
+            style="width: 180px; margin-left: 10px"
+            filterable
+            clearable
+            v-model="pageInfo.blockId"
+            :options="blockOptions"
+            :placeholder="$t('work.pleaseSelectBlock')"
+            @change="getPageList"
+          >
+          </el-select-v2>
+          <el-select-v2
+            style="width: 180px; margin-left: 10px"
+            filterable
+            clearable
+            v-model="pageInfo.operationType"
+            :options="taskTypeOptions"
+            :placeholder="$t('work.pleaseSelectOperationType')"
             @change="getPageList"
           >
           </el-select-v2>
@@ -52,10 +72,11 @@
         <div class="table_box" v-for="(item, index) in tableList" :key="index">
           <div class="table_inner" @click="gotoDetails(item.id)">
             <div class="inner_name">
-              {{ item.taskName }}
+              <span>{{ item.operationName }}</span>
+              <span>{{ item.taskName }}</span>
             </div>
             <div class="carName">
-              {{ item.vehicleName || "--" }}
+              {{ item.vehicleName?item.vehicleName+"/"+item.sn:"--" }}
             </div>
             <div class="map_container">
               <detail-map :ggaData="tableList[index].ggaList" :mapRenderMode="'canvas'" />
@@ -98,7 +119,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
-import { listVehicle_API, pageTask_API } from "@/api/fieldManagement/indx";
+import { listVehicle_API, pageTask_API, getFarmBlockList_API, getTaskType_API } from "@/api/fieldManagement/indx";
 import detailMap from "./components/detailMap.vue";
 import { useI18n } from "vue-i18n";
 import router from "@/router";
@@ -110,6 +131,8 @@ const timeRange = ref<any>([
 const { t } = useI18n();
 const carList = ref<any>([]);
 let options = ref<any>([]);
+let blockOptions = ref<any>([]);
+let taskTypeOptions = ref<any>([]);
 const pageInfo = reactive<any>({
   keyword: "",
   stTime: "",
@@ -118,6 +141,8 @@ const pageInfo = reactive<any>({
   currentPage: 1,
   pageSize: 10,
   sn: "",
+  blockId: "",
+  operationType: "",
 });
 
 const total = ref(0);
@@ -144,6 +169,31 @@ const getCarList = async () => {
     value: "",
   });
 };
+const getBlockOptions = async () => {
+  const farmId = useStorage("farmId", "").value;
+  if (!farmId) {
+    blockOptions.value = [];
+    return;
+  }
+  const res = await getFarmBlockList_API({ farmId });
+  const list = res?.data || [];
+  blockOptions.value = list.map((item: any) => ({ value: item.id, label: item.name }));
+};
+const getTaskTypeOptions = async () => {
+  const res = await getTaskType_API({ dicKey: "work_category", level: 2 });
+  const data = res?.data || [];
+  const flat: any[] = [];
+  const traverse = (nodes: any[]) => {
+    nodes.forEach((n: any) => {
+      if (n && (n.bizKey !== undefined) && (n.bizValue !== undefined)) {
+        flat.push({ value: n.bizKey, label: n.bizValue });
+      }
+      if (Array.isArray(n?.children) && n.children.length) traverse(n.children);
+    });
+  };
+  if (Array.isArray(data)) traverse(data);
+  taskTypeOptions.value = flat;
+};
 const disabledDate = (time: Date) => {
   return time.getTime() > Date.now() + 8.64e7;
 };
@@ -153,6 +203,7 @@ const isActive = ref<number>(2);
 watch(
   () => pageInfo.farmId,
   () => {
+    getBlockOptions();
     getPageList();
   },
   { deep: true }
@@ -204,6 +255,8 @@ const onYearClick = () => {
   getPageList();
 };
 getCarList();
+getBlockOptions();
+getTaskTypeOptions();
 getPageList();
 </script>
 
@@ -278,8 +331,17 @@ getPageList();
       background-color: #f7f7f7;
       border-radius: 8px;
       .inner_name {
-        color: #4cb04f;
+        //第一个span
+        span:first-child{
+          color: #dbac10;
+        }
+        //第二个span
+        span:last-child{
+          color: #4cb04f;
+        }
         font-size: 16px;
+        display: flex;
+        justify-content: space-between;
       }
       .carName {
         color: #b5b5b5;

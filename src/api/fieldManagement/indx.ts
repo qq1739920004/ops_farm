@@ -139,3 +139,19 @@ export function pushFarm_API(data:any){
         data
     })
 }
+//获取农场下地块列表
+export function getFarmBlockList_API(params:any){
+    return request<any, any>({
+        url:'/farm/farm-base/listBlock',
+        method: 'get',
+        params
+    })
+}
+//获取所有任务类型
+export function getTaskType_API(params:any){
+    return request<any, any>({
+        url:'/farm/sysDict/tree',
+        method: 'get',
+        params
+    })
+}
