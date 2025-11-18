@@ -392,7 +392,7 @@ const validateCropItem = (rule, value, callback) => {
 };
 const rules = {
   name: [{ required: true, message: t("messages.plzenter"), trigger: "change" }],
-  perimeter: [{ required: true, message: t("messages.plzenter"), trigger: "change" }],
+  perimeter: [{ required: false, message: t("messages.plzenter"), trigger: "change" }],
   area: [{ required: true, message: t("messages.plzenter"), trigger: "change" }],
 };
 const editField = async () => {

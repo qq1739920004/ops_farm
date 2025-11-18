@@ -224,77 +224,114 @@
     </div>
     <div class="info_box" v-show="infoShow">
       <div class="top_line">
-        <div>{{ fieldInfo.name }}</div>
-        <div>
-          <el-button
-            type="primary"
-            size="small"
-            style="margin-left: 10px"
-            @click="goEdit(fieldInfo.id)"
-            link
-          >
-            {{ t("work.edit") }}
-          </el-button>
-          <el-button link type="danger" size="small" @click="deleteFields(fieldInfo.id)">
-            {{ t("work.delete") }}
-          </el-button>
-        </div>
+        <div style="font-size: 16px; font-weight: bold;">{{ fieldInfo.name }}</div>
       </div>
       <div class="info_line">
+        <!-- 面积 -->
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8">
-            {{ t("work.allArea") + "(mu)" }}:</el-col
+            {{ t("work.allArea") + "(m²)" }}:</el-col
           >
           <el-col :span="12"> {{ fieldInfo.area }}</el-col>
         </el-row>
+        
+        <!-- 周长 -->
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8">
             {{ t("work.circumference") + "(m)" }}:</el-col
           >
           <el-col :span="12"> {{ fieldInfo.perimeter }}</el-col>
         </el-row>
+        
+        <!-- 种养品种 -->
+        <el-row>
+          <el-col :span="locale === 'en' ? 12 : 8">种养品种:</el-col>
+          <el-col :span="14">
+            <div v-if="fieldInfo.blockCrops && fieldInfo.blockCrops.length > 0" class="crop-info">
+              <span>{{ fieldInfo.blockCrops[0]?.cropName || '--' }}</span>
+              <span style="font-size: 12px; color: #aaa;">
+                {{ fieldInfo.blockCrops[0]?.plantingStartTime || '--' }}
+              </span>
+            </div>
+            <span v-else>--</span>
+            <el-button link type="primary" size="small">更多</el-button>
+          </el-col>
+        </el-row>
+        
+        <!-- 农事记录 -->
+        <el-row>
+          <el-col :span="locale === 'en' ? 12 : 8">农事记录:</el-col>
+          <el-col :span="12">
+            <el-button link type="primary" size="small">更多</el-button>
+          </el-col>
+        </el-row>
+        
+        <!-- 创建时间 -->
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.creationTime") }}:</el-col>
           <el-col :span="12"> {{ fieldInfo.createTime }}</el-col>
         </el-row>
+        
+        <!-- 创建人 -->
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.creator") }}:</el-col>
           <el-col :span="12"> {{ fieldInfo.creator }}</el-col>
         </el-row>
+        
+        <!-- 修改时间 -->
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.modifyTime") }}:</el-col>
           <el-col :span="12"> {{ fieldInfo.modifyTime }}</el-col>
         </el-row>
+        
+        <!-- 修改人 -->
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.modifier") }}:</el-col>
           <el-col :span="12"> {{ fieldInfo.modifier }}</el-col>
         </el-row>
+        
+        <!-- 描述 -->
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.describe") }}:</el-col>
           <el-col class="wrap-col" :span="12"> {{ fieldInfo.description }}</el-col>
         </el-row>
+        
+        <!-- 地址 -->
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8"> {{ t("work.address") }}:</el-col>
-          <el-col :span="12">
+          <el-col class="wrap-col" :span="12">
             {{ fieldInfo.address }}
-
-            <div style="display: flex">
+          </el-col>
+        </el-row>
+        
+        <!-- 操作按钮 -->
+        <el-row style="margin-top: 10px;">
+          <el-col :span="24">
+            <div style="display: flex; gap: 8px;">
+              <el-button
+                link
+                type="primary"
+                size="small"
+                @click="goEdit(fieldInfo.id)"
+              >
+                {{ t("work.edit") }}
+              </el-button>
+              <el-button 
+                link 
+                type="danger" 
+                size="small" 
+                @click="deleteFields(fieldInfo.id)"
+              >
+                {{ t("work.delete") }}
+              </el-button>
               <el-button
                 link
                 type="primary"
                 size="small"
                 @click="checkShare(fieldInfo.id, fieldInfo.createType)"
-                >下发地块</el-button
               >
-              <!-- <el-button link type="primary" size="small">分享边界</el-button> -->
-              <!-- <el-button
-                link
-                type="primary"
-                size="small"
-                v-if="fieldInfo.haveReference"
-                @click="showlines(fieldInfo.companyId)"
-                >显示作业线</el-button
-              > -->
+                下发地块
+              </el-button>
             </div>
           </el-col>
         </el-row>
@@ -361,7 +398,7 @@ import detailMap from "./components/detailMap.vue";
 import leftMap from "./components/leftMap.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { gcoordLngLat } from "sino-tool-v3";
-import { useStorage } from "@vueuse/core";
+import { useStorage } from "@vueuse/core";                                                                                              
 
 import {
   filedPage_API,
@@ -373,6 +410,7 @@ import {
   share_API,
   listVehicle_API,
   shareCar_API,
+  getFarmRecord_API,
   getCarList_API,
   pushReferenceLine_API,
 } from "@/api/fieldManagement/indx";
@@ -728,6 +766,10 @@ async function wordsSearch(e: any) {
       margin: 4px 0;
     }
   }
+}
+.crop-info{
+  display: flex;
+  justify-content: space-between;
 }
 .infinite-list_out {
   position: absolute;

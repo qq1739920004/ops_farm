@@ -242,8 +242,10 @@ watch(
 
   (boundariesID) => {
     findBoundaries(boundariesID);
-  }
+  },
+  { deep: true }
 );
+
 watch(
   () => props.handleOb,
   (mapCenter) => {
@@ -626,6 +628,11 @@ function initMap() {
     zIndex: 9999,
   });
   mapInstance.value = map;
+  
+  // 创建自定义 pane 用于作业线，z-index 高于 markerPane
+  map.createPane('referenceLinesPane');
+  map.getPane('referenceLinesPane')!.style.zIndex = '650';
+  
   markerGroup.addTo(map);
   markerClusterGroup.addTo(map);
   initCanvasGroup();
@@ -648,6 +655,13 @@ function initCanvasGroup() {
 // 移动详细视角
 function findBoundaries(list: any) {
   if (list.length === 0) {
+    // 如果没有选中的边界，恢复所有地块到默认样式
+    polygonArr.forEach((polygon: any) => {
+      polygon.setStyle({
+        fillOpacity: 0.44,
+        weight: 1
+      });
+    });
     return;
   }
   const polytrueData: any = [];
@@ -663,6 +677,50 @@ function findBoundaries(list: any) {
   });
   var bounds = L.latLngBounds(latLng);
   map.fitBounds(bounds);
+  
+  // 更新地块高亮显示：恢复所有地块到默认样式，然后高亮选中的地块
+  polygonArr.forEach((polygon: any) => {
+    // 恢复默认样式
+    polygon.setStyle({
+      fillOpacity: 0.44,
+      weight: 1
+    });
+    
+    // 检查是否是选中的地块（通过比较坐标）
+    const polygonCoords = polygon.getLatLngs()[0];
+    let isSelected = false;
+    
+    if (polygonCoords && polytrueData.length > 0) {
+      const selectedCoords = polytrueData[0];
+      // 比较坐标数量
+      if (polygonCoords.length === selectedCoords.length) {
+        // 简单比较第一个和最后一个坐标点
+        const firstMatch = Math.abs(polygonCoords[0].lat - selectedCoords[0][0]) < 0.0001 &&
+                          Math.abs(polygonCoords[0].lng - selectedCoords[0][1]) < 0.0001;
+        if (firstMatch && polygonCoords.length > 1) {
+          const lastIdx = polygonCoords.length - 1;
+          const lastMatch = Math.abs(polygonCoords[lastIdx].lat - selectedCoords[lastIdx][0]) < 0.0001 &&
+                           Math.abs(polygonCoords[lastIdx].lng - selectedCoords[lastIdx][1]) < 0.0001;
+          isSelected = firstMatch && lastMatch;
+        } else {
+          isSelected = firstMatch;
+        }
+      }
+    }
+    
+    // 高亮选中的地块
+    if (isSelected) {
+      polygon.setStyle({
+        fillOpacity: 0.7,
+        weight: 3
+      });
+    }
+  });
+  
+  // 延迟刷新地图，确保图层正确渲染
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 100);
 }
 function createMarker(list: any) {
   if (list.length === 0) {
@@ -985,9 +1043,9 @@ function drawReferenceLine(line: any) {
   switch (s72) {
     case 0: // 直线
       if (coords.length >= 2) {
-        let ABline = L.polyline(coords, { color: "red" }).addTo(map);
+        let ABline = L.polyline(coords, { color: "red", pane: 'referenceLinesPane' }).addTo(map);
         ABline.bindPopup(
-          `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+          `  <div class="popup-btn"  style='cursor:pointer; color: #1890ff; text-decoration: underline;' data-line-id="${line.id}">下发作业线</div >`
         );
         // 关键：监听弹窗打开事件，绑定点击委托
         ABline.on("popupopen", (e: any) => {
@@ -1012,10 +1070,11 @@ function drawReferenceLine(line: any) {
         color: "green",
         weight: 2,
         dashArray: "5, 5",
+        pane: 'referenceLinesPane'
       }).addTo(map);
       // 可根据s81/s82等参数添加转向辅助线（示例：基准线AB标黄）
       ABline2.bindPopup(
-        `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+        `  <div class="popup-btn"  style='cursor:pointer; color: #1890ff; text-decoration: underline;' data-line-id="${line.id}">下发作业线</div >`
       );
       // 关键：监听弹窗打开事件，绑定点击委托
       ABline2.on("popupopen", (e: any) => {
@@ -1040,9 +1099,9 @@ function drawReferenceLine(line: any) {
         const center = coords[0];
         const radius = s94.s83; // 半径（米）
         // Leaflet的圆默认单位是米，需用L.circle
-        let ABline4 = L.circle(center, { radius, color: "blue", fill: false }).addTo(map);
+        let ABline4 = L.circle(center, { radius, color: "blue", fill: false, pane: 'referenceLinesPane' }).addTo(map);
         ABline4.bindPopup(
-          `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+          `  <div class="popup-btn"  style='cursor:pointer; color: #1890ff; text-decoration: underline;' data-line-id="${line.id}">下发作业线</div >`
         );
         // 关键：监听弹窗打开事件，绑定点击委托
         ABline4.on("popupopen", (e: any) => {
@@ -1066,9 +1125,9 @@ function drawReferenceLine(line: any) {
       break;
 
     case 5: // 5: 等距曲线（多段线）
-      let ABline5 = L.polyline(coords, { color: "purple", weight: 2 }).addTo(map);
+      let ABline5 = L.polyline(coords, { color: "purple", weight: 2, pane: 'referenceLinesPane' }).addTo(map);
       ABline5.bindPopup(
-        `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+        `  <div class="popup-btn"  style='cursor:pointer; color: #1890ff; text-decoration: underline;' data-line-id="${line.id}">下发作业线</div >`
       );
       // 关键：监听弹窗打开事件，绑定点击委托
       ABline5.on("popupopen", (e: any) => {
@@ -1091,10 +1150,10 @@ function drawReferenceLine(line: any) {
       break;
 
     case 6: // 6: 自由轨迹（多段线）
-      let ABline6 = L.polyline(coords, { color: "orange", weight: 2 }).addTo(map);
+      let ABline6 = L.polyline(coords, { color: "orange", weight: 2, pane: 'referenceLinesPane' }).addTo(map);
 
       ABline6.bindPopup(
-        `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+        `  <div class="popup-btn"  style='cursor:pointer; color: #1890ff; text-decoration: underline;' data-line-id="${line.id}">下发作业线</div >`
       );
       // 关键：监听弹窗打开事件，绑定点击委托
       ABline6.on("popupopen", (e: any) => {
@@ -1155,9 +1214,10 @@ function drawReferenceLine(line: any) {
           radius,
           color: "cyan",
           fill: false,
+          pane: 'referenceLinesPane'
         }).addTo(map);
         ABline7.bindPopup(
-          `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+          `  <div class="popup-btn"  style='cursor:pointer; color: #1890ff; text-decoration: underline;' data-line-id="${line.id}">下发作业线</div >`
         );
         ABline7.on("popupopen", (e: any) => {
           const popupContainer = e.popup._contentNode.parentNode;
@@ -1174,11 +1234,11 @@ function drawReferenceLine(line: any) {
 
     case 8: // 8: 对角耙（封闭多边形）
       if (coords.length >= 3) {
-        let ABline8 = L.polygon(coords, { color: "brown", fill: false, weight: 2 }).addTo(
+        let ABline8 = L.polygon(coords, { color: "brown", fill: false, weight: 2, pane: 'referenceLinesPane' }).addTo(
           map
         );
         ABline8.bindPopup(
-          `  <div class="popup-btn"  style='cursor:pointer' data-line-id="${line.id}">下发作业线</div >`
+          `  <div class="popup-btn"  style='cursor:pointer; color: #1890ff; text-decoration: underline;' data-line-id="${line.id}">下发作业线</div >`
         );
         // 关键：监听弹窗打开事件，绑定点击委托
         ABline8.on("popupopen", (e: any) => {
@@ -1243,7 +1303,19 @@ function drawReferenceLine(line: any) {
 
         let ABline101Line: any;
         if (coords.length >= 2) {
-          ABline101Line = L.polyline([coords[0], coords[1]], { color: "lime", weight: 2 }).addTo(map);
+          ABline101Line = L.polyline([coords[0], coords[1]], { color: "lime", weight: 2, pane: 'referenceLinesPane' }).addTo(map);
+          // 为线条也添加相同的弹窗和事件
+          ABline101Line.bindPopup(
+            `  <div class="popup-btn"  style='cursor:pointer; color: #1890ff; text-decoration: underline;' data-line-id="${line.id}">下发作业线</div >`
+          );
+          ABline101Line.on("popupopen", (e: any) => {
+            const popupContainer = e.popup._contentNode.parentNode;
+            popupContainer.addEventListener("click", handlePopupClick);
+          });
+          ABline101Line.on("popupclose", (e: any) => {
+            const popupContainer = e.popup._contentNode.parentNode;
+            popupContainer.removeEventListener("click", handlePopupClick);
+          });
         }
 
         const anchor = coords.length >= 2 ? coords[1] : coords[0];
@@ -1259,9 +1331,10 @@ function drawReferenceLine(line: any) {
           weight: 2,
           fill: true,
           fillOpacity: 0.8,
+          pane: 'referenceLinesPane'
         }).addTo(map);
         ABline101.bindPopup(
-          `  <div class=\"popup-btn\"  style='cursor:pointer' data-line-id=\"${line.id}\">下发作业线</div >`
+          `  <div class="popup-btn"  style='cursor:pointer; color: #1890ff; text-decoration: underline;' data-line-id="${line.id}">下发作业线</div >`
         );
         ABline101.on("popupopen", (e: any) => {
           const popupContainer = e.popup._contentNode.parentNode;

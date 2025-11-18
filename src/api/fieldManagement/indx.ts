@@ -155,3 +155,11 @@ export function getTaskType_API(params:any){
         params
     })
 }
+//农事记录
+export function getFarmRecord_API(params:any){
+    return request<any, any>({
+        url:'/farm/farm-affair/page',
+        method: 'get',
+        params
+    })
+}

@@ -104,9 +104,9 @@
             <el-form-item :label="t('work.registrationNo')" prop="registrationNo">
               <el-input v-model="carParams.registrationNo"></el-input>
             </el-form-item>
-            <el-form-item :label="t('work.age')" prop="age">
+            <!-- <el-form-item :label="t('work.age')" prop="age">
               <el-input v-model="carParams.age"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item :label="t('work.powefr')" prop="power">
               <el-input v-model="carParams.power"></el-input>
             </el-form-item>
@@ -552,6 +552,10 @@ const addVehicle = async () => {
     if (isEdit.value) {
       await updateVehicle_API(payload);
       ElMessage.success(t('work.editSuccess'));
+      // 更新详情信息
+      if (selectedCarId.value) {
+        await fetchVehicleDetail(selectedCarId.value);
+      }
     } else {
       await addVehicle_API(payload);
       ElMessage.success(t('messages.addSuccess'));
