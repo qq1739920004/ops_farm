@@ -1192,6 +1192,7 @@ function drawReferenceLine(line: any) {
           break;
         }
         let lat: number, lng: number;
+        //适配经纬度正反
         if (Math.abs(a) <= 90 && Math.abs(b) <= 180) {
           lat = a;
           lng = b;

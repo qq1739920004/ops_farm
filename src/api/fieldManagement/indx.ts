@@ -163,3 +163,51 @@ export function getFarmRecord_API(params:any){
         params
     })
 }
+//新增农事记录
+export function addFarmRecord_API(data:any){
+    return request<any, any>({
+        url:'/farm/farm-affair/add',
+        method: 'post',
+        data
+    })
+}
+//编辑农事记录
+export function editFarmRecord_API(data:any){
+    return request<any, any>({
+        url:'/farm/farm-affair/update',
+        method: 'put',
+        data
+    })
+}
+//农事记录图片上传
+export function uploadFarmRecord_API(data:any){
+    return request<any, any>({
+        url:'/farm/farm-affair/upload',
+        method: 'post',
+        data
+    })
+}
+//种养记录
+export function getFarmAffair_API(params:any){
+    return request<any, any>({
+        url:'/farm/block-crop/page',
+        method: 'get',
+        params
+    })
+}
+//新增种养记录
+export function addFarmAffair_API(data:any){
+    return request<any, any>({
+        url:'/farm/block-crop/add',
+        method: 'post',
+        data
+    })
+}
+//编辑种养记录
+export function editFarmAffair_API(data:any){
+    return request<any, any>({
+        url:'/farm/block-crop/update',
+        method: 'put',
+        data
+    })
+}

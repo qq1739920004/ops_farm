@@ -82,25 +82,30 @@
               <detail-map :ggaData="tableList[index].ggaList" :mapRenderMode="'canvas'" />
             </div>
             <div class="bottm_line">
-              <div class="top">
-                <div class="left">
-                  <img src="@/assets/common/stTime.png" alt="" />
-                  {{ item.startTime || "--" }}
-                </div>
-                <div class="right">
+              <div class="line_row">
+                <div class="time_range">
                   <img src="@/assets/common/time.png" alt="" />
-                  {{ item.durationSeconds || "--" }}
+                  {{ item.startTime || "--" }} - {{ item.endTime || "--" }}
                 </div>
               </div>
-              <div class="bottom">
+              <div class="line_row">
+                <img src="@/assets/common/filed.png" alt="">
                 <div class="left">
-                  <img src="@/assets/common/edTime.png" alt="" />
-                  {{ item.endTime || "--" }}
+                  作业面积：{{ (+item.totalArea).toFixed(2) || "--" }}亩   
                 </div>
                 <div class="right">
-                  <img src="@/assets/common/taskLine.png" alt="" />
-                  {{ item.totalDistance || "--" }}km
+                  剩余面积：{{ (+item.missedArea).toFixed(2) || "--" }}亩   
                 </div>
+              </div>
+              <div class="line_row progress_row">
+                  <img src="@/assets/common/stTime.png" alt="">
+
+                <el-progress 
+                  :percentage="item.totalArea && item.totalArea > 0 ? ((item.totalArea - (item.missedArea || 0)) / item.totalArea * 100).toFixed(0) : 0" 
+                  :show-text="false"
+                  :stroke-width="8"
+                />
+                <div class="progress_value">{{ item.totalArea && item.totalArea > 0 ? ((item.totalArea - (item.missedArea || 0)) / item.totalArea * 100).toFixed(0) : 0 }}%</div>
               </div>
             </div>
           </div>
@@ -320,7 +325,7 @@ getPageList();
   padding: 10px;
   .table_box {
     height: 318px;
-    width: 20%;
+    width: 21%;
     display: flex;
     justify-content: center;
     .table_inner {
@@ -352,46 +357,53 @@ getPageList();
         height: 196px;
       }
       .bottm_line {
-        height: 66px;
         width: 100%;
-        .top {
+        padding-top: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        
+        .line_row {
           font-size: 12px;
           color: #000000;
           display: flex;
+          align-items: center;
           width: 100%;
-          height: 50%;
+          
+          .time_range {
+            display: flex;
+            align-items: center;
+            width: 100%;
+          }
+          
           .left {
-            width: 60%;
+            flex: 1;
             display: flex;
             align-items: center;
           }
           .right {
-            width: 40%;
+            flex: 1;
             display: flex;
             align-items: center;
+          }
+          
+          &.progress_row {
+            gap: 8px;
+            :deep(.el-progress) {
+              flex: 1;
+            }
+            .progress_value {
+              min-width: 40px;
+              text-align: left;
+              font-weight: 500;
+            }
           }
         }
-        .bottom {
-          font-size: 12px;
-          color: #000000;
-          display: flex;
-          height: 50%;
-          width: 100%;
-          .left {
-            width: 60%;
-            display: flex;
-            align-items: center;
-          }
-          .right {
-            width: 40%;
-            display: flex;
-            align-items: center;
-          }
-        }
+        
         img {
           width: 15px;
           height: 15px;
-          margin: 0 8px;
+          margin-right: 6px;
         }
       }
     }

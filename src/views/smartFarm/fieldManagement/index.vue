@@ -254,7 +254,7 @@
               </span>
             </div>
             <span v-else>--</span>
-            <el-button link type="primary" size="small">更多</el-button>
+            <el-button link type="primary" size="small" @click="openCropDrawer">更多</el-button>
           </el-col>
         </el-row>
         
@@ -262,7 +262,7 @@
         <el-row>
           <el-col :span="locale === 'en' ? 12 : 8">农事记录:</el-col>
           <el-col :span="12">
-            <el-button link type="primary" size="small">更多</el-button>
+            <el-button link type="primary" size="small" @click="openFarmRecordDrawer">更多</el-button>
           </el-col>
         </el-row>
         
@@ -389,6 +389,235 @@
         <el-button type="primary" @click="handleConfirm2">确认下发</el-button>
       </div>
     </el-dialog>
+    
+    <!-- 农事记录抽屉 -->
+    <el-drawer
+      v-model="farmRecordDrawerVisible"
+      title="农事记录"
+      direction="rtl"
+      size="50%"
+      @close="closeFarmRecordDrawer"
+    >
+      <div style="margin-bottom: 10px; text-align: right;">
+        <el-button type="primary" icon="Plus" @click="openAddFarmRecordDialog">新增农事记录</el-button>
+      </div>
+      
+      <el-table 
+        :data="farmRecordList" 
+        style="width: 100%"
+        v-loading="farmRecordLoading"
+      >
+        <el-table-column prop="type" label="类型" min-width="60">
+          <template #default="{ row }">
+            {{ getFarmAffairType(row.type) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="responsiblePerson" label="操作人" min-width="70" />
+        <el-table-column prop="time" label="农时间" min-width="90" />
+        <el-table-column prop="agriculturalMaterials" label="农资" min-width="75" />
+        <el-table-column prop="remark" label="备注" min-width="90" show-overflow-tooltip />
+        <el-table-column prop="modifier" label="更新人" min-width="60" />
+        <el-table-column prop="updateTime" label="更新时间" min-width="90" />
+        <el-table-column label="照片" min-width="100">
+          <template #default="{ row }">
+            <el-image
+              v-if="row.imageUrl"
+              style="width: 50px; height: 50px"
+              :src="row.imageUrl"
+              :preview-src-list="[row.imageUrl]"
+              fit="cover"
+            />
+            <span v-else>--</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" min-width="80" fixed="right">
+          <template #default="{ row }">
+            <el-button link type="success" @click="editFarmRecord(row)">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      
+      <div style="margin-top: 20px; text-align: center;">
+        <el-pagination
+          v-model:current-page="farmRecordPage.currentPage"
+          v-model:page-size="farmRecordPage.pageSize"
+          :total="farmRecordTotal"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleFarmRecordSizeChange"
+          @current-change="handleFarmRecordCurrentChange"
+        />
+      </div>
+    </el-drawer>
+    
+    <!-- 种养品种抽屉 -->
+    <el-drawer
+      v-model="cropDrawerVisible"
+      title="种养品种记录"
+      direction="rtl"
+      size="50%"
+      @close="closeCropDrawer"
+    >
+      <div style="margin-bottom: 10px; text-align: right;">
+        <el-button type="primary" icon="Plus" @click="openAddCropDialog">新增作物</el-button>
+      </div>
+      
+      <el-table 
+        :data="cropList" 
+        style="width: 100%"
+        v-loading="cropLoading"
+      >
+        <el-table-column label="开始结束日期" min-width="150">
+          <template #default="{ row }">
+            {{ row.plantingStartTime || '--' }} - {{ row.plantingEndTime || '--' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="cropName" label="作物品种" min-width="100" />
+        <el-table-column prop="plantingArea" label="产量(kg)" min-width="80">
+          <template #default="{ row }">
+            {{ row.plantingArea || '--' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" min-width="80" fixed="right">
+          <template #default="{ row }">
+            <el-button link type="success" @click="editCrop(row)">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      
+      <div style="margin-top: 20px; text-align: center;">
+        <el-pagination
+          v-model:current-page="cropPage.currentPage"
+          v-model:page-size="cropPage.pageSize"
+          :total="cropTotal"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleCropSizeChange"
+          @current-change="handleCropCurrentChange"
+        />
+      </div>
+    </el-drawer>
+    
+    <!-- 新增/编辑作物弹窗 -->
+    <el-dialog
+      v-model="addCropDialogVisible"
+      :title="cropForm.id ? '编辑作物' : '新增作物'"
+      width="500px"
+      @close="closeAddCropDialog"
+    >
+      <el-form
+        ref="cropFormRef"
+        :model="cropForm"
+        :rules="cropFormRules"
+        label-width="100px"
+      >
+        <el-form-item label="时间范围" prop="timeRange">
+          <el-date-picker
+            style="width: 100%"
+            v-model="cropForm.timeRange"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD"
+          />
+        </el-form-item>
+        
+        <el-form-item label="作物类型" prop="cropDictId">
+          <el-cascader
+            style="width: 100%"
+            v-model="cropForm.cropDictId"
+            :options="cropOptions"
+            :props="cascaderProps"
+            clearable
+            placeholder="请选择作物类型"
+          />
+        </el-form-item>
+        
+        <el-form-item label="产量" prop="plantingArea">
+          <el-input
+            v-model="cropForm.plantingArea"
+            placeholder="请输入产量"
+            type="number"
+          >
+            <template #append>kg</template>
+          </el-input>
+        </el-form-item>
+      </el-form>
+      
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="closeAddCropDialog">取消</el-button>
+          <el-button type="primary" @click="submitCropForm">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    
+    <!-- 新增/编辑农事记录弹窗 -->
+    <el-dialog
+      v-model="addFarmRecordDialogVisible"
+      :title="farmRecordForm.id ? '编辑农事记录' : '新增农事记录'"
+      width="500px"
+      @close="closeAddFarmRecordDialog"
+    >
+      <el-form
+        ref="farmRecordFormRef"
+        :model="farmRecordForm"
+        :rules="farmRecordFormRules"
+        label-width="100px"
+      >
+        <el-form-item label="类型" prop="affairType">
+          <el-select
+            style="width: 100%"
+            v-model="farmRecordForm.affairType"
+            placeholder="请选择类型"
+            clearable
+          >
+            <el-option
+              v-for="item in affairTypeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item label="操作人" prop="responsiblePerson">
+          <el-input
+            v-model="farmRecordForm.responsiblePerson"
+            placeholder="请输入操作人"
+          />
+        </el-form-item>
+        
+        <el-form-item label="时间" prop="time">
+          <el-date-picker
+            style="width: 100%"
+            v-model="farmRecordForm.time"
+            type="datetime"
+            placeholder="请选择时间"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+          />
+        </el-form-item>
+        
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            v-model="farmRecordForm.remark"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入备注"
+          />
+        </el-form-item>
+      </el-form>
+      
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="closeAddFarmRecordDialog">取消</el-button>
+          <el-button type="primary" @click="submitFarmRecordForm">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -411,6 +640,12 @@ import {
   listVehicle_API,
   shareCar_API,
   getFarmRecord_API,
+  addFarmRecord_API,
+  editFarmRecord_API,
+  getFarmAffair_API,
+  addFarmAffair_API,
+  editFarmAffair_API,
+  sysDict_API,
   getCarList_API,
   pushReferenceLine_API,
 } from "@/api/fieldManagement/indx";
@@ -436,6 +671,67 @@ const words = ref();
 const farmList = ref<any>([]);
 const total = ref(0);
 const infoShow = ref(false);
+const farmRecordDrawerVisible = ref(false);
+const farmRecordList = ref<any>([]);
+const farmRecordTotal = ref(0);
+const farmRecordLoading = ref(false);
+const farmRecordPage = reactive({
+  currentPage: 1,
+  pageSize: 10,
+  blockId: '',
+});
+const addFarmRecordDialogVisible = ref(false);
+const farmRecordFormRef = ref<any>();
+const farmRecordForm = reactive<{
+  id?: string | number;
+  affairType: string | number;
+  responsiblePerson: string;
+  time: string;
+  remark: string;
+}>({
+  affairType: '',
+  responsiblePerson: '',
+  time: '',
+  remark: '',
+});
+const farmRecordFormRules = {
+  affairType: [{ required: true, message: '请选择类型', trigger: 'change' }],
+  responsiblePerson: [{ required: true, message: '请输入操作人', trigger: 'blur' }],
+  time: [{ required: true, message: '请选择时间', trigger: 'change' }],
+};
+const affairTypeOptions = ref<any>([]);
+const cropDrawerVisible = ref(false);
+const cropList = ref<any>([]);
+const cropTotal = ref(0);
+const cropLoading = ref(false);
+const cropPage = reactive({
+  currentPage: 1,
+  pageSize: 10,
+  blockId: '',
+});
+const addCropDialogVisible = ref(false);
+const cropFormRef = ref<any>();
+const cropForm = reactive<{
+  id?: string | number;
+  timeRange: any[];
+  cropDictId: string | number[];
+  plantingArea: string;
+}>({
+  timeRange: [],
+  cropDictId: '',
+  plantingArea: '',
+});
+const cropFormRules = {
+  timeRange: [{ required: true, message: '请选择时间范围', trigger: 'change' }],
+  cropDictId: [{ required: true, message: '请选择作物类型', trigger: 'change' }],
+};
+const cropOptions = ref<any>([]);
+const cascaderProps = {
+  value: 'value',
+  label: 'label',
+  children: 'children',
+  checkStrictly: true,
+};
 const pickedSn = ref("");
 const companyId = ref("");
 const mapCenter = ref<any>({
@@ -690,6 +986,271 @@ async function wordsSearch(e: any) {
     remoteOptions.value = res.data;
   }
 }
+
+// 打开农事记录抽屉
+const openFarmRecordDrawer = () => {
+  farmRecordDrawerVisible.value = true;
+  farmRecordPage.blockId = fieldInfo.value.id;
+  farmRecordPage.currentPage = 1;
+  getFarmRecordList();
+};
+
+// 关闭农事记录抽屉
+const closeFarmRecordDrawer = () => {
+  farmRecordDrawerVisible.value = false;
+  farmRecordList.value = [];
+  farmRecordTotal.value = 0;
+};
+
+// 获取农事记录列表
+const getFarmRecordList = async () => {
+  farmRecordLoading.value = true;
+  try {
+    const res = await getFarmRecord_API({
+      currentPage: farmRecordPage.currentPage,
+      pageSize: farmRecordPage.pageSize,
+      blockId: farmRecordPage.blockId,
+    });
+    farmRecordList.value = res.data.records || [];
+    farmRecordTotal.value = res.data.total || 0;
+  } catch (error) {
+    console.error('获取农事记录失败:', error);
+  } finally {
+    farmRecordLoading.value = false;
+  }
+};
+
+// 分页大小改变
+const handleFarmRecordSizeChange = (val: number) => {
+  farmRecordPage.pageSize = val;
+  farmRecordPage.currentPage = 1;
+  getFarmRecordList();
+};
+
+// 页码改变
+const handleFarmRecordCurrentChange = (val: number) => {
+  farmRecordPage.currentPage = val;
+  getFarmRecordList();
+};
+
+// 获取农事类型名称
+const getFarmAffairType = (type: number) => {
+  const typeMap: any = {
+    1: '播种',
+    2: '施肥',
+    3: '灌溉',
+    4: '除草',
+    5: '打药',
+    6: '收割',
+    7: '其他',
+  };
+  return typeMap[type] || '未知';
+};
+
+// 打开新增农事记录弹窗
+const openAddFarmRecordDialog = () => {
+  addFarmRecordDialogVisible.value = true;
+};
+
+// 打开编辑农事记录弹窗
+const editFarmRecord = (row: any) => {
+  addFarmRecordDialogVisible.value = true;
+  // 填充表单数据
+  Object.assign(farmRecordForm, {
+    id: row.id,
+    affairType: row.type,
+    responsiblePerson: row.responsiblePerson || '',
+    time: row.time || '',
+    remark: row.remark || '',
+  });
+};
+
+// 关闭新增/编辑农事记录弹窗
+const closeAddFarmRecordDialog = () => {
+  addFarmRecordDialogVisible.value = false;
+  farmRecordFormRef.value?.resetFields();
+  Object.assign(farmRecordForm, {
+    id: undefined,
+    affairType: '',
+    responsiblePerson: '',
+    time: '',
+    remark: '',
+  });
+};
+
+// 提交农事记录表单
+const submitFarmRecordForm = async () => {
+  await farmRecordFormRef.value.validate();
+  try {
+    const params: any = {
+      blockId: fieldInfo.value.id,
+      type: farmRecordForm.affairType,
+      responsiblePerson: farmRecordForm.responsiblePerson,
+      time: farmRecordForm.time,
+      remark: farmRecordForm.remark,
+    };
+    
+    // 如果有id，说明是编辑模式，使用编辑API
+    if (farmRecordForm.id) {
+      params.id = farmRecordForm.id;
+      await editFarmRecord_API(params);
+    } else {
+      // 新增模式，使用新增API
+      await addFarmRecord_API(params);
+    }
+    
+    ElMessage.success(farmRecordForm.id ? '编辑成功' : '添加成功');
+    closeAddFarmRecordDialog();
+    getFarmRecordList();
+  } catch (error) {
+    console.error(farmRecordForm.id ? '编辑农事记录失败' : '添加农事记录失败', error);
+  }
+};
+
+// 格式化作物选项
+const formatOptions = (rawData: any) => {
+  return rawData.map((item: any) => ({
+    value: Number(item.bizKey),
+    label: item.bizValue,
+    children: item.children && item.children.length > 0 
+      ? formatOptions(item.children)
+      : []
+  }));
+};
+
+// 获取作物字典
+const getCropArray = async () => {
+  try {
+    const { data } = await sysDict_API({ dicKey: 'crop_type' });
+    cropOptions.value = formatOptions(data);
+  } catch (error) {
+    console.error('获取作物字典失败:', error);
+  }
+};
+getCropArray();
+
+// 获取农事类型字典
+const getAffairTypeArray = async () => {
+  try {
+    const { data } = await sysDict_API({ dicKey: 'affair_type' });
+    affairTypeOptions.value = data.map((item: any) => ({
+      value: Number(item.bizKey),
+      label: item.bizValue,
+    }));
+  } catch (error) {
+    console.error('获取农事类型字典失败:', error);
+  }
+};
+getAffairTypeArray();
+
+// 打开种养品种抽屉
+const openCropDrawer = () => {
+  cropDrawerVisible.value = true;
+  cropPage.blockId = fieldInfo.value.id;
+  cropPage.currentPage = 1;
+  getCropList();
+};
+
+// 关闭种养品种抽屉
+const closeCropDrawer = () => {
+  cropDrawerVisible.value = false;
+  cropList.value = [];
+  cropTotal.value = 0;
+};
+
+// 获取种养品种列表
+const getCropList = async () => {
+  cropLoading.value = true;
+  try {
+    const res = await getFarmAffair_API({
+      currentPage: cropPage.currentPage,
+      pageSize: cropPage.pageSize,
+      blockId: cropPage.blockId,
+    });
+    cropList.value = res.data.records || [];
+    cropTotal.value = res.data.total || 0;
+  } catch (error) {
+    console.error('获取种养品种失败:', error);
+  } finally {
+    cropLoading.value = false;
+  }
+};
+
+// 分页大小改变
+const handleCropSizeChange = (val: number) => {
+  cropPage.pageSize = val;
+  cropPage.currentPage = 1;
+  getCropList();
+};
+
+// 页码改变
+const handleCropCurrentChange = (val: number) => {
+  cropPage.currentPage = val;
+  getCropList();
+};
+
+// 打开新增作物弹窗
+const openAddCropDialog = () => {
+  addCropDialogVisible.value = true;
+};
+
+// 打开编辑作物弹窗
+const editCrop = (row: any) => {
+  addCropDialogVisible.value = true;
+  // 填充表单数据
+  Object.assign(cropForm, {
+    id: row.id,
+    timeRange: [row.plantingStartTime, row.plantingEndTime],
+    cropDictId: row.cropDictId,
+    plantingArea: row.plantingArea || '',
+  });
+};
+
+// 关闭新增/编辑作物弹窗
+const closeAddCropDialog = () => {
+  addCropDialogVisible.value = false;
+  cropFormRef.value?.resetFields();
+  Object.assign(cropForm, {
+    id: undefined,
+    timeRange: [],
+    cropDictId: '',
+    plantingArea: '',
+  });
+};
+
+// 提交作物表单
+const submitCropForm = async () => {
+  await cropFormRef.value.validate();
+  try {
+    const params: any = {
+      blockId: fieldInfo.value.id,
+      plantingStartTime: cropForm.timeRange[0],
+      plantingEndTime: cropForm.timeRange[1],
+      cropDictId: Array.isArray(cropForm.cropDictId)
+        ? cropForm.cropDictId[cropForm.cropDictId.length - 1]
+        : cropForm.cropDictId,
+      plantingArea: cropForm.plantingArea,
+    };
+    
+    // 如果有id，说明是编辑模式，使用编辑API
+    if (cropForm.id) {
+      params.id = cropForm.id;
+      await editFarmAffair_API(params);
+    } else {
+      // 新增模式，使用新增API
+      await addFarmAffair_API(params);
+    }
+    
+    ElMessage.success(cropForm.id ? '编辑成功' : '添加成功');
+    closeAddCropDialog();
+    getCropList();
+    // 刷新地块信息以更新主页面显示的最新种养品种
+    const res = await block_API({ id: fieldInfo.value.id });
+    fieldInfo.value = res.data;
+  } catch (error) {
+    console.error(cropForm.id ? '编辑作物失败' : '添加作物失败', error);
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -1051,7 +1612,7 @@ async function wordsSearch(e: any) {
   position: absolute;
   right: 10px;
   top: 10px;
-  z-index: 99999;
+  z-index: 999;
 }
 
 /* 单个条目样式：横向排列、对齐 */
