@@ -399,7 +399,7 @@
       @close="closeFarmRecordDrawer"
     >
       <div style="margin-bottom: 10px; text-align: right;">
-        <el-button type="primary" icon="Plus" @click="openAddFarmRecordDialog">新增农事记录</el-button>
+        <el-button type="primary"  @click="openAddFarmRecordDialog">新增农事</el-button>
       </div>
       
       <el-table 
@@ -407,17 +407,15 @@
         style="width: 100%"
         v-loading="farmRecordLoading"
       >
-        <el-table-column prop="type" label="类型" min-width="60">
+        <el-table-column  label="类型" min-width="70">
           <template #default="{ row }">
-            {{ getFarmAffairType(row.type) }}
+            {{ getFarmAffairType(row.affairType) }}
           </template>
         </el-table-column>
-        <el-table-column prop="responsiblePerson" label="操作人" min-width="70" />
-        <el-table-column prop="time" label="农时间" min-width="90" />
-        <el-table-column prop="agriculturalMaterials" label="农资" min-width="75" />
-        <el-table-column prop="remark" label="备注" min-width="90" show-overflow-tooltip />
-        <el-table-column prop="modifier" label="更新人" min-width="60" />
-        <el-table-column prop="updateTime" label="更新时间" min-width="90" />
+        <el-table-column prop="responsiblePerson" label="操作人" min-width="100" />
+        <el-table-column prop="time" label="农事时间" min-width="150" />
+        <el-table-column prop="updaterName" label="更新人" min-width="100" />
+        <el-table-column prop="updateTime" label="更新时间" min-width="150" />
         <el-table-column label="照片" min-width="100">
           <template #default="{ row }">
             <el-image
@@ -437,7 +435,7 @@
         </el-table-column>
       </el-table>
       
-      <div style="margin-top: 20px; text-align: center;">
+      <div style="margin-top: 20px; display: flex; justify-content: center;">
         <el-pagination
           v-model:current-page="farmRecordPage.currentPage"
           v-model:page-size="farmRecordPage.pageSize"
@@ -459,7 +457,7 @@
       @close="closeCropDrawer"
     >
       <div style="margin-bottom: 10px; text-align: right;">
-        <el-button type="primary" icon="Plus" @click="openAddCropDialog">新增作物</el-button>
+        <el-button type="primary"  @click="openAddCropDialog">新增作物</el-button>
       </div>
       
       <el-table 
@@ -485,7 +483,7 @@
         </el-table-column>
       </el-table>
       
-      <div style="margin-top: 20px; text-align: center;">
+      <div style="margin-top: 20px; display: flex; justify-content: center;">
         <el-pagination
           v-model:current-page="cropPage.currentPage"
           v-model:page-size="cropPage.pageSize"
@@ -1035,16 +1033,9 @@ const handleFarmRecordCurrentChange = (val: number) => {
 
 // 获取农事类型名称
 const getFarmAffairType = (type: number) => {
-  const typeMap: any = {
-    1: '播种',
-    2: '施肥',
-    3: '灌溉',
-    4: '除草',
-    5: '打药',
-    6: '收割',
-    7: '其他',
-  };
-  return typeMap[type] || '未知';
+  console.log(affairTypeOptions.value,type,'affairTypeOptions');
+  const option = affairTypeOptions.value.find((item: any) => item.value == type);
+  return option ? option.label : '未知';
 };
 
 // 打开新增农事记录弹窗
@@ -1058,10 +1049,10 @@ const editFarmRecord = (row: any) => {
   // 填充表单数据
   Object.assign(farmRecordForm, {
     id: row.id,
-    affairType: row.type,
+    affairType: row.affairType ? Number(row.affairType) : '',
     responsiblePerson: row.responsiblePerson || '',
     time: row.time || '',
-    remark: row.remark || '',
+    remark: '',
   });
 };
 
@@ -1083,8 +1074,9 @@ const submitFarmRecordForm = async () => {
   await farmRecordFormRef.value.validate();
   try {
     const params: any = {
+      farmId: fieldInfo.value.farmId,
       blockId: fieldInfo.value.id,
-      type: farmRecordForm.affairType,
+      affairType: farmRecordForm.affairType,
       responsiblePerson: farmRecordForm.responsiblePerson,
       time: farmRecordForm.time,
       remark: farmRecordForm.remark,
@@ -1132,7 +1124,7 @@ getCropArray();
 // 获取农事类型字典
 const getAffairTypeArray = async () => {
   try {
-    const { data } = await sysDict_API({ dicKey: 'affair_type' });
+    const { data } = await sysDict_API({ dicKey: 'affair_type'});
     affairTypeOptions.value = data.map((item: any) => ({
       value: Number(item.bizKey),
       label: item.bizValue,
@@ -1223,6 +1215,7 @@ const submitCropForm = async () => {
   await cropFormRef.value.validate();
   try {
     const params: any = {
+      farmId: fieldInfo.value.farmId,
       blockId: fieldInfo.value.id,
       plantingStartTime: cropForm.timeRange[0],
       plantingEndTime: cropForm.timeRange[1],
@@ -1328,6 +1321,7 @@ const submitCropForm = async () => {
     }
   }
 }
+
 .crop-info{
   display: flex;
   justify-content: space-between;

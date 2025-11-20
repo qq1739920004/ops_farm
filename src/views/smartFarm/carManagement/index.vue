@@ -12,12 +12,11 @@
           @create="addCars"
           @select="handleSelect"
           @loadMore="handleLoadMore"
-          @edit="handleEdit"
         />
       </div>
       <div class="car-management-page__right">
         <div class="car-management-page__right-top">
-          <CarInfoPanel :vehicle="displayVehicle" :loading="loading.detail" />
+          <CarInfoPanel :vehicle="displayVehicle" :loading="loading.detail" @edit="handleEdit" />
         </div>
         <div class="car-management-page__right-bottom">
           <CarExtraPanel :vehicle="displayVehicle" />

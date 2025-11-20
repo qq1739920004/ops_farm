@@ -75,13 +75,16 @@
               <span>{{ item.operationName }}</span>
               <span>{{ item.taskName }}</span>
             </div>
-            <div class="carName">
-              {{ item.vehicleName?item.vehicleName+"/"+item.sn:"--" }}
-            </div>
+     
             <div class="map_container">
               <detail-map :ggaData="tableList[index].ggaList" :mapRenderMode="'canvas'" />
             </div>
             <div class="bottm_line">
+                     <div class="line_row">
+                  <img src="@/assets/common/device.png" alt="" />
+
+              {{ item.vehicleName?item.vehicleName+"/"+item.sn:"--" }}
+            </div>
               <div class="line_row">
                 <div class="time_range">
                   <img src="@/assets/common/time.png" alt="" />
@@ -324,7 +327,7 @@ getPageList();
   flex-wrap: wrap;
   padding: 10px;
   .table_box {
-    height: 318px;
+    height: 358px;
     width: 21%;
     display: flex;
     justify-content: center;
@@ -338,18 +341,21 @@ getPageList();
       .inner_name {
         //第一个span
         span:first-child{
-          color: #dbac10;
+          color: #33b838;
+          font-weight: bold;
         }
         //第二个span
         span:last-child{
-          color: #4cb04f;
+        font-size: 12px;
+
         }
         font-size: 16px;
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
+        gap: 6px;
       }
       .carName {
-        color: #b5b5b5;
         font-size: 12px;
       }
       .map_container {

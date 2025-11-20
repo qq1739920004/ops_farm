@@ -79,8 +79,8 @@
                 </div>
                 <div class="data-item">
                   <span class="value" :class="{ 'zero-data': getMonthData(month, 'hours') === 0 }">
-                    <span v-if="getMonthData(month, 'hours') > 0"><i class="dot"
-                        style="background-color: #ffa500;"></i>{{ getMonthData(month, 'hours') }} 小时</span>
+                    <span v-if="getMonthData(month, 'hours') > 0" style="color: #feac03;"><i class="dot"
+                        style="background-color: #feac03;"></i>{{ getMonthData(month, 'hours') }} 小时</span>
                   </span>
                 </div>
               </div>
@@ -102,7 +102,7 @@
                 <div class="data-item">
                   <span class="value" :class="{ 'zero-data': getDayData(day, 'hours') === 0 }">
                     <span v-if="getDayData(day, 'hours') > 0"><i
-                        style="display:inline-block;width:8px;height:8px;border-radius:50%;background-color:#ffa500;margin-right:4px;"></i>{{
+                        style="display:inline-block;width:8px;height:8px;border-radius:50%;background-color:#feac03;margin-right:4px;"></i>{{
                           getDayData(day, 'hours') }} 小时</span>
                   </span>
                 </div>
@@ -280,18 +280,18 @@ const updateCharts = async () => {
   const hoursData = daysInMonth.map(d => monthData[d]?.hours || 0)
 
   const trendOptions = {
-    title: { text: `${selectedYear.value}年${selectedMonth.value}月作业趋势`, left: 'center', top: '2%', textStyle: { color: '#43cf7c', fontSize: 16 } },
+    title: { text: `${selectedYear.value}年${selectedMonth.value}月作业趋势`, left: 'center', top: '2%', textStyle: { color: '#333', fontSize: 16 } },
     tooltip: { show: true, trigger: 'axis', backgroundColor: 'rgba(0,0,0,0.8)', borderColor: '#3aed81', borderWidth: 1, textStyle: { color: '#fff', fontSize: 14 }, confine: false, appendToBody: true, extraCssText: 'z-index: 99999 !important; pointer-events: auto !important;' },
     legend: { data: ['作业面积', '作业时长'], top: '18%', textStyle: { color: '#a0a8b8' } },
     grid: { left: '3%', right: '4%', bottom: '3%', top: '30%', containLabel: true },
     xAxis: { type: 'category', boundaryGap: false, data: dates, axisLine: { lineStyle: { color: 'rgba(58,237,129,0.3)' } }, axisLabel: { color: '#a0a8b8', fontSize: 10 }, splitLine: { show: false } },
     yAxis: [
-      { type: 'value', name: '面积(亩)', position: 'left', nameTextStyle: { color: '#43cf7c', fontSize: 14, fontWeight: 'bold' }, axisLine: { lineStyle: { color: 'rgba(58,237,129,0.3)' } }, axisLabel: { color: '#a0a8b8' }, splitLine: { show: true, lineStyle: { color: 'rgba(58,237,129,0.1)', type: 'solid' } } },
-      { type: 'value', name: '时长(小时)', position: 'right', nameTextStyle: { color: '#ffa500', fontSize: 14, fontWeight: 'bold' }, axisLine: { lineStyle: { color: 'rgba(255,165,0,0.3)' } }, axisLabel: { color: '#a0a8b8' }, splitLine: { show: true, lineStyle: { color: 'rgba(58,237,129,0.1)', type: 'solid' } } }
+      { type: 'value', name: '面积(亩)', position: 'left', nameTextStyle: { color: '#000000', fontSize: 12 }, axisLine: { lineStyle: { color: 'rgba(58,237,129,0.3)' } }, axisLabel: { color: '#a0a8b8' }, splitLine: { show: true, lineStyle: { color: 'rgba(58,237,129,0.1)', type: 'solid' } } },
+      { type: 'value', name: '时长(小时)', position: 'right', nameTextStyle: { color: '#000000', fontSize: 12 }, axisLine: { lineStyle: { color: 'rgba(255,165,0,0.3)' } }, axisLabel: { color: '#a0a8b8' }, splitLine: { show: true, lineStyle: { color: 'rgba(58,237,129,0.1)', type: 'solid' } } }
     ],
     series: [
-      { name: '作业面积', type: 'line', data: areaData, smooth: true, lineStyle: { color: '#43cf7c' }, itemStyle: { color: '#43cf7c' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(67,207,124,0.3)' }, { offset: 1, color: 'rgba(67,207,124,0.1)' }] } } },
-      { name: '作业时长', type: 'line', yAxisIndex: 1, data: hoursData, smooth: true, lineStyle: { color: '#ffa500' }, itemStyle: { color: '#ffa500' } }
+      { name: '作业面积', type: 'line', data: areaData, smooth: true, lineStyle: { color: '#33b838' }, itemStyle: { color: '#33b838' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(67,207,124,0.3)' }, { offset: 1, color: 'rgba(67,207,124,0.1)' }] } } },
+      { name: '作业时长', type: 'line', yAxisIndex: 1, data: hoursData, smooth: true, lineStyle: { color: '#feac03' }, itemStyle: { color: '#feac03' } }
     ]
   }
 
@@ -303,17 +303,17 @@ const updateCharts = async () => {
         value: item.areaMu || 0,
         name: item.operationName || '未知类型',
         itemStyle: { 
-          color: ['#43cf7c', '#ffa500', '#3aed81', '#00bfff', '#ff6b6b', '#9b59b6'][index % 6]
+          color: ['#33b838', '#feac03', '#3aed81', '#00bfff', '#ff6b6b', '#9b59b6'][index % 6]
         }
       }))
     : [{ value: 1, name: '暂无数据', itemStyle: { color: 'rgba(58,237,129,0.2)' } }]
   
   const ringOptions = {
     title: { 
-      text: `${selectedMonth.value}月作业类型分布`, 
+      text: `${selectedMonth.value}月作业类型分布(亩)`, 
       left: 'center', 
       top: '0%', 
-      textStyle: { fontSize: 16, color: '#43cf7c' } 
+      textStyle: { fontSize: 16, color: '#333' } 
     },
     tooltip: { 
       show: true,
@@ -458,8 +458,7 @@ $primary-color: #42b983;
     align-items: start;
 
     .stats-card {
-      background: rgba(67, 207, 124, 0.1);
-      border: 1px solid rgba(67, 207, 124, 0.3);
+      border: 1px solid rgba(51, 184, 56, 1);
       border-radius: vw(12);
       padding: vh(16) vw(20);
       display: flex;
@@ -489,14 +488,14 @@ $primary-color: #42b983;
         flex: 1;
 
         h3 {
-          color: #a0a8b8;
+          color: #000000;
           font-size: vw(18);
           margin: 0 0 vh(10) 0;
           font-weight: normal;
         }
 
         .stats-value {
-          color: #43cf7c;
+          color: #33b838;
           font-size: vw(28);
           font-weight: bold;
           margin: 0 0 vw(5) 0;
@@ -504,7 +503,6 @@ $primary-color: #42b983;
 
           span {
             font-size: vw(20);
-            opacity: 0.8;
           }
         }
 
@@ -528,6 +526,9 @@ $primary-color: #42b983;
     .left-panel {
       flex: 0 0 63%;
       display: flex;
+      border: 1px solid #33b838;
+      padding: vh(16) vw(20);
+      border-radius: vw(12);
       flex-direction: column;
 
       .control-panel {
@@ -591,7 +592,6 @@ $primary-color: #42b983;
             overflow: hidden;
 
             .toggle-button {
-              background: rgba(67, 207, 124, 0.1);
               border: 1px solid rgba(67, 207, 124, 0.3);
               padding: vh(8) vw(20);
               color: #a0a8b8;
@@ -616,9 +616,8 @@ $primary-color: #42b983;
               }
 
               &.active {
-                background: rgba(67, 207, 124, 0.3);
-                border-color: #43cf7c;
-                color: #43cf7c;
+                border-color: #33b838;
+                color: #33b838;
                 font-weight: bold;
               }
             }
@@ -641,7 +640,6 @@ $primary-color: #42b983;
           flex: 1;
 
           .month-card {
-            background: rgba(67, 207, 124, 0.1);
             border: 1px solid rgba(67, 207, 124, 0.3);
             border-radius: vw(8);
             padding: vh(8) vw(12);
@@ -655,17 +653,16 @@ $primary-color: #42b983;
             }
 
             &.active {
-              background: rgba(67, 207, 124, 0.3);
-              border-color: #43cf7c;
+              border-color: #33b838;
 
               .month-title {
-                color: #43cf7c;
+                color: #000000;
               }
             }
 
             .month-title {
-              color: #a0a8b8;
-              font-size: vw(14);
+              color: #747474;
+              font-size: 14px;
               font-weight: bold;
               margin-bottom: vh(16);
               text-align: center;
@@ -683,7 +680,7 @@ $primary-color: #42b983;
                 }
 
                 .value {
-                  color: #43cf7c;
+                  color: #33b838;
                   font-weight: bold;
                   min-width: vw(100);
 
@@ -705,7 +702,6 @@ $primary-color: #42b983;
           flex: 1;
 
           .day-card {
-            background: rgba(67, 207, 124, 0.05);
             border: 1px solid rgba(67, 207, 124, 0.2);
             border-radius: vw(6);
             padding: vh(8) vw(8);
@@ -727,7 +723,6 @@ $primary-color: #42b983;
             }
 
             &.active {
-              background: rgba(67, 207, 124, 0.3);
               border-color: #43cf7c;
 
               .day-title {
@@ -736,7 +731,7 @@ $primary-color: #42b983;
             }
 
             .day-title {
-              color: #a0a8b8;
+              color: #747474;
               font-size: vw(16);
               font-weight: bold;
               display: flex;
@@ -776,8 +771,7 @@ $primary-color: #42b983;
 
       .chart-container {
         flex: 1;
-        background: rgba(67, 207, 124, 0.05);
-        border: 1px solid rgba(67, 207, 124, 0.2);
+        border: 1px solid #33b838;
         border-radius: vw(12);
         padding: vh(10) vw(10) 0;
         display: flex;

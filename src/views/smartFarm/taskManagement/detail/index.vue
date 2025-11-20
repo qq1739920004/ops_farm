@@ -47,7 +47,7 @@
           </div>
           <div class="info_box">
             <div class="top">{{ t("work.workArea") }}/{{ t("work.remainingArea") }}(亩)</div>
-            <div class="bottom">{{ (detailList.totalArea || "--") }}/{{ (detailList.missedArea || "--") }}</div>
+            <div class="bottom">{{ (+detailList.totalArea).toFixed(3) || "--" }}/{{ ((+detailList.missedArea).toFixed(3) || "--") }}</div>
           </div>
           <div class="info_box">
             <div class="top">{{ t("work.workDuration") }}(h)</div>

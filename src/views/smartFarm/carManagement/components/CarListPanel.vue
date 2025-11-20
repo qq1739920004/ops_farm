@@ -36,14 +36,6 @@
           <div class="car-card__title">
             {{ item.name || '--' }}
           </div>
-          <el-button
-            size="small"
-            type="primary"
-            link
-            @click.stop="emitEdit(item)"
-          >
-            {{ t('work.edit') }}
-          </el-button>
         </div>
         <div class="car-card__meta">
           <span>{{ item.vehicleTypeLabel || '--' }}</span>
@@ -209,11 +201,11 @@ const formatBrandModel = (brand?: string, model?: string) => {
 }
 .car-card {
   padding: 12px;
-  border-radius: 8px;
   background-color: var(--el-color-white);
   cursor: pointer;
   color: #666;
   transition: background-color 0.2s ease, color 0.2s ease;
+  border-bottom: 1px solid var(--el-border-color-light);
 }
 
 .car-card:hover {
@@ -221,20 +213,19 @@ const formatBrandModel = (brand?: string, model?: string) => {
 }
 
 .car-card--active {
-  background-color: #e6f1eb;
+  background:linear-gradient(90deg, rgba(76, 176, 79, 0) 0%, var(--el-color-primary) 100%);
 }
 
 .car-card__title {
   font-size: 16px;
-  font-weight: 600;
-  color: #666;
+  color: #000000;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .car-card--active .car-card__title {
-  color: #759a81;
+  color: #000000;
 }
 
 .car-card__title-row {
@@ -246,7 +237,7 @@ const formatBrandModel = (brand?: string, model?: string) => {
 }
 
 .car-card__meta {
-  font-size: 13px;
+  font-size: 14px;
   color: #666;
   display: flex;
   align-items: center;

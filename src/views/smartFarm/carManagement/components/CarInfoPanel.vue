@@ -9,7 +9,15 @@
     <div v-else class="car-info-panel__content">
       <div class="car-info-panel__info">
         <section class="info-section">
-          <header class="info-section__header">农机信息</header>
+          <header class="info-section__header">
+            <span>农机信息</span>
+            <img 
+              src="@/assets/common/edit_pen (1).png" 
+              alt="编辑" 
+              class="edit-icon"
+              @click="emitEdit"
+            />
+          </header>
           <div class="info-grid">
             <div class="info-item">
               <span class="info-item__label">车辆名称</span>
@@ -90,6 +98,10 @@ const props = defineProps<{
   loading?: boolean;
 }>();
 
+const emit = defineEmits<{
+  (e: "edit", value: any): void;
+}>();
+
 const { vehicle, loading } = toRefs(props);
 
 const defaultImage = startCar;
@@ -97,6 +109,12 @@ const defaultImage = startCar;
 const formatDate = (value?: string) => {
   if (!value) return "--";
   return value.split(" ")[0];
+};
+
+const emitEdit = () => {
+  if (props.vehicle) {
+    emit("edit", props.vehicle);
+  }
 };
 </script>
 
@@ -176,6 +194,20 @@ const formatDate = (value?: string) => {
   font-weight: 600;
   color: #333;
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.edit-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
 .info-grid {
@@ -196,7 +228,7 @@ const formatDate = (value?: string) => {
 }
 
 .info-item__label {
-  font-size: 12px;
+  font-size: 14px;
   color: #909399;
   line-height: 1.5;
   position: relative;
