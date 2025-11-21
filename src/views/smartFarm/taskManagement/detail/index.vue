@@ -46,7 +46,7 @@
             <div class="bottom">{{ getWorkProgress(detailList.missedArea, detailList.totalArea) }}</div>
           </div>
           <div class="info_box">
-            <div class="top">{{ t("work.workArea") }}/{{ t("work.remainingArea") }}(亩)</div>
+            <div class="top">{{ t("work.workArea") }}/{{ t("work.remainingArea") }}({{ t("work.mu") }})</div>
             <div class="bottom">{{ (+detailList.totalArea).toFixed(3) || "--" }}/{{ ((+detailList.missedArea).toFixed(3) || "--") }}</div>
           </div>
           <div class="info_box">

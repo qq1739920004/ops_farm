@@ -94,10 +94,10 @@
               <div class="line_row">
                 <img src="@/assets/common/filed.png" alt="">
                 <div class="left">
-                  作业面积：{{ (+item.totalArea).toFixed(2) || "--" }}亩   
+                  {{ t('work.workAreaMu') }}：{{ (+item.totalArea).toFixed(2) || "--" }}{{ t('work.mu') }}   
                 </div>
                 <div class="right">
-                  剩余面积：{{ (+item.missedArea).toFixed(2) || "--" }}亩   
+                  {{ t('work.remainingAreaMu') }}：{{ (+item.missedArea).toFixed(2) || "--" }}{{ t('work.mu') }}   
                 </div>
               </div>
               <div class="line_row progress_row">

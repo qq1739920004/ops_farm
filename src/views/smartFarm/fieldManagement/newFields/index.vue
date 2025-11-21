@@ -104,7 +104,7 @@
         </el-form-item>
         <div v-for="(crop, index) in fieldList.crops" :key="index" class="crop-item">
           <el-form-item
-            label="作物信息"
+            :label="t('work.cropInfo2')"
             :prop="`crops.${index}`"
             :rules="[{ required: true, validator: validateCropItem, trigger: 'change' }]"
           >
@@ -114,9 +114,9 @@
                 style="width: 280px"
                 v-model="crop.timeRange"
                 type="daterange"
-                range-separator="至"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
+                :range-separator="t('work.to')"
+                :start-placeholder="t('work.startTimePlaceholder')"
+                :end-placeholder="t('work.endTimePlaceholder')"
                 format="YYYY-MM-DD"
                 value-format="YYYY-MM-DD"
                 class="time-picker"
@@ -346,12 +346,12 @@ const rules = {
 const validateCropItem = (rule, value, callback) => {
   // 检查时间范围是否完整
   if (!value.timeRange || value.timeRange.length !== 2) {
-    return callback(new Error("请选择完整的时间范围"));
+    return callback(new Error(t("work.selectCompleteTime")));
   }
 
   // 检查作物类型是否选择
   if (!value.cropDictId) {
-    return callback(new Error("请选择作物类型"));
+    return callback(new Error(t("work.selectCrop")));
   }
 
   callback();

@@ -16,60 +16,60 @@
     />
     <div class="line-type-color-container">
     <div class="title_line">
-    作业线分类
+    {{ t('work.lineClassification') }}
     </div>
       <!-- 直线 - 红色 -->
       <div class="line-type-item">
         <div class="color-block" style="background-color: red"></div>
-        <div class="line-type-name">直线</div>
+        <div class="line-type-name">{{ t('work.straightLine') }}</div>
       </div>
 
       <!-- 自动掉头 - 绿色 -->
       <div class="line-type-item">
         <div class="color-block" style="background-color: green"></div>
-        <div class="line-type-name">自动掉头</div>
+        <div class="line-type-name">{{ t('work.autoTurnAround') }}</div>
       </div>
 
       <!-- 同心圆 - 蓝色 -->
       <div class="line-type-item">
         <div class="color-block" style="background-color: blue"></div>
-        <div class="line-type-name">同心圆</div>
+        <div class="line-type-name">{{ t('work.concentricCircle') }}</div>
       </div>
 
       <!-- 等距曲线 - 紫色 -->
       <div class="line-type-item">
         <div class="color-block" style="background-color: purple"></div>
-        <div class="line-type-name">等距曲线</div>
+        <div class="line-type-name">{{ t('work.equidistantCurve') }}</div>
       </div>
 
       <!-- 自由轨迹（多段线） - 橙色 -->
       <div class="line-type-item">
         <div class="color-block" style="background-color: orange"></div>
-        <div class="line-type-name">自由轨迹</div>
+        <div class="line-type-name">{{ t('work.freeTrajectory') }}</div>
       </div>
 
       <!-- 三点定圆 - 青色 -->
       <div class="line-type-item">
         <div class="color-block" style="background-color: cyan"></div>
-        <div class="line-type-name">三点定圆</div>
+        <div class="line-type-name">{{ t('work.threePointCircle') }}</div>
       </div>
 
       <!-- 对角耙 - 棕色 -->
       <div class="line-type-item">
         <div class="color-block" style="background-color: brown"></div>
-        <div class="line-type-name">对角耙</div>
+        <div class="line-type-name">{{ t('work.diagonalHarrow') }}</div>
       </div>
 
       <!-- 单点+航向 - 亮绿色 -->
       <div class="line-type-item">
         <div class="color-block" style="background-color: #1afa29"></div>
-        <div class="line-type-name">单点+航向</div>
+        <div class="line-type-name">{{ t('work.singlePointHeading') }}</div>
       </div>
 
       <!-- 循环模式 - 品红色 -->
       <div class="line-type-item">
         <div class="color-block" style="background-color: magenta"></div>
-        <div class="line-type-name">循环模式</div>
+        <div class="line-type-name">{{ t('work.loopMode') }}</div>
       </div>
     </div>
     <!-- <div class="select_area">
@@ -140,11 +140,11 @@
               <el-dropdown-menu class="custom-dropdown">
                 <el-dropdown-item command="manual" class="dropdown-item">
                   <el-icon class="item-icon"><Edit /></el-icon>
-                  <span>手动创建</span>
+                  <span>{{ t('work.manualCreate') }}</span>
                 </el-dropdown-item>
                 <el-dropdown-item command="import" class="dropdown-item">
                   <el-icon class="item-icon"><Upload /></el-icon>
-                  <span>导入创建</span>
+                  <span>{{ t('work.importCreate') }}</span>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -199,8 +199,8 @@
               <div class="trun_area">
                 <TruncatedString :text="item.name" :maxLength="18" />
               </div>
-              <div v-if="item.haveReference" class="shared_area">{{ "有作业线" }}</div>
-              <div v-else class="unRef_area">{{ "无作业线" }}</div>
+              <div v-if="item.haveReference" class="shared_area">{{ t('work.hasWorkLine') }}</div>
+              <div v-else class="unRef_area">{{ t('work.noWorkLine') }}</div>
               <!-- <div class="unshared_area">
                 {{ t("statisticsReport.thousandArea") }}:
               </div> -->
@@ -245,7 +245,7 @@
         
         <!-- 种养品种 -->
         <el-row>
-          <el-col :span="locale === 'en' ? 12 : 8">种养品种:</el-col>
+          <el-col :span="locale === 'en' ? 12 : 8">{{ t('work.cropInfo') }}:</el-col>
           <el-col :span="14">
             <div v-if="fieldInfo.blockCrops && fieldInfo.blockCrops.length > 0" class="crop-info">
               <span>{{ fieldInfo.blockCrops[0]?.cropName || '--' }}</span>
@@ -254,15 +254,15 @@
               </span>
             </div>
             <span v-else>--</span>
-            <el-button link type="primary" size="small" @click="openCropDrawer">更多</el-button>
+            <el-button link type="primary" size="small" @click="openCropDrawer">{{ t('work.more') }}</el-button>
           </el-col>
         </el-row>
         
         <!-- 农事记录 -->
         <el-row>
-          <el-col :span="locale === 'en' ? 12 : 8">农事记录:</el-col>
+          <el-col :span="locale === 'en' ? 12 : 8">{{ t('work.farmRecord') }}:</el-col>
           <el-col :span="12">
-            <el-button link type="primary" size="small" @click="openFarmRecordDrawer">更多</el-button>
+            <el-button link type="primary" size="small" @click="openFarmRecordDrawer">{{ t('work.more') }}</el-button>
           </el-col>
         </el-row>
         
@@ -330,14 +330,14 @@
                 size="small"
                 @click="checkShare(fieldInfo.id, fieldInfo.createType)"
               >
-                下发地块
+                {{ t('work.issueBlock') }}
               </el-button>
             </div>
           </el-col>
         </el-row>
       </div>
     </div>
-    <el-dialog v-model="dialogVisible" :title="'下发地块'" center width="500px">
+    <el-dialog v-model="dialogVisible" :title="t('work.issueBlock')" center width="500px">
       <div class="top_att" v-if="creatorType === 1">
         {{ t("work.patAtt") }}
       </div>
@@ -362,7 +362,7 @@
     </el-dialog>
     <el-dialog
       v-model="dialogVisible2"
-      :title="'下发作业线'"
+      :title="t('work.issueWorkLine')"
       center
       width="500px"
       @close="selectedCarId = ''"
@@ -385,21 +385,21 @@
       </div>
 
       <div class="dia_select1">
-        <el-button @click="dialogVisible2 = false">取消</el-button>
-        <el-button type="primary" @click="handleConfirm2">确认下发</el-button>
+        <el-button @click="dialogVisible2 = false">{{ t('work.cancel') }}</el-button>
+        <el-button type="primary" @click="handleConfirm2">{{ t('work.confirmIssue') }}</el-button>
       </div>
     </el-dialog>
     
     <!-- 农事记录抽屉 -->
     <el-drawer
       v-model="farmRecordDrawerVisible"
-      title="农事记录"
+      :title="t('work.farmRecord')"
       direction="rtl"
       size="50%"
       @close="closeFarmRecordDrawer"
     >
       <div style="margin-bottom: 10px; text-align: right;">
-        <el-button type="primary"  @click="openAddFarmRecordDialog">新增农事</el-button>
+        <el-button type="primary"  @click="openAddFarmRecordDialog">{{ t('work.addFarmRecord') }}</el-button>
       </div>
       
       <el-table 
@@ -407,16 +407,16 @@
         style="width: 100%"
         v-loading="farmRecordLoading"
       >
-        <el-table-column  label="类型" min-width="70">
+        <el-table-column  :label="t('work.recordType')" min-width="70">
           <template #default="{ row }">
             {{ getFarmAffairType(row.affairType) }}
           </template>
         </el-table-column>
-        <el-table-column prop="responsiblePerson" label="操作人" min-width="100" />
-        <el-table-column prop="time" label="农事时间" min-width="150" />
-        <el-table-column prop="updaterName" label="更新人" min-width="100" />
-        <el-table-column prop="updateTime" label="更新时间" min-width="150" />
-        <el-table-column label="照片" min-width="100">
+        <el-table-column prop="responsiblePerson" :label="t('work.operator')" min-width="100" />
+        <el-table-column prop="time" :label="t('work.farmTime')" min-width="150" />
+        <el-table-column prop="updaterName" :label="t('work.updater')" min-width="100" />
+        <el-table-column prop="updateTime" :label="t('work.farmUpdateTime')" min-width="150" />
+        <el-table-column :label="t('work.photo')" min-width="100">
           <template #default="{ row }">
             <el-image
               v-if="row.imageUrl"
@@ -428,9 +428,9 @@
             <span v-else>--</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" min-width="80" fixed="right">
+        <el-table-column :label="t('work.operation')" min-width="80" fixed="right">
           <template #default="{ row }">
-            <el-button link type="success" @click="editFarmRecord(row)">编辑</el-button>
+            <el-button link type="success" @click="editFarmRecord(row)">{{ t('work.editRecord') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -451,13 +451,13 @@
     <!-- 种养品种抽屉 -->
     <el-drawer
       v-model="cropDrawerVisible"
-      title="种养品种记录"
+      :title="t('work.cropRecord')"
       direction="rtl"
       size="50%"
       @close="closeCropDrawer"
     >
       <div style="margin-bottom: 10px; text-align: right;">
-        <el-button type="primary"  @click="openAddCropDialog">新增作物</el-button>
+        <el-button type="primary"  @click="openAddCropDialog">{{ t('work.addCrop') }}</el-button>
       </div>
       
       <el-table 
@@ -465,20 +465,20 @@
         style="width: 100%"
         v-loading="cropLoading"
       >
-        <el-table-column label="开始结束日期" min-width="150">
+        <el-table-column :label="t('work.startEndDate')" min-width="150">
           <template #default="{ row }">
             {{ row.plantingStartTime || '--' }} - {{ row.plantingEndTime || '--' }}
           </template>
         </el-table-column>
-        <el-table-column prop="cropName" label="作物品种" min-width="100" />
-        <el-table-column prop="plantingArea" label="产量(kg)" min-width="80">
+        <el-table-column prop="cropName" :label="t('work.cropVariety')" min-width="100" />
+        <el-table-column prop="plantingArea" :label="t('work.yield')+'(kg)'" min-width="80">
           <template #default="{ row }">
             {{ row.plantingArea || '--' }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" min-width="80" fixed="right">
+        <el-table-column :label="t('work.operation')" min-width="80" fixed="right">
           <template #default="{ row }">
-            <el-button link type="success" @click="editCrop(row)">编辑</el-button>
+            <el-button link type="success" @click="editCrop(row)">{{ t('work.editRecord') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -499,7 +499,7 @@
     <!-- 新增/编辑作物弹窗 -->
     <el-dialog
       v-model="addCropDialogVisible"
-      :title="cropForm.id ? '编辑作物' : '新增作物'"
+      :title="cropForm.id ? t('work.editCrop') : t('work.addCrop')"
       width="500px"
       @close="closeAddCropDialog"
     >
@@ -509,34 +509,34 @@
         :rules="cropFormRules"
         label-width="100px"
       >
-        <el-form-item label="时间范围" prop="timeRange">
+        <el-form-item :label="t('work.timeRange')" prop="timeRange">
           <el-date-picker
             style="width: 100%"
             v-model="cropForm.timeRange"
             type="daterange"
-            range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
+            :range-separator="t('work.to')"
+            :start-placeholder="t('work.startTime2')"
+            :end-placeholder="t('work.endTime2')"
             format="YYYY-MM-DD"
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
         
-        <el-form-item label="作物类型" prop="cropDictId">
+        <el-form-item :label="t('work.cropType')" prop="cropDictId">
           <el-cascader
             style="width: 100%"
             v-model="cropForm.cropDictId"
             :options="cropOptions"
             :props="cascaderProps"
             clearable
-            placeholder="请选择作物类型"
+            :placeholder="t('work.selectCropType')"
           />
         </el-form-item>
         
-        <el-form-item label="产量" prop="plantingArea">
+        <el-form-item :label="t('work.yield')" prop="plantingArea">
           <el-input
             v-model="cropForm.plantingArea"
-            placeholder="请输入产量"
+            :placeholder="t('work.inputYield')"
             type="number"
           >
             <template #append>kg</template>
@@ -546,8 +546,8 @@
       
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="closeAddCropDialog">取消</el-button>
-          <el-button type="primary" @click="submitCropForm">确定</el-button>
+          <el-button @click="closeAddCropDialog">{{ t('work.cancel') }}</el-button>
+          <el-button type="primary" @click="submitCropForm">{{ t('work.confirmBtn') }}</el-button>
         </span>
       </template>
     </el-dialog>
@@ -555,7 +555,7 @@
     <!-- 新增/编辑农事记录弹窗 -->
     <el-dialog
       v-model="addFarmRecordDialogVisible"
-      :title="farmRecordForm.id ? '编辑农事记录' : '新增农事记录'"
+      :title="farmRecordForm.id ? t('work.editFarmRecordTitle') : t('work.addFarmRecordTitle')"
       width="500px"
       @close="closeAddFarmRecordDialog"
     >
@@ -565,11 +565,11 @@
         :rules="farmRecordFormRules"
         label-width="100px"
       >
-        <el-form-item label="类型" prop="affairType">
+        <el-form-item :label="t('work.recordType')" prop="affairType">
           <el-select
             style="width: 100%"
             v-model="farmRecordForm.affairType"
-            placeholder="请选择类型"
+            :placeholder="t('work.selectType')"
             clearable
           >
             <el-option
@@ -581,38 +581,38 @@
           </el-select>
         </el-form-item>
         
-        <el-form-item label="操作人" prop="responsiblePerson">
+        <el-form-item :label="t('work.operator')" prop="responsiblePerson">
           <el-input
             v-model="farmRecordForm.responsiblePerson"
-            placeholder="请输入操作人"
+            :placeholder="t('work.inputOperator')"
           />
         </el-form-item>
         
-        <el-form-item label="时间" prop="time">
+        <el-form-item :label="t('work.time')" prop="time">
           <el-date-picker
             style="width: 100%"
             v-model="farmRecordForm.time"
             type="datetime"
-            placeholder="请选择时间"
+            :placeholder="t('work.selectTime')"
             format="YYYY-MM-DD HH:mm:ss"
             value-format="YYYY-MM-DD HH:mm:ss"
           />
         </el-form-item>
         
-        <el-form-item label="备注" prop="remark">
+        <el-form-item :label="t('work.remarkText')" prop="remark">
           <el-input
             v-model="farmRecordForm.remark"
             type="textarea"
             :rows="3"
-            placeholder="请输入备注"
+            :placeholder="t('work.inputRemark')"
           />
         </el-form-item>
       </el-form>
       
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="closeAddFarmRecordDialog">取消</el-button>
-          <el-button type="primary" @click="submitFarmRecordForm">确定</el-button>
+          <el-button @click="closeAddFarmRecordDialog">{{ t('work.cancel') }}</el-button>
+          <el-button type="primary" @click="submitFarmRecordForm">{{ t('work.confirmBtn') }}</el-button>
         </span>
       </template>
     </el-dialog>
@@ -693,9 +693,9 @@ const farmRecordForm = reactive<{
   remark: '',
 });
 const farmRecordFormRules = {
-  affairType: [{ required: true, message: '请选择类型', trigger: 'change' }],
-  responsiblePerson: [{ required: true, message: '请输入操作人', trigger: 'blur' }],
-  time: [{ required: true, message: '请选择时间', trigger: 'change' }],
+  affairType: [{ required: true, message: t('work.selectType'), trigger: 'change' }],
+  responsiblePerson: [{ required: true, message: t('work.inputOperator'), trigger: 'blur' }],
+  time: [{ required: true, message: t('work.selectTime'), trigger: 'change' }],
 };
 const affairTypeOptions = ref<any>([]);
 const cropDrawerVisible = ref(false);
@@ -764,14 +764,14 @@ const getCarList2 = async () => {
 };
 const handleConfirm2 = async () => {
   if (!selectedCarId.value) {
-    ElMessage.warning("请选择车辆");
+    ElMessage.warning(t("work.pleaseSelectVehicle"));
   } else {
     try {
       await pushReferenceLine_API({
         ReferenceLineId: lineValue.value,
         vehicleId: selectedCarId.value,
       });
-      ElMessage.success("下发成功");
+      ElMessage.success(t("work.issueSuccess"));
       dialogVisible2.value = false;
       lineValue.value = "";
       selectedCarId.value = "";
@@ -1091,7 +1091,7 @@ const submitFarmRecordForm = async () => {
       await addFarmRecord_API(params);
     }
     
-    ElMessage.success(farmRecordForm.id ? '编辑成功' : '添加成功');
+    ElMessage.success(farmRecordForm.id ? t('work.editSuccess') : t('messages.addSuccess'));
     closeAddFarmRecordDialog();
     getFarmRecordList();
   } catch (error) {
@@ -1234,7 +1234,7 @@ const submitCropForm = async () => {
       await addFarmAffair_API(params);
     }
     
-    ElMessage.success(cropForm.id ? '编辑成功' : '添加成功');
+    ElMessage.success(cropForm.id ? t('work.editSuccess') : t('messages.addSuccess'));
     closeAddCropDialog();
     getCropList();
     // 刷新地块信息以更新主页面显示的最新种养品种

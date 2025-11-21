@@ -3,44 +3,44 @@
     <div class="stats-overview">
       <div class="stats-card">
         <div class="stats-icon">
-          <img src="/src/assets/icons/total_work.svg" alt="作业总面积" width="56" height="56">
+          <img src="/src/assets/icons/total_work.svg" :alt="t('work.totalWorkArea')" width="56" height="56">
         </div>
         <div class="stats-content">
-          <h3>作业总面积</h3>
-          <p class="stats-value">{{ statsData.totalWorkArea.toFixed(2) }} <span>亩</span></p>
-          <p class="stats-desc">所有时间</p>
+          <h3>{{ t('work.totalWorkArea') }}</h3>
+          <p class="stats-value">{{ statsData.totalWorkArea.toFixed(2) }} <span>{{ t('work.areaUnit') }}</span></p>
+          <p class="stats-desc">{{ t('work.allTime') }}</p>
         </div>
       </div>
 
       <div class="stats-card">
         <div class="stats-icon">
-          <img src="/src/assets/icons/year_work.svg" alt="今年作业面积" width="56" height="56">
+          <img src="/src/assets/icons/year_work.svg" :alt="t('work.yearWorkArea')" width="56" height="56">
         </div>
         <div class="stats-content">
-          <h3>今年作业面积</h3>
-          <p class="stats-value">{{ statsData.currentYearWorkArea.toFixed(2) }} <span>亩</span></p>
-          <p class="stats-desc">{{ new Date().getFullYear() }}年</p>
+          <h3>{{ t('work.yearWorkArea') }}</h3>
+          <p class="stats-value">{{ statsData.currentYearWorkArea.toFixed(2) }} <span>{{ t('work.areaUnit') }}</span></p>
+          <p class="stats-desc">{{ new Date().getFullYear() }}{{ t('work.year') }}</p>
         </div>
       </div>
 
       <div class="stats-card">
         <div class="stats-icon">
-          <img src="/src/assets/icons/day_work.svg" alt="今日作业面积" width="56" height="56">
+          <img src="/src/assets/icons/day_work.svg" :alt="t('messages.todaysOperation')" width="56" height="56">
         </div>
         <div class="stats-content">
-          <h3>今日作业面积</h3>
-          <p class="stats-value">{{ statsData.todayWorkArea.toFixed(2) }} <span>亩</span></p>
+          <h3>{{ t('messages.todaysOperation') }}</h3>
+          <p class="stats-value">{{ statsData.todayWorkArea.toFixed(2) }} <span>{{ t('work.areaUnit') }}</span></p>
           <p class="stats-desc">{{ formatToday() }}</p>
         </div>
       </div>
 
       <div class="stats-card">
         <div class="stats-icon">
-          <img src="/src/assets/icons/time_work.svg" alt="今日作业时长" width="56" height="56">
+          <img src="/src/assets/icons/time_work.svg" :alt="t('work.todayWorkDuration')" width="56" height="56">
         </div>
         <div class="stats-content">
-          <h3>今日作业时长</h3>
-          <p class="stats-value">{{ statsData.todayCountNum }} <span>小时</span></p>
+          <h3>{{ t('work.todayWorkDuration') }}</h3>
+          <p class="stats-value">{{ statsData.todayCountNum }} <span>{{ t('work.durationUnit') }}</span></p>
           <p class="stats-desc">{{ formatToday() }}</p>
         </div>
       </div>
@@ -50,17 +50,17 @@
       <div class="left-panel">
         <div class="control-panel">
           <div class="date-controls">
-            <el-select v-model="selectedYear" placeholder="选择年份" class="year-select">
-              <el-option v-for="year in yearOptions" :key="year" :label="year + '年'" :value="year" />
+            <el-select v-model="selectedYear" :placeholder="t('work.selectYear')" class="year-select">
+              <el-option v-for="year in yearOptions" :key="year" :label="year + t('work.year')" :value="year" />
             </el-select>
-            <el-select v-model="selectedMonth" placeholder="选择月份" class="month-select">
-              <el-option v-for="month in monthOptions" :key="month" :label="month + '月'" :value="month" />
+            <el-select v-model="selectedMonth" :placeholder="t('work.selectMonth')" class="month-select">
+              <el-option v-for="month in monthOptions" :key="month" :label="month + t('work.month')" :value="month" />
             </el-select>
           </div>
           <div class="view-toggle">
             <div class="toggle-buttons">
-              <div class="toggle-button" :class="{ active: viewMode === 'year' }" @click="viewMode = 'year'">年</div>
-              <div class="toggle-button" :class="{ active: viewMode === 'month' }" @click="viewMode = 'month'">月</div>
+              <div class="toggle-button" :class="{ active: viewMode === 'year' }" @click="viewMode = 'year'">{{ t('work.year') }}</div>
+              <div class="toggle-button" :class="{ active: viewMode === 'month' }" @click="viewMode = 'month'">{{ t('work.month') }}</div>
             </div>
           </div>
         </div>
@@ -69,18 +69,18 @@
           <div v-if="viewMode === 'year'" class="month-grid">
             <div v-for="month in 12" :key="month" class="month-card" :class="{ active: selectedMonth === month }"
               @click="selectMonth(month)">
-              <div class="month-title">{{ month }}月</div>
+              <div class="month-title">{{ month }}{{ t('work.month') }}</div>
               <div class="month-data">
                 <div class="data-item">
                   <span class="value" :class="{ 'zero-data': getMonthData(month, 'area') === 0 }">
                     <span v-if="getMonthData(month, 'area') > 0"><i class="dot"></i>{{ getMonthData(month, 'area') }}
-                      亩</span>
+                      {{ t('work.areaUnit') }}</span>
                   </span>
                 </div>
                 <div class="data-item">
                   <span class="value" :class="{ 'zero-data': getMonthData(month, 'hours') === 0 }">
                     <span v-if="getMonthData(month, 'hours') > 0" style="color: #feac03;"><i class="dot"
-                        style="background-color: #feac03;"></i>{{ getMonthData(month, 'hours') }} 小时</span>
+                        style="background-color: #feac03;"></i>{{ getMonthData(month, 'hours') }} {{ t('work.durationUnit') }}</span>
                   </span>
                 </div>
               </div>
@@ -90,20 +90,20 @@
           <div v-else class="day-grid">
             <div v-for="day in getDaysInMonth(selectedYear, selectedMonth)" :key="day" class="day-card"
               :class="{ active: selectedDay === day, 'has-data': getDayData(day, 'area') > 0 }" @click="selectDay(day)">
-              <div class="day-title">{{ day }}日</div>
+              <div class="day-title">{{ day }}{{ t('work.day') }}</div>
               <div class="day-data">
                 <div class="data-item">
                   <span class="value" :class="{ 'zero-data': getDayData(day, 'area') === 0 }">
                     <span v-if="getDayData(day, 'area') > 0"><i
                         style="display:inline-block;width:8px;height:8px;border-radius:50%;background-color:#41cb79;margin-right:4px;"></i>{{
-                          getDayData(day, 'area') }} 亩</span>
+                          getDayData(day, 'area') }} {{ t('work.areaUnit') }}</span>
                   </span>
                 </div>
                 <div class="data-item">
                   <span class="value" :class="{ 'zero-data': getDayData(day, 'hours') === 0 }">
                     <span v-if="getDayData(day, 'hours') > 0"><i
                         style="display:inline-block;width:8px;height:8px;border-radius:50%;background-color:#feac03;margin-right:4px;"></i>{{
-                          getDayData(day, 'hours') }} 小时</span>
+                          getDayData(day, 'hours') }} {{ t('work.durationUnit') }}</span>
                   </span>
                 </div>
               </div>
@@ -126,9 +126,12 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import { getCarWorkAreaStats_path, getVehicleDailyWorkAreaStats_path, getVehicleMonthlyWorkAreaStats_path,getVehicleMonthlyWorkAreaStats_type_path } from '@/api/carManagement/index'
 import * as echarts from 'echarts'
+
+const { t } = useI18n()
 
 const props = defineProps({
   vehicle: { type: Object, required: true },
@@ -159,12 +162,12 @@ let ringChartResizeHandler = null
 
 const formatToday = () => {
   const today = new Date()
-  return `${today.getMonth() + 1}月${today.getDate()}日`
+  return `${today.getMonth() + 1}${t('work.month')}${today.getDate()}${t('work.day')}`
 }
 
 const getJobStats = async () => {
   try {
-    if (!props.vehicle?.id) { ElMessage.warning('车辆信息不完整，无法获取作业统计'); return }
+    if (!props.vehicle?.id) { ElMessage.warning(t('work.vehicleInfoIncomplete')); return }
     const res = await getCarWorkAreaStats_path({ vehicleId: props.vehicle.id })
     if (res && res.code === 0 && res.data) {
       const d = res.data
@@ -173,14 +176,14 @@ const getJobStats = async () => {
       statsData.todayWorkArea = d.todayWorkArea || 0
       statsData.todayCountNum = d.todayCountNum || 0
     } else {
-      ElMessage.warning('获取作业统计数据失败')
+      ElMessage.warning(t('work.getStatsFailed'))
       statsData.totalWorkArea = 0
       statsData.currentYearWorkArea = 0
       statsData.todayWorkArea = 0
       statsData.todayCountNum = 0
     }
   } catch (e) {
-    ElMessage.error('获取作业统计数据失败')
+    ElMessage.error(t('work.getStatsFailed'))
     statsData.totalWorkArea = 0
     statsData.currentYearWorkArea = 0
     statsData.todayWorkArea = 0
@@ -280,18 +283,18 @@ const updateCharts = async () => {
   const hoursData = daysInMonth.map(d => monthData[d]?.hours || 0)
 
   const trendOptions = {
-    title: { text: `${selectedYear.value}年${selectedMonth.value}月作业趋势`, left: 'center', top: '2%', textStyle: { color: '#333', fontSize: 16 } },
+    title: { text: `${selectedYear.value}${t('work.year')}${selectedMonth.value}${t('work.month')}${t('work.workTrend')}`, left: 'center', top: '2%', textStyle: { color: '#333', fontSize: 16 } },
     tooltip: { show: true, trigger: 'axis', backgroundColor: 'rgba(0,0,0,0.8)', borderColor: '#3aed81', borderWidth: 1, textStyle: { color: '#fff', fontSize: 14 }, confine: false, appendToBody: true, extraCssText: 'z-index: 99999 !important; pointer-events: auto !important;' },
-    legend: { data: ['作业面积', '作业时长'], top: '18%', textStyle: { color: '#a0a8b8' } },
+    legend: { data: [t('work.workArea'), t('work.duration')], top: '18%', textStyle: { color: '#a0a8b8' } },
     grid: { left: '3%', right: '4%', bottom: '3%', top: '30%', containLabel: true },
     xAxis: { type: 'category', boundaryGap: false, data: dates, axisLine: { lineStyle: { color: 'rgba(58,237,129,0.3)' } }, axisLabel: { color: '#a0a8b8', fontSize: 10 }, splitLine: { show: false } },
     yAxis: [
-      { type: 'value', name: '面积(亩)', position: 'left', nameTextStyle: { color: '#000000', fontSize: 12 }, axisLine: { lineStyle: { color: 'rgba(58,237,129,0.3)' } }, axisLabel: { color: '#a0a8b8' }, splitLine: { show: true, lineStyle: { color: 'rgba(58,237,129,0.1)', type: 'solid' } } },
-      { type: 'value', name: '时长(小时)', position: 'right', nameTextStyle: { color: '#000000', fontSize: 12 }, axisLine: { lineStyle: { color: 'rgba(255,165,0,0.3)' } }, axisLabel: { color: '#a0a8b8' }, splitLine: { show: true, lineStyle: { color: 'rgba(58,237,129,0.1)', type: 'solid' } } }
+      { type: 'value', name: `${t('work.area')}(${t('work.areaUnit')})`, position: 'left', nameTextStyle: { color: '#000000', fontSize: 12 }, axisLine: { lineStyle: { color: 'rgba(58,237,129,0.3)' } }, axisLabel: { color: '#a0a8b8' }, splitLine: { show: true, lineStyle: { color: 'rgba(58,237,129,0.1)', type: 'solid' } } },
+      { type: 'value', name: `${t('work.duration')}(${t('work.durationUnit')})`, position: 'right', nameTextStyle: { color: '#000000', fontSize: 12 }, axisLine: { lineStyle: { color: 'rgba(255,165,0,0.3)' } }, axisLabel: { color: '#a0a8b8' }, splitLine: { show: true, lineStyle: { color: 'rgba(58,237,129,0.1)', type: 'solid' } } }
     ],
     series: [
-      { name: '作业面积', type: 'line', data: areaData, smooth: true, lineStyle: { color: '#33b838' }, itemStyle: { color: '#33b838' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(67,207,124,0.3)' }, { offset: 1, color: 'rgba(67,207,124,0.1)' }] } } },
-      { name: '作业时长', type: 'line', yAxisIndex: 1, data: hoursData, smooth: true, lineStyle: { color: '#feac03' }, itemStyle: { color: '#feac03' } }
+      { name: t('work.workArea'), type: 'line', data: areaData, smooth: true, lineStyle: { color: '#33b838' }, itemStyle: { color: '#33b838' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(67,207,124,0.3)' }, { offset: 1, color: 'rgba(67,207,124,0.1)' }] } } },
+      { name: t('work.duration'), type: 'line', yAxisIndex: 1, data: hoursData, smooth: true, lineStyle: { color: '#feac03' }, itemStyle: { color: '#feac03' } }
     ]
   }
 
@@ -301,16 +304,16 @@ const updateCharts = async () => {
   const pieData = operationTypeList.length > 0 
     ? operationTypeList.map((item, index) => ({
         value: item.areaMu || 0,
-        name: item.operationName || '未知类型',
+        name: item.operationName || t('work.unknownType'),
         itemStyle: { 
           color: ['#33b838', '#feac03', '#3aed81', '#00bfff', '#ff6b6b', '#9b59b6'][index % 6]
         }
       }))
-    : [{ value: 1, name: '暂无数据', itemStyle: { color: 'rgba(58,237,129,0.2)' } }]
+    : [{ value: 1, name: t('work.noData'), itemStyle: { color: 'rgba(58,237,129,0.2)' } }]
   
   const ringOptions = {
     title: { 
-      text: `${selectedMonth.value}月作业类型分布(亩)`, 
+      text: `${selectedMonth.value}${t('work.month')}${t('work.workTypeDistribution')}(${t('work.areaUnit')})`, 
       left: 'center', 
       top: '0%', 
       textStyle: { fontSize: 16, color: '#333' } 
@@ -318,7 +321,7 @@ const updateCharts = async () => {
     tooltip: { 
       show: true,
       trigger: 'item',
-      formatter: (params) => `${params.name}: ${Number(params.value).toFixed(1)} 亩`,
+      formatter: (params) => `${params.name}: ${Number(params.value).toFixed(1)} ${t('work.areaUnit')}`,
       appendToBody: true,
       extraCssText: 'z-index: 9999; position: absolute;'
     },

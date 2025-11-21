@@ -50,7 +50,7 @@
         <el-form-item :label="t('work.remark')" prop="remark">
           <el-input style="width: 200px" v-model="fieldList.remark"></el-input>
         </el-form-item>
-        <el-form-item label="系统图片" prop="systemLogo">
+        <el-form-item :label="t('farm.systemImage')" prop="systemLogo">
           <div class="uploadImg_area">
             <div class="image_area">
               <el-upload
@@ -89,7 +89,7 @@
             <!-- <div class="addImg">{{ t('work.picLimit') }}</div> -->
           </div>
         </el-form-item>
-        <el-form-item label="环境照片" prop="environmentPhoto">
+        <el-form-item :label="t('farm.environmentPhoto')" prop="environmentPhoto">
           <div class="uploadImg_area">
             <div class="image_area">
               <el-upload
@@ -223,7 +223,7 @@ const handleChange2 = (file: any, fileList: any) => {
 };
 const uploadImg = async () => {
   if (!trueImg.value) {
-    return ElMessage.warning("请选择图片");
+    return ElMessage.warning(t("farm.selectImage"));
   }
   let formDataE = new FormData();
   formDataE.append("file", trueImg.value);
@@ -233,7 +233,7 @@ const uploadImg = async () => {
 };
 const uploadImg2 = async () => {
   if (!trueImg2.value) {
-    return ElMessage.warning("请选择图片");
+    return ElMessage.warning(t("farm.selectImage"));
   }
   let formDataE = new FormData();
   formDataE.append("file", trueImg2.value);
@@ -278,7 +278,7 @@ const rules = {
 };
 const addField = async () => {
   if (fieldList.locationContour.length === 0) {
-    return ElMessage.warning("农场不能为空！");
+    return ElMessage.warning(t("farm.farmCannotBeEmpty"));
   }
   await uploadImg();
   await uploadImg2();
@@ -291,7 +291,7 @@ const addField = async () => {
       router.go(-1);
     } catch {}
   } else {
-    ElMessage.warning("请添加农场");
+    ElMessage.warning(t("farm.pleaseAddFarm"));
   }
 };
 async function getFarmList() {

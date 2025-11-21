@@ -310,11 +310,13 @@ const resetCarParams = () => {
   trueImg.value = null;
 };
 
-const buildKeyword = () =>
-  [searchForm.name, searchForm.sn]
+const buildKeyword = () => {
+  const values = [searchForm.name, searchForm.sn]
     .map((item) => (item || '').trim())
-    .filter(Boolean)
-    .join(' ');
+    .filter(Boolean);
+  // 去除重复值
+  return [...new Set(values)].join(' ');
+};
 
 const fetchVehicleTypes = async () => {
   try {

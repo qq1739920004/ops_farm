@@ -17,25 +17,25 @@
         </div>
         <div class="button_area">
           <el-button style="margin-right: 5px" type="primary" @click="newFarm"
-            >新建农场</el-button
+            >{{ t('farm.newFarm') }}</el-button
           >
         </div>
       </div>
       <el-table :data="farmListData" class="date-icon" style="max-width: 100%" stripe>
         <!-- 农场名称列 -->
 
-        <el-table-column prop="name" label="农场名称" align="center" min-width="150" />
+        <el-table-column prop="name" :label="t('farm.farmName')" align="center" min-width="150" />
 
         <!-- 地址列 -->
-        <el-table-column prop="address" label="地址" align="center" min-width="200" />
+        <el-table-column prop="address" :label="t('farm.address')" align="center" min-width="200" />
 
         <!-- 创建人列 -->
-        <el-table-column prop="creator" label="创建人" align="center" min-width="120" />
+        <el-table-column prop="creator" :label="t('farm.creator')" align="center" min-width="120" />
 
         <!-- 创建时间列 -->
         <el-table-column
           prop="createTime"
-          label="创建时间"
+          :label="t('farm.createTime')"
           align="center"
           min-width="180"
         />
@@ -61,7 +61,7 @@
                 type="primary"
                 text
                 @click="openDialog(scope.row.companyId, scope.row.id, scope.row.name)"
-                >{{ "下发" }}</el-button
+                >{{ t('farm.issue') }}</el-button
               >
               <el-button
                 :style="
@@ -104,7 +104,7 @@
     <!-- 弹窗组件 -->
     <el-dialog
       v-model="dialogVisible"
-      title="下发"
+      :title="t('farm.issue')"
       width="500px"
       @close="handleClose"
       center
@@ -114,7 +114,7 @@
         multiple
         filterable
         clearable
-        placeholder="请选择车辆"
+        :placeholder="t('farm.selectVehicles')"
       >
         <el-option
           v-for="vehicle in vehicleList"
@@ -125,8 +125,8 @@
       </el-select>
 
       <template #footer>
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleDownload">确认下发</el-button>
+        <el-button @click="dialogVisible = false">{{ t('work.cancel') }}</el-button>
+        <el-button type="primary" @click="handleDownload">{{ t('farm.confirmIssue') }}</el-button>
       </template>
     </el-dialog>
   </div>
@@ -184,7 +184,7 @@ const openExternalLink = (id: any) => {
 // 处理下载逻辑
 const handleDownload = async () => {
   if (selectedIds.value.length === 0) {
-    ElMessage.warning("请至少选择一项");
+    ElMessage.warning(t("farm.selectAtLeastOne"));
     return;
   }
 
@@ -194,7 +194,7 @@ const handleDownload = async () => {
       id: farmId.value,
       farmName: farmName.value,
     });
-    ElMessage.success("下发成功");
+    ElMessage.success(t("work.issueSuccess"));
     // 关闭弹窗
     dialogVisible.value = false;
     // 清空选择

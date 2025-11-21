@@ -50,7 +50,7 @@
         <el-form-item :label="t('work.remark')" prop="remark">
           <el-input style="width: 200px" v-model="fieldList.remark"></el-input>
         </el-form-item>
-        <el-form-item label="系统图片" prop="systemLogo">
+        <el-form-item :label="t('farm.systemImage')" prop="systemLogo">
           <div class="uploadImg_area">
             <div class="image_area">
               <el-upload
@@ -89,7 +89,7 @@
             <!-- <div class="addImg">{{ t('work.picLimit') }}</div> -->
           </div>
         </el-form-item>
-        <el-form-item label="环境照片" prop="environmentPhoto">
+        <el-form-item :label="t('farm.environmentPhoto')" prop="environmentPhoto">
           <div class="uploadImg_area">
             <div class="image_area">
               <el-upload
@@ -309,7 +309,7 @@ const rules = {
 };
 const editField = async () => {
   if (fieldList.locationContour.length === 0) {
-    return ElMessage.warning("农场不能为空！");
+    return ElMessage.warning(t("farm.farmCannotBeEmpty"));
   }
   if (trueImg.value) {
     await uploadImg();

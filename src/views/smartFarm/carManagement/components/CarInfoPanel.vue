@@ -10,7 +10,7 @@
       <div class="car-info-panel__info">
         <section class="info-section">
           <header class="info-section__header">
-            <span>农机信息</span>
+            <span>{{ t('work.vehicleInfo') }}</span>
             <img 
               src="@/assets/common/edit_pen (1).png" 
               alt="编辑" 
@@ -20,52 +20,52 @@
           </header>
           <div class="info-grid">
             <div class="info-item">
-              <span class="info-item__label">车辆名称</span>
+              <span class="info-item__label">{{ t('work.vehicleName') }}</span>
               <span class="info-item__value">{{ vehicle.name || '--' }}</span>
             </div>
             <div class="info-item">
-              <span class="info-item__label">车牌</span>
+              <span class="info-item__label">{{ t('work.licensePlate') }}</span>
               <span class="info-item__value">{{ vehicle.licensePlate || '--' }}</span>
             </div>
             <div class="info-item">
-              <span class="info-item__label">车辆类型</span>
+              <span class="info-item__label">{{ t('work.vehicleType') }}</span>
               <span class="info-item__value">{{ vehicle.vehicleTypeLabel || '--' }}</span>
             </div>
             <div class="info-item">
-              <span class="info-item__label">品牌</span>
+              <span class="info-item__label">{{ t('work.brand') }}</span>
               <span class="info-item__value">{{ vehicle.brand || '--' }}</span>
             </div>
             <div class="info-item">
-              <span class="info-item__label">型号</span>
+              <span class="info-item__label">{{ t('work.model') }}</span>
               <span class="info-item__value">{{ vehicle.model || '--' }}</span>
             </div>
             <div class="info-item">
-              <span class="info-item__label">马力</span>
+              <span class="info-item__label">{{ t('work.power') }}</span>
               <span class="info-item__value">{{ vehicle.power || '--' }}</span>
             </div>
             <div class="info-item">
-              <span class="info-item__label">整机编号</span>
+              <span class="info-item__label">{{ t('work.registrationNo') }}</span>
               <span class="info-item__value">{{ vehicle.registrationNo || '--' }}</span>
             </div>
             <div class="info-item">
-              <span class="info-item__label">燃料类型</span>
+              <span class="info-item__label">{{ t('work.fuelType') }}</span>
               <span class="info-item__value">{{ vehicle.fuel || '--' }}</span>
             </div>
             <div class="info-item">
-              <span class="info-item__label">购买日期</span>
+              <span class="info-item__label">{{ t('work.purchaseDate') }}</span>
               <span class="info-item__value">{{ formatDate(vehicle.buyTime) }}</span>
             </div>
           </div>
         </section>
         <section class="info-section">
-          <header class="info-section__header">终端信息</header>
+          <header class="info-section__header">{{ t('work.terminalInfo') }}</header>
           <div class="info-grid info-grid--single">
             <div class="info-item">
-              <span class="info-item__label">设备SN</span>
+              <span class="info-item__label">{{ t('work.deviceSN') }}</span>
               <span class="info-item__value">{{ vehicle.sn || '--' }}</span>
             </div>
             <div class="info-item">
-              <span class="info-item__label">安装日期</span>
+              <span class="info-item__label">{{ t('work.installDate') }}</span>
               <span class="info-item__value">{{ formatDate(vehicle.installDate) }}</span>
             </div>
           </div>
@@ -90,8 +90,11 @@
 
 <script setup lang="ts">
 import { toRefs } from "vue";
+import { useI18n } from "vue-i18n";
 import { Picture } from "@element-plus/icons-vue";
 import startCar from "@/assets/common/car.png";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   vehicle: Record<string, any> | null;
