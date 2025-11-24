@@ -29,59 +29,68 @@
         height="calc(100% - 60px)"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" />
-        <el-table-column :label="t('supplies.suppliesImage')" width="100">
+        <el-table-column type="selection" min-width="55" />
+        <el-table-column :label="t('supplies.suppliesImage')" align="center" min-width="100">
           <template #default="{ row }">
-            <el-image
-              v-if="row.imageUrl"
-              :src="row.imageUrl"
-              style="width: 60px; height: 60px"
-              fit="cover"
-              :preview-src-list="[row.imageUrl]"
-              preview-teleported
-            />
-            <div v-else class="no-image">{{ t('supplies.noImage') }}</div>
+            <div class="image-container">
+              <el-image
+                v-if="row.imageUrl"
+                :src="row.imageUrl"
+                style="width: 60px; height: 60px"
+                fit="cover"
+                :preview-src-list="[row.imageUrl]"
+                preview-teleported
+              />
+              <div v-else class="no-image">{{ t('supplies.noImage') }}</div>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column prop="name" :label="t('supplies.suppliesName')" min-width="120" />
-        <el-table-column prop="stock" :label="t('supplies.stock')" width="100">
+        <el-table-column prop="name" :label="t('supplies.suppliesName')" align="center" min-width="80" />
+        <el-table-column prop="stockQuantity" :label="t('supplies.stock')" align="center" min-width="120">
           <template #default="{ row }">
-            {{ row.stock || 0 }} {{ row.unit || 'kg' }}
+            {{ row.stockQuantity || 0 }} {{ row.unit || 'kg' }}
           </template>
         </el-table-column>
-        <el-table-column prop="type" :label="t('supplies.type')" width="100">
+        <el-table-column prop="type" :label="t('supplies.type')" align="center" min-width="100">
           <template #default="{ row }">
             <el-tag :type="getTypeTagType(row.type)">
               {{ getTypeLabel(row.type) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="manufacturer" :label="t('supplies.manufacturer')" min-width="150" />
-        <el-table-column prop="createTime" :label="t('work.creationTime')" width="180">
+        <el-table-column prop="productionEnterprise" :label="t('supplies.manufacturer')" align="center" min-width="120" />
+        <el-table-column prop="createTime" :label="t('work.creationTime')" align="center" min-width="140">
           <template #default="{ row }">
             {{ formatDate(row.createTime) }}
           </template>
         </el-table-column>
-        <el-table-column :label="t('supplies.stockFlow')" width="100">
+        <el-table-column :label="t('supplies.stockFlow')" align="center" min-width="110">
           <template #default="{ row }">
             <el-button 
               type="primary" 
               text 
               @click="handleViewFlow(row)"
-              :disabled="!row.flowCount"
+              :disabled="!row.stockFlowCount"
             >
-              {{ row.flowCount || 0 }}{{ t('supplies.records') }}
+              {{ row.stockFlowCount || 0 }}{{ t('supplies.records') }}
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column :label="t('work.operation')" width="160" fixed="right">
+        <el-table-column 
+          :label="t('work.operation')" 
+          align="center" 
+          min-width="160" 
+          fixed="right"
+        >
           <template #default="{ row }">
-            <el-button type="primary" text @click="handleInStock(row)">
-              {{ t('supplies.inStock') }}
-            </el-button>
-            <el-button type="warning" text @click="handleOutStock(row)">
-              {{ t('supplies.outStock') }}
-            </el-button>
+            <div class="operation-buttons">
+              <el-button type="primary" text @click="handleInStock(row)">
+                {{ t('supplies.inStock') }}
+              </el-button>
+              <el-button type="primary" text @click="handleOutStock(row)">
+                {{ t('supplies.outStock') }}
+              </el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -124,11 +133,11 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item :label="t('supplies.suppliesName')" prop="name">
+        <el-form-item :label="t('supplies.suppliesName')" prop="name"  >
           <el-input v-model="createForm.name" :placeholder="t('supplies.enterSuppliesName')" />
         </el-form-item>
-        <el-form-item :label="t('supplies.manufacturer')" prop="manufacturer">
-          <el-input v-model="createForm.manufacturer" :placeholder="t('supplies.enterManufacturer')" />
+        <el-form-item :label="t('supplies.manufacturer')" prop="productionEnterprise">
+          <el-input v-model="createForm.productionEnterprise" :placeholder="t('supplies.enterManufacturer')" />
         </el-form-item>
         <el-form-item :label="t('supplies.suppliesImage')">
           <el-upload
@@ -303,9 +312,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onMounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
+import { useStorage } from '@vueuse/core';
 import { Search, Plus, Edit } from '@element-plus/icons-vue';
 import {
   getSuppliesList_API,
@@ -317,6 +327,7 @@ import {
 } from '@/api/suppliesMgt/index';
 
 const { t } = useI18n();
+const farmIdStorage = useStorage('farmId', '');
 
 // 响应式数据
 const searchForm = reactive({
@@ -357,9 +368,9 @@ const currentSupplies = ref<any>(null);
 
 // 表单数据
 const createForm = reactive({
-  type: '',
+  type: undefined as number | undefined,
   name: '',
-  manufacturer: '',
+  productionEnterprise: '', // 生产企业
   imageUrl: '',
 });
 
@@ -373,19 +384,19 @@ const createFormRef = ref();
 const inStockFormRef = ref();
 const outStockFormRef = ref();
 
-// 类型选项
+// 类型选项（根据API文档：1种子、2农药、3肥料、4其他）
 const typeOptions = [
-  { value: 'PESTICIDE', label: t('supplies.pesticide') },
-  { value: 'FERTILIZER', label: t('supplies.fertilizer') },
-  { value: 'SEED', label: t('supplies.seed') },
-  { value: 'OTHER', label: t('supplies.other') },
+  { value: 1, label: t('supplies.seed') },
+  { value: 2, label: t('supplies.pesticide') },
+  { value: 3, label: t('supplies.fertilizer') },
+  { value: 4, label: t('supplies.other') },
 ];
 
 // 表单验证规则
 const createRules = {
   type: [{ required: true, message: t('work.enterValue'), trigger: 'change' }],
   name: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }],
-  manufacturer: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }],
+  productionEnterprise: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }],
 };
 
 const stockRules = {
@@ -396,17 +407,18 @@ const stockRules = {
 };
 
 // 计算属性和方法
-const getTypeLabel = (type: string) => {
+const getTypeLabel = (type: number) => {
   const option = typeOptions.find(item => item.value === type);
   return option?.label || type;
 };
 
-const getTypeTagType = (type: string) => {
-  const typeMap: Record<string, string> = {
-    PESTICIDE: 'danger',
-    FERTILIZER: 'success',
-    SEED: 'primary',
-    OTHER: 'info',
+const getTypeTagType = (type: number) => {
+  // 1种子、2农药、3肥料、4其他
+  const typeMap: Record<number, string> = {
+    1: 'primary',    // 种子 - 蓝色
+    2: 'danger',     // 农药 - 红色
+    3: 'success',    // 肥料 - 绿色
+    4: 'info',       // 其他 - 灰色
   };
   return typeMap[type] || 'info';
 };
@@ -464,11 +476,11 @@ const handleFlowPageChange = (page: number) => {
 };
 
 const resetForm = () => {
-  createForm.type = '';
+  createForm.type = undefined;
   createForm.name = '';
-  createForm.manufacturer = '';
+  createForm.productionEnterprise = '';
   createForm.imageUrl = '';
-  createFormRef.value?.resetFields();
+  createFormRef.value?.clearValidate();
 };
 
 const resetStockForm = () => {
@@ -514,7 +526,11 @@ const handleSubmitCreate = async () => {
     loading.create = true;
     
     try {
-      await createSupplies_API(createForm);
+      const payload = {
+        ...createForm,
+        farmId: Number(farmIdStorage.value),
+      };
+      await createSupplies_API(payload);
       ElMessage.success(t('messages.addSuccess'));
     } catch (apiError) {
       // 如果API失败，模拟成功
@@ -566,7 +582,7 @@ const handleSubmitOutStock = async () => {
   try {
     await outStockFormRef.value?.validate();
     
-    if (stockForm.amount > (currentSupplies.value?.stock || 0)) {
+    if (stockForm.amount > (currentSupplies.value?.stockQuantity || 0)) {
       ElMessage.error(t('supplies.outStockExceedsStock'));
       return;
     }
@@ -603,15 +619,16 @@ const fetchSuppliesList = async () => {
     loading.list = true;
     
     const params = {
-      currentPage: pagination.currentPage,
-      pageSize: pagination.pageSize,
-      keyword: searchForm.keyword,
+      farmId: Number(farmIdStorage.value),
+      name: searchForm.keyword || undefined,
+      current: pagination.currentPage,
+      size: pagination.pageSize,
     };
     
     try {
-      const { data } = await getSuppliesList_API(params);
-      suppliesList.value = data?.records || [];
-      pagination.total = data?.total ?? 0;
+      const response = await getSuppliesList_API(params);
+      suppliesList.value = response.data?.records || [];
+      pagination.total = response.data?.total ?? 0;
     } catch (apiError) {
       // 如果API失败，使用模拟数据
       await new Promise(resolve => setTimeout(resolve, 800));
@@ -620,37 +637,40 @@ const fetchSuppliesList = async () => {
       const mockData = {
         records: [
           {
-            id: '1',
+            id: 1,
             name: '除草剂A',
-            type: 'PESTICIDE',
-            stock: 150.5,
+            type: 2, // 农药
+            typeName: '农药',
+            stockQuantity: 150.5,
             unit: 'L',
-            manufacturer: '农药有限公司',
+            productionEnterprise: '农药有限公司',
             imageUrl: '',
             createTime: '2024-11-20 09:30:00',
-            flowCount: 5,
+            stockFlowCount: 5,
           },
           {
-            id: '2',
+            id: 2,
             name: '复合肥料B',
-            type: 'FERTILIZER',
-            stock: 2000,
+            type: 3, // 肥料
+            typeName: '肥料',
+            stockQuantity: 2000,
             unit: 'kg',
-            manufacturer: '肥料制造商',
+            productionEnterprise: '肥料制造商',
             imageUrl: '',
             createTime: '2024-11-19 14:20:00',
-            flowCount: 8,
+            stockFlowCount: 8,
           },
           {
-            id: '3',
+            id: 3,
             name: '玉米种子C',
-            type: 'SEED',
-            stock: 50,
+            type: 1, // 种子
+            typeName: '种子',
+            stockQuantity: 50,
             unit: 'kg',
-            manufacturer: '种业公司',
+            productionEnterprise: '种业公司',
             imageUrl: '',
             createTime: '2024-11-18 11:15:00',
-            flowCount: 3,
+            stockFlowCount: 3,
           },
         ],
         total: 3,
@@ -719,6 +739,15 @@ const fetchFlowList = async () => {
   }
 };
 
+// 监听农场切换
+watch(
+  () => farmIdStorage.value,
+  () => {
+    pagination.currentPage = 1;
+    fetchSuppliesList();
+  }
+);
+
 onMounted(() => {
   fetchSuppliesList();
 });
@@ -770,6 +799,14 @@ onMounted(() => {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 4px 0;
+}
+
 .no-image {
   display: flex;
   align-items: center;
@@ -780,6 +817,14 @@ onMounted(() => {
   border-radius: 4px;
   color: var(--el-text-color-placeholder);
   font-size: 12px;
+}
+
+.operation-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  flex-wrap: wrap;
 }
 
 .avatar-uploader {
