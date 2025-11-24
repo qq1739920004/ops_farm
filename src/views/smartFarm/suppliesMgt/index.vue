@@ -27,9 +27,7 @@
         :data="suppliesList"
         stripe
         height="calc(100% - 60px)"
-        @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" min-width="55" />
         <el-table-column :label="t('supplies.suppliesImage')" align="center" min-width="100">
           <template #default="{ row }">
             <div class="image-container">
@@ -48,7 +46,7 @@
         <el-table-column prop="name" :label="t('supplies.suppliesName')" align="center" min-width="80" />
         <el-table-column prop="stockQuantity" :label="t('supplies.stock')" align="center" min-width="120">
           <template #default="{ row }">
-            {{ row.stockQuantity || 0 }} {{ row.unit || 'kg' }}
+            {{ row.stockQuantity || 0 }} kg
           </template>
         </el-table-column>
         <el-table-column prop="type" :label="t('supplies.type')" align="center" min-width="100">
@@ -136,33 +134,8 @@
         <el-form-item :label="t('supplies.suppliesName')" prop="name"  >
           <el-input v-model="createForm.name" :placeholder="t('supplies.enterSuppliesName')" />
         </el-form-item>
-        <el-form-item :label="t('supplies.manufacturer')" prop="productionEnterprise">
+        <el-form-item :label="t('supplies.manufacturer')">
           <el-input v-model="createForm.productionEnterprise" :placeholder="t('supplies.enterManufacturer')" />
-        </el-form-item>
-        <el-form-item :label="t('supplies.suppliesImage')">
-          <el-upload
-            class="avatar-uploader"
-            accept=".png,.jpg,.jpeg"
-            action=""
-            :http-request="uploadImage"
-            :show-file-list="false"
-            :before-upload="beforeImageUpload"
-          >
-            <div v-if="createForm.imageUrl" class="image-preview">
-              <el-image
-                :src="createForm.imageUrl"
-                style="width: 200px; height: 150px"
-                fit="cover"
-              />
-              <div class="image-overlay">
-                <el-icon><Edit /></el-icon>
-              </div>
-            </div>
-            <div v-else class="upload-placeholder">
-              <el-icon><Plus /></el-icon>
-              <div>{{ t('supplies.uploadImage') }}</div>
-            </div>
-          </el-upload>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -188,15 +161,19 @@
         label-width="120px"
         style="padding: 0 20px"
       >
-        <el-form-item :label="t('supplies.inStockAmount')" prop="amount">
+        <el-form-item :label="t('supplies.inStockAmount')" prop="quantity">
           <el-input-number
-            v-model="stockForm.amount"
-            :min="0"
-            :precision="2"
+            v-model="stockForm.quantity"
+            :min="0.01"
             :step="1"
+            :precision="2"
             style="width: 100%"
+            :placeholder="t('supplies.enterAmount')"
           />
           <span style="margin-left: 8px; color: #909399">{{ currentSupplies?.unit || 'kg' }}</span>
+        </el-form-item>
+        <el-form-item :label="t('supplies.operator')" prop="operator">
+          <el-input v-model="stockForm.operator" :placeholder="t('supplies.enterOperator')" />
         </el-form-item>
         <el-form-item :label="t('supplies.remark')">
           <el-input
@@ -232,19 +209,23 @@
       >
         <el-form-item :label="t('supplies.currentStock')">
           <span style="font-weight: bold">
-            {{ currentSupplies?.stock || 0 }} {{ currentSupplies?.unit || 'kg' }}
+            {{ currentSupplies?.stockQuantity || 0 }} kg
           </span>
         </el-form-item>
-        <el-form-item :label="t('supplies.outStockAmount')" prop="amount">
+        <el-form-item :label="t('supplies.outStockAmount')" prop="quantity">
           <el-input-number
-            v-model="stockForm.amount"
-            :min="0"
-            :max="currentSupplies?.stock || 0"
+            v-model="stockForm.quantity"
+            :min="0.01"
+            :max="currentSupplies?.stockQuantity || 0"
             :precision="2"
             :step="1"
             style="width: 100%"
+            :placeholder="t('supplies.enterAmount')"
           />
-          <span style="margin-left: 8px; color: #909399">{{ currentSupplies?.unit || 'kg' }}</span>
+          <span style="margin-left: 8px; color: #909399">kg</span>
+        </el-form-item>
+        <el-form-item :label="t('supplies.operator')" prop="operator">
+          <el-input v-model="stockForm.operator" :placeholder="t('supplies.enterOperator')" />
         </el-form-item>
         <el-form-item :label="t('supplies.remark')">
           <el-input
@@ -283,9 +264,9 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="amount" :label="t('supplies.amount')" width="120">
+        <el-table-column prop="quantity" :label="t('supplies.amount')" width="120">
           <template #default="{ row }">
-            {{ row.type === 'IN' ? '+' : '-' }}{{ row.amount }} {{ currentSupplies?.unit || 'kg' }}
+            {{ row.type === 'IN' ? '+' : '-' }}{{ row.quantity }} kg
           </template>
         </el-table-column>
         <el-table-column prop="operator" :label="t('supplies.operator')" width="100" />
@@ -316,14 +297,13 @@ import { reactive, ref, onMounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 import { useStorage } from '@vueuse/core';
-import { Search, Plus, Edit } from '@element-plus/icons-vue';
+import { Search, Plus } from '@element-plus/icons-vue';
 import {
   getSuppliesList_API,
   createSupplies_API,
   inStockSupplies_API,
   outStockSupplies_API,
   getSuppliesFlow_API,
-  uploadSuppliesImg_API,
 } from '@/api/suppliesMgt/index';
 
 const { t } = useI18n();
@@ -363,19 +343,18 @@ const dialogVisible = reactive({
 
 const suppliesList = ref<any[]>([]);
 const flowList = ref<any[]>([]);
-const selectedRows = ref<any[]>([]);
 const currentSupplies = ref<any>(null);
 
 // 表单数据
 const createForm = reactive({
   type: undefined as number | undefined,
   name: '',
-  productionEnterprise: '', // 生产企业
-  imageUrl: '',
+  productionEnterprise: '', // 生产企业（可选）
 });
 
 const stockForm = reactive({
-  amount: 0,
+  quantity: 0,
+  operator: '',
   remark: '',
 });
 
@@ -396,13 +375,16 @@ const typeOptions = [
 const createRules = {
   type: [{ required: true, message: t('work.enterValue'), trigger: 'change' }],
   name: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }],
-  productionEnterprise: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }],
+  // productionEnterprise 是可选的，不需要验证
 };
 
 const stockRules = {
-  amount: [
+  quantity: [
     { required: true, message: t('work.enterValue'), trigger: 'blur' },
     { type: 'number', min: 0.01, message: t('supplies.amountMustGreaterThanZero'), trigger: 'blur' }
+  ],
+  operator: [
+    { required: true, message: t('work.enterValue'), trigger: 'blur' }
   ],
 };
 
@@ -415,10 +397,10 @@ const getTypeLabel = (type: number) => {
 const getTypeTagType = (type: number) => {
   // 1种子、2农药、3肥料、4其他
   const typeMap: Record<number, string> = {
-    1: 'primary',    // 种子 - 蓝色
-    2: 'danger',     // 农药 - 红色
-    3: 'success',    // 肥料 - 绿色
-    4: 'info',       // 其他 - 灰色
+    1: 'primary',    // 种子 - 蓝色primary
+    2: 'primary',     // 农药 - 红色danger
+    3: 'primary',    // 肥料 - 绿色success
+    4: 'primary',       // 其他 - 灰色info
   };
   return typeMap[type] || 'info';
 };
@@ -443,10 +425,6 @@ const handleSizeChange = (size: number) => {
 const handleCurrentChange = (page: number) => {
   pagination.currentPage = page;
   fetchSuppliesList();
-};
-
-const handleSelectionChange = (selection: any[]) => {
-  selectedRows.value = selection;
 };
 
 const handleCreate = () => {
@@ -479,45 +457,15 @@ const resetForm = () => {
   createForm.type = undefined;
   createForm.name = '';
   createForm.productionEnterprise = '';
-  createForm.imageUrl = '';
   createFormRef.value?.clearValidate();
 };
 
 const resetStockForm = () => {
-  stockForm.amount = 0;
+  stockForm.quantity = 0;
+  stockForm.operator = '';
   stockForm.remark = '';
   inStockFormRef.value?.resetFields();
   outStockFormRef.value?.resetFields();
-};
-
-const beforeImageUpload = (file: File) => {
-  const isImage = /\.(jpg|jpeg|png)$/i.test(file.name);
-  const isLt10M = file.size / 1024 / 1024 < 10;
-
-  if (!isImage) {
-    ElMessage.error(t('supplies.imageFormatError'));
-    return false;
-  }
-  if (!isLt10M) {
-    ElMessage.error(t('supplies.imageSizeError'));
-    return false;
-  }
-  return true;
-};
-
-const uploadImage = async (options: any) => {
-  try {
-    const formData = new FormData();
-    formData.append('file', options.file);
-    const { data } = await uploadSuppliesImg_API(formData);
-    createForm.imageUrl = data;
-    ElMessage.success(t('supplies.uploadSuccess'));
-  } catch (error) {
-    // 如果API失败，先用模拟方式
-    createForm.imageUrl = URL.createObjectURL(options.file);
-    ElMessage.success(t('supplies.uploadSuccess'));
-    console.warn('Upload API failed, using mock:', error);
-  }
 };
 
 const handleSubmitCreate = async () => {
@@ -525,19 +473,12 @@ const handleSubmitCreate = async () => {
     await createFormRef.value?.validate();
     loading.create = true;
     
-    try {
-      const payload = {
-        ...createForm,
-        farmId: Number(farmIdStorage.value),
-      };
-      await createSupplies_API(payload);
-      ElMessage.success(t('messages.addSuccess'));
-    } catch (apiError) {
-      // 如果API失败，模拟成功
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      ElMessage.success(t('messages.addSuccess'));
-      console.warn('Create API failed, using mock:', apiError);
-    }
+    const payload = {
+      ...createForm,
+      farmId: Number(farmIdStorage.value),
+    };
+    await createSupplies_API(payload);
+    ElMessage.success(t('messages.addSuccess'));
     
     dialogVisible.create = false;
     resetForm();
@@ -554,19 +495,13 @@ const handleSubmitInStock = async () => {
     await inStockFormRef.value?.validate();
     loading.inStock = true;
     
-    try {
-      await inStockSupplies_API({
-        suppliesId: currentSupplies.value.id,
-        amount: stockForm.amount,
-        remark: stockForm.remark,
-      });
-      ElMessage.success(t('supplies.inStockSuccess'));
-    } catch (apiError) {
-      // 如果API失败，模拟成功
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      ElMessage.success(t('supplies.inStockSuccess'));
-      console.warn('InStock API failed, using mock:', apiError);
-    }
+    await inStockSupplies_API({
+      amId: currentSupplies.value.id,
+      quantity: stockForm.quantity,
+      operator: stockForm.operator,
+      remark: stockForm.remark,
+    });
+    ElMessage.success(t('supplies.inStockSuccess'));
     
     dialogVisible.inStock = false;
     resetStockForm();
@@ -582,26 +517,20 @@ const handleSubmitOutStock = async () => {
   try {
     await outStockFormRef.value?.validate();
     
-    if (stockForm.amount > (currentSupplies.value?.stockQuantity || 0)) {
+    if (stockForm.quantity > (currentSupplies.value?.stockQuantity || 0)) {
       ElMessage.error(t('supplies.outStockExceedsStock'));
       return;
     }
     
     loading.outStock = true;
     
-    try {
-      await outStockSupplies_API({
-        suppliesId: currentSupplies.value.id,
-        amount: stockForm.amount,
-        remark: stockForm.remark,
-      });
-      ElMessage.success(t('supplies.outStockSuccess'));
-    } catch (apiError) {
-      // 如果API失败，模拟成功
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      ElMessage.success(t('supplies.outStockSuccess'));
-      console.warn('OutStock API failed, using mock:', apiError);
-    }
+    await outStockSupplies_API({
+      amId: currentSupplies.value.id,
+      quantity: stockForm.quantity,
+      operator: stockForm.operator,
+      remark: stockForm.remark,
+    });
+    ElMessage.success(t('supplies.outStockSuccess'));
     
     dialogVisible.outStock = false;
     resetStockForm();
@@ -625,60 +554,9 @@ const fetchSuppliesList = async () => {
       size: pagination.pageSize,
     };
     
-    try {
-      const response = await getSuppliesList_API(params);
-      suppliesList.value = response.data?.records || [];
-      pagination.total = response.data?.total ?? 0;
-    } catch (apiError) {
-      // 如果API失败，使用模拟数据
-      await new Promise(resolve => setTimeout(resolve, 800));
-      console.warn('GetSuppliesList API failed, using mock data:', apiError);
-      
-      const mockData = {
-        records: [
-          {
-            id: 1,
-            name: '除草剂A',
-            type: 2, // 农药
-            typeName: '农药',
-            stockQuantity: 150.5,
-            unit: 'L',
-            productionEnterprise: '农药有限公司',
-            imageUrl: '',
-            createTime: '2024-11-20 09:30:00',
-            stockFlowCount: 5,
-          },
-          {
-            id: 2,
-            name: '复合肥料B',
-            type: 3, // 肥料
-            typeName: '肥料',
-            stockQuantity: 2000,
-            unit: 'kg',
-            productionEnterprise: '肥料制造商',
-            imageUrl: '',
-            createTime: '2024-11-19 14:20:00',
-            stockFlowCount: 8,
-          },
-          {
-            id: 3,
-            name: '玉米种子C',
-            type: 1, // 种子
-            typeName: '种子',
-            stockQuantity: 50,
-            unit: 'kg',
-            productionEnterprise: '种业公司',
-            imageUrl: '',
-            createTime: '2024-11-18 11:15:00',
-            stockFlowCount: 3,
-          },
-        ],
-        total: 3,
-      };
-      
-      suppliesList.value = mockData.records;
-      pagination.total = mockData.total;
-    }
+    const response = await getSuppliesList_API(params);
+    suppliesList.value = response.data?.records || [];
+    pagination.total = response.data?.total ?? 0;
   } catch (error) {
     console.error('Fetch supplies list failed:', error);
     ElMessage.error(t('supplies.fetchListFailed'));
@@ -697,40 +575,9 @@ const fetchFlowList = async () => {
       pageSize: flowPagination.pageSize,
     };
     
-    try {
-      const { data } = await getSuppliesFlow_API(params);
-      flowList.value = data?.records || [];
-      flowPagination.total = data?.total ?? 0;
-    } catch (apiError) {
-      // 如果API失败，使用模拟数据
-      await new Promise(resolve => setTimeout(resolve, 500));
-      console.warn('GetSuppliesFlow API failed, using mock data:', apiError);
-      
-      const mockFlowData = {
-        records: [
-          {
-            id: '1',
-            type: 'IN',
-            amount: 100,
-            operator: '张三',
-            createTime: '2024-11-20 10:00:00',
-            remark: '新采购入库',
-          },
-          {
-            id: '2',
-            type: 'OUT',
-            amount: 50,
-            operator: '李四',
-            createTime: '2024-11-20 15:30:00',
-            remark: '田间作业使用',
-          },
-        ],
-        total: 2,
-      };
-      
-      flowList.value = mockFlowData.records;
-      flowPagination.total = mockFlowData.total;
-    }
+    const { data } = await getSuppliesFlow_API(params);
+    flowList.value = data?.records || [];
+    flowPagination.total = data?.total ?? 0;
   } catch (error) {
     console.error('Fetch flow list failed:', error);
     ElMessage.error(t('supplies.fetchFlowFailed'));

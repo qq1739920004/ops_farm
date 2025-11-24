@@ -777,6 +777,8 @@ const zh = {
     fetchFlowFailed: '获取库存流水失败',
     outStockExceedsStock: '出库数量不能大于当前库存',
     amountMustGreaterThanZero: '数量必须大于0',
+    enterAmount: '请输入数量',
+    enterOperator: '请输入经办人',
     pesticide: '农药',
     fertilizer: '肥料',
     seed: '种子',

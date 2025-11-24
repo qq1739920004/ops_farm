@@ -109,7 +109,7 @@ export function getSuppliesFlow_API(params: any) {
 // 上传农资图片
 export function uploadSuppliesImg_API(data: any) {
   return request<any, any>({
-    url: `/farm/supplies/uploadImage`,
+    url: `/farm/vehicle/uploadImage`,
     method: 'post',
     data,
     headers: { "Content-Type": "multipart/form-data" },
