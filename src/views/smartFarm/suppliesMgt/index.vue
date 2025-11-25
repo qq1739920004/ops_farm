@@ -26,7 +26,7 @@
         v-loading="loading.list"
         :data="suppliesList"
         stripe
-        height="calc(100% - 60px)"
+        height="calc(100% - 100px)"
       >
         <el-table-column :label="t('supplies.suppliesImage')" align="center" min-width="100">
           <template #default="{ row }">
@@ -92,18 +92,17 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
-
-    <div class="supplies-management-page__pagination">
-      <el-pagination
-        v-model:current-page="pagination.currentPage"
-        v-model:page-size="pagination.pageSize"
-        :page-sizes="[10, 20, 50, 100]"
-        :total="pagination.total"
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+      <div class="supplies-management-page__pagination">
+        <el-pagination
+          v-model:current-page="pagination.currentPage"
+          v-model:page-size="pagination.pageSize"
+          :page-sizes="[10, 20, 50, 100]"
+          :total="pagination.total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </div>
 
     <!-- 新建农资对话框 -->
@@ -167,7 +166,7 @@
             :min="0.01"
             :step="1"
             :precision="2"
-            style="width: 100%"
+            style="width: 200px"
             :placeholder="t('supplies.enterAmount')"
           />
           <span style="margin-left: 8px; color: #909399">{{ currentSupplies?.unit || 'kg' }}</span>
@@ -257,16 +256,16 @@
         stripe
         max-height="400px"
       >
-        <el-table-column prop="type" :label="t('supplies.flowType')" width="100">
+        <el-table-column prop="flowType" :label="t('supplies.flowType')" width="100">
           <template #default="{ row }">
-            <el-tag :type="row.type === 'IN' ? 'success' : 'warning'">
-              {{ row.type === 'IN' ? t('supplies.inStock') : t('supplies.outStock') }}
+            <el-tag :type="row.flowType === 1 ? 'success' : 'warning'">
+              {{ row.flowType === 1 ? t('supplies.inStock') : t('supplies.outStock') }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="quantity" :label="t('supplies.amount')" width="120">
           <template #default="{ row }">
-            {{ row.type === 'IN' ? '+' : '-' }}{{ row.quantity }} kg
+            {{ row.flowType === 1 ? '+' : '-' }}{{ row.quantity }} kg
           </template>
         </el-table-column>
         <el-table-column prop="operator" :label="t('supplies.operator')" width="100" />
@@ -570,9 +569,9 @@ const fetchFlowList = async () => {
     loading.flow = true;
     
     const params = {
-      suppliesId: currentSupplies.value.id,
-      currentPage: flowPagination.currentPage,
-      pageSize: flowPagination.pageSize,
+      amId: currentSupplies.value.id,
+      current: flowPagination.currentPage,
+      size: flowPagination.pageSize,
     };
     
     const { data } = await getSuppliesFlow_API(params);
@@ -640,10 +639,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   margin-top: 20px;
-  padding: 16px;
-  background-color: var(--el-bg-color);
-  border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  padding: 16px 0;
 }
 
 .image-container {

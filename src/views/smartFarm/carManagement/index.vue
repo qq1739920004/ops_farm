@@ -5,7 +5,6 @@
         <CarListPanel
           v-model:searchForm="searchForm"
           :cars="displayCars"
-          :loading="loading.list"
           :finished="pagination.finished"
           :active-id="selectedCarId"
           @search="handleSearch"
