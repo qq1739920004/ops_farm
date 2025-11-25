@@ -61,7 +61,7 @@
           <header class="info-section__header">{{ t('work.terminalInfo') }}</header>
           <div class="info-grid info-grid--single">
             <div class="info-item">
-              <span class="info-item__label">{{ t('work.deviceSN') }}</span>
+              <span class="info-item__label">SN</span>
               <span class="info-item__value">{{ vehicle.sn || '--' }}</span>
             </div>
             <div class="info-item">

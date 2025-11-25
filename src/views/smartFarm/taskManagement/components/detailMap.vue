@@ -301,28 +301,62 @@ function parseGPGGA(gpggaStr: any) {
   }
 }
 function handleGGaData(data: any) {
-  let latLng: any = [];
-  data.forEach((item: any) => {
-    // const gga: any = parseGPGGA(JSON.parse(item).deviceGGA);
-    const position = gcoordLngLat(item.posY, item.posX);
-    latLng.push(position);
-    var circle = L.circle(position, {
-      radius: 2, // 半径，单位米
-      stroke: true, // 是否显示边框
-      color: "red", // 边框颜色
-      weight: 3, // 边框宽度（像素）
-      opacity: 1, // 边框透明度
-      fill: true, // 是否填充
-      fillColor: "red", // 填充颜色
-      fillOpacity: 1, // 填充透明度
-      className: "my-circle", // 自定义CSS类名
-    }).addTo(map);
-    cycleArray.push(circle);
-  });
+  if (!map || !Array.isArray(data) || !data.length) {
+    return;
+  }
 
-  var bounds = L.latLngBounds(latLng);
-  map.fitBounds(bounds);
-  map.setView(map.getCenter());
+  ABlineArray.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+  ABlineArray.length = 0;
+
+  cycleArray.forEach((item: any) => {
+    map.removeLayer(item);
+  });
+  cycleArray.length = 0;
+
+  const positionList = data
+    .map((item: any) => gcoordLngLat(item.posY, item.posX))
+    .filter((position: any) => Array.isArray(position) && position.length === 2);
+
+  if (!positionList.length) {
+    return;
+  }
+
+  const speedList = data.map((item: any) => item.speed ?? 0);
+
+  for (let i = 0; i < positionList.length - 1; i++) {
+    const color = speedList[i] <= 30 ? "#5EFF7B" : "#FF54AC";
+    const line = L.polyline([positionList[i], positionList[i + 1]], {
+      color,
+      weight: 3,
+    }).addTo(map);
+    ABlineArray.push(line);
+  }
+
+  const startMarker = L.circleMarker(positionList[0], {
+    radius: 4,
+    color: "#56EEFF",
+    fillColor: "#56EEFF",
+    fillOpacity: 1,
+  }).addTo(map);
+  cycleArray.push(startMarker);
+
+  if (positionList.length > 1) {
+    const endMarker = L.circleMarker(positionList[positionList.length - 1], {
+      radius: 4,
+      color: "#FF8341",
+      fillColor: "#FF8341",
+      fillOpacity: 1,
+    }).addTo(map);
+    cycleArray.push(endMarker);
+
+    const bounds = L.latLngBounds(positionList);
+    map.fitBounds(bounds);
+    map.setView(map.getCenter());
+  } else {
+    map.setView(positionList[0], map.getZoom() || defaultMapZoom);
+  }
 }
 onMounted(() => {
   initMap();
