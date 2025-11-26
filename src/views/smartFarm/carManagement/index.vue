@@ -5,6 +5,7 @@
         <CarListPanel
           v-model:searchForm="searchForm"
           :cars="displayCars"
+          :loading="loading.list"
           :finished="pagination.finished"
           :active-id="selectedCarId"
           @search="handleSearch"
@@ -43,7 +44,8 @@
             :model="carParams"
             style="max-width: 1012px; margin-bottom: 20px"
           >
-            <el-form-item :label="t('work.farmName')" prop="farmId">
+            <!-- 农场选择已注释,自动从全局状态获取 -->
+            <!-- <el-form-item :label="t('work.farmName')" prop="farmId">
               <el-select
                 style="width: 192px"
                 v-model="carParams.farmId"
@@ -57,7 +59,7 @@
                   :value="farm.id"
                 />
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item :label="t('work.vehicleName')" prop="name">
               <el-input v-model="carParams.name"></el-input>
             </el-form-item>
@@ -184,7 +186,7 @@ import {
   detail_API,
 } from '@/api/carManagement/index';
 import { updateVehicle_API } from '@/api/carManagement/index';
-import { sysDict_API, farmList_API } from '@/api/fieldManagement/indx';
+import { sysDict_API } from '@/api/fieldManagement/indx'; // farmList_API 已不再需要
 import startCar from '@/assets/common/car.png';
 
 const { t } = useI18n();
@@ -213,7 +215,7 @@ const carFormRef = ref();
 const trueImg = ref<File | null>(null);
 
 const vehicle = ref<any[]>([]);
-const farmOptions = ref<any[]>([]);
+// const farmOptions = ref<any[]>([]); // 不再需要,农场ID自动从全局状态获取
 const optionsList = ref<any[]>([]);
 const carList = ref<any[]>([]);
 const selectedCarId = ref<string | number | null>(null);
@@ -292,7 +294,7 @@ const displayVehicle = computed(() => {
 
 const resetCarParams = () => {
   carParams.id = '';
-  carParams.farmId = '';
+  carParams.farmId = farmIdStorage.value; // 自动设置为当前农场ID
   carParams.carId = '';
   carParams.name = '';
   carParams.brand = '';
@@ -327,15 +329,16 @@ const fetchVehicleTypes = async () => {
   }
 };
 
-const fetchFarmOptions = async () => {
-  try {
-    const { data } = await farmList_API();
-    farmOptions.value = data || [];
-  } catch (error) {
-    console.error("Failed to fetch farm list:", error);
-    farmOptions.value = [];
-  }
-};
+// fetchFarmOptions 已不再需要,因为农场ID自动从全局状态获取
+// const fetchFarmOptions = async () => {
+//   try {
+//     const { data } = await farmList_API();
+//     farmOptions.value = data || [];
+//   } catch (error) {
+//     console.error("Failed to fetch farm list:", error);
+//     farmOptions.value = [];
+//   }
+// };
 
 const getSNList = async () => {
   try {
@@ -433,8 +436,9 @@ const handleLoadMore = async () => {
 const addCars = () => {
   dialogVisible.value = true;
   isEdit.value = false;
+  carParams.farmId = farmIdStorage.value; // 自动设置为当前农场ID
   getSNList();
-  fetchFarmOptions();
+  // fetchFarmOptions(); // 不再需要获取农场列表
 };
 
 const handleEdit = async (item: any) => {
@@ -446,7 +450,7 @@ const handleEdit = async (item: any) => {
     // 预填表单
     Object.assign(carParams, {
       id: data.id,
-      farmId: data.farmId,
+      farmId: farmIdStorage.value, // 使用当前农场ID而不是原数据中的farmId
       carId: data.carId,
       name: data.name,
       brand: data.brand,
@@ -461,7 +465,8 @@ const handleEdit = async (item: any) => {
       vehicleType: data.vehicleType ? [String(data.vehicleType)] : [],
       buyTime: data.buyTime,
     });
-    await Promise.all([getSNList(), fetchFarmOptions()]);
+    await getSNList();
+    // await Promise.all([getSNList(), fetchFarmOptions()]); // 不再需要获取农场列表
     // 确保当前绑定的SN存在于选项中
     if (
       carParams.carId &&
@@ -503,15 +508,16 @@ const handleChange = async (file: any) => {
   return true;
 };
 
-const uploadImg = async () => {
-  if (!trueImg.value) {
-    return ElMessage.warning(t("work.plzImg") || "Please select an image");
-  }
-  const formData = new FormData();
-  formData.append('file', trueImg.value);
-  const { data } = await uploadImg_API(formData);
-  carParams.imageUrl = data;
-};
+// uploadImg 函数已不再使用,图片上传在handleChange中处理
+// const uploadImg = async () => {
+//   if (!trueImg.value) {
+//     return ElMessage.warning(t("work.plzImg") || "Please select an image");
+//   }
+//   const formData = new FormData();
+//   formData.append('file', trueImg.value);
+//   const { data } = await uploadImg_API(formData);
+//   carParams.imageUrl = data;
+// };
 
 const checkFileType = (file: any) => {
   const fileName = file.name || '';
@@ -589,7 +595,7 @@ watch(
 );
 
 const rules = {
-  farmId: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }],
+  // farmId: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }], // 农场ID自动获取,无需验证
   name: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }],
   brand: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }],
   model: [{ required: true, message: t('work.enterValue'), trigger: 'blur' }],

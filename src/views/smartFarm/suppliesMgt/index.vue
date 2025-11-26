@@ -109,34 +109,67 @@
     <el-dialog
       v-model="dialogVisible.create"
       :title="t('supplies.newSupplies')"
-      width="600px"
+      width="800px"
       center
       @close="resetForm"
     >
-      <el-form
-        ref="createFormRef"
-        :model="createForm"
-        :rules="createRules"
-        label-width="120px"
-        style="padding: 0 20px"
-      >
-        <el-form-item :label="t('supplies.type')" prop="type">
-          <el-select v-model="createForm.type" :placeholder="t('work.pleaseSelect')" style="width: 100%">
-            <el-option
-              v-for="item in typeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="t('supplies.suppliesName')" prop="name"  >
-          <el-input v-model="createForm.name" :placeholder="t('supplies.enterSuppliesName')" />
-        </el-form-item>
-        <el-form-item :label="t('supplies.manufacturer')">
-          <el-input v-model="createForm.productionEnterprise" :placeholder="t('supplies.enterManufacturer')" />
-        </el-form-item>
-      </el-form>
+      <div class="create-form-container">
+        <div class="create-form-left">
+          <el-form
+            ref="createFormRef"
+            :model="createForm"
+            :rules="createRules"
+            label-width="120px"
+          >
+            <el-form-item :label="t('supplies.type')" prop="type">
+              <el-select v-model="createForm.type" :placeholder="t('work.pleaseSelect')" style="width: 100%">
+                <el-option
+                  v-for="item in typeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="t('supplies.suppliesName')" prop="name"  >
+              <el-input v-model="createForm.name" :placeholder="t('supplies.enterSuppliesName')" />
+            </el-form-item>
+            <el-form-item :label="t('supplies.manufacturer')">
+              <el-input v-model="createForm.productionEnterprise" :placeholder="t('supplies.enterManufacturer')" />
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="create-form-right">
+          <div class="upload-image-area">
+            <el-upload
+              accept=".png,.jpg,.jpeg"
+              class="supplies-uploader"
+              action=""
+              :http-request="handleUpload"
+              :show-file-list="false"
+              :on-change="handleImageChange"
+              :before-upload="checkFileType"
+            >
+              <div class="upload-content">
+                <div v-if="createForm.imageUrl" class="image-preview">
+                  <el-image
+                    style="width: 280px; height: 200px"
+                    :src="createForm.imageUrl"
+                    fit="cover"
+                  />
+                  <div class="edit-overlay">
+                    <el-icon><Edit /></el-icon>
+                  </div>
+                </div>
+                <div v-else class="upload-placeholder">
+                  <el-icon :size="40"><Plus /></el-icon>
+                  <div>{{ t('supplies.uploadImage') }}</div>
+                </div>
+              </div>
+            </el-upload>
+          </div>
+        </div>
+      </div>
       <template #footer>
         <el-button @click="dialogVisible.create = false">{{ t('work.cancel') }}</el-button>
         <el-button type="primary" @click="handleSubmitCreate" :loading="loading.create">
@@ -277,13 +310,14 @@
         <el-table-column prop="remark" :label="t('supplies.remark')" min-width="150" show-overflow-tooltip />
       </el-table>
       
-      <div v-if="flowPagination.total > 0" style="margin-top: 20px; text-align: center">
+      <div v-if="flowPagination.total > 0" class="flow-pagination-container">
         <el-pagination
           v-model:current-page="flowPagination.currentPage"
           v-model:page-size="flowPagination.pageSize"
           :page-sizes="[10, 20, 30]"
           :total="flowPagination.total"
-          layout="prev, pager, next"
+          layout="total, prev, pager, next"
+          background
           @current-change="handleFlowPageChange"
         />
       </div>
@@ -296,13 +330,14 @@ import { reactive, ref, onMounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 import { useStorage } from '@vueuse/core';
-import { Search, Plus } from '@element-plus/icons-vue';
+import { Search, Plus, Edit } from '@element-plus/icons-vue';
 import {
   getSuppliesList_API,
   createSupplies_API,
   inStockSupplies_API,
   outStockSupplies_API,
   getSuppliesFlow_API,
+  uploadSuppliesImg_API,
 } from '@/api/suppliesMgt/index';
 
 const { t } = useI18n();
@@ -343,12 +378,14 @@ const dialogVisible = reactive({
 const suppliesList = ref<any[]>([]);
 const flowList = ref<any[]>([]);
 const currentSupplies = ref<any>(null);
+const uploadedImageFile = ref<File | null>(null);
 
 // 表单数据
 const createForm = reactive({
   type: undefined as number | undefined,
   name: '',
   productionEnterprise: '', // 生产企业（可选）
+  imageUrl: '', // 图片URL
 });
 
 const stockForm = reactive({
@@ -456,6 +493,8 @@ const resetForm = () => {
   createForm.type = undefined;
   createForm.name = '';
   createForm.productionEnterprise = '';
+  createForm.imageUrl = '';
+  uploadedImageFile.value = null;
   createFormRef.value?.clearValidate();
 };
 
@@ -465,6 +504,40 @@ const resetStockForm = () => {
   stockForm.remark = '';
   inStockFormRef.value?.resetFields();
   outStockFormRef.value?.resetFields();
+};
+
+const handleImageChange = async (file: any) => {
+  // validate file type
+  const pass = checkFileType(file);
+  if (pass === false) return false;
+  // preview immediately
+  createForm.imageUrl = URL.createObjectURL(file.raw);
+  uploadedImageFile.value = file.raw;
+  // upload immediately
+  try {
+    if (uploadedImageFile.value) {
+      const formData = new FormData();
+      formData.append('file', uploadedImageFile.value);
+      const { data } = await uploadSuppliesImg_API(formData);
+      createForm.imageUrl = data;
+    }
+  } catch (e) {
+    ElMessage.error(t('supplies.uploadImageFailed') || 'Upload image failed');
+  }
+  return true;
+};
+
+const handleUpload = () => {};
+
+const checkFileType = (file: any) => {
+  const fileName = file.name || '';
+  const fileType = fileName.substring(fileName.lastIndexOf('.'));
+  const allowTypes = [".png", ".jpg", ".jpeg"];
+  if (!allowTypes.includes(fileType.toLowerCase())) {
+    ElMessage.error(t('supplies.pleaseSelectImage') || 'Please select an image (.png/.jpg/.jpeg)');
+    return false;
+  }
+  return true;
 };
 
 const handleSubmitCreate = async () => {
@@ -668,6 +741,107 @@ onMounted(() => {
   justify-content: center;
   gap: 0px;
   flex-wrap: wrap;
+}
+
+.flow-pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  padding: 10px 0;
+}
+
+.create-form-container {
+  display: flex;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.create-form-left {
+  flex: 1;
+}
+
+.create-form-right {
+  width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-image-area {
+  width: 100%;
+}
+
+.supplies-uploader {
+  width: 100%;
+  
+  :deep(.el-upload) {
+    width: 100%;
+  }
+}
+
+.upload-content {
+  width: 100%;
+  cursor: pointer;
+}
+
+.image-preview {
+  position: relative;
+  width: 280px;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  
+  &:hover .edit-overlay {
+    opacity: 1;
+  }
+}
+
+.edit-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  
+  .el-icon {
+    color: white;
+    font-size: 24px;
+  }
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 280px;
+  height: 200px;
+  border: 2px dashed var(--el-border-color);
+  border-radius: 8px;
+  background-color: var(--el-fill-color-light);
+  transition: all 0.3s;
+  
+  &:hover {
+    border-color: var(--el-color-primary);
+    background-color: var(--el-fill-color);
+  }
+  
+  .el-icon {
+    color: var(--el-text-color-placeholder);
+    margin-bottom: 8px;
+  }
+  
+  div {
+    color: var(--el-text-color-regular);
+    font-size: 14px;
+  }
 }
 
 .avatar-uploader {

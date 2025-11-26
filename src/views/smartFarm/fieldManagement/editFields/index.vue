@@ -104,51 +104,6 @@
             </div>
           </transition>
         </el-form-item>
-        <div v-for="(crop, index) in fieldList.crops" :key="index" class="crop-item">
-          <el-form-item
-            :label="t('work.cropInfo2')"
-            :prop="`crops.${index}`"
-            :rules="[{ required: true, validator: validateCropItem, trigger: 'change' }]"
-          >
-            <div class="crop-fields">
-              <!-- 时间选择 -->
-              <el-date-picker
-                style="width: 280px"
-                v-model="crop.timeRange"
-                type="daterange"
-                :range-separator="t('work.to')"
-                :start-placeholder="t('work.startTimePlaceholder')"
-                :end-placeholder="t('work.endTimePlaceholder')"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                class="time-picker"
-              />
-
-              <el-cascader
-                v-model="crop.cropDictId"
-                :options="cropOptions"
-                :props="cascaderProps"
-                clearable
-              />
-
-              <!-- 删除按钮（至少保留一项） -->
-              <el-button
-                type="danger"
-                icon="Delete"
-                size="small"
-                @click="removeCrop(index)"
-                v-if="fieldList.crops.length > 1"
-              />
-            </div>
-          </el-form-item>
-        </div>
-
-        <!-- 新增作物按钮 -->
-        <el-form-item>
-          <el-button type="primary" icon="Plus" @click="addCrop" class="add-btn">
-            新增作物
-          </el-button>
-        </el-form-item>
       </el-form>
       <div class="btn_area">
         <el-button type="primary" @click="editField">
@@ -211,7 +166,6 @@ const route = useRoute();
 const { t } = useI18n();
 import {
   farmList_API,
-  sysDict_API,
   suggest_API,
   block_API,
   updateBlock_API,
@@ -219,12 +173,6 @@ import {
 const words = ref(null);
 const formRef = ref<any>();
 const isSHowColorPicker = ref(false);
-const cascaderProps = {
-  value: "value", // 指定 value 对应的字段名
-  label: "label", // 指定 label 对应的字段名
-  children: "children", // 指定子节点对应的字段名（默认就是children，可省略）,
-  checkStrictly: true,
-};
 const farmList = ref<any>([]);
 const filedDetail = ref<any>({});
 const mapCenter = ref<any>({
@@ -243,56 +191,16 @@ const fieldList = reactive({
   referenceLines: [],
   boundaries: [],
   obstacles: [],
-  crops: [{ timeRange: [], cropDictId: "" }],
 });
 const polygonData = ref<any>([]);
 const lineData = ref<any>([]);
 const markerData = ref<any>([]);
 const remoteOptions = ref<any>([]);
-const formatOptions = (rawData:any) => {
-  return rawData.map(item => ({
-    value: Number(item.bizKey),  // 转为number类型（关键）
-    label: item.bizValue,
-    children: item.children && item.children.length > 0 
-      ? formatOptions(item.children)  // 递归处理子级
-      : []
-  }));
-};
-
-const findFullPath = (options:any, targetKey:any, currentPath:any = []) => {
-  for (const option of options) {
-    // 拼接当前路径（value即bizKey的number类型）
-    const newPath = [...currentPath, option.value];
-    // 如果当前选项是最后一级（无children）且值匹配，返回完整路径
-    if (option.children.length === 0 && option.value === targetKey) {
-      return newPath;
-    }
-    // 有子级则递归查找
-    if (option.children.length > 0) {
-      const result:any = findFullPath(option.children, targetKey, newPath);
-      if (result) return result;
-    }
-  }
-  return null;
-};
 const getDetails = async () => {
   const { data } = await block_API({ id: route.query.id });
   filedDetail.value = data;
   fieldList.id = data.id;
   fieldList.farmId = data.farmId ? data.farmId : "";
-  let params: any = [];
-  if (data.blockCrops && data.blockCrops.length > 0) {
-    data.blockCrops.map((item: any) => {
-      const path = findFullPath(cropOptions.value, item.cropDictId);
-      
-      params.push({
-        timeRange: [item.plantingStartTime, item.plantingEndTime],
-        cropDictId: item.cropDictId,
-        id: item.id || "",
-      });
-    });
-  }
-  fieldList.crops = params;
   fieldList.name = data.name;
   fieldList.perimeter = data.perimeter;
   fieldList.area = data.area;
@@ -327,16 +235,6 @@ const getDetails = async () => {
 };
 getDetails();
 
-const cropOptions = ref<any>([]);
-const getCropArray = async () => {
-  const { data } = await sysDict_API({
-    dicKey: "crop_type",
-  });
-  cropOptions.value = data;
- cropOptions.value =  formatOptions(cropOptions.value)
-};
-
-getCropArray();
 // 关键字查询
 async function wordsSearch(e: any) {
   if (e) {
@@ -376,20 +274,6 @@ const getBoundaries = (e: any) => {
 const getPickerPoints = (e: any) => {
   fieldList.referenceLines = JSON.parse(e);
 };
-// 验证单个作物项
-const validateCropItem = (rule, value, callback) => {
-  // 检查时间范围是否完整
-  if (!value.timeRange || value.timeRange.length !== 2) {
-    return callback(new Error(t("work.selectCompleteTime")));
-  }
-
-  // 检查作物类型是否选择
-  if (!value.cropDictId) {
-    return callback(new Error(t("work.selectCrop")));
-  }
-
-  callback();
-};
 const rules = {
   name: [{ required: true, message: t("messages.plzenter"), trigger: "change" }],
   perimeter: [{ required: false, message: t("messages.plzenter"), trigger: "change" }],
@@ -406,18 +290,6 @@ const editField = async () => {
     type: "warning",
   })
     .then(async () => {
-      let params: any = [];
-      fieldList.crops.map((item: any, index) => {
-        params.push({
-          plantingEndTime: item.timeRange[1],
-          plantingStartTime: item.timeRange[0],
-          id: item.id || "",
-          cropDictId:
-            item.cropDictId instanceof Array
-              ? item.cropDictId[item.cropDictId.length - 1]
-              : item.cropDictId,
-        });
-      });
       let uploadParams = {
         id: fieldList.id,
         farmId: fieldList.farmId,
@@ -427,7 +299,6 @@ const editField = async () => {
         area: fieldList.area,
         description: fieldList.description,
         referenceLines: fieldList.referenceLines,
-        blockCrops: params,
         boundaries: fieldList.boundaries,
         obstacles: fieldList.obstacles,
       };
@@ -461,17 +332,6 @@ const changeRadio = () => {
   if (radio.value === "1") {
     fieldList.color = "";
   }
-};
-// 新增作物项
-const addCrop = () => {
-  fieldList.crops.push({
-    timeRange: [],
-    cropDictId: "",
-  });
-};
-// 删除作物项
-const removeCrop = (index) => {
-  fieldList.crops.splice(index, 1);
 };
 </script>
 

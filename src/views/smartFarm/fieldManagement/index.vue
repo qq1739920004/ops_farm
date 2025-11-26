@@ -249,12 +249,13 @@
           <el-col :span="14">
             <div v-if="fieldInfo.blockCrops && fieldInfo.blockCrops.length > 0" class="crop-info">
               <span>{{ fieldInfo.blockCrops[0]?.cropName || '--' }}</span>
-              <span style="font-size: 12px; color: #aaa;">
+              <!-- <span style="font-size: 12px; color: #aaa;">
                 {{ fieldInfo.blockCrops[0]?.plantingStartTime || '--' }}
-              </span>
+              </span> -->
+            <el-button link type="primary" size="small" @click="openCropDrawer">{{ t('work.more') }}</el-button>
+
             </div>
             <span v-else>--</span>
-            <el-button link type="primary" size="small" @click="openCropDrawer">{{ t('work.more') }}</el-button>
           </el-col>
         </el-row>
         
@@ -1311,7 +1312,7 @@ const submitCropForm = async () => {
   z-index: 999;
   .top_line {
     display: flex;
-    padding: 0 5px;
+    padding: 0;
     justify-content: space-between;
   }
   .info_line {
@@ -1324,7 +1325,8 @@ const submitCropForm = async () => {
 
 .crop-info{
   display: flex;
-  justify-content: space-between;
+  gap:10px
+  // justify-content: space-between;
 }
 .infinite-list_out {
   position: absolute;

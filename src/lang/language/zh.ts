@@ -769,6 +769,8 @@ const zh = {
     uploadImage: '上传图片',
     uploadSuccess: '上传成功',
     uploadFailed: '上传失败',
+    uploadImageFailed: '图片上传失败',
+    pleaseSelectImage: '请选择图片(.png/.jpg/.jpeg)',
     imageFormatError: '图片格式错误，请选择jpg/jpeg/png格式',
     imageSizeError: '图片大小不能超过10MB',
     noImage: '暂无图片',

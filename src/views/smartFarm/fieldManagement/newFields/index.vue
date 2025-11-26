@@ -102,51 +102,6 @@
             </div>
           </transition>
         </el-form-item>
-        <div v-for="(crop, index) in fieldList.crops" :key="index" class="crop-item">
-          <el-form-item
-            :label="t('work.cropInfo2')"
-            :prop="`crops.${index}`"
-            :rules="[{ required: true, validator: validateCropItem, trigger: 'change' }]"
-          >
-            <div class="crop-fields">
-              <!-- 时间选择 -->
-              <el-date-picker
-                style="width: 280px"
-                v-model="crop.timeRange"
-                type="daterange"
-                :range-separator="t('work.to')"
-                :start-placeholder="t('work.startTimePlaceholder')"
-                :end-placeholder="t('work.endTimePlaceholder')"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                class="time-picker"
-              />
-
-              <el-cascader
-                v-model="crop.cropDictId"
-                :options="cropOptions"
-                :props="cascaderProps"
-                clearable
-              />
-
-              <!-- 删除按钮（至少保留一项） -->
-              <el-button
-                type="danger"
-                icon="Delete"
-                size="small"
-                @click="removeCrop(index)"
-                v-if="fieldList.crops.length > 1"
-              />
-            </div>
-          </el-form-item>
-        </div>
-
-        <!-- 新增作物按钮 -->
-        <el-form-item>
-          <el-button type="primary" icon="Plus" @click="addCrop" class="add-btn">
-            新增作物
-          </el-button>
-        </el-form-item>
       </el-form>
       <div class="btn_area">
         <el-button type="primary" @click="addField">{{ t("work.save") }} </el-button>
@@ -205,7 +160,6 @@ import {
   addBlock_API,
   suggest_API,
   farmDetail_API,
-  sysDict_API,
 } from "@/api/fieldManagement/indx";
 import { gcoordLngLat } from "sino-tool-v3";
 import { ElMessage } from "element-plus";
@@ -236,12 +190,6 @@ const mapCenter = ref<any>({
 });
 const remoteOptions = ref<any>([]);
 
-const cascaderProps = {
-  value: "bizKey", // 指定 value 对应的字段名
-  label: "bizValue", // 指定 label 对应的字段名
-  children: "children", // 指定子节点对应的字段名（默认就是children，可省略）,
-  checkStrictly: true,
-};
 // 关键字查询
 async function wordsSearch(e: any) {
   if (e) {
@@ -251,14 +199,6 @@ async function wordsSearch(e: any) {
     }
   }
 }
-const cropOptions = ref<any>([]);
-const getCropArray = async () => {
-  const { data } = await sysDict_API({
-    dicKey: "crop_type",
-  });
-  cropOptions.value = data;
-};
-getCropArray();
 function remoteMethod(e: any) {
   wordsSearch(e);
 }
@@ -278,17 +218,6 @@ const changeRadio = () => {
     fieldList.color = "";
   }
 };
-// 新增作物项
-const addCrop = () => {
-  fieldList.crops.push({
-    timeRange: [],
-    cropDictId: "",
-  });
-};
-// 删除作物项
-const removeCrop = (index) => {
-  fieldList.crops.splice(index, 1);
-};
 const fieldList = reactive({
   farmId: useStorage("farmId", ""),
   name: "",
@@ -297,7 +226,6 @@ const fieldList = reactive({
   area: "",
   description: "",
   referenceLines: [],
-  crops: [{ timeRange: [], cropDictId: "" }],
   boundaries: [],
   obstacles: [],
 });
@@ -342,34 +270,12 @@ const rules = {
   perimeter: [{ required: true, message: t("messages.plzenter"), trigger: "change" }],
   area: [{ required: true, message: t("messages.plzenter"), trigger: "change" }],
 };
-// 验证单个作物项
-const validateCropItem = (rule, value, callback) => {
-  // 检查时间范围是否完整
-  if (!value.timeRange || value.timeRange.length !== 2) {
-    return callback(new Error(t("work.selectCompleteTime")));
-  }
-
-  // 检查作物类型是否选择
-  if (!value.cropDictId) {
-    return callback(new Error(t("work.selectCrop")));
-  }
-
-  callback();
-};
 const addField = async () => {
   if (!fieldList.farmId) {
     return ElMessage.warning(t("farm.plzFarmId"));
   }
-  let params: any = [];
   await formRef.value.validate();
 
-  fieldList.crops.map((item: any, index) => {
-    params.push({
-      plantingEndTime: item.timeRange[1],
-      plantingStartTime: item.timeRange[0],
-      cropDictId: item.cropDictId[item.cropDictId.length - 1],
-    });
-  });
   let uploadParams = {
     farmId: fieldList.farmId,
     name: fieldList.name,
@@ -378,7 +284,6 @@ const addField = async () => {
     area: fieldList.area,
     description: fieldList.description,
     referenceLines: fieldList.referenceLines,
-    blockCrops: params,
     boundaries: fieldList.boundaries,
     obstacles: fieldList.obstacles,
   };
