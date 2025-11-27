@@ -105,6 +105,7 @@ const zh = {
     ranging: '测距',
   },
   menus: {
+    suppliesManagement: '农资管理',
     monitoring: '态势监控',
     userCenter: '用户中心',
     logOut: '退出登录',

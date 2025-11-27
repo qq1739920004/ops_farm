@@ -321,7 +321,13 @@ const updateCharts = async () => {
     tooltip: { 
       show: true,
       trigger: 'item',
-      formatter: (params) => `${params.name}: ${Number(params.value).toFixed(1)} ${t('work.areaUnit')}`,
+      formatter: (params) => {
+        // 如果是无数据的占位项，只显示提示信息
+        if (operationTypeList.length === 0) {
+          return params.name
+        }
+        return `${params.name}: ${Number(params.value).toFixed(1)} ${t('work.areaUnit')}`
+      },
       appendToBody: true,
       extraCssText: 'z-index: 9999; position: absolute;'
     },
@@ -348,7 +354,7 @@ const updateCharts = async () => {
       },
       labelLine: { show: false },
       emphasis: { 
-        label: { show: false },
+        label: { show: true },
         itemStyle: {
           shadowBlur: 10,
           shadowOffsetX: 0,
