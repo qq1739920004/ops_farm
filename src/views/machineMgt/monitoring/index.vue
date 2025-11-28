@@ -341,6 +341,28 @@ const mapCenter = reactive<any>({
   mapCenter: [],
 });
 
+// 坐标验证函数
+function isValidCoordinate(lng: number, lat: number): boolean {
+  // 检查是否为有效数字
+  if (typeof lng !== 'number' || typeof lat !== 'number') return false;
+  if (isNaN(lng) || isNaN(lat)) return false;
+  if (!isFinite(lng) || !isFinite(lat)) return false;
+  
+  // 检查经纬度范围是否合理
+  // 经度范围：-180 到 180
+  // 纬度范围：-90 到 90
+  if (lng < -180 || lng > 180) {
+    console.warn(`[监控页面] 异常经度数据: ${lng}`);
+    return false;
+  }
+  if (lat < -90 || lat > 90) {
+    console.warn(`[监控页面] 异常纬度数据: ${lat}`);
+    return false;
+  }
+  
+  return true;
+}
+
 const formatTotalArea = computed(() => {
   const total = dataStatistics.value?.workArea?.totalArea;
   if (typeof total !== "number" || Number.isNaN(total)) return "--";
@@ -452,6 +474,20 @@ function handleSelect(item: any) {
 function handleSocketData(socketData: any) {
   if (socketData.module == "farm" && socketData.type == "farmPt") {
     let { action, data } = socketData;
+    
+    // 验证WebSocket推送的坐标数据
+    if (data && (data.posY !== undefined || data.posX !== undefined)) {
+      if (!isValidCoordinate(data.posY, data.posX)) {
+        console.error(`[WebSocket] 收到异常坐标数据，已忽略:`, {
+          action,
+          sn: data.sn,
+          posY: data.posY,
+          posX: data.posX
+        });
+        return; // 直接返回，不处理异常坐标数据
+      }
+    }
+    
     if (action == "upline") {
       if (sinoMapRef.value.isIconChange) {
         const markerId = data.sn;
@@ -693,9 +729,25 @@ async function getOnlineFarmPosition() {
     item.markerPopup = createMarkerPopup(item);
     item.driveState = item.driveState;
   });
-  onlineFarmMachines = onlineFarmMachines.filter(
-    (item: any) => item.markerLng || item.markerLng == 0
-  );
+  // 过滤掉异常坐标数据
+  onlineFarmMachines = onlineFarmMachines.filter((item: any) => {
+    // 检查是否有坐标
+    if (!(item.markerLng || item.markerLng === 0)) return false;
+    
+    // 验证坐标是否合法
+    const isValid = isValidCoordinate(item.markerLng, item.markerLat);
+    if (!isValid) {
+      console.error(`[监控页面] 发现异常坐标设备，已过滤:`, {
+        sn: item.sn,
+        markerId: item.markerId,
+        lng: item.markerLng,
+        lat: item.markerLat,
+        posY: item.posY,
+        posX: item.posX
+      });
+    }
+    return isValid;
+  });
   markerData.value = onlineFarmMachines;
 
   route.query.markerId ? (mapCenter.markerId = route.query.markerId) : "";

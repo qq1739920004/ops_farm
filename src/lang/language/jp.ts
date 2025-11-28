@@ -801,7 +801,7 @@ const jp = {
     imageFormatError: '画像フォーマットエラー、jpg/jpeg/pngを選択してください',
     imageSizeError: '画像サイズは10MBを超えることはできません',
     noImage: '画像なし',
-    searchPlaceholder: '農資名または生産企業を入力してください',
+    searchPlaceholder: '農資名を入力してください',
     fetchListFailed: '農資リストの取得に失敗しました',
     fetchFlowFailed: '在庫フローの取得に失敗しました',
     outStockExceedsStock: '出庫数量は現在の在庫を超えることはできません',

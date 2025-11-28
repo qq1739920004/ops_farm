@@ -10,13 +10,28 @@
           @clear="handleSearch"
           @keyup.enter="handleSearch"
         />
+        <el-select
+          v-model="searchForm.type"
+          :placeholder="t('supplies.allTypes')"
+          clearable
+          style="width: 150px"
+          @change="handleSearch"
+          @clear="handleSearch"
+        >
+          <el-option
+            v-for="item in typeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        
         <el-button type="primary" @click="handleSearch" :loading="loading.list">
           <el-icon><Search /></el-icon>
           {{ t('work.search') }}
         </el-button>
       </div>
       <el-button type="primary" @click="handleCreate">
-        <el-icon><Plus /></el-icon>
         {{ t('supplies.newSupplies') }}
       </el-button>
     </div>
@@ -346,6 +361,7 @@ const farmIdStorage = useStorage('farmId', '');
 // 响应式数据
 const searchForm = reactive({
   keyword: '',
+  type: undefined as number | undefined,
 });
 
 const pagination = reactive({
@@ -622,6 +638,7 @@ const fetchSuppliesList = async () => {
     const params = {
       farmId: Number(farmIdStorage.value),
       name: searchForm.keyword || undefined,
+      type: searchForm.type || undefined,
       current: pagination.currentPage,
       size: pagination.pageSize,
     };

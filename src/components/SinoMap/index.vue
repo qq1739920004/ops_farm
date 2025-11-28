@@ -184,7 +184,13 @@ watch(
     markerArr.length = 0;
     markerClusterGroup.clearLayers();
     markerGroup.clearLayers();
-     createMarker(markerData);
+    
+    // Canvas模式下，需要重新初始化Canvas层，清空旧的markers
+    if (mapRenderMode === "canvas" && markerCanvasGroup) {
+      initCanvasGroup();
+    }
+    
+    createMarker(markerData);
     // createMarker1();
     // setTimeout(() => {
     //   handleMapCenter(props.mapCenter || "");
@@ -388,14 +394,62 @@ onMounted(() => {
   handleMapCenter(props.mapCenter);
 });
 const markerDataN = ref<any>([]);
+
+// 校验坐标是否有效
+function isValidCoordinate(lng: number, lat: number): boolean {
+  // 检查是否为有效数字
+  if (typeof lng !== 'number' || typeof lat !== 'number') return false;
+  if (isNaN(lng) || isNaN(lat)) return false;
+  if (!isFinite(lng) || !isFinite(lat)) return false;
+  
+  // 检查经纬度范围是否合理
+  // 经度范围：-180 到 180
+  // 纬度范围：-90 到 90
+  if (lng < -180 || lng > 180) {
+    console.warn(`异常经度数据: ${lng}`);
+    return false;
+  }
+  if (lat < -90 || lat > 90) {
+    console.warn(`异常纬度数据: ${lat}`);
+    return false;
+  }
+  
+  return true;
+}
+
 // 创建地图marker点
 function createMarker(list: any) {
   markerDataN.value = list;
-  mapRenderModeLength.value += list.length;
+  
+  // 先过滤掉异常坐标的数据
+  const validList = list.filter((item: any) => {
+    const isValid = isValidCoordinate(item.markerLng, item.markerLat);
+    if (!isValid) {
+      console.error(`发现异常坐标数据，已过滤:`, {
+        markerId: item.markerId,
+        lng: item.markerLng,
+        lat: item.markerLat
+      });
+    }
+    return isValid;
+  });
+  
+  mapRenderModeLength.value += validList.length;
 
-  list.forEach((item: any) => {
+  validList.forEach((item: any) => {
     let marker: any;
     const position: any = gcoordLngLat(item.markerLng, item.markerLat);
+    
+    // 验证转换后的坐标是否有效
+    if (!position || position.length < 2 || !isValidCoordinate(position[1], position[0])) {
+      console.error(`坐标转换后异常，已跳过:`, {
+        markerId: item.markerId,
+        原始坐标: [item.markerLng, item.markerLat],
+        转换后: position
+      });
+      return;
+    }
+    
     const icon = createIcon(item);
     if (icon) {
       marker = L.marker(position, {
@@ -469,6 +523,17 @@ function updateMarker(item: any) {
   if (!currentMarker || !item.markerLng || !item.markerLat) {
     return;
   }
+  
+  // 验证坐标是否有效
+  if (!isValidCoordinate(item.markerLng, item.markerLat)) {
+    console.error(`updateMarker收到异常坐标，已忽略:`, {
+      markerId: item.markerId,
+      lng: item.markerLng,
+      lat: item.markerLat
+    });
+    return;
+  }
+  
   const position = gcoordLngLat(item.markerLng, item.markerLat);
   currentMarker.setLatLng(position);
   currentMarker.getPopup().setContent(item.markerPopup);
@@ -600,7 +665,24 @@ function updateMarkerVisible(list: any) {
     markerClusterGroup.addLayers(includedMarkers);
   } else if (mapRenderMode == "canvas") {
     initCanvasGroup();
-    // includedMarkers.length?markerCanvasGroup.addMarkers(includedMarkers.filter((item:any)=>item.markerType != "line")):''
+    
+    // 过滤掉异常坐标的markers（Leaflet Marker对象需要用getLatLng()获取坐标）
+    includedMarkers = includedMarkers.filter((item: any) => {
+      const latlng = item.getLatLng();
+      if (!latlng) return false;
+      
+      const isValid = isValidCoordinate(latlng.lng, latlng.lat);
+      if (!isValid) {
+        console.warn(`[updateMarkerVisible] 过滤异常坐标marker:`, {
+          markerId: item.markerId,
+          lng: latlng.lng,
+          lat: latlng.lat
+        });
+      }
+      return isValid;
+    });
+    
+    console.log(`[updateMarkerVisible] Canvas模式，准备添加 ${includedMarkers.length} 个markers`);
     includedMarkers.length ? markerCanvasGroup.addMarkers(includedMarkers) : "";
     map.setView(map.getCenter()); //缩放也会漂移
   }
@@ -723,7 +805,6 @@ function mapTileChange() {
 }
 // 处理地图定位
 function handleMapCenter(data: any) {
-  console.log("handleCenter");
   if (!data) {
     let latLng: any = [];
     if (props.mapCenter.center) {
@@ -912,12 +993,12 @@ function createMarkerIconSmall(item: any) {
   return icon;
 }
 function changeMarkerIcon() {
-  initCanvasGroup();
+  console.log('changeMarkerIcon被调用，当前缩放级别:', currentZoom.value);
+  
   const newMarkers: any = [];
   if (iconChangeLimit.value) {
     //显示大图标
-    markerArr.forEach((marker: any, index: number) => {
-      // if(!markerTypeIcon[marker.markerType]){return}
+    markerArr.forEach((marker: any) => {
       const normalIcon = getRelativeIcon(createMarkerIcon(marker));
       const newMarker = L.marker(marker.getLatLng(), {
         icon: normalIcon,
@@ -929,12 +1010,10 @@ function changeMarkerIcon() {
       newMarker.driveState = marker.driveState;
       newMarker.onlineTcp = marker.onlineTcp;
       newMarkers.push(newMarker);
-      markerArr.splice(index, 1, newMarker);
     });
   } else {
     //显示小图标
-    markerArr.forEach((marker: any, index: number) => {
-      // if(!markerTypeIconSmall[marker.markerType]){return}
+    markerArr.forEach((marker: any) => {
       const smallIcon = getRelativeIcon(createMarkerIconSmall(marker));
       const newMarker = L.marker(marker.getLatLng(), {
         icon: smallIcon,
@@ -946,19 +1025,17 @@ function changeMarkerIcon() {
       newMarker.driveState = marker.driveState;
       newMarker.onlineTcp = marker.onlineTcp;
       newMarkers.push(newMarker);
-      markerArr.splice(index, 1, newMarker);
     });
   }
-  if (newMarkers.length) {
-    newMarkers.forEach((v: any) => {
-      markerAddToMap(v.markerType, v);
-    });
-  }
-
-  map.setView(map.getCenter());
-  setTimeout(() => {
-    updateMarkerVisible(markerDataHiddenNow.value);
-  }, 1);
+  
+  // 一次性替换整个markerArr数组，避免在forEach中使用splice
+  markerArr.length = 0;
+  markerArr.push(...newMarkers);
+  
+  console.log('changeMarkerIcon完成，新markerArr长度:', markerArr.length);
+  
+  // 统一由updateMarkerVisible处理渲染，避免重复操作Canvas
+  updateMarkerVisible(markerDataHiddenNow.value);
 }
 const currentView = ref<any[]>([]);
 // 地图缩放处理事件
@@ -974,7 +1051,6 @@ function mapZoomChange() {
   map.on("zoomend", function () {
     currentView.value = getMapView(map);
     currentZoom.value = map.getZoom();
-    console.log(currentZoom.value);
     //动态设置地图标注字体大小
     document.documentElement.style.setProperty(
       "--map-font-size",

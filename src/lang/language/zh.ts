@@ -775,7 +775,7 @@ const zh = {
     imageFormatError: '图片格式错误，请选择jpg/jpeg/png格式',
     imageSizeError: '图片大小不能超过10MB',
     noImage: '暂无图片',
-    searchPlaceholder: '请输入农资名称或生产企业',
+    searchPlaceholder: '请输入农资名称',
     fetchListFailed: '获取农资列表失败',
     fetchFlowFailed: '获取库存流水失败',
     outStockExceedsStock: '出库数量不能大于当前库存',
@@ -785,7 +785,8 @@ const zh = {
     pesticide: '农药',
     fertilizer: '肥料',
     seed: '种子',
-    other: '其他'
+    other: '其他',
+    allTypes: '全部类型'
   },
   farm:{
     enterDp:'进入大屏',

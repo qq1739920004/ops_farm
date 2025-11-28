@@ -802,7 +802,7 @@ const en = {
     imageFormatError: 'Image format error, please select jpg/jpeg/png',
     imageSizeError: 'Image size cannot exceed 10MB',
     noImage: 'No Image',
-    searchPlaceholder: 'Enter Supplies Name or Manufacturer',
+    searchPlaceholder: 'Enter Supplies Name',
     fetchListFailed: 'Failed to fetch supplies list',
     fetchFlowFailed: 'Failed to fetch stock flow',
     outStockExceedsStock: 'Out stock amount cannot exceed current stock',
