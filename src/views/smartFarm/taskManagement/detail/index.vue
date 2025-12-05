@@ -4,16 +4,13 @@
     <div class="app_card">
       <div class="top_line">
         <div class="left">
-          <span style="color: #4cb04f; font-size: 16px">{{
-            detailList.taskName || "--"
-          }}</span>
-          <span style="color: #b5b5b5; font-size: 12px">{{
-            detailList.vehicleName?detailList.vehicleName+"/"+detailList.sn:"--"
-          }}</span>
+          <span style="color: #ff9500; font-size: 16px; font-weight: bold; margin-right: 10px; padding: 2px 8px; background: rgba(0, 0, 0, 0); border-radius: 4px">{{ detailList.operationName || "--" }}</span>
+          <span style="color: #4cb04f; font-size: 16px">{{ detailList.taskName || "--" }}</span>
+          <span style="color: #b5b5b5; font-size: 12px">{{ detailList.vehicleName?detailList.vehicleName+"/"+detailList.sn:"--" }}</span>
         </div>
         <div class="right" v-show="radio === 1">
           <div class="cycle1"></div>
-         {{ t('work.startPoint') }}
+          {{ t('work.startPoint') }}
           <div class="cycle2"></div>
           {{ t('work.endPoint') }}
           <div class="cycle3"></div>
@@ -37,30 +34,32 @@
       <div class="map_container1">
         <detail-map :ggaData="logList" @radio="changeRadio" />
         <div class="map_info">
-          <div class="info_box">
-            <div class="top">{{ t("work.operationType") }}</div>
-            <div class="bottom">{{ detailList.operationName || "--" }}</div>
+          <!-- 第一行：作业统计和时间信息 -->
+          <div class="info_row">
+            <div class="info_box">
+                <div class="bottom"><span> {{ t("work.workArea") }}:{{ (+detailList.totalArea).toFixed(3) || "--" }} {{ t("work.mu") }}</span><span> {{ t("work.remainingArea") }}:{{ ((+detailList.missedArea).toFixed(3) || "--") }} {{ t("work.mu") }}</span></div>
+              <div class="bottom progress_row">
+                <img src="@/assets/common/stTime.png" alt="">
+                <el-progress 
+                  :percentage="detailList.totalArea && detailList.totalArea > 0 ? ((detailList.totalArea - (detailList.missedArea || 0)) / detailList.totalArea * 100).toFixed(0) : 0" 
+                  :show-text="false"
+                  :stroke-width="8"
+                />
+                <div class="progress_value">{{ detailList.totalArea && detailList.totalArea > 0 ? ((detailList.totalArea - (detailList.missedArea || 0)) / detailList.totalArea * 100).toFixed(0) : 0 }}%</div>
+              </div>
+            </div>
+   
+            <div class="info_box">
+              <div class="bottom">{{ t("work.workDuration") }}:{{ detailList.durationSeconds || "--" }}</div>
+              <div class="bottom"> <img class="timepng" src="@/assets/common/time.png" alt="" />{{ detailList.startTime || "--" }} - {{ detailList.endTime || "--" }}</div>
+            </div>
+           
+            <div class="info_box">
+              <div class="bottom"><span> {{ t("work.toolName") }}:{{ detailList.toolName || "--" }}</span><span> {{ t("work.toolWidth") }}(m):{{ detailList.width !== null && detailList.width !== undefined ? detailList.width : "--" }}</span></div>
+              <div class="bottom"><span>{{ t("work.overlapWidth") }}(m):{{ detailList.overlapWidth !== null && detailList.overlapWidth !== undefined ? detailList.overlapWidth : "--" }}</span><span>{{ t("work.offset") }}(m):{{ detailList.offset !== null && detailList.offset !== undefined ? detailList.offset : "--" }}</span></div>
+            </div>
           </div>
-          <div class="info_box">
-            <div class="top">{{ t("work.workProgress") }}(%)</div>
-            <div class="bottom">{{ getWorkProgress(detailList.missedArea, detailList.totalArea) }}</div>
-          </div>
-          <div class="info_box">
-            <div class="top">{{ t("work.workArea") }}/{{ t("work.remainingArea") }}({{ t("work.mu") }})</div>
-            <div class="bottom">{{ (+detailList.totalArea).toFixed(3) || "--" }}/{{ ((+detailList.missedArea).toFixed(3) || "--") }}</div>
-          </div>
-          <div class="info_box">
-            <div class="top">{{ t("work.workDuration") }}(h)</div>
-            <div class="bottom">{{ detailList.durationSeconds || "--" }}</div>
-          </div>
-          <div class="info_box" style="width: 20%">
-            <div class="top">{{ t("work.startTime") }}</div>
-            <div class="bottom">{{ detailList.startTime || "--" }}</div>
-          </div>
-          <div class="info_box" style="width: 20%">
-            <div class="top">{{ t("work.endTime") }}</div>
-            <div class="bottom">{{ detailList.endTime || "--" }}</div>
-          </div>
+          
         </div>
       </div>
       <div class="table_container">
@@ -490,15 +489,61 @@ onMounted(() => {
       width: 100%;
       z-index: 9999;
       bottom: 0;
-      height: 84px;
+      height: auto;
       background: linear-gradient(rgba(4, 49, 41, 0.5) 27%, rgba(18, 65, 56, 0.2) 100%);
-      display: flex;
-      align-items: center;
+      padding: 10px 0;
       color: white;
+      
+      .info_row {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        margin-bottom: 8px;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+      
       .info_box {
-        padding: 0 4px;
-        width: 15%;
+        padding: 0 8px;
+        flex: 1;
         font-weight: 1000;
+        text-align: center;
+        
+        .top {
+          font-size: 12px;
+          margin-bottom: 4px;
+          opacity: 0.9;
+        }
+        .progress_row{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .el-progress{
+            width: 220px;
+            margin:0 10px;
+          }
+          img{
+            width: 16px;
+            height: 16px;
+            margin:0 5px;
+          }
+        }
+        .bottom {
+          font-size: 16px;
+          font-weight: bold;
+          span{
+            margin-right: 16px; 
+          }
+          .timepng{
+            width: 16px;
+            height: 16px;
+            margin:0 5px;
+            line-height: 16px;
+            vertical-align: -3px;
+          }
+        }
       }
     }
   }

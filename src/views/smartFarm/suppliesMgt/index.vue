@@ -72,9 +72,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="productionEnterprise" :label="t('supplies.manufacturer')" align="center" min-width="120" />
-        <el-table-column prop="createTime" :label="t('work.creationTime')" align="center" min-width="140">
+        <el-table-column prop="operateTime" :label="t('work.creationTime')" align="center" min-width="140">
           <template #default="{ row }">
-            {{ formatDate(row.createTime) }}
+            {{ formatDate(row.operateTime) }}
           </template>
         </el-table-column>
         <el-table-column :label="t('supplies.stockFlow')" align="center" min-width="110">
@@ -317,9 +317,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="operator" :label="t('supplies.operator')" width="100" />
-        <el-table-column prop="createTime" :label="t('work.time')" width="180">
+        <el-table-column prop="operateTime" :label="t('work.time')" width="180">
           <template #default="{ row }">
-            {{ formatDate(row.createTime) }}
+            {{ formatDate(row.operateTime) }}
           </template>
         </el-table-column>
         <el-table-column prop="remark" :label="t('supplies.remark')" min-width="150" show-overflow-tooltip />

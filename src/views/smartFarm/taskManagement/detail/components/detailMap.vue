@@ -304,18 +304,49 @@ function drawPoint(gga: any, position: any) {
     cycleArray.push(circle);
   }
 }
-function drawline(position: any, speed: any) {
+function drawline(position: any, speed: any, dataPoints: any) {
+  // 标准：米/像素 = 156543.03392 * cos(lat) / 2^zoom
+  const getMetersPerPixel = (zoom: number, latitude: number) => {
+    return 156543.03392 * Math.cos(latitude * Math.PI / 180) / Math.pow(2, zoom);
+  };
+
+  const currentZoom = map.getZoom();
+  
+  // 调试：显示当前zoom级别
+  console.log(`当前zoom=${currentZoom}`);
+  
   for (let i = 0; i < position.length - 1; i++) {
+    // 使用后一端点的线宽（优先），无则回退前一端点，最后默认3m
+    const nextWidth = dataPoints[i + 1]?.lineWidth;
+    const prevWidth = dataPoints[i]?.lineWidth;
+    const lineWidthInMeters = (nextWidth ?? prevWidth ?? 1);
+
+    // 调试：输出前5条线段的数据
+    if (i < 5) {
+      console.log(`线段${i}: 前点lineWidth=${prevWidth}, 后点lineWidth=${nextWidth}, 使用=${lineWidthInMeters}m`);
+    }
+
+    // 计算线段中点纬度用于米/像素换算
+    const midLatitude = (position[i][0] + position[i + 1][0]) / 2;
+    const mpp = getMetersPerPixel(currentZoom, midLatitude);
+
+    // 米 -> 像素；降低最小像素限制到0.5px，让不同宽度能显示出差异
+    const lineWidthInPixels = Math.max(0.5, lineWidthInMeters / mpp);
+    
+    if (i < 5) {
+      console.log(`  -> mpp=${mpp.toFixed(4)}, 原始像素=${(lineWidthInMeters / mpp).toFixed(2)}, 最终像素=${lineWidthInPixels.toFixed(2)}px`);
+    }
+
     if (speed[i] <= 30) {
       let line = L.polyline([position[i], position[i + 1]], {
         color: "#5EFF7B",
-        weight: 3,
+        weight: lineWidthInPixels,
       }).addTo(map);
       ABlineArray.push(line);
     } else {
       let line = L.polyline([position[i], position[i + 1]], {
         color: "#FF54AC",
-        weight: 3,
+        weight: lineWidthInPixels,
       }).addTo(map);
       ABlineArray.push(line);
     }
@@ -391,7 +422,7 @@ function handleGGaData(data: any) {
       drawPoint(item.solStat, position);
     });
   } else {
-    drawline(positionList, speedList);
+    drawline(positionList, speedList, data);
   }
 
   var bounds = L.latLngBounds(positionList);
@@ -655,7 +686,7 @@ function initMap() {
   if (mapContainer.value) {
     map = L.map(mapContainer.value, {
       minZoom: 3, //最小缩放值
-      maxZoom: 18, //最大缩放值
+      maxZoom: 22, //最大缩放值
       // center: props.mapCenter.center, //注意和其他地图经纬度格式区别
       // zoom: props.mapCenter.zoom, //初始缩放值
       zoomControl: false, //是否启用地图缩放控件

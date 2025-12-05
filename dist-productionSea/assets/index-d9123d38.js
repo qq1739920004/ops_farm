@@ -1,0 +1,1 @@
+import{s as e,__tla as r}from"./index-d3596342.js";let t,l=Promise.all([(()=>{try{return r}catch{}})()]).then(async()=>{t=function(a){return e({url:`/farm/car/cityData/new/list?provinceCode=${a}`,method:"get"})}});export{l as __tla,t as g};

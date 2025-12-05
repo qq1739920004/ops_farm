@@ -1,5 +1,5 @@
 {
     "CONFIG_BASE_WS":"ws://140.207.166.210:9034/websocket",
-    "CONFIG_DOWNLOAD_WS":"ws://140.207.166.210:9030",
+    "CONFIG_DOWNLOAD_WS":"http://140.207.166.210:9030",
     "CONFIG_NEW":"http://140.207.166.210:9030"
 }
