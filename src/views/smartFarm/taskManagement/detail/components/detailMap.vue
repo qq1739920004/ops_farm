@@ -414,20 +414,34 @@ function handleGGaData(data: any) {
   const speedList = data.map((item: any) => {
     return item.speed;
   });
-  if (radio2.value === 2) {
-    data.forEach((item: any) => {
-      // const gga: any = parseGPGGA(item.deviceGGA);
-      const position = gcoordLngLat(item.posY, item.posX);
-
-      drawPoint(item.solStat, position);
-    });
-  } else {
-    drawline(positionList, speedList, data);
-  }
-
+  
+  // 先调整地图视野到合适的zoom级别
   var bounds = L.latLngBounds(positionList);
   map.fitBounds(bounds);
   map.setView(map.getCenter());
+  
+  // 在zoom调整完成后再绘制,确保线宽计算基于正确的zoom级别
+  // 使用once确保只执行一次,setTimeout作为备用方案
+  const drawContent = () => {
+    if (radio2.value === 2) {
+      data.forEach((item: any) => {
+        // const gga: any = parseGPGGA(item.deviceGGA);
+        const position = gcoordLngLat(item.posY, item.posX);
+
+        drawPoint(item.solStat, position);
+      });
+    } else {
+      drawline(positionList, speedList, data);
+    }
+  };
+  
+  // 监听zoomend事件,确保在zoom调整完成后绘制
+  map.once('zoomend', drawContent);
+  // 备用方案:如果zoomend没有触发(例如zoom没变化),使用setTimeout
+  setTimeout(() => {
+    map.off('zoomend', drawContent);
+    drawContent();
+  }, 100);
 }
 const radio2 = ref(1);
 const clearMarkers = () => {

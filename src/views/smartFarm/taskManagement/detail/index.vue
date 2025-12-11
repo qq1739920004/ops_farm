@@ -14,9 +14,9 @@
           <div class="cycle2"></div>
           {{ t('work.endPoint') }}
           <div class="cycle3"></div>
-          {{ t('work.lowSpeed') }}(0-30km/h)
+          {{ t('work.lowSpeed') }}
           <div class="cycle4"></div>
-          {{ t('work.highSpeed') }}(30-100km/h)
+          {{ t('work.highSpeed') }}
         </div>
         <div class="right" v-show="radio === 2">
           <div class="cycle1"></div>
