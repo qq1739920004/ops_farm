@@ -51,6 +51,16 @@ export function addFarm_API(data: any) {
         data
     })
 }
+//上传视频
+export function uploadVideo_API(data: any) {
+    return request<any, any>({
+        url: '/farm/vehicle/uploadVideo',
+        method: 'post',
+        data,
+        headers: { "Content-Type": "multipart/form-data" },
+    })
+}
+
 export function deleteBlock_API(params: any) {
     return request<any, any>({
         url: '/farm/block/deleteBlock',

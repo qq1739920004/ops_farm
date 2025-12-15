@@ -63,7 +63,7 @@
               >
                 <template #default>
                   <div class="upload-btn">
-                    <div v-if="systemLogoBlob" class="img_upload">
+                    <div v-if="systemLogoBlob" class="img_upload" style="position: relative">
                       <el-image
                         class="el_img"
                         style="width: 150px; height: 100px"
@@ -72,6 +72,13 @@
                         fit="scale-down"
                       >
                       </el-image>
+                      <el-icon 
+                        class="delete-icon" 
+                        @click.stop="deleteSystemLogo"
+                        style="position: absolute; top: 5px; right: 5px; cursor: pointer; background: rgba(0,0,0,0.5); color: white; border-radius: 50%; padding: 4px; font-size: 16px;"
+                      >
+                        <Close />
+                      </el-icon>
                     </div>
                     <div v-else class="img_upload">
                       <el-icon class="upload-icon"><Plus /></el-icon>
@@ -91,6 +98,10 @@
         </el-form-item>
         <el-form-item :label="t('farm.environmentPhoto')" prop="environmentPhoto">
           <div class="uploadImg_area">
+            <el-radio-group v-model="environmentPhotoMediaType" style="margin-bottom: 10px">
+              <el-radio label="image"><span style="color: #fff">图片</span></el-radio>
+              <el-radio label="video"><span style="color: #fff">视频</span></el-radio>
+            </el-radio-group>
             <div class="image_area">
               <el-upload
                 class="avatar-uploader"
@@ -98,11 +109,12 @@
                 :http-request="Upload"
                 :show-file-list="false"
                 :on-change="handleChange2"
-                :before-upload="checkFileType"
+                :before-upload="environmentPhotoMediaType === 'image' ? checkFileType : checkVideoType"
+                :accept="environmentPhotoMediaType === 'image' ? 'image/*' : 'video/*'"
               >
                 <template #default>
                   <div class="upload-btn">
-                    <div v-if="environmentPhotoBlob" class="img_upload">
+                    <div v-if="environmentPhotoBlob && environmentPhotoMediaType === 'image'" class="img_upload" style="position: relative">
                       <el-image
                         class="el_img"
                         style="width: 150px; height: 100px"
@@ -111,6 +123,28 @@
                         fit="scale-down"
                       >
                       </el-image>
+                      <el-icon 
+                        class="delete-icon" 
+                        @click.stop="deleteEnvironmentPhoto"
+                        style="position: absolute; top: 5px; right: 5px; cursor: pointer; background: rgba(0,0,0,0.5); color: white; border-radius: 50%; padding: 4px; font-size: 16px;"
+                      >
+                        <Close />
+                      </el-icon>
+                    </div>
+                    <div v-else-if="environmentPhotoBlob && environmentPhotoMediaType === 'video'" class="video_upload" style="position: relative">
+                      <video
+                        style="width: 150px; height: 100px; object-fit: contain"
+                        :src="environmentPhotoBlob"
+                        controls
+                      >
+                      </video>
+                      <el-icon 
+                        class="delete-icon" 
+                        @click.stop="deleteEnvironmentPhoto"
+                        style="position: absolute; top: 5px; right: 5px; cursor: pointer; background: rgba(0,0,0,0.5); color: white; border-radius: 50%; padding: 4px; font-size: 16px;"
+                      >
+                        <Close />
+                      </el-icon>
                     </div>
                     <div v-else class="img_upload">
                       <el-icon class="upload-icon"><Plus /></el-icon>
@@ -165,13 +199,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import detailMap from "./components/detailMap.vue";
 import router from "@/router";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 import { ElMessage } from "element-plus";
-import { farmList_API, addFarm_API, suggest_API } from "@/api/fieldManagement/indx";
+import { farmList_API, addFarm_API, suggest_API, uploadVideo_API } from "@/api/fieldManagement/indx";
 import { gcoordLngLat } from "sino-tool-v3";
 import { uploadImg_API } from "@/api/carManagement/index";
 const words = ref(null);
@@ -198,6 +232,13 @@ function remoteMethod(e: any) {
 const Upload = () => {};
 const trueImg = ref("");
 const trueImg2 = ref("");
+const environmentPhotoMediaType = ref("image");
+// 监听媒体类型切换,清空已选择的文件
+watch(environmentPhotoMediaType, () => {
+  if (environmentPhotoBlob.value) {
+    deleteEnvironmentPhoto();
+  }
+});
 const checkFileType = (file: any) => {
   const fileName = file.name;
   const fileType = fileName.substring(fileName.lastIndexOf("."));
@@ -208,6 +249,15 @@ const checkFileType = (file: any) => {
   //   ElMessage.error(t("work.plzImg") + "(.png)");
   //   return false;
   // }
+};
+const checkVideoType = (file: any) => {
+  const fileName = file.name;
+  const fileType = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+  const validVideoTypes = [".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv", ".webm"];
+  if (!validVideoTypes.includes(fileType)) {
+    ElMessage.error("请上传视频文件");
+    return false;
+  }
 };
 const systemLogoBlob = ref("");
 const environmentPhotoBlob = ref("");
@@ -233,13 +283,33 @@ const uploadImg = async () => {
 };
 const uploadImg2 = async () => {
   if (!trueImg2.value) {
-    return ElMessage.warning(t("farm.selectImage"));
+    const message = environmentPhotoMediaType.value === "image" ? t("farm.selectImage") : "请选择视频";
+    return ElMessage.warning(message);
   }
+
   let formDataE = new FormData();
   formDataE.append("file", trueImg2.value);
 
-  const { data } = await uploadImg_API(formDataE);
-  fieldList.environmentPhoto = data;
+  if (environmentPhotoMediaType.value === "image") {
+    const { data } = await uploadImg_API(formDataE);
+    fieldList.environmentPhoto = data;
+    fieldList.environmentVideoUrl = ""; // 清空视频字段
+  } else {
+    const { data } = await uploadVideo_API(formDataE);
+    fieldList.environmentVideoUrl = data;
+    fieldList.environmentPhoto = ""; // 清空图片字段
+  }
+};
+const deleteSystemLogo = () => {
+  systemLogoBlob.value = "";
+  trueImg.value = "";
+  fieldList.systemLogo = "";
+};
+const deleteEnvironmentPhoto = () => {
+  environmentPhotoBlob.value = "";
+  trueImg2.value = "";
+  fieldList.environmentPhoto = "";
+  fieldList.environmentVideoUrl = "";
 };
 const fieldList = reactive({
   name: "",
@@ -251,6 +321,7 @@ const fieldList = reactive({
 
   systemLogo: "",
   environmentPhoto: "",
+  environmentVideoUrl: "",
 });
 function handleSelectBranchCom(e: any) {
   if (e) {
@@ -274,7 +345,28 @@ const getBoundaries = (e: any) => {
 const rules = {
   name: [{ required: true, message: t("messages.plzenter"), trigger: "change" }],
   systemLogo: [{ required: true, message: t("work.plzImg"), trigger: "change" }],
-  environmentPhoto: [{ required: true, message: t("work.plzImg"), trigger: "change" }],
+  environmentPhoto: [
+    {
+      required: true,
+      validator: (rule: any, value: any, callback: any) => {
+        // 根据媒体类型检查对应的字段
+        if (environmentPhotoMediaType.value === "image") {
+          if (!fieldList.environmentPhoto) {
+            callback(new Error(t("work.plzImg")));
+          } else {
+            callback();
+          }
+        } else {
+          if (!fieldList.environmentVideoUrl) {
+            callback(new Error("请上传视频"));
+          } else {
+            callback();
+          }
+        }
+      },
+      trigger: "change"
+    }
+  ],
 };
 const addField = async () => {
   if (fieldList.locationContour.length === 0) {
