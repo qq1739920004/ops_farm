@@ -813,7 +813,10 @@ const zh = {
     selectAtLeastOne:'请至少选择一项',
     systemImage:'系统图片',
     environmentPhoto:'环境照片',
+    environmentVideo:'环境视频',
     selectImage:'请选择图片',
+    applyToBigScreen:'应用到大屏',
+    pleaseUploadVideo:'请上传视频',
     farmCannotBeEmpty:'农场不能为空！',
     pleaseAddFarm:'请添加农场'
   }

@@ -764,7 +764,10 @@ const en = {
     selectAtLeastOne:'Select at least one',
     systemImage:'System Image',
     environmentPhoto:'Environment Photo',
+    environmentVideo:'Environment Video',
     selectImage:'Select Image',
+    applyToBigScreen:'Apply to Big Screen',
+    pleaseUploadVideo:'Please upload video',
     farmCannotBeEmpty:'Farm cannot be empty',
     pleaseAddFarm:'Add a farm'
   },

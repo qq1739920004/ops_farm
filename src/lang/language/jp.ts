@@ -763,7 +763,10 @@ const jp = {
     selectAtLeastOne:'少なくとも1つを選択してください',
     systemImage:'システム画像',
     environmentPhoto:'環境写真',
+    environmentVideo:'環境ビデオ',
     selectImage:'画像を選択してください',
+    applyToBigScreen:'大画面に適用',
+    pleaseUploadVideo:'ビデオをアップロードしてください',
     farmCannotBeEmpty:'農場を空にすることはできません！',
     pleaseAddFarm:'農場を追加してください'
   },
