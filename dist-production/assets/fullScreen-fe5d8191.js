@@ -1,1 +1,0 @@
-const t=""+new URL("out-802898fa.svg",import.meta.url).href,n=""+new URL("zoom-5bdc010c.svg",import.meta.url).href;function c(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(e=>{alert(`\u5168\u5C4F\u5931\u8D25: ${e.message} (${e.name})`)})}export{t as _,n as a,c as f};

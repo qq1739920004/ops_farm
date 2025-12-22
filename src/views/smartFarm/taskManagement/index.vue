@@ -164,7 +164,7 @@ const gotoDetails = (id: any) => {
   });
 };
 const getCarList = async () => {
-  const res = await listVehicle_API();
+  const res = await listVehicle_API({ farmId: pageInfo.farmId });
   carList.value = res.data;
   options.value = carList.value.map((item: any, _idx: any) => {
     return {
@@ -211,6 +211,7 @@ const isActive = ref<number>(2);
 watch(
   () => pageInfo.farmId,
   () => {
+    getCarList();
     getBlockOptions();
     getPageList();
   },

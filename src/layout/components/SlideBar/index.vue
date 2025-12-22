@@ -42,7 +42,7 @@
   </el-menu>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed,onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import SlidebarItem from "./SlidebarItem.vue";
@@ -72,6 +72,9 @@ const activeMenu = computed(() => {
 function elMenuSelect() {
   emit("handleChange");
 }
+onMounted(() => {
+  console.log('router.options.routes',router.options.routes);
+})
 </script>
 
 <style lang="scss" scoped>

@@ -784,6 +784,7 @@ watch(
   () => {
     changeKeyWord();
     getDetails();
+    getCarList();
   },
   { deep: true }
 );
@@ -856,7 +857,7 @@ const handleCommand = (command: any) => {
 };
 
 const getCarList = async () => {
-  const res = await listVehicle_API();
+  const res = await listVehicle_API({ farmId: pageInfo.farmId });
   carList.value = res.data;
   options = carList.value.map((item: any, _idx: any) => {
     return {

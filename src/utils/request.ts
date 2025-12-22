@@ -5,10 +5,13 @@ import i18n from "@/lang/index"
 import useUserStore from '@/store/user'
 const userStore = useUserStore()
 import { ElLoading } from 'element-plus'
+import { getRuntimeConfig } from './config';
+
 let loadingInstance: any;
 // 创建 axios 实例
+console.log('getRuntimeConfig:',getRuntimeConfig().VITE_APP_Model);
 const service = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API,
+  baseURL: getRuntimeConfig().VITE_APP_BASE_API,
   //超时时间改成2分钟
   timeout: 60000,
   headers: { 'Content-Type': 'application/json;charset=utf-8' }

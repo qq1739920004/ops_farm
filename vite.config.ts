@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from "path";
+import fs from 'fs';
 
 import AutoImport from 'unplugin-auto-import/vite'
 // import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
@@ -10,6 +11,52 @@ import topLevelAwait from 'vite-plugin-top-level-await'
 
 const baiduUrl = `https://api.map.baidu.com`;
 const nogateway = `https://cloud.sinognss.com/gateway`;
+
+// 自定义插件：生成运行时配置文件
+function generateRuntimeConfig() {
+  return {
+    name: 'generate-runtime-config',
+    closeBundle() {
+      // 在构建完成后执行
+      const mode = process.env.NODE_ENV || 'production';
+      const env = loadEnv(mode, process.cwd());
+      
+      // 配置模板
+      const configTemplate = `
+window.APP_CONFIG = {
+
+
+  // 重要提示：如果需要将API请求指向特定服务器，请将相对路径改为完整URL
+  // 例如：将 '/gateway' 改为 'http://140.207.166.210:9030/gateway' 或 'https://cloud.sinognss.com/gateway'
+  // /gateway与http://140.207.166.210:9030/gateway效果一致，如果只写/gateway那就自动使用当前服务器地址
+  
+  // 主要API接口地址
+  VITE_APP_BASE_API: '${env.VITE_APP_BASE_API || '/gateway'}',
+  
+  
+  // 无网关API地址
+  VITE_APP_nogate_API: '${env.VITE_APP_nogate_API || ''}',
+  
+  // WebSocket连接地址（车辆实时轨迹）
+  VITE_APP_BASE_WS: '${env.VITE_APP_BASE_WS || 'ws://140.207.166.210:9034/websocket'}',
+  
+  // 模式配置
+  // 1: 只显示智慧农场菜单，1以外的值: 所有菜单
+  VITE_APP_Model: '${env.VITE_APP_Model || '1'}'
+};`;
+
+      // 输出目录
+      const outputDir = `dist-${env.VITE_ENV || mode}`;
+      const configPath = path.resolve(process.cwd(), outputDir, 'config.js');
+      
+      // 确保目录存在并写入配置文件
+      if (fs.existsSync(path.dirname(configPath))) {
+        fs.writeFileSync(configPath, configTemplate, 'utf8');
+        console.log(`✓ 运行时配置文件已生成: ${configPath}`);
+      }
+    }
+  };
+}
 
 // https://vitejs.dev/config/
 export default ({ mode }) => defineConfig({
@@ -41,8 +88,9 @@ export default ({ mode }) => defineConfig({
     promiseExportName: '__tla',
     // The function to generate import names of top-level await promise in each chunk module
     promiseImportName: i => `__tla_${i}`
-  })
-
+  }),
+  // 添加运行时配置生成插件
+  generateRuntimeConfig()
 
   ],
   resolve: {
@@ -77,25 +125,12 @@ export default ({ mode }) => defineConfig({
       //   rewrite: (path) =>
       //     path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
       // },
-      '/dev-apino': {
-        target: `http://140.207.166.210:9030`,
-        changeOrigin: true,
-        rewrite: (path) =>
-          path.replace(new RegExp("^/dev-apino"), ""), // 替换 /dev-api 为 target 接口地址
+       '/gateway': {  // 修改这里
+          target: 'http://140.207.166.210:9030',  // 修改这里，移除末尾的/gateway
+          changeOrigin: true,
+        // 不需要rewrite
       },
-      '/dev-api': {
-        // target: "http://127.0.0.1:4523/m1/2885822-0-default",
-        // target: 'http://140.207.166.210:9030',
-          target: 'http://140.207.166.210:9030/gateway',
-       // target:'https://cloud.comnavtech.com/gateway',
-        // target: 'http://192.168.2.136/gateway'
-          //target: 'https://cloud.sinognss.com/gateway',
-        // target: 'https://ads.changfanz.net/gateway',
-        //target: 'http://140.207.166.210:9030/gateway/farm',
-        changeOrigin: true,
-        rewrite: (path) =>
-          path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
-      },
+    
 
       // 自定义地图服务代理
       '/_AMapService/v4/map/styles': {

@@ -96,17 +96,32 @@ export function getActiveData(params:timeParams) {
 }
 
 
-export function getStateWs(resList: any) {
-  //获取cookie
-  let cookie =document.cookie.split('loginSysCookie=')[1].split('#').join('_')
-  let wsUrl=''
+import { config } from "@/utils/config";
 
-  //查看当前环境
-  let currentUrl = window.location.href
-  if(!currentUrl.includes('cloud.sinognss')){
-    wsUrl=`ws://140.207.166.210:9034/websocket?token=${cookie}`
-  }else{
-    wsUrl=`wss://cloud.sinognss.com/websocket?token=${cookie}`
+export function getStateWs(resList: any) {
+  // 获取cookie
+  let cookie = document.cookie.split('loginSysCookie=')[1].split('#').join('_');
+  
+  // 使用配置中的WebSocket地址
+  let baseWsUrl = config.VITE_APP_BASE_WS;
+  
+  // 处理URL中的协议部分
+  let wsUrl = '';
+  
+  // 根据当前环境确定是否使用wss
+  let currentUrl = window.location.href;
+  if (currentUrl.includes('cloud.sinognss') || currentUrl.startsWith('https://')) {
+    // 如果是https环境，确保使用wss
+    wsUrl = baseWsUrl.replace('ws://', 'wss://');
+  } else {
+    wsUrl = baseWsUrl;
+  }
+  
+  // 添加token参数
+  if (wsUrl.includes('?')) {
+    wsUrl = `${wsUrl}&token=${cookie}`;
+  } else {
+    wsUrl = `${wsUrl}?token=${cookie}`;
   }
 const ws = new WebSocket(wsUrl);
 

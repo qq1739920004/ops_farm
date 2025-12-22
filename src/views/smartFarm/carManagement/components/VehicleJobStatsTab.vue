@@ -174,7 +174,8 @@ const getJobStats = async () => {
       statsData.totalWorkArea = d.totalWorkArea || 0
       statsData.currentYearWorkArea = d.currentYearWorkArea || 0
       statsData.todayWorkArea = d.todayWorkArea || 0
-      statsData.todayCountNum = d.todayCountNum || 0
+      //秒换算成小时
+      statsData.todayCountNum = Math.round(d.todayCountNum / 3600 * 100) / 100
     } else {
       ElMessage.warning(t('work.getStatsFailed'))
       statsData.totalWorkArea = 0

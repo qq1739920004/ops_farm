@@ -11,6 +11,13 @@
     }
 
   </script>
+  <!-- 运行时配置文件 - 只在生产环境下加载 -->
+  <script>
+    // 检测是否在开发环境
+    if (window.location.port !== '8089') { // 在生产环境下才加载配置文件
+      document.write('<script src="./config.js"><\/script>');
+    }
+  </script>
   <title></title>
   <link rel="stylesheet" href="/leaflet/leaflet.css" />
   <link rel="stylesheet" href="/leaflet/MarkerCluster.css" />

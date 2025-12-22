@@ -5,6 +5,7 @@ import router from "@/router";
 import { menusPermissionByUser } from "@/api/permission";
 import Layout from "@/layout/index.vue";
 import { app } from "@/store";
+import { config } from "@/utils/config";
 
 // const appStore = useAppStore();
 const loadView = import.meta.glob('@/views/**/*.vue');
@@ -28,6 +29,15 @@ let params = {
 let res = await menusPermissionByUser(params);
 // @ts-ignore
 let menuPermissions = res.data.menuPermissions; // 菜单权限数据
+
+// 根据VITE_APP_Model的值进行条件过滤
+if (config.VITE_APP_Model == '1') {
+  console.log(config.VITE_APP_Model);
+  menuPermissions = menuPermissions.filter(item => {
+    return item.id == 2598; 
+  });
+}
+
 let buttonPermissions = res.data.buttonPermissions; // 按钮权限数据
 formatRoute(menuPermissions);
 formatButton(buttonPermissions);
