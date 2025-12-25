@@ -768,7 +768,14 @@ const jp = {
     applyToBigScreen:'大画面に適用',
     pleaseUploadVideo:'ビデオをアップロードしてください',
     farmCannotBeEmpty:'農場を空にすることはできません！',
-    pleaseAddFarm:'農場を追加してください'
+    pleaseAddFarm:'農場を追加してください',
+    viewMode:'表示モード',
+    modeOne:'モード1',
+    modeTwo:'モード2',
+    displayMode:'表示モード',
+    bigScreenModeSetting:'大画面モード設定',
+    viewModeUpdateSuccess:'表示モードが正常に更新されました',
+    viewModeUpdateFailed:'表示モードの更新に失敗しました'
   },
   supplies: {
     suppliesManagement: '農資管理',

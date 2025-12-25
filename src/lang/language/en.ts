@@ -769,7 +769,14 @@ const en = {
     applyToBigScreen:'Apply to Big Screen',
     pleaseUploadVideo:'Please upload video',
     farmCannotBeEmpty:'Farm cannot be empty',
-    pleaseAddFarm:'Add a farm'
+    pleaseAddFarm:'Add a farm',
+    viewMode:'Display Mode',
+    modeOne:'Mode 1',
+    modeTwo:'Mode 2',
+    displayMode:'Display Mode',
+    bigScreenModeSetting:'Big Screen Mode Settings',
+    viewModeUpdateSuccess:'Display mode updated successfully',
+    viewModeUpdateFailed:'Display mode update failed'
   },
   supplies: {
     suppliesManagement: 'Supplies Management',

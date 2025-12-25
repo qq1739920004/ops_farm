@@ -818,7 +818,14 @@ const zh = {
     applyToBigScreen:'应用到大屏',
     pleaseUploadVideo:'请上传视频',
     farmCannotBeEmpty:'农场不能为空！',
-    pleaseAddFarm:'请添加农场'
+    pleaseAddFarm:'请添加农场',
+    viewMode:'展示模式',
+    modeOne:'模式一',
+    modeTwo:'模式二',
+    displayMode:'显示模式',
+    bigScreenModeSetting:'大屏模式设置',
+    viewModeUpdateSuccess:'显示模式更新成功',
+    viewModeUpdateFailed:'显示模式更新失败'
   }
 }
 export default zh

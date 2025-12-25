@@ -16,7 +16,7 @@
           </el-input>
         </div>
         <div class="button_area">
-          <el-button style="margin-right: 5px" type="primary" @click="newFarm"
+          <el-button v-auth="2567" style="margin-right: 5px" type="primary" @click="newFarm"
             >{{ t('farm.newFarm') }}</el-button
           >
         </div>
@@ -48,18 +48,19 @@
         >
           <template #default="scope">
             <div class="operation-buttons">
-              <el-button type="primary" text @click="editFarm(scope.row.id)">{{
+              <el-button type="primary" v-auth="2568" text @click="editFarm(scope.row.id)">{{
                 t("work.edit")
               }}</el-button>
-              <el-button type="primary" text @click="gotoDetails(scope.row.id)">{{
+              <el-button type="primary" v-auth="2597" text @click="gotoDetails(scope.row.id)">{{
                 t("devicelist.details")
               }}</el-button>
-              <el-button type="primary" text @click="deleteFarm(scope.row.id)">{{
+              <el-button type="primary" v-auth="2794" text @click="deleteFarm(scope.row.id)">{{
                 t("work.delete")
               }}</el-button>
               <el-button
                 type="primary"
                 text
+                v-auth="2793"
                 @click="openDialog(scope.row.companyId, scope.row.id, scope.row.name)"
                 >{{ t('farm.issue') }}</el-button
               >
@@ -71,12 +72,14 @@
                     ? 'width:95px'
                     : 'width:65px'
                 "
+                v-auth="2795"
                 type="primary"
                 text
                 @click="openExternalLink(scope.row.id)"
                 >{{ t("farm.enterDp") }}</el-button
               >
               <el-button
+                v-auth="2796"
                 :style="
                   locale == 'en'
                     ? 'width: 85px'
@@ -90,10 +93,12 @@
                 >{{ t("farm.PicMgt") }}</el-button
               >
               <el-button
+                v-auth="2792"
+
                 type="primary"
                 text
                 @click="openViewModeDialog(scope.row.id, scope.row.name, scope.row.viewMode)"
-                >显示模式</el-button
+                >{{ t('farm.displayMode') }}</el-button
               >
             </div>
           </template>
@@ -139,7 +144,7 @@
     <!-- 显示模式弹窗 -->
     <el-dialog
       v-model="viewModeDialogVisible"
-      title="大屏模式设置"
+      :title="t('farm.bigScreenModeSetting')"
       width="400px"
       @close="handleViewModeClose"
       center
@@ -147,17 +152,17 @@
       <div style="padding: 20px 0; display: flex; justify-content: center;">
         <el-radio-group v-model="selectedViewMode" class="vertical-radio-group">
           <el-radio :label="1" class="radio-item">
-            模式一
+            {{ t('farm.modeOne') }}
           </el-radio>
           <el-radio :label="2" class="radio-item">
-            模式二
+            {{ t('farm.modeTwo') }}
           </el-radio>
         </el-radio-group>
       </div>
 
       <template #footer>
-        <el-button @click="viewModeDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleViewModeConfirm">确认</el-button>
+        <el-button @click="viewModeDialogVisible = false">{{ t('work.cancel') }}</el-button>
+        <el-button type="primary" @click="handleViewModeConfirm">{{ t('work.submit') }}</el-button>
       </template>
     </el-dialog>
   </div>
@@ -320,12 +325,12 @@ const handleViewModeConfirm = async () => {
       id: currentFarmId.value,
       viewMode: selectedViewMode.value
     });
-    ElMessage.success("显示模式更新成功");
+    ElMessage.success(t("farm.viewModeUpdateSuccess"));
     viewModeDialogVisible.value = false;
     handleViewModeClose();
     getList(); // 刷新列表
   } catch (error) {
-    ElMessage.error("显示模式更新失败");
+    ElMessage.error(t("farm.viewModeUpdateFailed"));
   }
 };
 
