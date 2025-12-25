@@ -127,7 +127,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
-import { listVehicle_API, pageTask_API, getFarmBlockList_API, getTaskType_API } from "@/api/fieldManagement/indx";
+import { getCarList_API, pageTask_API, getFarmBlockList_API, getTaskType_API } from "@/api/fieldManagement/indx";
 import detailMap from "./components/detailMap.vue";
 import { useI18n } from "vue-i18n";
 import router from "@/router";
@@ -164,7 +164,7 @@ const gotoDetails = (id: any) => {
   });
 };
 const getCarList = async () => {
-  const res = await listVehicle_API({ farmId: pageInfo.farmId });
+  const res = await getCarList_API({ farmId: pageInfo.farmId });
   carList.value = res.data;
   options.value = carList.value.map((item: any, _idx: any) => {
     return {

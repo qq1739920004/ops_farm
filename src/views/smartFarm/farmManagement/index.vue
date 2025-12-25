@@ -44,7 +44,7 @@
         <el-table-column
           :label="$t('devicelist.operation')"
           align="center"
-          :width="locale == 'jp' ? 650 : 475"
+          :width="locale == 'jp' ? 750 : 575"
         >
           <template #default="scope">
             <div class="operation-buttons">
@@ -89,6 +89,12 @@
                 @click=""
                 >{{ t("farm.PicMgt") }}</el-button
               >
+              <el-button
+                type="primary"
+                text
+                @click="openViewModeDialog(scope.row.id, scope.row.name, scope.row.viewMode)"
+                >显示模式</el-button
+              >
             </div>
           </template>
         </el-table-column>
@@ -129,6 +135,31 @@
         <el-button type="primary" @click="handleDownload">{{ t('farm.confirmIssue') }}</el-button>
       </template>
     </el-dialog>
+
+    <!-- 显示模式弹窗 -->
+    <el-dialog
+      v-model="viewModeDialogVisible"
+      title="大屏模式设置"
+      width="400px"
+      @close="handleViewModeClose"
+      center
+    >
+      <div style="padding: 20px 0; display: flex; justify-content: center;">
+        <el-radio-group v-model="selectedViewMode" class="vertical-radio-group">
+          <el-radio :label="1" class="radio-item">
+            模式一
+          </el-radio>
+          <el-radio :label="2" class="radio-item">
+            模式二
+          </el-radio>
+        </el-radio-group>
+      </div>
+
+      <template #footer>
+        <el-button @click="viewModeDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleViewModeConfirm">确认</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -138,7 +169,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from "@/components/Pagination/index.vue";
 import { reactive, ref, onMounted } from "vue";
 import { pageList_API, deleteFarm_API } from "@/api/machineryList/index";
-import { getCarList_API, pushFarm_API } from "@/api/fieldManagement/indx";
+import { getCarList_API, pushFarm_API, updateFarm_API } from "@/api/fieldManagement/indx";
 import { useI18n } from "vue-i18n";
 const { locale, t } = useI18n();
 let $route = useRoute();
@@ -154,6 +185,12 @@ const pageInfo = reactive({
   key: "",
 });
 const dialogVisible = ref(false);
+
+// 显示模式弹窗相关变量
+const viewModeDialogVisible = ref(false);
+const currentFarmId = ref();
+const currentFarmName = ref();
+const selectedViewMode = ref(1);
 
 const vehicleList = ref<any>([]);
 const openDialog = (companyId: any, id: any, name: any) => {
@@ -262,6 +299,36 @@ const deleteFarm = (id: any) => {
     })
     .catch(() => {});
 };
+
+// 显示模式相关函数
+const openViewModeDialog = (id: any, name: any, currentMode: any) => {
+  currentFarmId.value = id;
+  currentFarmName.value = name;
+  selectedViewMode.value = currentMode || 1;
+  viewModeDialogVisible.value = true;
+};
+
+const handleViewModeClose = () => {
+  currentFarmId.value = "";
+  currentFarmName.value = "";
+  selectedViewMode.value = 1;
+};
+
+const handleViewModeConfirm = async () => {
+  try {
+    await updateFarm_API({
+      id: currentFarmId.value,
+      viewMode: selectedViewMode.value
+    });
+    ElMessage.success("显示模式更新成功");
+    viewModeDialogVisible.value = false;
+    handleViewModeClose();
+    getList(); // 刷新列表
+  } catch (error) {
+    ElMessage.error("显示模式更新失败");
+  }
+};
+
 onMounted(() => {
   getList();
 });
@@ -303,6 +370,22 @@ onMounted(() => {
     .tab_active {
       color: var(--el-color-primary);
       border-color: var(--el-color-primary);
+    }
+  }
+}
+
+// 显示模式弹窗样式
+.vertical-radio-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  .radio-item {
+    margin-right: 0 !important; // 覆盖Element Plus默认的右边距
+    margin-bottom: 20px;
+    
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }

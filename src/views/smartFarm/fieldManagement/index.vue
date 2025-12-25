@@ -636,7 +636,6 @@ import {
   farmDetail_API,
   deleteBlock_API,
   share_API,
-  listVehicle_API,
   shareCar_API,
   getFarmRecord_API,
   addFarmRecord_API,
@@ -857,7 +856,7 @@ const handleCommand = (command: any) => {
 };
 
 const getCarList = async () => {
-  const res = await listVehicle_API({ farmId: pageInfo.farmId });
+  const res = await getCarList_API({ farmId: pageInfo.farmId });
   carList.value = res.data;
   options = carList.value.map((item: any, _idx: any) => {
     return {
@@ -879,7 +878,7 @@ const creatorType = ref<any>(1);
 const checkShare = async (id: any, type: any) => {
   creatorType.value = type;
   try {
-    await share_API({ id: id });
+    // await share_API({ id: id });
     dialogVisible.value = true;
     pickedSn.value = "";
   } catch {}
