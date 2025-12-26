@@ -394,7 +394,7 @@
     <!-- 农事记录抽屉 -->
     <el-drawer
       v-model="farmRecordDrawerVisible"
-      :title="t('work.farmRecord')"
+      :title="fieldInfo.name + ' - ' + t('work.farmRecord')"
       direction="rtl"
       size="50%"
       @close="closeFarmRecordDrawer"
@@ -452,7 +452,7 @@
     <!-- 种养品种抽屉 -->
     <el-drawer
       v-model="cropDrawerVisible"
-      :title="t('work.cropRecord')"
+      :title="fieldInfo.name + ' - ' + t('work.cropRecord')"
       direction="rtl"
       size="50%"
       @close="closeCropDrawer"
