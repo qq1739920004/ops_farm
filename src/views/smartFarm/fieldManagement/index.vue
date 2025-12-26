@@ -205,7 +205,7 @@
                 {{ t("statisticsReport.thousandArea") }}:
               </div> -->
               <div class="unshared_area">
-                {{ item.area ? item.area.toFixed(2) : 0 }}{{ t("work.are") }}
+                {{ item.area ? formatAreaValue(item.area) : 0 }}{{ t("work.are") }}
               </div>
             </div>
             <div class="bottom">
@@ -229,10 +229,10 @@
       <div class="info_line">
         <!-- 面积 -->
         <el-row>
-          <el-col :span="locale === 'en' ? 12 : 8">
-            {{ t("work.allArea") + "(m²)" }}:</el-col
+          <el-col :span="(locale === 'en' || locale === 'jp') ? 12 : 8">
+            {{ t("work.allArea") }}({{ (locale === 'en' || locale === 'jp') ? 'ha' : 'm²' }}):</el-col
           >
-          <el-col :span="12"> {{ fieldInfo.area }}</el-col>
+          <el-col :span="12"> {{ (locale === 'en' || locale === 'jp') ? (fieldInfo.area / 10000).toFixed(4) : fieldInfo.area }}</el-col>
         </el-row>
         
         <!-- 周长 -->
@@ -647,9 +647,13 @@ import {
   getCarList_API,
   pushReferenceLine_API,
 } from "@/api/fieldManagement/indx";
+import { useDictMapping } from '@/utils/dictMapping';
+import { useAreaConversion } from '@/utils/areaConversion';
 import router from "@/router";
 import { useI18n } from "vue-i18n";
 const { t, locale } = useI18n();
+const { getDictOptions } = useDictMapping();
+const { formatAreaValue } = useAreaConversion();
 const sinoMapRef = ref<any>();
 const lineData = ref<any>([]);
 const dialogVisible2 = ref(false);

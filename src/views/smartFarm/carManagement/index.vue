@@ -187,9 +187,11 @@ import {
 } from '@/api/carManagement/index';
 import { updateVehicle_API } from '@/api/carManagement/index';
 import { sysDict_API } from '@/api/fieldManagement/indx'; // farmList_API 已不再需要
+import { useDictMapping } from '@/utils/dictMapping';
 import startCar from '@/assets/common/car.png';
 
 const { t } = useI18n();
+const { getDictOptions } = useDictMapping();
 const farmIdStorage = useStorage("farmId", "");
 
 const searchForm = reactive({
@@ -240,8 +242,8 @@ const carParams = reactive<any>({
 });
 
 const cascaderProps = {
-  value: 'bizKey',
-  label: 'bizValue',
+  value: 'value',  
+  label: 'label', 
   children: 'children',
   checkStrictly: true,
 };
@@ -250,7 +252,7 @@ const flattenVehicleType = computed(() => {
   const map = new Map<string, string>();
   const traverse = (nodes: any[]) => {
     nodes?.forEach((node) => {
-      map.set(String(node.bizKey), node.bizValue);
+      map.set(String(node.value), node.label);
       if (node.children?.length) {
         traverse(node.children);
       }
@@ -322,7 +324,8 @@ const buildKeyword = () => {
 const fetchVehicleTypes = async () => {
   try {
     const { data } = await sysDict_API({ dicKey: 'vehicle_type' });
-    vehicle.value = data || [];
+    // 使用字典映射工具转换为选项列表
+    vehicle.value = getDictOptions(data || []);
   } catch (error) {
     console.error("Failed to fetch vehicle types:", error);
     vehicle.value = [];

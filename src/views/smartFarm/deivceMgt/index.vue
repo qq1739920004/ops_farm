@@ -19,7 +19,7 @@
 
           <el-button type="primary" @click="handleAdd">
             <el-icon><Plus /></el-icon>
-            新增设备
+            {{ $t('deviceMgt.addDevice') }}
           </el-button>
         </div>
         <div class="table-scroll-container">
@@ -31,9 +31,9 @@
               :label="$t('work.item')"
               align="center"
             />
-            <el-table-column prop="serialNums" label="设备序列号" min-width="120" />
-            <el-table-column prop="deviceName" label="设备名称" min-width="120" />
-            <el-table-column prop="deviceType" label="设备类型" min-width="120">
+            <el-table-column prop="serialNums" :label="$t('deviceMgt.deviceSN')" min-width="120" />
+            <el-table-column prop="deviceName" :label="$t('deviceMgt.deviceName')" min-width="120" />
+            <el-table-column prop="deviceType" :label="$t('deviceMgt.deviceType')" min-width="120">
               <template #default="scope">
                 {{ formatDeviceType(scope.row.deviceType) }}
               </template>
@@ -43,34 +43,34 @@
               {{ scope.row.termType }}
             </template>
           </el-table-column> -->
-            <el-table-column prop="farmName" label="农场名称" min-width="120" />
-            <el-table-column prop="blockName" label="区块名称" min-width="120" />
-            <el-table-column label="位置" min-width="120">
+            <el-table-column prop="farmName" :label="$t('deviceMgt.farmName')" min-width="120" />
+            <el-table-column prop="blockName" :label="$t('deviceMgt.fieldName')" min-width="120" />
+            <el-table-column :label="$t('deviceMgt.location')" min-width="120">
               <template #default="scope">
                 <div v-if="scope.row.latitude && scope.row.longitude">
                   {{ scope.row.latitude.toFixed(6) }},
                   {{ scope.row.longitude.toFixed(6) }}
                 </div>
-                <div v-else>未设置</div>
+                <div v-else>{{ $t('deviceMgt.notSet') }}</div>
               </template>
             </el-table-column>
-            <el-table-column prop="cameraUrl" label="摄像头地址" min-width="120">
+            <el-table-column prop="cameraUrl" :label="$t('deviceMgt.cameraAddress')" min-width="120">
               <template #default="scope">
                 <el-link
                   v-if="scope.row.cameraUrl"
                   :href="scope.row.cameraUrl"
                   target="_blank"
                 >
-                  查看
+                  {{ $t('deviceMgt.view') }}
                 </el-link>
-                <span v-else>无</span>
+                <span v-else>{{ $t('deviceMgt.none') }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="creator" label="创建人" min-width="120" />
-            <el-table-column prop="createTime" label="创建时间" min-width="120" />
-            <el-table-column prop="modifier" label="修改人" min-width="120" />
-            <el-table-column prop="modifyTime" label="修改时间" min-width="120" />
-            <el-table-column label="操作" align="center" min-width="220">
+            <el-table-column prop="creator" :label="$t('deviceMgt.creator')" min-width="120" />
+            <el-table-column prop="createTime" :label="$t('deviceMgt.createdTime')" min-width="120" />
+            <el-table-column prop="modifier" :label="$t('deviceMgt.updatedBy')" min-width="120" />
+            <el-table-column prop="modifyTime" :label="$t('deviceMgt.updatedTime')" min-width="120" />
+            <el-table-column :label="$t('work.operation')" align="center" min-width="220">
               <template #default="scope">
                 <el-button
                   type="success"
@@ -79,7 +79,7 @@
                   style="margin-left: 5px"
                   text
                 >
-                  编辑
+                  {{ $t('deviceMgt.edit') }}
                 </el-button>
                 <el-button
                   type="danger"
@@ -88,7 +88,7 @@
                   style="margin-left: 5px"
                   text
                 >
-                  删除
+                  {{ $t('deviceMgt.delete') }}
                 </el-button>
               </template>
             </el-table-column>
@@ -131,6 +131,9 @@ const currentChange = (val: any) => {
   loadData();
 };
 // 设备类型映射
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+
 const deviceTypeMap = {
   7: "气象设备",
   8: "田间监测摄像头",
@@ -149,7 +152,7 @@ const deviceTypeMap = {
 
 // 格式化设备类型
 const formatDeviceType = (type) => {
-  return deviceTypeMap[type] || `未知(${type})`;
+  return deviceTypeMap[type] || `${t('deviceMgt.unknown')}(${type})`;
 };
 
 // // 格式化终端类型
@@ -173,8 +176,8 @@ const loadData = async () => {
     tableData.value = res.data.records;
     total.value = res.data.total;
   } catch (error) {
-    console.error("加载数据失败:", error);
-    ElMessage.error("加载数据失败，请重试");
+    console.error(t('deviceMgt.loadFailed'), error);
+    ElMessage.error(t('deviceMgt.loadFailed'));
   } finally {
     loading.value = false;
   }
@@ -201,19 +204,19 @@ const handleEdit = (row) => {
 
 const handleDelete = (row) => {
   // 删除设备确认
-  ElMessageBox.confirm("确认删除", `确定要删除设备吗？`, {
-    confirmButtonText: "确认",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t('deviceMgt.confirmDelete'), t('deviceMgt.confirmDeleteDevice'), {
+    confirmButtonText: t('deviceMgt.confirm'),
+    cancelButtonText: t('deviceMgt.cancel'),
     type: "warning",
   })
     .then(async() => {
    await delete_API({id:row.id})
-      ElMessage.success("删除成功");
+      ElMessage.success(t('deviceMgt.deleteSuccess'));
       loadData(); // 重新加载数据
     })
     .catch(() => {
       // 取消删除
-      ElMessage.info("已取消删除");
+      ElMessage.info(t('deviceMgt.cancelDelete'));
     });
 };
 

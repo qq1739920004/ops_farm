@@ -26,8 +26,7 @@
       </template>
     </el-table-column>
     <el-table-column :label="$t('work.acreage')" align="center">
-      <template #="{ row }" v-if="locale.includes('zh')"> {{ row.workedArea }}{{ $t("work.are") }}</template>
-      <template #="{ row }"v-if="locale.includes('en') || locale.includes('jp')"> {{ (row.workedArea/15).toFixed(2) }}{{ $t("work.are") }}</template>
+      <template #="{ row }"> {{ convertAreaValue(row.workedArea).toFixed(2) }}{{ $t("work.are") }}</template>
     </el-table-column>
     <el-table-column :label="$t('work.acTime')" align="center" width="180">
       <template #="{ row }"
@@ -78,7 +77,9 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { useI18n } from "vue-i18n";
+import { useAreaConversion } from '@/utils/areaConversion';
 const { t, locale } = useI18n();
+const { convertAreaValue } = useAreaConversion();
 
 const props = defineProps(["paddyWorkList"]);
 const workTypeReflect = reactive<any>({

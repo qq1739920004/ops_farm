@@ -7,7 +7,7 @@
         </div>
         <div class="stats-content">
           <h3>{{ t('work.totalWorkArea') }}</h3>
-          <p class="stats-value">{{ statsData.totalWorkArea.toFixed(2) }} <span>{{ t('work.areaUnit') }}</span></p>
+          <p class="stats-value">{{ convertAreaValue(statsData.totalWorkArea).toFixed(2) }} <span>{{ t('work.areaUnit') }}</span></p>
           <p class="stats-desc">{{ t('work.allTime') }}</p>
         </div>
       </div>
@@ -18,7 +18,7 @@
         </div>
         <div class="stats-content">
           <h3>{{ t('work.yearWorkArea') }}</h3>
-          <p class="stats-value">{{ statsData.currentYearWorkArea.toFixed(2) }} <span>{{ t('work.areaUnit') }}</span></p>
+          <p class="stats-value">{{ convertAreaValue(statsData.currentYearWorkArea).toFixed(2) }} <span>{{ t('work.areaUnit') }}</span></p>
           <p class="stats-desc">{{ new Date().getFullYear() }}{{ t('work.year') }}</p>
         </div>
       </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="stats-content">
           <h3>{{ t('messages.todaysOperation') }}</h3>
-          <p class="stats-value">{{ statsData.todayWorkArea.toFixed(2) }} <span>{{ t('work.areaUnit') }}</span></p>
+          <p class="stats-value">{{ convertAreaValue(statsData.todayWorkArea).toFixed(2) }} <span>{{ t('work.areaUnit') }}</span></p>
           <p class="stats-desc">{{ formatToday() }}</p>
         </div>
       </div>
@@ -54,7 +54,7 @@
               <el-option v-for="year in yearOptions" :key="year" :label="year + t('work.year')" :value="year" />
             </el-select>
             <el-select v-model="selectedMonth" :placeholder="t('work.selectMonth')" class="month-select">
-              <el-option v-for="month in monthOptions" :key="month" :label="month + t('work.month')" :value="month" />
+              <el-option v-for="month in monthOptions" :key="month" :label="t('statisticsReport.active' + month)" :value="month" />
             </el-select>
           </div>
           <div class="view-toggle">
@@ -69,11 +69,11 @@
           <div v-if="viewMode === 'year'" class="month-grid">
             <div v-for="month in 12" :key="month" class="month-card" :class="{ active: selectedMonth === month }"
               @click="selectMonth(month)">
-              <div class="month-title">{{ month }}{{ t('work.month') }}</div>
+              <div class="month-title">{{ t('statisticsReport.active' + month) }}</div>
               <div class="month-data">
                 <div class="data-item">
                   <span class="value" :class="{ 'zero-data': getMonthData(month, 'area') === 0 }">
-                    <span v-if="getMonthData(month, 'area') > 0"><i class="dot"></i>{{ getMonthData(month, 'area') }}
+                    <span v-if="getMonthData(month, 'area') > 0"><i class="dot"></i>{{ convertAreaValue(getMonthData(month, 'area')).toFixed(2) }}
                       {{ t('work.areaUnit') }}</span>
                   </span>
                 </div>
@@ -90,13 +90,13 @@
           <div v-else class="day-grid">
             <div v-for="day in getDaysInMonth(selectedYear, selectedMonth)" :key="day" class="day-card"
               :class="{ active: selectedDay === day, 'has-data': getDayData(day, 'area') > 0 }" @click="selectDay(day)">
-              <div class="day-title">{{ day }}{{ t('work.day') }}</div>
+              <div class="day-title">{{ t('perception.date' + day) }}</div>
               <div class="day-data">
                 <div class="data-item">
                   <span class="value" :class="{ 'zero-data': getDayData(day, 'area') === 0 }">
                     <span v-if="getDayData(day, 'area') > 0"><i
                         style="display:inline-block;width:8px;height:8px;border-radius:50%;background-color:#41cb79;margin-right:4px;"></i>{{
-                          getDayData(day, 'area') }} {{ t('work.areaUnit') }}</span>
+                          convertAreaValue(getDayData(day, 'area')).toFixed(2) }} {{ t('work.areaUnit') }}</span>
                   </span>
                 </div>
                 <div class="data-item">
@@ -127,11 +127,13 @@
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useAreaConversion } from '@/utils/areaConversion'
 import { ElMessage } from 'element-plus'
 import { getCarWorkAreaStats_path, getVehicleDailyWorkAreaStats_path, getVehicleMonthlyWorkAreaStats_path,getVehicleMonthlyWorkAreaStats_type_path } from '@/api/carManagement/index'
 import * as echarts from 'echarts'
 
 const { t } = useI18n()
+const { convertAreaValue, getAreaUnit } = useAreaConversion()
 
 const props = defineProps({
   vehicle: { type: Object, required: true },
@@ -162,7 +164,7 @@ let ringChartResizeHandler = null
 
 const formatToday = () => {
   const today = new Date()
-  return `${today.getMonth() + 1}${t('work.month')}${today.getDate()}${t('work.day')}`
+  return `${t('statisticsReport.active' + (today.getMonth() + 1))} ${t('perception.date' + today.getDate())}`
 }
 
 const getJobStats = async () => {
@@ -284,7 +286,7 @@ const updateCharts = async () => {
   const hoursData = daysInMonth.map(d => monthData[d]?.hours || 0)
 
   const trendOptions = {
-    title: { text: `${selectedYear.value}${t('work.year')}${selectedMonth.value}${t('work.month')}${t('work.workTrend')}`, left: 'center', top: '2%', textStyle: { color: '#333', fontSize: 16 } },
+    title: { text: `${selectedYear.value}${t('work.year')} ${t('statisticsReport.active' + selectedMonth.value)} ${t('work.workTrend')}`, left: 'center', top: '2%', textStyle: { color: '#333', fontSize: 16 } },
     tooltip: { show: true, trigger: 'axis', backgroundColor: 'rgba(0,0,0,0.8)', borderColor: '#3aed81', borderWidth: 1, textStyle: { color: '#fff', fontSize: 14 }, confine: false, appendToBody: true, extraCssText: 'z-index: 99999 !important; pointer-events: auto !important;' },
     legend: { data: [t('work.workArea'), t('work.duration')], top: '18%', textStyle: { color: '#a0a8b8' } },
     grid: { left: '3%', right: '4%', bottom: '3%', top: '30%', containLabel: true },
@@ -314,7 +316,7 @@ const updateCharts = async () => {
   
   const ringOptions = {
     title: { 
-      text: `${selectedMonth.value}${t('work.month')}${t('work.workTypeDistribution')}(${t('work.areaUnit')})`, 
+      text: `${t('statisticsReport.active' + selectedMonth.value)} ${t('work.workTypeDistribution')}(${t('work.areaUnit')})`, 
       left: 'center', 
       top: '0%', 
       textStyle: { fontSize: 16, color: '#333' } 

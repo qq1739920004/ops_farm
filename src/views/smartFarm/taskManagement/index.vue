@@ -94,10 +94,10 @@
               <div class="line_row">
                 <img src="@/assets/common/filed.png" alt="">
                 <div class="left">
-                  {{ t('work.workAreaMu') }}：{{ (+item.totalArea).toFixed(2) || "--" }}{{ t('work.mu') }}   
+                  {{ t('work.workAreaMu') }}：{{ formatAreaValue(item.totalArea) || "--" }}{{ getAreaUnit() }}   
                 </div>
                 <div class="right">
-                  {{ t('work.remainingAreaMu') }}：{{ (+item.missedArea).toFixed(2) || "--" }}{{ t('work.mu') }}   
+                  {{ t('work.remainingAreaMu') }}：{{ formatAreaValue(item.missedArea) || "--" }}{{ getAreaUnit() }}   
                 </div>
               </div>
               <div class="line_row progress_row">
@@ -128,6 +128,8 @@
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
 import { getCarList_API, pageTask_API, getFarmBlockList_API, getTaskType_API } from "@/api/fieldManagement/indx";
+import { useDictMapping } from '@/utils/dictMapping';
+import { useAreaConversion } from '@/utils/areaConversion';
 import detailMap from "./components/detailMap.vue";
 import { useI18n } from "vue-i18n";
 import router from "@/router";
@@ -137,6 +139,8 @@ const timeRange = ref<any>([
   new Date(new Date().setHours(23, 59, 59, 999)).getTime(),
 ]);
 const { t } = useI18n();
+const { getDictOptions } = useDictMapping();
+const { formatAreaValue, getAreaUnit } = useAreaConversion();
 const carList = ref<any>([]);
 let options = ref<any>([]);
 let blockOptions = ref<any>([]);
@@ -190,17 +194,8 @@ const getBlockOptions = async () => {
 const getTaskTypeOptions = async () => {
   const res = await getTaskType_API({ dicKey: "work_category", level: 2 });
   const data = res?.data || [];
-  const flat: any[] = [];
-  const traverse = (nodes: any[]) => {
-    nodes.forEach((n: any) => {
-      if (n && (n.bizKey !== undefined) && (n.bizValue !== undefined)) {
-        flat.push({ value: n.bizKey, label: n.bizValue });
-      }
-      if (Array.isArray(n?.children) && n.children.length) traverse(n.children);
-    });
-  };
-  if (Array.isArray(data)) traverse(data);
-  taskTypeOptions.value = flat;
+  // 使用字典映射工具转换
+  taskTypeOptions.value = getDictOptions(data);
 };
 const disabledDate = (time: Date) => {
   return time.getTime() > Date.now() + 8.64e7;

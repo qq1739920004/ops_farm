@@ -37,7 +37,7 @@
           <!-- 第一行：作业统计和时间信息 -->
           <div class="info_row">
             <div class="info_box">
-                <div class="bottom"><span> {{ t("work.workArea") }}:{{ (+detailList.totalArea).toFixed(3) || "--" }} {{ t("work.mu") }}</span><span> {{ t("work.remainingArea") }}:{{ ((+detailList.missedArea).toFixed(3) || "--") }} {{ t("work.mu") }}</span></div>
+                <div class="bottom"><span> {{ t("work.workArea") }}:{{ formatAreaValue(detailList.totalArea, 3) || "--" }} {{ getAreaUnit() }}</span><span> {{ t("work.remainingArea") }}:{{ formatAreaValue(detailList.missedArea, 3) || "--" }} {{ getAreaUnit() }}</span></div>
               <div class="bottom progress_row">
                 <img src="@/assets/common/stTime.png" alt="">
                 <el-progress 
@@ -75,6 +75,7 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from "vue";
 import { taskDetail_API } from "@/api/fieldManagement/indx";
+import { useAreaConversion } from '@/utils/areaConversion';
 import detailMap from "./components/detailMap.vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -84,6 +85,7 @@ let speedChart: any;
 let pitchAngleChart: any;
 let rollAngleChart: any;
 const { t } = useI18n();
+const { formatAreaValue, getAreaUnit } = useAreaConversion();
 const route = useRoute();
 
 // 计算作业进度百分比
@@ -136,7 +138,7 @@ const changeRadio = (e: any) => {
 function createXOffsetChart(date: any, x: any) {
   const option = {
     tooltip: { trigger: "axis" },
-    grid: { left: "3%", right: "4%", bottom: "3%", top: "28%", containLabel: true },
+    grid: { left: "6%", right: "4%", bottom: "3%", top: "28%", containLabel: true },
     toolbox: { feature: { saveAsImage: {} } },
     xAxis: [{
       axisLabel: {
@@ -171,7 +173,7 @@ function createXOffsetChart(date: any, x: any) {
       axisLine: { show: true, lineStyle: { color: "#DCE4F6" } }
     }],
     yAxis: [{
-      name: "横向偏差(m)",
+      name: `${t("chart.lateralDeviation")}(m)`,
       type: "value",
       splitNumber: 5,
       axisLine: { show: false },
@@ -179,7 +181,7 @@ function createXOffsetChart(date: any, x: any) {
       splitLine: { show: true }
     }],
     series: [{
-      name: "横向偏差",
+      name: t("chart.lateralDeviation"),
       showSymbol: false,
       type: "line",
       data: x,
@@ -293,7 +295,7 @@ function createPitchAngleChart(date: any, x: any) {
       axisLine: { show: true, lineStyle: { color: "#DCE4F6" } }
     }],
     yAxis: [{
-      name: "航向角(°)",
+      name: `${t("chart.headingAngle")}(°)`,
       type: "value",
       splitNumber: 5,
       axisLine: { show: false },
@@ -301,7 +303,7 @@ function createPitchAngleChart(date: any, x: any) {
       splitLine: { show: true }
     }],
     series: [{
-      name: "航向角",
+      name: `${t("chart.headingAngle")}`,
       showSymbol: false,
       type: "line",
       data: x,

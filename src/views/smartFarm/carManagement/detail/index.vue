@@ -267,6 +267,7 @@ import {
   updateVehicle_API,
 } from "@/api/carManagement/index";
 import { sysDict_API } from "@/api/fieldManagement/indx";
+import { useDictMapping } from '@/utils/dictMapping';
 import sand from "@/assets/common/Gsand.png";
 import oil from "@/assets/common/goil.png";
 import speed1 from "@/assets/common/speed.png";
@@ -277,6 +278,8 @@ import startCar from "@/assets/common/car.png";
 import carM from "@/assets/common/car.png";
 import { useStorage } from "@vueuse/core";
 const { t } = useI18n();
+const { getDictOptions } = useDictMapping();
+const carDetailRef = ref();<any>({});
 const detailList = ref<any>({});
 let markerData = ref<any>([]);
 const carParams = ref<any>({});
@@ -296,7 +299,12 @@ const getvehicleArray = async () => {
   const { data } = await sysDict_API({
     dicKey: "vehicle_type",
   });
-  vehicle.value = data;
+  // 使用字典映射工具转换为选项列表，保持原有的级联结构
+  vehicle.value = (data || []).map((item: any) => ({
+    bizKey: item.bizKey,
+    bizValue: getDictOptions([item])[0]?.label || item.bizValue,
+    children: item.children || []
+  }));
 };
 getvehicleArray();
 const load = () => {
