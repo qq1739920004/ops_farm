@@ -50,12 +50,7 @@
         <el-form-item :label="t('work.remark')" prop="remark">
           <el-input style="width: 200px" v-model="fieldList.remark"></el-input>
         </el-form-item>
-        <el-form-item :label="t('farm.viewMode')" prop="viewMode">
-          <el-select style="width: 200px" v-model="fieldList.viewMode" :placeholder="t('farm.viewMode')">
-            <el-option :label="t('farm.modeOne')" :value="1"></el-option>
-            <el-option :label="t('farm.modeTwo')" :value="2"></el-option>
-          </el-select>
-        </el-form-item>
+       
         <el-form-item :label="t('farm.systemImage')" prop="systemLogo">
           <div class="uploadImg_area">
             <div class="image_area">
@@ -362,7 +357,6 @@ const fieldList = reactive<any>({
   environmentPhoto: "",
   environmentVideoUrl: "",
   bigScreenType: 0, // 0=图片, 1=视频
-  viewMode: 1, // 农场展示模式，默认模式一
 });
 const polygonData = ref<any>([]);
 
@@ -379,7 +373,6 @@ const getDetails = async () => {
   fieldList.environmentVideoUrl = data.environmentVideoUrl;
   fieldList.systemLogo = data.systemLogo;
   fieldList.bigScreenType = data.bigScreenType || 0;
-  fieldList.viewMode = data.viewMode || 1;
   fieldList.locationContour = JSON.parse(data.locationContour);
   
   const boundaries = fieldList.locationContour.map((item: any) => {

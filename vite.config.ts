@@ -24,8 +24,6 @@ function generateRuntimeConfig() {
       // 配置模板
       const configTemplate = `
 window.APP_CONFIG = {
-
-
   // 重要提示：如果需要将API请求指向特定服务器，请将相对路径改为完整URL
   // 例如：将 '/gateway' 改为 'http://140.207.166.210:9030/gateway' 或 'https://cloud.sinognss.com/gateway'
   // /gateway与http://140.207.166.210:9030/gateway效果一致，如果只写/gateway那就自动使用当前服务器地址
@@ -125,10 +123,10 @@ export default ({ mode }) => defineConfig({
       //   rewrite: (path) =>
       //     path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
       // },
-       '/gateway': {  // 修改这里
-          target: 'http://140.207.166.210:9030',  // 修改这里，移除末尾的/gateway
+       '/gateway': { 
+          target: 'http://140.207.166.210:9030',  
+          // target: 'https://cloud.sinognss.com',  
           changeOrigin: true,
-        // 不需要rewrite
       },
     
 
