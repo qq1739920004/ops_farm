@@ -108,14 +108,13 @@ const getTaskInfo = async () => {
     return item.createTime;
   });
   const xOffsetList = logList.value.map((item: any) => {
-    const value = item.xOffset !== null && item.xOffset !== undefined ? item.xOffset : 0;
-    return value;
+    return item.xoffset ?? 0;
   });
   const speedList = logList.value.map((item: any) => {
     return item.speed ?? 0;
   });
   const pitchAngleList = logList.value.map((item: any) => {
-    return item.pitchAngle ?? 0;
+    return item.headingOffset ?? 0;
   });
   const rollAngleList = logList.value.map((item: any) => {
     return item.rollAngle ?? 0;

@@ -77,7 +77,7 @@
             </div>
      
             <div class="map_container">
-              <detail-map :ggaData="tableList[index].ggaList" :mapRenderMode="'canvas'" />
+              <detail-map :key="`${pageInfo.farmId}-${item.id}`" :ggaData="tableList[index].ggaList" :mapRenderMode="'canvas'" />
             </div>
             <div class="bottm_line">
                      <div class="line_row">
@@ -85,12 +85,19 @@
 
               {{ item.vehicleName?item.vehicleName+"/"+item.sn:"--" }}
             </div>
+            <div class="line_row">
+                <img src="@/assets/icons/fieldManagement_menu2.svg" alt="">
+                <div class="left">
+                  {{t('project.landName') }}：{{ item.blockName || "--" }} 
+                </div>
+              </div>
               <div class="line_row">
                 <div class="time_range">
                   <img src="@/assets/common/time.png" alt="" />
                   {{ item.startTime || "--" }} - {{ item.endTime || "--" }}
                 </div>
               </div>
+               
               <div class="line_row">
                 <img src="@/assets/common/filed.png" alt="">
                 <div class="left">
@@ -100,6 +107,7 @@
                   {{ t('work.remainingAreaMu') }}：{{ formatAreaValue(item.missedArea) || "--" }}{{ getAreaUnit() }}   
                 </div>
               </div>
+             
               <div class="line_row progress_row">
                   <img src="@/assets/common/stTime.png" alt="">
 
@@ -323,8 +331,8 @@ getPageList();
   flex-wrap: wrap;
   padding: 10px;
   .table_box {
-    height: 358px;
-    width: 21%;
+    height: 388px;
+    width: 25%;
     display: flex;
     justify-content: center;
     .table_inner {
