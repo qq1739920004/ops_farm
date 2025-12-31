@@ -112,11 +112,11 @@
                   <img src="@/assets/common/stTime.png" alt="">
 
                 <el-progress 
-                  :percentage="item.totalArea && item.totalArea > 0 ? ((item.totalArea - (item.missedArea || 0)) / item.totalArea * 100).toFixed(0) : 0" 
+                  :percentage="calculateProgress(item)" 
                   :show-text="false"
                   :stroke-width="8"
                 />
-                <div class="progress_value">{{ item.totalArea && item.totalArea > 0 ? ((item.totalArea - (item.missedArea || 0)) / item.totalArea * 100).toFixed(0) : 0 }}%</div>
+                <div class="progress_value">{{ calculateProgress(item) }}%</div>
               </div>
             </div>
           </div>
@@ -174,6 +174,20 @@ const gotoDetails = (id: any) => {
       id: id,
     },
   });
+};
+
+// 计算作业进度百分比
+const calculateProgress = (item: any) => {
+  if (!item.totalArea) return 0;
+  
+  const totalArea = item.totalArea;
+  const missedArea = item.missedArea || 0;
+  const totalReseedArea = item.totalReseedArea || 0;
+  const denominator = totalArea + missedArea - totalReseedArea;
+  
+  if (denominator <= 0) return 0;
+  
+  return Math.round((totalArea / denominator) * 100);
 };
 const getCarList = async () => {
   const res = await getCarList_API({ farmId: pageInfo.farmId });

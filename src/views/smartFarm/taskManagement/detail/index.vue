@@ -41,11 +41,11 @@
               <div class="bottom progress_row">
                 <img src="@/assets/common/stTime.png" alt="">
                 <el-progress 
-                  :percentage="detailList.totalArea && detailList.totalArea > 0 ? ((detailList.totalArea - (detailList.missedArea || 0)) / detailList.totalArea * 100).toFixed(0) : 0" 
+                  :percentage="calculateProgress(detailList)" 
                   :show-text="false"
                   :stroke-width="8"
                 />
-                <div class="progress_value">{{ detailList.totalArea && detailList.totalArea > 0 ? ((detailList.totalArea - (detailList.missedArea || 0)) / detailList.totalArea * 100).toFixed(0) : 0 }}%</div>
+                <div class="progress_value">{{ calculateProgress(detailList) }}%</div>
               </div>
             </div>
    
@@ -89,11 +89,17 @@ const { formatAreaValue, getAreaUnit } = useAreaConversion();
 const route = useRoute();
 
 // 计算作业进度百分比
-const getWorkProgress = (missedArea: number, totalArea: number) => {
-  if (!totalArea || totalArea === 0) return "--";
-  if (!missedArea) missedArea = 0;
-  const progress = ((totalArea - missedArea) / totalArea * 100).toFixed(1);
-  return progress;
+const calculateProgress = (detailList: any) => {
+  if (!detailList.totalArea) return 0;
+  
+  const totalArea = detailList.totalArea ;
+  const missedArea = detailList.missedArea || 0;
+  const totalReseedArea = detailList.totalReseedArea || 0;
+  const denominator = totalArea + missedArea - totalReseedArea;
+  
+  if (denominator <= 0) return 0;
+  
+  return Math.round((totalArea / denominator) * 100);
 };
 
 const detailList = ref<any>({});
