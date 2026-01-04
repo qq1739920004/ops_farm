@@ -15,5 +15,5 @@ window.APP_CONFIG = {
   
   // 模式配置
   // 1: 只显示智慧农场菜单，1以外的值: 所有菜单
-  VITE_APP_Model: '1'
+  VITE_APP_Model: '0'
 };

@@ -11,6 +11,13 @@
     }
 
   </script>
+  <!-- 运行时配置文件 - 只在生产环境下加载 -->
+  <script>
+    // 检测是否在开发环境
+    if (window.location.port !== '8089') { // 在生产环境下才加载配置文件
+      document.write('<script src="./config.js"><\/script>');
+    }
+  </script>
   <title></title>
   <link rel="stylesheet" href="./leaflet/leaflet.css" />
   <link rel="stylesheet" href="./leaflet/MarkerCluster.css" />
@@ -27,8 +34,8 @@
   <script src="./leaflet/leaflet-roughcanvas.js"></script>
   <script src="./leaflet/leaflet.canvaslabel.js"></script>
   <script src="./leaflet/leaflet.polylineDecorator.js"></script>
-  <script type="module" crossorigin src="./assets/index-d3596342.js"></script>
-  <link rel="stylesheet" href="./assets/index-1195b3e7.css">
+  <script type="module" crossorigin src="./assets/index-68efce95.js"></script>
+  <link rel="stylesheet" href="./assets/index-0a2b9d3f.css">
 </head>
 
 <body>

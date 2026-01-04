@@ -2,7 +2,7 @@
   <el-menu
     :mode="appStore.layout"
     :default-active="activeMenu"
-    :collapse="collapse"
+    :collapse="props.collapse"
     :background-color="variables.appMenuColor"
     text-color="#fff"
     active-text-color="#fff"
@@ -20,10 +20,10 @@
     <el-menu-item
       v-else
       onclick="location.href='/'"
-      :class="{ logo_area: true, logo_active: collapse }"
+      :class="{ logo_area: true, logo_active: props.collapse }"
     >
-      <SvgIcon icon="logo" size="48" />
-
+      <!-- <SvgIcon icon="logo" size="48" /> -->
+      <img src="@/assets/icons/logo.svg" alt="">
       <span>{{ t("messages.systemName") }}</span>
     </el-menu-item>
 
@@ -55,7 +55,7 @@ const emit = defineEmits(["handleChange"]);
 import { useI18n } from "vue-i18n";
 const { t, locale } = useI18n();
 const isChangfa = import.meta.env.MODE === "changFa";
-defineProps({
+const props = defineProps({
   collapse: {
     type: Boolean,
     default: false,
@@ -80,7 +80,6 @@ onMounted(() => {
 <style lang="scss" scoped>
 .menu-en {
   width: 200px;
-x
   :deep(.el-menu-item:not(.logo_area)) {
     font-size: var(--sino-el-menu-item-font-size-en) !important;
   }
@@ -109,15 +108,22 @@ x
     font-size: var(--sino-el-menu-item-font-size-cn) !important;
   }
 }
+
+
+
+.menu-cn.el-menu--collapse {
+  width: 64px !important;
+}
 .logo_area {
   font-size: 24px;
-  transition: all 1s;
+  transition: all 0.3s ease;
   margin-top: 8px;
   margin-bottom: 22px;
   line-height: normal;
   height: auto;
   img {
     width: 48px;
+    transition: all 0.3s ease;
   }
   span {
     margin-left: var(--menu-gutter);
@@ -127,28 +133,18 @@ x
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow: hidden;
+    transition: all 0.3s ease;
   }
 }
 .logo_active {
-  transition: all 1s;
   display: flex;
   justify-content: center;
   align-items: center;
-  animation-name: opacityKeyframes;
-  animation-duration: 1s;
   span {
     margin-left: 0px;
   }
 }
 
-@keyframes opacityKeyframes {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
 .el-menu {
   border-right: none;
@@ -189,6 +185,9 @@ x
       .logo_active {
         margin: 0;
         padding: 0;
+        img {
+          width: 32px;
+        }
       }
     }
   }

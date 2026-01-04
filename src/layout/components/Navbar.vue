@@ -182,7 +182,7 @@ function gotoPm() {
     margin-right: 10px;
   }
   .avatar-dropdown {
-    color: #fff;
+    color: #000000;
     cursor: pointer;
     div {
       display: flex;
