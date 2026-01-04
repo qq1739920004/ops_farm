@@ -1,15 +1,16 @@
 <template>
   <div class="navbar_component">
+    <!-- 显示topType值用于调试 -->
     <div class="setting-item">
       <SvgIcon
         @click="toggle"
-        color="#fff"
+        :color="appStore.topType==1 ? '#fff' : '#33b838'"
         :icon="isFullscreen ? 'exit-fullscreen' : 'fullscreen'"
       />
-      <SvgIcon icon="theme" size="20" @click="drawer = true" />
+      <SvgIcon icon="theme" :color="appStore.topType==1 ? '#fff' : '#33b838'" size="20" @click="drawer = true" />
     </div>
     <el-dropdown class="lang-dropdown">
-      <SvgIcon icon="language" size="18" />
+      <SvgIcon :icon="appStore.topType==1 ? 'language' : 'language3'" size="20"  />
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item :disabled="locale == 'zh'" @click="changeLang('zh')"
@@ -29,7 +30,7 @@
         <img src="@/assets/header.png" alt="" />
         <span>
           <span>{{ userStore.userInfo.nickName }}</span>
-          <el-icon><arrow-down /></el-icon>
+          <el-icon :color="appStore.topType==1 ? '#fff' : '#33b838'" ><arrow-down /></el-icon>
         </span>
       </div>
       <template #dropdown>

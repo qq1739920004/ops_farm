@@ -11,7 +11,7 @@
               @click="changeCollapse"
               cursor="pointer"
               :icon="collapse ? 'exit-fold' : 'fold'"
-              color="#fff"
+              :color="appStore.topType==1 ? '#fff' : '#33b838'"
               size="24"
             />
             <div class="route_select">
@@ -190,7 +190,7 @@ function changeCollapse() {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: var(--app-menu-color);
+      background-color: var(--app-menu-color-top);
       background-image: url("@/assets/layout/navbar.png");
       background-repeat: no-repeat;
       background-position: center center;
@@ -208,7 +208,10 @@ function changeCollapse() {
 .el-main {
   height: 100%;
   padding: 0;
+  padding: 12px;
+  background-color: #f0f1f3;
 }
+
 .route_select {
   color: #fff;
 }
@@ -216,10 +219,10 @@ function changeCollapse() {
 .select-container {
   :deep(.el-select__wrapper) {
     background-color: transparent;
-    color: #fff;
+    color: #000;
   }
   :deep(.el-select__selected-item) {
-    color: #fff;
+    color: #000;
   }
 }
 </style>

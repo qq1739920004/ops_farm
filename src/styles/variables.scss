@@ -1,5 +1,4 @@
 :root {
-    --app-menu-color: #131A26;
     --xs-width:450px;
     --sm-idth:768px;
     --md-width:992px;
@@ -22,11 +21,18 @@
     --sino-el-menu-item-font-size-en:14px;
     --sino-el-button-disabled-color:#b8b8b8;
     --app-menu-color: #131A26;
+    --app-menu-color-top: #fff;
     --menu-padding-left:22px;
     --main-text-color:#000000;
     --bread-crumb-font-size:18px;
     --table-body-color:#1D1D1F;
     --danger-color:#F56C6C;
     --warning-color:#E6A23C;
+}
+.app_container{
+    padding: 0 ;
+  }
+.table_container{
+  border-radius: 0;
 }
 

@@ -1,9 +1,10 @@
 <template>
   <section class="app-main">
-    <div>
+    
+    <router-view v-slot="{ Component, route }">
+      <div>
       <breadcrumb />
     </div>
-    <router-view v-slot="{ Component, route }">
       <transition name="router-fade" mode="out-in">
         <!-- <keep-alive> -->
         <component :is="Component" :key="route.fullPath" />
@@ -21,7 +22,8 @@ import Breadcrumb from "./Breadcrumb/index.vue";
   min-height: 100%;
   height: 100%;
   background-color: var(--el-bg-color-page);
-
+  border-radius: 6px;
+  overflow: hidden;
   // position: relative;
   // width: 100%;
 

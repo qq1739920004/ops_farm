@@ -26,6 +26,7 @@ const useAppStore = defineStore("app", () => {
     const themeColor = useStorage('themeColor_farm', '#33B838')
     const device = ref('desktop') // 屏幕类型
     const language = useStorage("language", navigatorLanguage);
+    const topType = ref(2)
     const locale = computed(() => {
         if (language.value == 'zh') {
             return zhCn
@@ -85,6 +86,7 @@ const useAppStore = defineStore("app", () => {
         themeColor,
         language,
         locale,
+        topType,
         updateIsDark,
         updateDevice,
         updateLayout,

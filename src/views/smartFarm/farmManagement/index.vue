@@ -340,6 +340,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+
 .search_container {
   display: flex;
   justify-content: space-between;
