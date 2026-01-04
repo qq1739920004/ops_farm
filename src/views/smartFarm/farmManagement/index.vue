@@ -247,7 +247,8 @@ const getCarList = async (id: any) => {
   const res = await getCarList_API({
     farmId: id,
   });
-  vehicleList.value = res.data;
+  console.log(res.data);
+  vehicleList.value = res.data
 };
 
 const currentChange = (val: any) => {

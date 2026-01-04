@@ -3,13 +3,13 @@
     <div class="top_left">
       <!-- <img src="~@/assets/systemPerceptionImage/top_title_logo.png" class="top-img"  key=""  alt="" /> -->
       <div class="top_tittle" v-if="isChangfa">
-        <router-link to='/monitoring' >
+        <router-link to='/machineMgt/monitoring' >
           <img src="~@/assets/perceptionImage/logochangfa-usercenter.png" key="" style="width:60px"  alt="" />
           <h1>常发农装感知平台</h1>
         </router-link>
       </div>
       <div class="top_tittle" v-else>
-        <router-link to='/monitoring'>
+        <router-link to='/machineMgt/monitoring'>
           <img src="~@/assets/common/perceoArrow.png" key=""  alt="" />
           <h1>司南耕耘感知平台</h1>
         </router-link>

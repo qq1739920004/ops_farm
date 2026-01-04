@@ -2,13 +2,13 @@
   <div class="top">
     <div class="top_left">
       <div class="top_tittle" v-if="isChangfa">
-        <router-link to="/monitoring">
+        <router-link to="/machineMgt/monitoring">
           <img src="~@/assets/perceptionImage/logochangfa-usercenter.png" style="width:60px" key="" alt="" />
           <h1>常发导航北斗农机智能监管平台</h1>
         </router-link>
       </div>
       <div class="top_tittle" v-else>
-        <router-link to="/monitoring">
+        <router-link to="/machineMgt/monitoring">
           <img src="~@/assets/common/perceoArrow.png" key="" alt="" />
           <h1>CTFarm Perception Platform</h1>
         </router-link>

@@ -13,23 +13,34 @@ let chartContainerList = ref<any>([]);
 let optionsList = ref<any>([]);
 let isUpdata = ref(false);
 function updateChart(dataList: MonitorObj["provinceCars"]) {
-  if (!isUpdata.value) return;
-  dataList.filter((item) => {
-    return item.lat;
+  if (!isUpdata.value || !dataList || dataList.length === 0) return;
+  
+  // Filter the data properly and save the result
+  const filteredData = dataList.filter((item) => {
+    return item && item.lat;
   });
+  
+  // Make sure we don't exceed array bounds
   optionsList.value.forEach((item: any, index: number) => {
-    item.xAxis.data[0] = dataList[index].cityName;
+    // Check if data exists at this index
+    if (!filteredData[index]) return;
+    
+    // Safely access properties
+    item.xAxis.data[0] = filteredData[index].cityName || 'Unknown';
     //在线数
-    item.series[0].data[0] = dataList[index].onlineNum;
+    item.series[0].data[0] = filteredData[index].onlineNum || 0;
     //离线数
     item.series[1].data[0] =
-      dataList[index].totalNum - dataList[index].onlineNum;
+      (filteredData[index].totalNum || 0) - (filteredData[index].onlineNum || 0);
     //总数
     item.series[1].label.formatter = function () {
-      return dataList[index].totalNum; // 显示总数
+      return filteredData[index].totalNum || 0; // 显示总数
     };
 
-    chartList.value[index].setOption(item, true);
+    // Make sure the chart exists before trying to set options
+    if (chartList.value[index]) {
+      chartList.value[index].setOption(item, true);
+    }
   });
 }
 
@@ -39,11 +50,24 @@ function setMarker(
   dataList: MonitorObj["provinceCars"],
   t: any
 ) {
-  for (let i = 0; i <= dataList.length; i++) {
-    if (!dataList[i].code) {
-      isUpdata.value=true
-      return
-    };
+  // Reset chart lists before adding new elements
+  chartList.value = [];
+  chartContainerList.value = [];
+  optionsList.value = [];
+  
+  // Validate input data
+  if (!dataList || !Array.isArray(dataList)) {
+    console.error('Invalid data provided to setMarker');
+    return;
+  }
+  
+  // Changed <= to < to avoid accessing index that doesn't exist
+  for (let i = 0; i < dataList.length; i++) {
+    // Check if dataList[i] exists and has required properties
+    if (!dataList[i] || !dataList[i].code) {
+      isUpdata.value = true;
+      continue; // Skip this item instead of returning
+    }
     const markerContent = document.createElement("div");
     const markerContent2 = document.createElement("div");
     markerContent2.style.width = `${width.value}px`;
