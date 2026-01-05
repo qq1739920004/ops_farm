@@ -3,6 +3,7 @@ import { ElMessage } from "element-plus";
 import useUserStore from '@/store/user'
 const userStore = useUserStore()
 import { ElLoading } from 'element-plus'
+import { getRuntimeConfig } from './config';
 let loadingInstance: any;
 // 创建 axios 实例
 const service = axios.create({
@@ -50,9 +51,16 @@ service.interceptors.response.use(
     if (status == 401) {
       userStore.clearUserInfo()
       // 前往登录页面
-      process.env.NODE_ENV !== "development"
-        ? (location.href = `${location.origin}/#/login?clientUrl=${location.href}`)
-        : "";
+      if (process.env.NODE_ENV !== "development") {
+        const config = getRuntimeConfig();
+        if (config.VITE_APP_Model === '1') {
+          // 当VITE_APP_Model为1时，跳转到指定的云平台登录页
+          location.href =(config.VITE_ENV=="development" || config.VITE_ENV=="test")? `http://140.207.166.210:9030/farmScreen/login?clientUrl=${location.href}`: `https://cloud.sinognss.com/farmScreen/login?clientUrl=${location.href}`;
+        } else {
+          // 当VITE_APP_Model不为1时，保持原来的行为
+          location.href = `${location.origin}/#/login?clientUrl=${location.href}`;
+        }
+      }
 
     } else if (status == 403) {
       ElMessage.error('暂无权限');

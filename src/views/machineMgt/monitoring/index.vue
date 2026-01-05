@@ -13,6 +13,7 @@
       <!--    :placeholder="$t('messages.SNLabelSNcarName')" -->
       <el-autocomplete
         popper-class="my-autocomplete"
+        :placeholder="$t('work.searchPlaceholder')"
         :trigger-on-focus="false"
         v-model="searchSn"
         :fetch-suggestions="querySearch"
@@ -1185,7 +1186,6 @@ function openRemote_markerPopup(arg: any) {
         color: #fff !important;
         background-color: transparent;
         &::placeholder {
-          color: #fff !important;
         }
       }
     }

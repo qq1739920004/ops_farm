@@ -110,6 +110,7 @@ import useAppStore from "@/store/app";
 import useUserStore from "@/store/user";
 import { useFullscreen } from "@vueuse/core";
 import SvgIcon from "@/components/SvgIcon/index.vue";
+import { getRuntimeConfig } from "@/utils/config";
 
 
 const { locale,t } = useI18n();
@@ -149,7 +150,14 @@ function changeLang(value: string) {
 // 退出登录
 function logOut() {
   userStore.clearUserInfo();
-  location.href = "/";
+  const config = getRuntimeConfig();
+  if (config.VITE_APP_Model === '1') {
+    // 当VITE_APP_Model为1时，跳转到指定的云平台登录页
+    location.href =(config.VITE_ENV=="development" || config.VITE_ENV=="test")? `http://140.207.166.210:9030/farmScreen/login?clientUrl=${location.href}`:`https://cloud.sinognss.com/farmScreen/login?clientUrl=${location.href}`;
+  } else {
+    // 当VITE_APP_Model不为1时，保持原来的行为
+    location.href = "/";
+  }
 }
 // 前往用户中心
 function goUserCenter() {

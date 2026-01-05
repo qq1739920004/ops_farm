@@ -43,7 +43,7 @@ service.interceptors.response.use(
       tokenRenewal();
     }
 
-    let { code, message, type, data } = response.data;
+    let { code, message, type } = response.data;
 
     // 响应数据为二进制流处理(Excel导出)
     if (response.data instanceof ArrayBuffer || response.data instanceof Blob) {
@@ -77,9 +77,16 @@ service.interceptors.response.use(
     if (status == 401) {
       userStore.clearUserInfo()
       // 前往登录页面
-      process.env.NODE_ENV !== "development"
-        ? (location.href = `${location.origin}/#/login?clientUrl=${location.href}`)
-        : "";
+      if (process.env.NODE_ENV !== "development") {
+        const config = getRuntimeConfig();
+        if (config.VITE_APP_Model === '1') {
+          // 当VITE_APP_Model为1时，跳转到指定的云平台登录页
+          location.href =(config.VITE_ENV=="development" || config.VITE_ENV=="test")? `http://140.207.166.210:9030/farmScreen/login?clientUrl=${location.href}`: `https://cloud.sinognss.com/farmScreen/login?clientUrl=${location.href}`;
+        } else {
+          // 当VITE_APP_Model不为1时，保持原来的行为
+          location.href = `${location.origin}/#/login?clientUrl=${location.href}`;
+        }
+      }
 
     } else if (status == 403) {
       ElMessage.warning(i18n.global.t('messages.noPer'));

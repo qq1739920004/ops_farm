@@ -9,10 +9,6 @@ lerna-debug.log*
 
 node_modules
 dist
-dist-test
-dist-ssr
-dist-production*
-dist-productionSea*
 dist-*
 dist.zip
 *.local

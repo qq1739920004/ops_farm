@@ -230,7 +230,7 @@
         <!-- 面积 -->
         <el-row>
           <el-col :span="(locale === 'en' || locale === 'jp') ? 12 : 8">
-            {{ t("work.allArea") }}({{ (locale === 'en' || locale === 'jp') ? 'ha' : 'm²' }}):</el-col
+            {{ t("work.allArea") }}({{ (locale === 'en' || locale === 'jp') ? 'ha' : '亩' }}):</el-col
           >
           <el-col :span="12"> {{ (locale === 'en' || locale === 'jp') ? (fieldInfo.area / 10000).toFixed(4) : fieldInfo.area }}</el-col>
         </el-row>

@@ -176,6 +176,9 @@ const jp = {
     apply: "意気"
   },
   work: {
+    searchPlaceholder:'SN/設備名/ネームプレートSN/会社/連絡先',
+    searchPlaceholder2:'名前/電話番号/ネームプレートSN/SN',
+    searchPlaceholder3:'農場名を入力してください',
     item: "シリアル番号",
     basicP: '基本パラメータ',
     name: "所有者",

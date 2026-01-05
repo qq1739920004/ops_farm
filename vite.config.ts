@@ -13,12 +13,11 @@ const baiduUrl = `https://api.map.baidu.com`;
 const nogateway = `https://cloud.sinognss.com/gateway`;
 
 // 自定义插件：生成运行时配置文件
-function generateRuntimeConfig() {
+function generateRuntimeConfig(mode) {
   return {
     name: 'generate-runtime-config',
     closeBundle() {
-      // 在构建完成后执行
-      const mode = process.env.NODE_ENV || 'production';
+      // 在构建完成后执行，使用传入的mode参数
       const env = loadEnv(mode, process.cwd());
       
       // 配置模板
@@ -43,8 +42,11 @@ window.APP_CONFIG = {
   VITE_APP_Model: '${env.VITE_APP_Model || '1'}'
 };`;
 
-      // 输出目录
-      const outputDir = `dist-${env.VITE_ENV || mode}`;
+      // 输出目录，使用与build配置相同的逻辑
+      console.log('当前构建模式:', mode);
+      console.log('加载的环境变量VITE_ENV:', env.VITE_ENV);
+      const outputDir = `dist-${env.VITE_ENV}`;
+      console.log('输出目录:', outputDir);
       const configPath = path.resolve(process.cwd(), outputDir, 'config.js');
       
       // 确保目录存在并写入配置文件
@@ -88,7 +90,7 @@ export default ({ mode }) => defineConfig({
     promiseImportName: i => `__tla_${i}`
   }),
   // 添加运行时配置生成插件
-  generateRuntimeConfig()
+  generateRuntimeConfig(mode)
 
   ],
   resolve: {

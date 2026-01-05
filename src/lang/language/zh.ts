@@ -176,6 +176,9 @@ const zh = {
     apply: "配置"
   },
   work: {
+    searchPlaceholder:'SN/设备名称/铭牌SN/公司/联系方式',
+    searchPlaceholder2:'车主姓名/联系方式/铭牌SN/SN',
+    searchPlaceholder3:'请输入农场名称',
     item: "序号",
     basicP: '基本参数',
     name: "车主",

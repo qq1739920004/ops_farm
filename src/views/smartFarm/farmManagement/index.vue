@@ -5,6 +5,7 @@
         <div class="input_area">
           <el-input
             v-model="pageInfo.key"
+            :placeholder="t('work.searchPlaceholder3')"
             class="input-with-select"
             @keyup.enter.native="getList"
             clearable

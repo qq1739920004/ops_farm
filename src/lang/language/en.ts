@@ -175,6 +175,9 @@ const en = {
     apply: "Apply",
   },
   work: {
+    searchPlaceholder:'SN/device name/Label SN/Dealer/Phone',
+    searchPlaceholder2:'name/tel/Label SN/SN',
+    searchPlaceholder3:'please enter farm name',
     builtInNetwork: "Built-in Network",
     operationWork: "Operation",
     noData: "No Data",

@@ -7,6 +7,7 @@
           <el-input
             v-model="pageInfo.key"
             class="input-with-select"
+            :placeholder="$t('work.searchPlaceholder2')"
             @keyup.enter.native="search"
             clearable
             @clear="clearAll"
