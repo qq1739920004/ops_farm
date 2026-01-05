@@ -11,7 +11,7 @@
       <div class="top_tittle" v-else>
         <router-link to='/machineMgt/monitoring'>
           <img src="~@/assets/common/perceoArrow.png" key=""  alt="" />
-          <h1>司南耕耘感知平台</h1>
+          <h1>万象农业感知平台</h1>
         </router-link>
 
       </div>

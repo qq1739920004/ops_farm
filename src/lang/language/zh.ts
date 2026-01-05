@@ -51,7 +51,7 @@ const zh = {
     browse: '浏览',
     Pleasedistributor: '请选择经销商',
     pleaseSelectDevice:'请选择设备',
-    systemName: '司南耕耘',
+    systemName: '万象农业',
     systemName2: '常发农装',
     backHome: '返回首页',
     noRequest: '访问地址不存在！',
