@@ -74,11 +74,12 @@
                 "
                 v-auth="2795"
                 type="primary"
+                v-if="isVisible"
                 text
                 @click="openExternalLink(scope.row.id)"
                 >{{ t("farm.enterDp") }}</el-button
               >
-              <el-button
+              <!-- <el-button
                 v-auth="2796"
                 :style="
                   locale == 'en'
@@ -91,10 +92,10 @@
                 text
                 @click=""
                 >{{ t("farm.PicMgt") }}</el-button
-              >
+              > -->
               <el-button
                 v-auth="2792"
-
+                v-if="isVisible"
                 type="primary"
                 text
                 @click="openViewModeDialog(scope.row.id, scope.row.name, scope.row.viewMode)"
@@ -130,7 +131,7 @@
         <el-option
           v-for="vehicle in vehicleList"
           :key="vehicle.id"
-          :label="vehicle.name"
+          :label="vehicle.label"
           :value="vehicle.id"
         />
       </el-select>
@@ -172,11 +173,14 @@
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from "@/components/Pagination/index.vue";
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, computed } from "vue";
 import { pageList_API, deleteFarm_API } from "@/api/machineryList/index";
 import { getCarList_API, pushFarm_API, updateFarm_API } from "@/api/fieldManagement/indx";
 import { useI18n } from "vue-i18n";
 const { locale, t } = useI18n();
+
+// 检查环境变量，当VITE_ENV为productionSea时不显示组件
+const isVisible = computed(() => import.meta.env.VITE_ENV !== 'productionSea');
 let $route = useRoute();
 const router = useRouter();
 const total = ref(0);
@@ -248,7 +252,10 @@ const getCarList = async (id: any) => {
     farmId: id,
   });
   console.log(res.data);
-  vehicleList.value = res.data
+  vehicleList.value = res.data.map((item:any)=>{
+    item.label=`${item.name}(${item.sn})`
+    return item
+  })
 };
 
 const currentChange = (val: any) => {

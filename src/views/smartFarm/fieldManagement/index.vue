@@ -252,10 +252,10 @@
               <!-- <span style="font-size: 12px; color: #aaa;">
                 {{ fieldInfo.blockCrops[0]?.plantingStartTime || '--' }}
               </span> -->
-            <el-button link type="primary" size="small" @click="openCropDrawer">{{ t('work.more') }}</el-button>
 
             </div>
             <span v-else>--</span>
+            <el-button link type="primary" size="small" @click="openCropDrawer">{{ t('work.more') }}</el-button>
           </el-col>
         </el-row>
         
@@ -1328,7 +1328,7 @@ const submitCropForm = async () => {
 }
 
 .crop-info{
-  display: flex;
+  display: inline-block;
   gap:10px
   // justify-content: space-between;
 }
