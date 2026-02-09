@@ -173,7 +173,17 @@ const jp = {
     oneYear: "年",
     expiredNow: "すぐに期限切れ",
     permanent: "永",
-    apply: "意気"
+    apply: "意気",
+    codeRecord: "登録コード履歴",
+    getRegistrationCode: "登録コードを取得する",
+    codeType: "コードタイプ",
+    registrationDuration: "登録期間",
+    operator: "オペレーター",
+    operateTime: "操作時間",
+    status: "ステータス",
+    remark: "備考",
+    noAvailableDuration: "このデバイスには永久コードが発行済みか、利用可能な登録期間がありません",
+    codeIssuedSuccess: "登録コードの発行に成功しました"
   },
   work: {
     searchPlaceholder:'SN/設備名/ネームプレートSN/会社/連絡先',

@@ -173,6 +173,16 @@ const en = {
     expiredNow: "Expired now",
     permanent: "Permanent",
     apply: "Apply",
+    codeRecord: "Code Record",
+    getRegistrationCode: "Get Code",
+    codeType: "Code Type",
+    registrationDuration: "Registration Duration",
+    operator: "Operator",
+    operateTime: "Operation Time",
+    status: "Status",
+    remark: "Remark",
+    noAvailableDuration: "Device has permanent code or no available duration",
+    codeIssuedSuccess: "Registration code issued successfully"
   },
   work: {
     searchPlaceholder:'SN/device name/Label SN/Dealer/Phone',

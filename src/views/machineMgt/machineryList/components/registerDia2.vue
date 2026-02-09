@@ -27,8 +27,8 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <div v-auth="2854" class="log-link">
-            <el-link type="primary" @click="openLog">取码记录</el-link>
+        <div class="log-link">
+            <span class="link-text" v-auth="2854" @click="openLog">{{ $t('devicelist.codeRecord') }}</span>
         </div>
         <span class="dialog-footer">
           <el-button type="primary" @click="activationAddBtn" :disabled="dataArray.length === 0">
@@ -76,7 +76,7 @@ const getDays = async () => {
         tips.value = "";
       } else {
         // If no days available, it might mean permanent code is already taken or not available
-        tips.value = "该设备已取永久码或无可用注册时长"; // "Device already has permanent code or no available duration"
+        tips.value = t('devicelist.noAvailableDuration'); // "Device already has permanent code or no available duration"
       }
     }
   } catch (e) {
@@ -98,7 +98,7 @@ const activationAddBtn = async () => {
       // So likely no deviceId needed for this new API.
     });
     if (res.code === 0) {
-      ElMessage({ type: "success", message: "注册码下发成功" }); // "Registration code issued successfully"
+      ElMessage({ type: "success", message: t('devicelist.codeIssuedSuccess') }); // "Registration code issued successfully"
       dialogVisible.value = false;
     } else {
         // Error is handled by request interceptor usually, but if code!=0
@@ -160,5 +160,14 @@ const activationAddBtn = async () => {
     text-align: right;
     margin-bottom: 10px;
     margin-right: 20px;
+}
+.link-text {
+  color: var(--el-color-primary);
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+}
+.link-text:hover {
+  opacity: 0.8;
 }
 </style>

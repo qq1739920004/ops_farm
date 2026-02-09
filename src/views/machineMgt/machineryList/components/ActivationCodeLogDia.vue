@@ -1,27 +1,27 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="取码记录"
+    :title="$t('devicelist.codeRecord')"
     width="700px"
     :close-on-click-modal="false"
   >
     <el-table :data="tableData" stripe style="width: 100%" v-loading="loading">
-      <el-table-column prop="sn" label="SN" min-width="150" align="center" />
+      <el-table-column prop="sn" :label="$t('devicelist.sn')" min-width="150" align="center" />
       <!-- <el-table-column prop="npn" label="NPN" width="180" align="center" /> -->
-      <el-table-column prop="codeType" label="取码类型" min-width="100" align="center">
+      <el-table-column prop="codeType" :label="$t('devicelist.codeType')" min-width="100" align="center">
         <template #default="{ row }">
             {{ row.codeType }}
         </template>
       </el-table-column>
-      <el-table-column prop="registerDays" label="注册时长" min-width="100" align="center">
+      <el-table-column prop="registerDays" :label="$t('devicelist.registrationDuration')" min-width="100" align="center">
           <template #default="{ row }">
-            {{ row.registerDays === -1 ? '立即过期' : (row.registerDays === 65535 ? '永久' : row.registerDays) }}
+            {{ row.registerDays === -1 ? $t('devicelist.expiredNow') : (row.registerDays === 65535 ? $t('devicelist.permanent') : row.registerDays) }}
         </template>
       </el-table-column>
       <!-- <el-table-column prop="registerDays" label="注册时长" width="100" align="center">
       </el-table-column> -->
-      <el-table-column prop="operatorName" label="操作人" min-width="120" align="center" />
-      <el-table-column prop="createTime" label="操作时间" min-width="180" align="center">
+      <el-table-column prop="operatorName" :label="$t('devicelist.operator')" min-width="120" align="center" />
+      <el-table-column prop="createTime" :label="$t('devicelist.operateTime')" min-width="180" align="center">
           <template #default="{ row }">
             {{ row.createTime ? dayjs(row.createTime).format("YYYY-MM-DD HH:mm:ss") : '' }}
           </template>
@@ -36,7 +36,9 @@
 import { ref } from "vue";
 import { getActivationCodeLog_API } from "@/api/machineryList/index";
 import dayjs from "dayjs";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const dialogVisible = ref(false);
 const tableData = ref([]);
 const loading = ref(false);

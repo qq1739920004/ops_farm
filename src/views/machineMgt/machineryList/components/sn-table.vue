@@ -316,7 +316,7 @@
               type="primary"
               text
               @click="gotoRegister2(row.id, row.sn, row.deviceId)"
-              >取注册码</el-button
+              >{{ $t("devicelist.getRegistrationCode") }}</el-button
             >
           </span>
         </el-tooltip>

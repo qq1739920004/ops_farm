@@ -173,7 +173,17 @@ const zh = {
     oneYear: "一年",
     expiredNow: "立即过期",
     permanent: "永久",
-    apply: "配置"
+    apply: "配置",
+    codeRecord: "取码记录",
+    getRegistrationCode: "取注册码",
+    codeType: "取码类型",
+    registrationDuration: "注册时长",
+    operator: "操作人",
+    operateTime: "操作时间",
+    status: "状态",
+    remark: "备注",
+    noAvailableDuration: "该设备已取永久码或无可用注册时长",
+    codeIssuedSuccess: "注册码下发成功"
   },
   work: {
     searchPlaceholder:'SN/设备名称/铭牌SN/公司/联系方式',
