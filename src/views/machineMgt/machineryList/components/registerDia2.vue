@@ -27,7 +27,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <div class="log-link">
+        <div v-auth="2854" class="log-link">
             <el-link type="primary" @click="openLog">取码记录</el-link>
         </div>
         <span class="dialog-footer">
