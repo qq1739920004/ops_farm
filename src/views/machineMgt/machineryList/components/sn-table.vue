@@ -290,6 +290,7 @@
     >
       <template #="{ row }">
         <el-button
+          v-if="row.origin != 1"
           :disabled="row.onlineTcp === 1 ? false : true"
           v-auth="476"
           :style="
@@ -300,6 +301,25 @@
           @click="gotoRegister(row.id, row.sn, row.deviceId)"
           >{{ $t("devicelist.swRegistration") }}</el-button
         >
+        <el-tooltip
+          v-if="row.origin == 1"
+          :content="getRegisterButtonTip(row)"
+          :disabled="!getRegisterButtonTip(row)"
+          placement="top"
+        >
+          <span style="display: inline-block;">
+            <el-button
+              :disabled="!!getRegisterButtonTip(row)"
+              :style="
+                locale == 'en' ? 'width: 85px' : locale == 'jp' ? 'width:95px' : 'width:65px'
+              "
+              type="primary"
+              text
+              @click="gotoRegister2(row.id, row.sn, row.deviceId)"
+              >取注册码</el-button
+            >
+          </span>
+        </el-tooltip>
         <el-tooltip
           style="margin-right: 6px"
           :disabled="row.openRemote ? true : false"
@@ -405,6 +425,7 @@
     :name="name"
   />
   <RegisterDia ref="RegisterD" :sn="sn" :carId="carId" :deviceId="deviceId"></RegisterDia>
+  <RegisterDia2 ref="RegisterD2" :sn="sn" :carId="carId" :deviceId="deviceId"></RegisterDia2>
 </template>
 
 <script setup lang="ts">
@@ -419,9 +440,12 @@ import MachineDetail501Dia from "./machineDetail501Dia.vue";
 import { terminalTypeList_API } from "@/api/machineryList/index";
 import RemoteControl from "@/components/remoteAdjust/index.vue";
 import RegisterDia from "./registerDia.vue";
+import RegisterDia2 from "./registerDia2.vue";
 import { useRouter } from "vue-router";
 import { cityCodeList } from "./citycode2";
 import { useI18n } from "vue-i18n";
+import useUserStore from "@/store/user";
+const userStore = useUserStore();
 const { locale } = useI18n();
 const { t } = useI18n();
 const router = useRouter();
@@ -437,6 +461,7 @@ const expirationTime = ref<string>("");
 const satelliteDate = ref<string>("");
 const warrantyDate = ref<string>("");
 const RegisterD = ref();
+const RegisterD2 = ref();
 const paramVersionnum = ref<string>("");
 const paramType = ref<string>("");
 const name = ref<string>("");
@@ -444,6 +469,17 @@ const deviceId = ref<string>("");
 const isChange = ref(false);
 const isLanguage = ref<any>(localStorage.language);
 
+const getRegisterButtonTip = (row: any) => {
+  const tips = [];
+  console.log(userStore.permissionList,'userStore.permissionList');
+  if (row.activationStatus != 1) {
+    tips.push(t("statisticsReport.notActived"));
+  }
+  if (!userStore.permissionList.includes(2849)) {
+    tips.push("没有取注册码权限");
+  }
+  return tips.join('; ');
+};
 const handleFunctionList = () => {
   let apiArr = [
     { text: t("statisticsReport.notActived"), value: 0 },
@@ -573,6 +609,12 @@ const gotoRegister = (val: any, val2: any, val3: any) => {
   sn.value = val2;
   deviceId.value = val3;
   RegisterD.value.dialogVisible = true;
+};
+const gotoRegister2 = (val: any, val2: any, val3: any) => {
+  carId.value = val;
+  sn.value = val2;
+  deviceId.value = val3;
+  RegisterD2.value.dialogVisible = true;
 };
 const gotoRemote = (val: any, val2: any, val3: any, val4: any, val5: any, val6: any) => {
   terminalType.value = val;

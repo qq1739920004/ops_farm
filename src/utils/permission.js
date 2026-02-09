@@ -1,4 +1,5 @@
 import useAppStore from "@/store/app";
+import useUserStore from "@/store/user";
 import { ElMessage } from "element-plus";
 import { asyncRoutes } from "@/router";
 import router from "@/router";
@@ -7,7 +8,7 @@ import Layout from "@/layout/index.vue";
 import { app } from "@/store";
 import { config } from "@/utils/config";
 
-// const appStore = useAppStore();
+const appStore = useAppStore();
 const loadView = import.meta.glob('@/views/**/*.vue');
 const loadComponents = import.meta.glob('@/components/**/*.vue');
 let params = {
@@ -29,7 +30,7 @@ let params = {
 let res = await menusPermissionByUser(params);
 // @ts-ignore
 let menuPermissions = res.data.menuPermissions; // 菜单权限数据
-
+const userStore =useUserStore()
 // 根据VITE_APP_Model的值进行条件过滤
 if (config.VITE_APP_Model == '1') {
   console.log(config.VITE_APP_Model);
@@ -253,7 +254,7 @@ function formatButton(buttonPermissions) {
     (item) => item.isHavePermission
   );
   haveButtonPermissionsIds = haveButtonPermissionsIds.map((item) => item.id);
-
+  userStore.setPermissionList(haveButtonPermissionsIds);
   app.directive("auth", {
     mounted: function (el, binding, vnode) {
       const btn_value = binding.value;

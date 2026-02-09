@@ -19,7 +19,7 @@
     <!-- ucFrontEnd -->
     <el-menu-item
       v-else
-      onclick="location.href='/'"
+      @click="handleLogoClick"
       :class="{ logo_area: true, logo_active: props.collapse }"
     >
       <!-- <SvgIcon icon="logo" size="48" /> -->
@@ -53,6 +53,7 @@ const route = useRoute();
 const router = useRouter();
 const emit = defineEmits(["handleChange"]);
 import { useI18n } from "vue-i18n";
+import { config } from "@/utils/config";
 const { t, locale } = useI18n();
 const isChangfa = import.meta.env.MODE === "changFa";
 const props = defineProps({
@@ -71,6 +72,14 @@ const activeMenu = computed(() => {
 });
 function elMenuSelect() {
   emit("handleChange");
+}
+
+function handleLogoClick() {
+  if (config.VITE_APP_Model === '1') {
+    // 不跳转
+    return;
+  }
+  location.href = '/';
 }
 onMounted(() => {
   console.log('router.options.routes',router.options.routes);

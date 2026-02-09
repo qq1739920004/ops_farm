@@ -113,11 +113,16 @@ import upGradeDia from "./components/upgradeDia.vue";
 import Pagination from "@/components/Pagination/index.vue";
 import { reactive, ref, onMounted } from "vue";
 import { carNewList_API } from "@/api/machineryList/index";
-import { newListObj, carNewListResponseData, pageInfo } from "@/api/machineryList/type";
+// import { newListObj, carNewListResponseData, pageInfo }  from "@/api/machineryList/type";
+//导入type
+import type { newListObj, carNewListResponseData, pageInfo }  from "@/api/machineryList/type";
 import snTable from "./components/sn-table.vue";
 // import snCard from "./components/sn-card.vue";
 import { carDealer_API } from "@/api/machineryList/index";
 import { carDealerResponseData, carDealerObj } from "@/api/machineryList/type";
+//从pinia获取用户拥有的所有权限
+import useUserStore from "@/store/user";
+
 import {
   ProvinceDataNewListResponseData,
   ProvinceDataNewListObj,
@@ -129,6 +134,7 @@ const router = useRouter();
 const tableShow = ref<boolean>(true);
 const inputT = ref()
 const total = ref<number>(10);
+const userStore = useUserStore();
 // 经销商列表
 const dealerList = ref<carDealerObj[]>([]);
 const pageInfo = reactive<pageInfo>({

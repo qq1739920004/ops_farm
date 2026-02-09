@@ -116,7 +116,7 @@ export default ({ mode }) => defineConfig({
   },
   server: {
     host: "0.0.0.0",
-    port: 8089,
+    // port: 8081,
     open: true, // 运行是否自动打开浏览器
     proxy: {
       // '/dev-api/lu': {

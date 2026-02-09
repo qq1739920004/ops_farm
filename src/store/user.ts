@@ -1,6 +1,13 @@
 import { defineStore } from 'pinia'
 import { useStorage } from "@vueuse/core";
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
+//permissionList用来记录用户权限
+const permissionList = ref<number[]>([])
+//set permissionList
+function setPermissionList(arg: any[]) {
+    permissionList.value = arg
+}
+
 const useUserStore = defineStore("use", () => {
     const userInfo = reactive(JSON.parse(localStorage.getItem('userInfo') || '{}'))
     let locationHrefAuthorization = location.href.split('?Authorization=')[1] || ''
@@ -24,14 +31,16 @@ const useUserStore = defineStore("use", () => {
         localStorage.removeItem("userInfo")
           localStorage.removeItem("isBlock")
     }
-    
+    //添加permissionList到返回对象中
     return {
         userInfo,
         Authorization,
         refresh_token,
         updateAuthorization,
         updateRefreshToken,
-        clearUserInfo
+        clearUserInfo,
+        permissionList,
+        setPermissionList
     }
 })
 export default useUserStore

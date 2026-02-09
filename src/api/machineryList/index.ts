@@ -158,3 +158,34 @@ export function setFileUpload(params:any) {
     },
   });
 }
+//获取取注册码的天数
+export function getActivationCodeDay_API(params:any){
+    return request<any,any>({
+        url:'/farm/activationCode/getDays',
+        method:'get',
+        params
+    })
+}
+//取注册码
+export function getActivationCode_API(params:any){
+    return request<any,any>({
+        url:'/farm/activationCode/pushCode',
+        method:'post',
+        params
+    })
+}
+/*
+取注册码下发日志
+sn
+必需
+codeType
+可选
+取码类型 临时码 永久码 非必传
+*/
+export function getActivationCodeLog_API(params:any){
+    return request<any,any>({
+        url:'/farm/activationCode/getCodePushLogs',
+        method:'get',
+        params
+    })
+}
