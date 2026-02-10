@@ -2,7 +2,7 @@
   <el-dialog
     v-model="dialogVisible"
     :title="$t('devicelist.codeRecord')"
-    width="700px"
+    width="1000px"
     :close-on-click-modal="false"
   >
     <el-table :data="tableData" stripe style="width: 100%" v-loading="loading">
@@ -26,8 +26,8 @@
             {{ row.createTime ? dayjs(row.createTime).format("YYYY-MM-DD HH:mm:ss") : '' }}
           </template>
       </el-table-column>
-      <!-- <el-table-column prop="operateStatus" label="状态" align="center" /> -->
-      <!-- <el-table-column prop="remark" label="备注" align="center" show-overflow-tooltip /> -->
+      <el-table-column prop="operateStatus" label="状态" align="center" />
+      <el-table-column prop="remark" label="备注" min-width="180" align="center" show-overflow-tooltip />
     </el-table>
   </el-dialog>
 </template>
