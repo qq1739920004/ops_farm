@@ -307,7 +307,7 @@
           :disabled="!getRegisterButtonTip(row)"
           placement="top"
         >
-          <span style="display: inline-block;">
+          <span style="display: inline-block; margin-right: 12px">
             <el-button
               :disabled="!!getRegisterButtonTip(row)"
               :style="
