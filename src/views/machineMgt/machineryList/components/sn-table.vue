@@ -264,6 +264,25 @@
         <!-- </el-tooltip> -->
       </template>
     </el-table-column>
+    <el-table-column
+      :label="$t('devicelist.source')"
+      prop="createtime"
+      align="center"
+      width="60"
+    >
+      <template #="{ row }">
+        <!-- <el-tooltip
+          style="margin-right: 6px"
+          :disabled="false"
+          class="box-item"
+          effect="dark"
+          :content="row.lastOnlineTime"
+          placement="top-start"
+        > -->
+        {{ row.origin != 1 ? '其他' :'B2B' }}
+        <!-- </el-tooltip> -->
+      </template>
+    </el-table-column>
     <!-- <el-table-column label="公司/经销商" >
             <template #="{ row }">
                 {{ row.companyName || '/' }}

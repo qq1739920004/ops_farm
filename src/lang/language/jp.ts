@@ -160,6 +160,7 @@ const jp = {
     lastOnlineTime: "最近発売された商品",
     operation: "動く",
     swRegistration: "ソフトウェア登録",
+    source: "ソース",
     deviceStatys: "車両がオフラインまたは自動操縦状態である",
     remoteMgt: "リモート管理",
     historyTrack: "歴史的な軌跡",

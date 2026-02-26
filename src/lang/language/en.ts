@@ -160,6 +160,7 @@ const en = {
     lastOnlineTime: "Last Online",
     operation: "Operation",
     swRegistration: "SW registration",
+    source: "Source",
     remoteMgt: "Remote Mgt.",
     historyTrack: "History Track",
     details: "Details",
