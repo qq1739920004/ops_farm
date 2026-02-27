@@ -440,34 +440,36 @@ const editInfo = async () => {
     await carModuleInfoUpdate_API(newRecords);
   } catch {}
 };
-const edit = (row: any) => {
-  if (scence.value == "1") {
-    dialogVisible.value = true;
-  }
-  if (scence.value == "2") {
+const switchDialog = (type: string) => {
+  dialogVisible.value = false;
+  G502D.value.dialogVisible = false;
+  G501D.value.dialogVisible = false;
+  G501DPRO.value.dialogVisible = false;
+  G502DJP.value.dialogVisible = false;
+  AG501PRO_JP.value.dialogVisible = false;
+  GMT802.value.dialogVisible = false;
+  GMT901.value.dialogVisible = false;
+
+  if (type == "AG502") {
     G502D.value.dialogVisible = true;
-  }
-  if (scence.value == "3") {
+  } else if (type == "AG501") {
     G501D.value.dialogVisible = true;
-  }
-  if (scence.value == "8") {
+  } else if (type == "AG501Pro") {
     G501DPRO.value.dialogVisible = true;
-  }
-  if (scence.value == "4") {
+  } else if (type == "AG502_JP") {
     G502DJP.value.dialogVisible = true;
-  }
-  if (scence.value == "5") {
+  } else if (type == "MT802") {
     GMT802.value.dialogVisible = true;
-  }
-  if (scence.value == "6") {
+  } else if (type == "MT901D") {
     GMT901.value.dialogVisible = true;
-  }
-  if (scence.value == "7") {
+  } else if (type == "AG501Pro_JP") {
     AG501PRO_JP.value.dialogVisible = true;
-  }
-  if ((scence.value = "9")) {
+  } else {
     G502D.value.dialogVisible = true;
   }
+};
+
+const edit = (row: any) => {
   newRecords.carImuSn = row.carImuSn;
   newRecords.hubSn = row.hubSn;
   newRecords.antennaTwo = row.antennaTwo;
@@ -482,6 +484,9 @@ const edit = (row: any) => {
   newRecords.motorSn = row.motorSn;
   newRecords.userName = row.username;
   newRecords.tel = row.tel;
+
+  switchDialog(newRecords.terminalType as string);
+
   nextTick(() => {
     formRef?.value.clearValidate();
     G501D.value.formRef?.clearValidate();
@@ -493,91 +498,11 @@ const edit = (row: any) => {
     GMT901.value.formRef?.clearValidate();
   });
 };
+
 watch(
   () => newRecords.terminalType,
-  () => {
-    if (newRecords.terminalType == "AG502") {
-      dialogVisible.value = false;
-      G502D.value.dialogVisible = true;
-      G501D.value.dialogVisible = false;
-      G501DPRO.value.dialogVisible = false;
-      G502DJP.value.dialogVisible = false;
-      AG501PRO_JP.value.dialogVisible = false;
-      GMT802.value.dialogVisible = false;
-      GMT901.value.dialogVisible = false;
-    }
-    // if (newRecords.terminalType == "AG360") {
-    //   dialogVisible.value = true;
-    //   G502D.value.dialogVisible = false;
-    //   G501D.value.dialogVisible = false;
-    //   G502DJP.value.dialogVisible = false;
-    //   GMT802.value.dialogVisible = false;
-    //   GMT901.value.dialogVisible = false;
-    // }
-    else if (newRecords.terminalType == "AG501") {
-      dialogVisible.value = false;
-      G501D.value.dialogVisible = true;
-      G502D.value.dialogVisible = false;
-      G502DJP.value.dialogVisible = false;
-      G501DPRO.value.dialogVisible = false;
-      AG501PRO_JP.value.dialogVisible = false;
-      GMT802.value.dialogVisible = false;
-      GMT901.value.dialogVisible = false;
-    } else if (newRecords.terminalType == "AG502_JP") {
-      dialogVisible.value = false;
-      G502DJP.value.dialogVisible = true;
-      G501DPRO.value.dialogVisible = false;
-      AG501PRO_JP.value.dialogVisible = false;
-      G502D.value.dialogVisible = false;
-      G501D.value.dialogVisible = false;
-      GMT802.value.dialogVisible = false;
-      GMT901.value.dialogVisible = false;
-    } else if (newRecords.terminalType == "MT802") {
-      dialogVisible.value = false;
-      G501D.value.dialogVisible = false;
-      G502D.value.dialogVisible = false;
-      G502DJP.value.dialogVisible = false;
-      G501DPRO.value.dialogVisible = false;
-      AG501PRO_JP.value.dialogVisible = false;
-      GMT802.value.dialogVisible = true;
-      GMT901.value.dialogVisible = false;
-    } else if (newRecords.terminalType == "MT901D") {
-      dialogVisible.value = false;
-      G502DJP.value.dialogVisible = false;
-      AG501PRO_JP.value.dialogVisible = false;
-      G502D.value.dialogVisible = false;
-      G501DPRO.value.dialogVisible = false;
-      G501D.value.dialogVisible = false;
-      GMT802.value.dialogVisible = false;
-      GMT901.value.dialogVisible = true;
-    } else if (newRecords.terminalType == "AG501Pro_JP") {
-      dialogVisible.value = false;
-      G502DJP.value.dialogVisible = false;
-      G502D.value.dialogVisible = false;
-      G501D.value.dialogVisible = false;
-      G501DPRO.value.dialogVisible = false;
-      GMT802.value.dialogVisible = false;
-      GMT901.value.dialogVisible = false;
-      AG501PRO_JP.value.dialogVisible = true;
-    } else if (newRecords.terminalType == "AG501Pro") {
-      dialogVisible.value = false;
-      G502DJP.value.dialogVisible = false;
-      G502D.value.dialogVisible = false;
-      G501D.value.dialogVisible = false;
-      G501DPRO.value.dialogVisible = true;
-      GMT802.value.dialogVisible = false;
-      GMT901.value.dialogVisible = false;
-      AG501PRO_JP.value.dialogVisible = false;
-    } else {
-      dialogVisible.value = false;
-      G502D.value.dialogVisible = true;
-      G501D.value.dialogVisible = false;
-      G501DPRO.value.dialogVisible = false;
-      G502DJP.value.dialogVisible = false;
-      AG501PRO_JP.value.dialogVisible = false;
-      GMT802.value.dialogVisible = false;
-      GMT901.value.dialogVisible = false;
-    }
+  (val:any) => {
+    switchDialog(val);
   }
 );
 const editSubmit = async () => {

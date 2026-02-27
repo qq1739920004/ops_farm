@@ -3,6 +3,7 @@
   <el-table
     class="date-icon"
     style="max-width: 100%"
+    height="calc(100vh - 240px)"
     @sort-change="changesort"
     :data="props.carNewList"
     stripe
