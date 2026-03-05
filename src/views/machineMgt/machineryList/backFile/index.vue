@@ -1,7 +1,7 @@
 <!--  -->
 <template>
     <div>
-        <el-table :data="fileListData" style="width:100%" v-loading="loading">
+        <el-table :data="fileListData" style="width:100%" v-loading="loading" height="calc(100vh - 240px)">
             <el-table-column type="index" :label="$t('work.item') + ':'" :width="60">
             </el-table-column>
             <el-table-column label="文件名称">

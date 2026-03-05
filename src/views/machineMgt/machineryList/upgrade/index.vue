@@ -74,6 +74,7 @@
         <el-table
           :data="fileListData"
           style="width: 100%"
+          height="calc(100vh - 240px)"
           @select="handleSelectionChange"
           @select-all="handleSelectAll"
         >

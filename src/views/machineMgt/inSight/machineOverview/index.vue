@@ -774,6 +774,25 @@ onUnmounted(() => {
   overflow-y: auto;
   max-height: calc(100vh - 180px);
 
+  // 美化滚动条
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #dcdfe6; // 使用 Element Plus 默认的边框颜色或类似的灰色
+    border-radius: 3px;
+    
+    &:hover {
+      background-color: #c0c4cc; // 悬停时稍微加深
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent; // 轨道透明
+  }
+
   .car_item_online {
     background-color: #e7ffe6 !important;
   }

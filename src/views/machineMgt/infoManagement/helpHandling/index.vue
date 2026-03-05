@@ -38,7 +38,7 @@
           </el-tag>
         </div>
       </div>
-      <el-table type="index" @sort-change="changeTableSort" :data="helpList" stripe>
+      <el-table type="index" @sort-change="changeTableSort" :data="helpList" stripe height="calc(100vh - 240px)">
         <el-table-column
           :label="$t('devicelist.item')"
           type="index"

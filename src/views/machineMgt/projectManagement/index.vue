@@ -9,7 +9,7 @@
           }}</el-button>
         </div>
       </div>
-      <el-table :data="projectList">
+      <el-table :data="projectList" height="calc(100vh - 240px)">
         <el-table-column
           type="index"
           :label="t('devicelist.item')"

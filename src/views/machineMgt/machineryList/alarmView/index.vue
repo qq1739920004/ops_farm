@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="table_area">
-        <el-table class="date-icon" style="max-width: 100%" :data="pageList" stripe>
+        <el-table class="date-icon" style="max-width: 100%" :data="pageList" stripe height="calc(100vh - 240px)">
           <el-table-column type="index" :label="$t('devicelist.item')"  width="120"/>
           <el-table-column label="SN" > {{route.query.sn}}</el-table-column>
           <el-table-column :label="$t('devicelist.type')" prop="grade">

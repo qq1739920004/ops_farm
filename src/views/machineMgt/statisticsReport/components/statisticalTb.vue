@@ -6,6 +6,7 @@
       @sort-change="tbDataSort"
       class="all_select_tb"
       row-key="sn"
+      height="calc(100vh - 240px)"
     >
       <el-table-column fixed type="index" :label="$t('devicelist.item')" width="60">
       </el-table-column>

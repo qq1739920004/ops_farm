@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <el-table :data="props.paddyWorkList" stripe>
+  <el-table :data="props.paddyWorkList" stripe height="calc(100vh - 240px)">
     <el-table-column
       type="index"
       :label="$t('devicelist.item')"

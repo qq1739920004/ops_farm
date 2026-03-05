@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <el-table @selection-change="handleSelectionChange" :data="records" stripe>
+      <el-table @selection-change="handleSelectionChange" :data="records" stripe height="calc(100vh - 240px)">
         <el-table-column type="selection" width="55" />
         <el-table-column
           type="index"

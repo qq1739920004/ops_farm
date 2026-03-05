@@ -31,6 +31,7 @@
       <el-table
         :data="tableData"
         style="width: 100%"
+        height="calc(100vh - 240px)"
         @select="handleSelect"
         @select-all="handleSelectAll"
       >

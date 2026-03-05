@@ -1,6 +1,6 @@
 <template>
   <div class="app_container app_card">
-    <el-table :data="landList">
+    <el-table :data="landList" height="calc(100vh - 240px)">
       <el-table-column :label="t('project.landName')" prop="area"> </el-table-column>
       <el-table-column :label="t('message.detail')" prop="areaJson" min-width="300" align="center">
       </el-table-column>

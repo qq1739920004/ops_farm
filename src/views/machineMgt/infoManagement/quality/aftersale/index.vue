@@ -167,7 +167,7 @@
                 </div>
                 <div class="main">
                     <el-table :data="tableData" style="width: 100%;" :row-style="{ height: '60px' }"
-                        :cell-style="{ padding: '10px' }">
+                        :cell-style="{ padding: '10px' }" height="calc(100vh - 240px)">
                         <el-table-column type="index" :label="$t('work.item')+':'" width="80" />
                         <el-table-column prop="dateTime" :label="$t('work.time')+':'" width="200" />
                         <el-table-column prop="operation" :label="$t('work.operation')+':'" />
