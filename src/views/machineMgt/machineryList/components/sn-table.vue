@@ -139,15 +139,7 @@
             >已过期</el-tag
           >
         </div> -->
-        <div
-          v-if="
-            row.terminalType === 'AG502' ||
-            row.terminalType === 'AG501Pro' ||
-            row.terminalType === 'AG501' ||
-            row.terminalType === 'AG502_JP' ||
-            row.terminalType === 'AG501Pro_JP'
-          "
-        >
+        <div>
           <div style="display: flex; justify-content: center">
             <el-tag
               v-if="row.activationStatus == 1"
@@ -166,7 +158,7 @@
             <div v-else>{{ t("statisticsReport.notActived") }}</div>
           </div>
         </div>
-        <div v-else>--</div>
+
       </template>
     </el-table-column>
 
