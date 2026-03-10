@@ -23,7 +23,7 @@ import Breadcrumb from "./Breadcrumb/index.vue";
   height: 100%;
   background-color: var(--el-bg-color-page);
   border-radius: 6px;
-  overflow: hidden;
+  // overflow: hidden;
   // position: relative;
   // width: 100%;
 

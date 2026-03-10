@@ -74,7 +74,6 @@
         <el-table
           :data="fileListData"
           style="width: 100%"
-          height="calc(100vh - 240px)"
           @select="handleSelectionChange"
           @select-all="handleSelectAll"
         >
@@ -497,6 +496,7 @@ getModel();
 </script>
 
 <style lang="scss" scoped>
+
 .top_line {
   padding-top: 20px;
   width: 100%;

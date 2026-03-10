@@ -116,7 +116,7 @@ export default ({ mode }) => defineConfig({
   },
   server: {
     host: "0.0.0.0",
-    // port: 8081,
+    port: 8081,
     open: true, // 运行是否自动打开浏览器
     proxy: {
       // '/dev-api/lu': {
@@ -126,8 +126,8 @@ export default ({ mode }) => defineConfig({
       //     path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
       // },
        '/gateway': { 
-          target: 'http://140.207.166.210:9030',  
-          // target: 'https://cloud.sinognss.com',  
+          // target: 'http://140.207.166.210:9030',  
+          target: 'https://cloud.sinognss.com',  
           changeOrigin: true,
       },
     
