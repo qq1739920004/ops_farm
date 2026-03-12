@@ -14,6 +14,8 @@ export interface pageInfo {
     provinceCode?: string
     activationStatus?:any
     terminalType?:any
+    sorted?: number
+    origin?: number
 }
 
 export interface newListObj {

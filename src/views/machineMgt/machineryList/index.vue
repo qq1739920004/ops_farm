@@ -81,6 +81,7 @@
         :carNewList="carNewList"
         @changeSort="changeSort"
         @typechange="dataChange2"
+        @originchange="dataChange3"
       >
         <div>
           <Pagination
@@ -147,6 +148,8 @@ const pageInfo = reactive<pageInfo>({
   cityCode: "",
   activationStatus: "",
   terminalType: "",
+  sorted: 1, // Default sorted by Latest Online Time (1) based on user request "1、最新上线时间"
+  origin: undefined,
 });
 const upgradeD = ref();
 const inputD = ref();
@@ -186,8 +189,13 @@ const gotoUpgrade = () => {
     },
   });
 };
-const changeSort = (val: string) => {
-  pageInfo.order = val;
+const changeSort = (val: any) => {
+  pageInfo.order = val.order;
+  pageInfo.sorted = val.sorted;
+  getCarList();
+};
+const dataChange3 = (val: any) => {
+  pageInfo.origin = val.origin;
   getCarList();
 };
 const getProvinceDataNewList = async () => {

@@ -259,9 +259,12 @@
     </el-table-column>
     <el-table-column
       :label="$t('devicelist.source')"
-      prop="createtime"
+      prop="origin"
       align="center"
-      width="60"
+      width="100"
+      :filters="handleOriginList()"
+      column-key="filterOrigin"
+      :filter-multiple="false"
     >
       <template #="{ row }">
         <!-- <el-tooltip
@@ -463,7 +466,7 @@ const { t } = useI18n();
 const router = useRouter();
 const props = defineProps(["carNewList"]);
 
-const emits = defineEmits(["changeSort", "datachange", "typechange"]);
+const emits = defineEmits(["changeSort", "datachange", "typechange", "originchange"]);
 // const switchStatus = ref<boolean>(false)
 const sn = ref();
 const MachineD = ref();
@@ -496,6 +499,13 @@ const handleFunctionList = () => {
   let apiArr = [
     { text: t("statisticsReport.notActived"), value: 0 },
     { text: t("statisticsReport.actived"), value: 1 },
+  ];
+  return apiArr;
+};
+const handleOriginList = () => {
+  let apiArr = [
+    { text: "B2B", value: 1 },
+    { text: "其他", value: 0 },
   ];
   return apiArr;
 };
@@ -532,18 +542,27 @@ const isChangfa = import.meta.env.MODE === "changFa";
 //   router.push({ path: "/machineryList/alarmView", query: { id: id, sn: sn } });
 // };
 const changesort = (val: any) => {
+  let orderVal = "1";
   switch (val.order) {
     case "ascending":
-      pageInfo.order = "2";
+      orderVal = "2";
       break;
     case "descending":
-      pageInfo.order = "1";
+      orderVal = "1";
       break;
     case null:
-      pageInfo.order = "1";
+      orderVal = "1";
       break;
   }
-  emits("changeSort", pageInfo.order);
+  pageInfo.order = orderVal;
+
+  let sortedVal = 1;
+  if (val.prop === "createtime") {
+    sortedVal = 1;
+  } else if (val.prop === "activationTime") {
+    sortedVal = 2;
+  }
+  emits("changeSort", { order: orderVal, sorted: sortedVal });
 };
 // 取消首次触发change钩子
 // const beforeSwitchChange = () => {
@@ -912,6 +931,12 @@ const filterChange = (filterObj: any) => {
     terValue = filterObj.filterTerminalType[0];
     emits("typechange", {
       terminalType: terValue,
+    });
+  }
+  if (filterObj.filterOrigin) {
+    const originVal = filterObj.filterOrigin[0];
+    emits("originchange", {
+      origin: originVal,
     });
   }
 };
