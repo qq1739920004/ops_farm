@@ -102,6 +102,7 @@ const mapFontSize = computed(() => {
   return fontSize;
 });
 const { t, locale } = useI18n();
+const emit = defineEmits(['markerClick']);
 const props = defineProps({
   mapTile: {
     type: Array,
@@ -259,6 +260,9 @@ watch(
     }
     if (markerDataHandle.markerHandle == "update") {
       updateMarker(markerDataHandle);
+    }
+    if (markerDataHandle.markerHandle == "popup") {
+      updateMarkerPopupOnly(markerDataHandle);
     }
   },
   { deep: true }
@@ -454,13 +458,15 @@ function createMarker(list: any) {
     if (icon) {
       marker = L.marker(position, {
         icon,
-        zIndexOffset: item.onlineTcp === 1 ? 1000 : 999,
+        zIndexOffset: Number(item.onlineTcp) === 1 ? 1000 : 999,
         riseOnHover: true,
       });
     } else {
       marker = L.marker(position);
     }
-    marker.bindPopup(item.markerPopup);
+    if (item.markerPopup) {
+      marker.bindPopup(item.markerPopup);
+    }
     if (item.markerName) {
       marker.bindTooltip(item.markerName, {
         permanent: true,
@@ -468,10 +474,13 @@ function createMarker(list: any) {
         offset: [0, -15],
       });
     }
+    marker.on("click", () => {
+      emit("markerClick", item);
+    });
     marker.markerId = item.markerId; // marker对象上设置唯一标识
     marker.markerType = item.markerType; // marker对象上设置唯一标识
-    marker.driveState = item.driveState;
-    marker.onlineTcp = item.onlineTcp;
+    marker.driveState = Number(item.driveState);
+    marker.onlineTcp = Number(item.onlineTcp);
 
     markerArr.push(marker);
     markerAddToMap(item.markerType, marker);
@@ -520,7 +529,13 @@ function markerAddToMap(markerType: string, marker: any) {
 function updateMarker(item: any) {
   const currentMarker = markerArr.find((i: any) => i.markerId == item.markerId);
   const currentMarkerIndex = markerArr.findIndex((i: any) => i.markerId == item.markerId);
-  if (!currentMarker || !item.markerLng || !item.markerLat) {
+  if (
+    !currentMarker ||
+    item.markerLng === undefined ||
+    item.markerLng === null ||
+    item.markerLat === undefined ||
+    item.markerLat === null
+  ) {
     return;
   }
   
@@ -536,7 +551,12 @@ function updateMarker(item: any) {
   
   const position = gcoordLngLat(item.markerLng, item.markerLat);
   currentMarker.setLatLng(position);
-  currentMarker.getPopup().setContent(item.markerPopup);
+  const currentPopup = currentMarker.getPopup?.();
+  if (currentPopup) {
+    currentPopup.setContent(item.markerPopup);
+  } else if (item.markerPopup) {
+    currentMarker.bindPopup(item.markerPopup);
+  }
 
   if (
     currentMarker.markerType != item.markerType &&
@@ -549,13 +569,19 @@ function updateMarker(item: any) {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
       const newMarker = L.marker(position, {
         icon,
-        zIndexOffset: item.onlineTcp === 1 ? 1000 : 999,
+        zIndexOffset: Number(item.onlineTcp) === 1 ? 1000 : 999,
         riseOnHover: true,
-      }).bindPopup(item.markerPopup) as any;
+      }) as any;
+      if (item.markerPopup) {
+        newMarker.bindPopup(item.markerPopup);
+      }
+      newMarker.on("click", () => {
+        emit("markerClick", item);
+      });
       newMarker.markerId = currentMarker.markerId;
       newMarker.markerType = item.markerType;
-      newMarker.onlineTcp = item.onlineTcp;
-      newMarker.driveState = item.driveState;
+      newMarker.onlineTcp = Number(item.onlineTcp);
+      newMarker.driveState = Number(item.driveState);
       markerCanvasGroup.removeMarker(currentMarker);
       markerArr.splice(currentMarkerIndex, 1, newMarker);
       props.markerDataHidden.includes(item.markerType)
@@ -570,7 +596,7 @@ function updateMarker(item: any) {
     }
   }
   if (
-    currentMarker.onlineTcp != item.onlineTcp &&
+    Number(currentMarker.onlineTcp) !== Number(item.onlineTcp) &&
     !props.markerDataHidden.includes(item.markerType)
   ) {
     //onlineTcp变化
@@ -580,13 +606,19 @@ function updateMarker(item: any) {
       //要重新建一个marker，不然地图缩放setIcon点会缩放
       const newMarker = L.marker(position, {
         icon,
-        zIndexOffset: item.onlineTcp === 1 ? 1000 : 999,
+        zIndexOffset: Number(item.onlineTcp) === 1 ? 1000 : 999,
         riseOnHover: true,
-      }).bindPopup(item.markerPopup) as any;
+      }) as any;
+      if (item.markerPopup) {
+        newMarker.bindPopup(item.markerPopup);
+      }
+      newMarker.on("click", () => {
+        emit("markerClick", item);
+      });
       newMarker.markerId = currentMarker.markerId;
       newMarker.markerType = item.markerType;
-      newMarker.onlineTcp = item.onlineTcp;
-      newMarker.driveState = item.driveState;
+      newMarker.onlineTcp = Number(item.onlineTcp);
+      newMarker.driveState = Number(item.driveState);
       markerCanvasGroup.removeMarker(currentMarker);
       markerArr.splice(currentMarkerIndex, 1, newMarker);
       props.markerDataHidden.includes(item.markerType)
@@ -599,6 +631,17 @@ function updateMarker(item: any) {
         ? ""
         : markerAddToMap(currentMarker.markerType, currentMarker);
     }
+  }
+}
+function updateMarkerPopupOnly(item: any) {
+  if (!item?.markerId) return;
+  const currentMarker = markerArr.find((i: any) => i.markerId == item.markerId);
+  if (!currentMarker) return;
+  const currentPopup = currentMarker.getPopup?.();
+  if (currentPopup) {
+    currentPopup.setContent(item.markerPopup || "");
+  } else if (item.markerPopup) {
+    currentMarker.bindPopup(item.markerPopup);
   }
 }
 function changeZoom() {
@@ -747,6 +790,12 @@ function initCanvasGroup() {
     map.removeLayer(markerCanvasGroup);
   }
   markerCanvasGroup = L.canvasIconLayer({}).addTo(map);
+  markerCanvasGroup.addOnClickListener((_: any, hitList: any[]) => {
+    const hitMarker = hitList?.[0]?.data;
+    const markerId = hitMarker?.markerId;
+    const originalItem = markerDataN.value.find((i: any) => i.markerId == markerId);
+    emit("markerClick", originalItem);
+  });
 
   canvasLayerElement = document.getElementsByClassName(
     "leaflet-canvas-icon-layer"
@@ -835,6 +884,12 @@ function handleMapCenter(data: any) {
   } else {
     map.setView(defaultMapCenter, defaultMapZoom);
   }
+}
+
+function openMarkerPopup(markerId: any) {
+  if (!markerId) return;
+  const findMarker = markerArr.find((item: any) => item.markerId == markerId);
+  findMarker?.openPopup?.();
 }
 let currentLayers: any = [];
 // 设置图商
@@ -1002,13 +1057,17 @@ function changeMarkerIcon() {
       const normalIcon = getRelativeIcon(createMarkerIcon(marker));
       const newMarker = L.marker(marker.getLatLng(), {
         icon: normalIcon,
-        zIndexOffset: marker.onlineTcp === 1 ? 1000 : 999,
+        zIndexOffset: Number(marker.onlineTcp) === 1 ? 1000 : 999,
         riseOnHover: true,
       }).bindPopup(marker.getPopup()) as any;
+      const originalItem = markerDataN.value.find((i: any) => i.markerId == marker.markerId);
+      newMarker.on("click", () => {
+        emit("markerClick", originalItem);
+      });
       newMarker.markerId = marker.markerId;
       newMarker.markerType = marker.markerType;
-      newMarker.driveState = marker.driveState;
-      newMarker.onlineTcp = marker.onlineTcp;
+      newMarker.driveState = Number(marker.driveState);
+      newMarker.onlineTcp = Number(marker.onlineTcp);
       newMarkers.push(newMarker);
     });
   } else {
@@ -1017,13 +1076,17 @@ function changeMarkerIcon() {
       const smallIcon = getRelativeIcon(createMarkerIconSmall(marker));
       const newMarker = L.marker(marker.getLatLng(), {
         icon: smallIcon,
-        zIndexOffset: marker.onlineTcp === 1 ? 1000 : 999,
+        zIndexOffset: Number(marker.onlineTcp) === 1 ? 1000 : 999,
         riseOnHover: true,
       }).bindPopup(marker.getPopup()) as any;
+      const originalItem = markerDataN.value.find((i: any) => i.markerId == marker.markerId);
+      newMarker.on("click", () => {
+        emit("markerClick", originalItem);
+      });
       newMarker.markerId = marker.markerId;
       newMarker.markerType = marker.markerType;
-      newMarker.driveState = marker.driveState;
-      newMarker.onlineTcp = marker.onlineTcp;
+      newMarker.driveState = Number(marker.driveState);
+      newMarker.onlineTcp = Number(marker.onlineTcp);
       newMarkers.push(newMarker);
     });
   }
@@ -1115,6 +1178,7 @@ function initRanging() {
 }
 defineExpose({
   handleMapCenter,
+  openMarkerPopup,
   mapTileChange,
   iconChangeLimit,
   isIconChange,

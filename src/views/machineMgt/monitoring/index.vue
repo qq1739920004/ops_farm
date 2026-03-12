@@ -2,6 +2,7 @@
   <div class="map_container">
     <sino-map
       ref="sinoMapRef"
+      @marker-click="handleMarkerClick"
       :markerData="markerData"
       :markerDataHandle="markerDataHandle"
       :markerDataHidden="markerDataHidden"
@@ -303,6 +304,7 @@ import {
   onlineFarmMachinePosition_API,
   farmMachineDataStatistics_API,
 } from "@/api/monitoring";
+import { carNewDetail_API } from "@/api/machineryList";
 // carLog_API,
 import { useI18n } from "vue-i18n";
 const sinoMapRef = ref();
@@ -500,7 +502,7 @@ function handleSocketData(socketData: any) {
         const markerIcon = sinoMapRef.value.iconChangeLimit
           ? createMarkerIcon(data)
           : createMarkerIconSmall(data);
-        const markerPopup = createMarkerPopup(data);
+        const markerPopup = "";
         markerDataHandle.value = {
           markerId,
           onlineTcp,
@@ -518,7 +520,7 @@ function handleSocketData(socketData: any) {
         const markerLat = data.posX;
         const markerType = createMarkerType(data);
         const markerIcon = createMarkerIcon(data);
-        const markerPopup = createMarkerPopup(data);
+        const markerPopup = "";
         const onlineTcp = data.onlineTcp;
         const driveState = data.driveState;
         markerDataHandle.value = {
@@ -545,7 +547,7 @@ function handleSocketData(socketData: any) {
         const markerIcon = sinoMapRef.value.iconChangeLimit
           ? createMarkerIcon(data)
           : createMarkerIconSmall(data);
-        const markerPopup = createMarkerPopup(data);
+        const markerPopup = "";
         markerDataHandle.value = {
           markerId,
           onlineTcp,
@@ -563,7 +565,7 @@ function handleSocketData(socketData: any) {
         const markerLat = data.posX;
         const markerType = createMarkerType(data);
         const markerIcon = createMarkerIcon(data);
-        const markerPopup = createMarkerPopup(data);
+        const markerPopup = "";
         const onlineTcp = data.onlineTcp;
         const driveState = data.driveState;
         markerDataHandle.value = {
@@ -590,7 +592,7 @@ function handleSocketData(socketData: any) {
         const driveState = data.driveState;
         const markerLat = data.posX;
         const markerType = createMarkerType(data);
-        const markerPopup = createMarkerPopup(data);
+        const markerPopup = "";
         markerDataHandle.value = {
           markerId,
           markerLng,
@@ -610,7 +612,7 @@ function handleSocketData(socketData: any) {
         const onlineTcp = data.onlineTcp;
         const driveState = data.driveState;
         const markerType = createMarkerType(data);
-        const markerPopup = createMarkerPopup(data);
+        const markerPopup = "";
         markerDataHandle.value = {
           markerId,
           markerLng,
@@ -727,7 +729,7 @@ async function getOnlineFarmPosition() {
       item.markerIcon = createMarkerIcon(item);
     }
 
-    item.markerPopup = createMarkerPopup(item);
+    item.markerPopup = "";
     item.driveState = item.driveState;
   });
   // 过滤掉异常坐标数据
@@ -758,7 +760,6 @@ async function getOnlineFarmPosition() {
   });
 }
 
-//
 function markerTypeChange() {
   let types = [];
 
@@ -807,8 +808,15 @@ function createMarkerType(item: any) {
   }
 }
 
+function createLoadingPopup(item: any) {
+  return `<div class="map_popup" style="width:200px;height:100px;display:flex;align-items:center;justify-content:center;color:#fff;">
+            <span>Loading... ${item.sn || ""}</span>
+          </div>`;
+}
+
 // marker弹窗
-function createMarkerPopup(item: any) {
+function generatePopupContent(item: any) {
+  console.log(item,'111111111111111111111111111111');
   const driveState: any = {
     0: t("messages.auto1"),
     1: t("messages.auto2"),
@@ -965,7 +973,7 @@ function createMarkerPopup(item: any) {
             <div class="r">
               <div class="label">${t("work.differentialChains")}</div>
               <div class="value">${diffSource[item.diffSource] || "--"} (${
-    item.diffAge !== null ? item.diffAge + "s" : "--"
+    item.diffAge ? item.diffAge + "s" : "--"
   })</div>
             </div>
           </li>
@@ -1018,7 +1026,7 @@ function createMarkerPopup(item: any) {
           </li>
           <li>
             <div class="btn ${
-              item.driveState == 0 || item.onlineTcp == 0 ? "disabled" : ""
+              (item.driveState == 0 || item.onlineTcp == 0) ? "disabled" : ""
             }" onclick='openRealTimeChart_markerPopup(${JSON.stringify(item)})'>${t(
     "messages.Realtimedrivingtrendchart"
   )}</div>
@@ -1031,11 +1039,52 @@ function createMarkerPopup(item: any) {
 
   return popup;
 }
+function handleMarkerClick(item: any) {
+  const carId = item.carId ?? item.id;
+  if (!carId) {
+    const newPopup = generatePopupContent(item);
+    updateMarkerPopup(item, newPopup);
+    sinoMapRef.value?.openMarkerPopup?.(item.markerId ?? item.sn);
+    return;
+  }
+  carNewDetail_API(carId, 3).then((res) => {
+    if (res.code == 0) {
+      const detail = res.data;
+      const newItem = mergeDefined(item, detail);
+      const newPopup = generatePopupContent(newItem);
+      updateMarkerPopup(newItem, newPopup);
+      // 使用 nextTick 确保 updateMarkerPopup 生效后再打开弹窗
+      setTimeout(() => {
+        sinoMapRef.value?.openMarkerPopup?.(newItem.markerId ?? newItem.sn);
+      }, 0);
+    }
+  });
+}
+
+function mergeDefined(base: any, detail: any) {
+  // detail 直接覆盖 base，但过滤 undefined (保留 null)
+  const merged: any = { ...base };
+  if (!detail || typeof detail !== "object") return merged;
+  Object.keys(detail).forEach((k) => {
+    const v = detail[k];
+    if (v !== undefined) merged[k] = v;
+  });
+  return merged;
+}
+
+function updateMarkerPopup(item: any, popupContent: string) {
+  markerDataHandle.value = {
+    markerHandle: "popup",
+    markerId: item.markerId ?? item.sn,
+    markerPopup: popupContent,
+  };
+}
+
 // marker 图标
 function createMarkerIcon(item: any) {
   const { terminalType, driveState, onlineTcp } = item;
   let icon: string = "";
-  if (onlineTcp === 0) {
+  if (Number(onlineTcp) === 0) {
     icon = AG360_offline;
   } else {
     icon = driveState == 0 ? AG360_warn : AG360;
@@ -1076,7 +1125,7 @@ function createMarkerIcon(item: any) {
 function createMarkerIconSmall(item: any) {
   const { terminalType, driveState, onlineTcp } = item;
   let icon: string = "";
-  if (onlineTcp === 0) {
+  if (Number(onlineTcp) === 0) {
     icon = gray;
   } else {
     icon = driveState == 0 ? yellow : green;
