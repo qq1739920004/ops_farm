@@ -680,7 +680,7 @@ function updateMarkerVisible(list: any) {
     list.includes("offline") &&
     !list.includes("online2")
   ) {
-    fitlerArr = markerArr.filter((j: any) => j.driveState === 0);
+    fitlerArr = markerArr.filter((j: any) => j.driveState === 0 && j.onlineTcp !== 0);
   } else if (
     list.includes("online2") &&
     list.includes("offline") &&
