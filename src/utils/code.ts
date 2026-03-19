@@ -3,7 +3,7 @@ export const errorCode: any = {
     1001: 'code.noSN',
     1002: 'code.noCar',
     1004: 'code.modeChange',
-    1005: "code.hasNpn",
+    // 1005: "code.hasNpn",
     1006: 'code.versionError',
     1007: 'code.parameterNo',
     1008: 'code.parameterNo',

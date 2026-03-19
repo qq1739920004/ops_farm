@@ -126,8 +126,8 @@ export default ({ mode }) => defineConfig({
       //     path.replace(new RegExp("^/dev-api"), ""), // 替换 /dev-api 为 target 接口地址
       // },
        '/gateway': { 
-          target: 'http://140.207.166.210:9030',  
-          // target: 'https://cloud.sinognss.com',  
+          // target: 'http://140.207.166.210:9030',  
+          target: 'https://cloud.sinognss.com',  
           changeOrigin: true,
       },
     
