@@ -78,10 +78,11 @@ export function statisticalExport(data:any){
   })
 }
 //激活总量折线图
-export function statisticalLineData(){
+export function statisticalLineData(params?: any){
   return request({
     url:`/farm/report/foldLine`,
     method:'get',
+    params,
   })
 }
 

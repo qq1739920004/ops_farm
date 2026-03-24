@@ -85,7 +85,7 @@
                                 <span style="color: var(--el-input-text-color,var(--el-text-color-regular))"> {{
                                     topvalue.npn || '/' }}</span>
                             </el-form-item>
-                            <el-form-item :label="$t('devicelist.deviceSN')+':'" label-width="125px" prop="sn">
+                            <el-form-item :label="(is501(topvalue.terminalType)? $t('devicelist.smartAntennaSN'): $t('devicelist.deviceSN'))+':'" label-width="125px" prop="sn">
                                 <el-input v-model="topvalue.sn">
                                     <template #append>
                                         <el-button @click="changeSnBtn(topvalue.sn)" class="change_btn">{{$t('work.replace')}}</el-button>
@@ -235,6 +235,9 @@ const getInfo = async () => {
         ElMessage({ message: t('messages.noRecord') })
     }
 
+}
+const is501=(type:string)=>{
+  return type.includes('AG501Pro')||type.includes('AG501MPro')
 }
 const getStartInfo = async () => {
     const res: carModuleInfoOperationLogResponseData = await carModuleInfoOperationLog_API($route.query.id as never)

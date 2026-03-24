@@ -3,7 +3,7 @@
         <el-dialog style="border-radius: 8px;" v-model="dialogVisible" width="30%" title="注册设备" center>
             <el-row :gutter="16" class="mainArea">
                 <el-col :span="21" :offset="3" style="margin-bottom:20px ">
-                    铭牌SN号:13333333333333
+                    出厂编号号:13333333333333
                 </el-col>
             </el-row>
             <el-row :gutter="16" class="mainArea">

@@ -14,7 +14,7 @@
       <span style="margin-right: 20px"
         >{{ $t("work.vehicleName") }}：{{ props.name || "/" }}</span
       >
-      <span>{{ $t("work.vehicleType") }}：{{ props.terminalType }}</span>
+      <span>{{ $t("work.productType") }}：{{ props.terminalType }}</span>
     </div>
     <div class="menuArea">
       <el-tabs stretch v-model="activeName" class="demo-tabs" @tab-click="handleClick">

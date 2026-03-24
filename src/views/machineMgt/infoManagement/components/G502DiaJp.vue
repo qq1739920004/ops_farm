@@ -35,7 +35,7 @@
         <el-form-item :label="$t('work.labelSN')" prop="npn">
           <el-input v-model="newRecords.npn"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('devicelist.deviceSN')" prop="sn">
+        <el-form-item :label="$t('devicelist.productSN')" prop="sn">
           <el-input v-model="newRecords.sn"></el-input>
         </el-form-item>
         <el-form-item :label="$t('work.motorSN')" prop="motorSn">

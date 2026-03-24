@@ -41,7 +41,7 @@
         {{ scope.row.npn }}
       </template>
     </el-table-column>
-    <el-table-column label="SN" prop="sn" align="center" width="180"
+    <el-table-column label="产品SN" prop="sn" align="center" width="180"
       ><template #default="scope">
         <div
           :class="scope.row.onlineTcp === 1 ? 'sn_area1' : 'sn_area2'"

@@ -43,6 +43,7 @@
       <statistical-tb
         v-if="statisticalListData"
         :tbData="statisticalListData"
+        :tableHeight="tableHeight"
         @tbSortChange="tbSortChange"
       ></statistical-tb>
 
@@ -77,6 +78,7 @@ const headData = ref<any>(null);
 const statisticalListData = ref<any[]>([]);
 const total = ref<number>(0);
 const agencyList = ref<any[]>([]);
+const tableHeight = ref<number>(window.innerHeight - 350);
 const tbParams = reactive<any>({
   currentPage: 1,
   pageSize: 10,
@@ -119,7 +121,10 @@ const tbSortChange = (data: any[]) => {
 };
 
 const goLine = () => {
-  router.push("statisticsReport/line");
+  router.push({
+    path: "statisticsReport/line",
+    query: { companyId: tbParams.companyId }
+  });
 };
 const exportInventory = async () => {
  

@@ -63,7 +63,7 @@
           align="center"
         />
         <el-table-column :label="$t('work.labelSN')" align="center" prop="npn" />
-        <el-table-column :label="$t('devicelist.deviceSN')" align="center" prop="sn" />
+        <el-table-column :label="$t('devicelist.productSN')" align="center" prop="sn" />
 
         <!-- <el-table-column :label="$t('work.guarantee')" align="center">
           <template #="{ row }">

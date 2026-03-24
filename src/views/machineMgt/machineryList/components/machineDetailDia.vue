@@ -88,7 +88,7 @@
     </div>
     <div class="tableData">
       <div class="line line3">
-        <div class="tit">SN:</div>
+        <div class="tit">产品SN:</div>
         <div class="data data4" :class="NewDetail.onlineTcp != 0 ? 'circlearea' : ''">
           {{ NewDetail.sn }}
           <span v-if="NewDetail.onlineTcp != 0"
