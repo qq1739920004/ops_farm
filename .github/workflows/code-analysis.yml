@@ -76,9 +76,9 @@ jobs:
           
           # 打印完整的 curl 命令（隐藏 Token）
           echo "Curl command (token hidden):"
-          echo "curl -X POST 'https://bcmnz6k8jx.coze.site/run' \"
-          echo "  -H 'Content-Type: application/json' \"
-          echo "  -H 'Authorization: Bearer ***' \"
+          echo "curl -X POST 'https://bcmnz6k8jx.coze.site/run'"
+          echo "  -H 'Content-Type: application/json'"
+          echo "  -H 'Authorization: Bearer ***'"
           echo "  -d '<body>'"
           echo ""
           
