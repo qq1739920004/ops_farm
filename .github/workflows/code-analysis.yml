@@ -32,16 +32,18 @@ jobs:
           echo "  Branch: $BRANCH"
           echo "  Commit: $COMMIT_SHA"
 
+          REF="refs/heads/$BRANCH"
+
           REQUEST_BODY=$(jq -n \
             --arg repo_url "$REPO_URL" \
-            --arg branch "$BRANCH" \
+            --arg ref "$REF" \
             --arg commit_sha "$COMMIT_SHA" \
             --arg commit_msg "$COMMIT_MESSAGE" \
             --arg commit_author "$COMMIT_AUTHOR" \
             '{
               "webhook_payload": {
                 "repository": {"html_url": $repo_url},
-                "ref": "refs/heads/" + $branch,
+                "ref": $ref,
                 "head_commit": {
                   "id": $commit_sha,
                   "message": $commit_msg,
