@@ -148,7 +148,7 @@ jobs:
           
           # 详细错误分析
           echo ""
-          echo "❌ FAILED after $MAX_RETRIES attempts"
+          echo " FAILED after $MAX_RETRIES attempts"
           
           if echo "$BODY" | grep -q "Missing authorization"; then
             echo ""
