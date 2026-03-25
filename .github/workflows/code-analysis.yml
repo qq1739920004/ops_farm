@@ -85,18 +85,18 @@ jobs:
           
           # 预热服务（唤醒冷启动的 Coze 实例）
           echo "🔥 Warming up service (attempting to wake up cold instance)..."
-          curl -s -m 20 -X POST "https://bcmnz6k8jx.coze.site/run" \
+          curl -s -m 10 -X POST "https://bcmnz6k8jx.coze.site/run" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $COZE_API_TOKEN" \
             -d "$REQUEST_BODY" > /dev/null 2>&1 || true
           
           # 等待服务启动
-          echo "⏳ Waiting 45s for service to start..."
-          sleep 45
+          echo "⏳ Waiting 30s for service to start..."
+          sleep 30
           
           # 正式请求，带重试机制
           MAX_RETRIES=3
-          RETRY_DELAY=30
+          RETRY_DELAY=20
           
           for ((i=1; i<=MAX_RETRIES; i++)); do
             echo ""
@@ -104,8 +104,8 @@ jobs:
             echo "Sending request..."
             
             RESPONSE=$(curl -v -s -w "\n---HTTP_CODE---%{http_code}" \
-              --connect-timeout 60 \
-              --max-time 300 \
+              --connect-timeout 30 \
+              --max-time 120 \
               -X POST "https://bcmnz6k8jx.coze.site/run" \
               -H "Content-Type: application/json" \
               -H "Authorization: Bearer $COZE_API_TOKEN" \
