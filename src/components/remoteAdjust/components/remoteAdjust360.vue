@@ -498,7 +498,6 @@ const router = useRouter();
 const basicTitleData = ref<any | null>([]);
 const activeName = ref("1");
 const isChangfa = import.meta.env.MODE === "changFa";
-console.log("111111", isChangfa);
 const handleClick = (tab: TabsPaneContext) => {
   activeIndex.value = tab.props.name as never;
 };
@@ -883,7 +882,6 @@ const getBasic = async () => {
 // 高级参数1对应的值
 const getAdvanced1 = async () => {
   const { data }: paramAdvanced1ParamData = await getAdvanced1Param_API(props.carId);
-  console.log(data);
   data.data.paramJson
     ? Object.assign(advanced1ParamsData, JSON.parse(data.data.paramJson))
     : "";

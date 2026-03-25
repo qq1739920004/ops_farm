@@ -790,7 +790,6 @@ let currentLayers: any = [];
 // 设置图商
 function changeTileLayer(mapName = "GaoDe", mapType = "Satellite") {
   if (!map) {
-    console.warn("未初始化底图实例");
     return;
   }
   if (currentLayers.length) {
