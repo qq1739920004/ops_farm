@@ -8,6 +8,7 @@ on:
 jobs:
   analyze:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -82,38 +83,72 @@ jobs:
           echo "  -d '<body>'"
           echo ""
           
-          # 发送请求并保存完整响应
-          echo "Sending request..."
-          RESPONSE=$(curl -v -s -w "\n---HTTP_CODE---%{http_code}" \
-            --connect-timeout 30 \
-            --max-time 120 \
-            -X POST "https://bcmnz6k8jx.coze.site/run" \
+          # 预热服务（唤醒冷启动的 Coze 实例）
+          echo "🔥 Warming up service (attempting to wake up cold instance)..."
+          curl -s -m 20 -X POST "https://bcmnz6k8jx.coze.site/run" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $COZE_API_TOKEN" \
-            -d "$REQUEST_BODY" 2>&1)
+            -d "$REQUEST_BODY" > /dev/null 2>&1 || true
           
-          echo ""
-          echo "========== FULL RESPONSE =========="
-          echo "$RESPONSE"
-          echo "===================================="
+          # 等待服务启动
+          echo "⏳ Waiting 45s for service to start..."
+          sleep 45
           
-          # 解析 HTTP 状态码
-          HTTP_CODE=$(echo "$RESPONSE" | grep "---HTTP_CODE---" | sed 's/---HTTP_CODE---//')
-          BODY=$(echo "$RESPONSE" | sed '/---HTTP_CODE---/d')
+          # 正式请求，带重试机制
+          MAX_RETRIES=3
+          RETRY_DELAY=30
           
-          echo ""
-          echo "HTTP Status Code: $HTTP_CODE"
-          echo "Response Body: $BODY"
-          
-          if [ "$HTTP_CODE" = "200" ]; then
+          for ((i=1; i<=MAX_RETRIES; i++)); do
             echo ""
-            echo "✅ SUCCESS!"
-            exit 0
-          fi
+            echo "========== ATTEMPT $i/$MAX_RETRIES =========="
+            echo "Sending request..."
+            
+            RESPONSE=$(curl -v -s -w "\n---HTTP_CODE---%{http_code}" \
+              --connect-timeout 60 \
+              --max-time 300 \
+              -X POST "https://bcmnz6k8jx.coze.site/run" \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $COZE_API_TOKEN" \
+              -d "$REQUEST_BODY" 2>&1)
+            
+            echo ""
+            echo "========== RESPONSE =========="
+            echo "$RESPONSE"
+            echo "=============================="
+            
+            # 解析 HTTP 状态码
+            HTTP_CODE=$(echo "$RESPONSE" | grep "---HTTP_CODE---" | sed 's/---HTTP_CODE---//')
+            BODY=$(echo "$RESPONSE" | sed '/---HTTP_CODE---/d')
+            
+            echo ""
+            echo "HTTP Status Code: $HTTP_CODE"
+            
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo ""
+              echo "✅ SUCCESS!"
+              exit 0
+            fi
+            
+            # 检查是否是需要重试的错误
+            if echo "$BODY" | grep -q "no_ready_instance\|upstream failed"; then
+              echo "⚠️ Service still warming up, will retry..."
+            elif [ -z "$HTTP_CODE" ] || [ "$HTTP_CODE" = "000" ]; then
+              echo "⚠️ Connection timeout, will retry..."
+            else
+              # 其他错误，打印详细信息
+              echo "Response Body: $BODY"
+              break
+            fi
+            
+            if [ $i -lt $MAX_RETRIES ]; then
+              echo "Waiting ${RETRY_DELAY}s before retry..."
+              sleep $RETRY_DELAY
+            fi
+          done
           
           # 详细错误分析
           echo ""
-          echo "❌ FAILED"
+          echo "❌ FAILED after $MAX_RETRIES attempts"
           
           if echo "$BODY" | grep -q "Missing authorization"; then
             echo ""
@@ -128,11 +163,14 @@ jobs:
           elif echo "$BODY" | grep -q "no_ready_instance"; then
             echo ""
             echo "Error Type: Service Cold Start"
-            echo "The service is starting up. Try again in a few minutes."
+            echo "The service is taking too long to start. Consider:"
+            echo "  1. Check if the Coze bot is properly deployed"
+            echo "  2. Try again in a few minutes"
           elif [ -z "$HTTP_CODE" ] || [ "$HTTP_CODE" = "000" ]; then
             echo ""
-            echo "Error Type: Connection Failed"
-            echo "Could not connect to the server or request timed out."
+            echo "Error Type: Connection Timeout"
+            echo "Could not connect to the server after $MAX_RETRIES attempts."
+            echo "The service may be down or unreachable."
           fi
           
           exit 1
